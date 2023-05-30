@@ -70,3 +70,47 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# ---- ---- ---- ----
+
+# Never ignore DLLs in the FMOD subfolder.
+!/[Aa]ssets/Plugins/FMOD/libs/*
+
+# Don't ignore images and gizmos used by FMOD in the Unity Editor.
+!/[Aa]ssets/Gizmos/FMOD/*
+!/[Aa]ssets/Editor Default Resources/FMOD/*
+
+# Ignore the Cache folder since it is updated locally.
+/[Aa]ssets/Plugins/FMOD/Cache/*
+
+# Ignore bank files in the StreamingAssets folder.
+/[Aa]ssets/StreamingAssets/**/*.bank
+/[Aa]ssets/StreamingAssets/**/*.bank.meta
+# If the source bank files are kept outside of the StreamingAssets folder then these can be ignored.
+
+# Log files can be ignored.
+fmod_editor.log
+
+# ---- ---- ---- ----
+
+# Stuffs
+/[Aa]ssets/Feel
+/[Aa]ssets/Feel.meta
+
+/[Aa]ssets/Le Tai's Asset
+/[Aa]ssets/Le Tai's Asset.meta
+
+/[Aa]ssets/Plugins/Borodar
+/[Aa]ssets/Plugins/Borodar.meta
+
+/[Aa]ssets/Plugins/FMOD
+/[Aa]ssets/Plugins/FMOD.meta
+
+/[Aa]ssets/Unity-Logs-Viewer
+/[Aa]ssets/Unity-Logs-Viewer.meta
+
+/[Aa]ssets/AssetInventory
+/[Aa]ssets/AssetInventory.meta
+
+/[Aa]ssets/SelectionUtility
+/[Aa]ssets/SelectionUtility.meta
