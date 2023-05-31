@@ -90,8 +90,9 @@ GameObject:
   - component: {fileID: 451694239489095257}
   - component: {fileID: 4202238354008328933}
   - component: {fileID: 8678552878948442558}
+  - component: {fileID: 4732525087149238274}
   m_Layer: 5
-  m_Name: Button
+  m_Name: ItemSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -244,3 +245,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetToolTip: {fileID: 0}
   isSpecialThings: 1
+--- !u!114 &4732525087149238274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6907260733322050985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de5bdefa59222b444972d2c358be61d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initPos: []
+  _camera: {fileID: 0}

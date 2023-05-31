@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class CharacterPickup : MonoBehaviour
+public class PickupUnit : MonoBehaviour
 {
     [SerializeField] private Vector3[] initPos;
     [SerializeField] private Camera _camera;

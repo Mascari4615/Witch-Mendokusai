@@ -3,4 +3,5 @@ using UnityEngine;
 public class Item : SpecialThing
 {
     public int count;
+    public Recipe[] recipes;
 }
