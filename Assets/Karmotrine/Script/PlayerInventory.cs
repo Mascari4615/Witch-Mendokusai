@@ -2,7 +2,7 @@ using UnityEngine;
 
 
 [CreateAssetMenu(fileName = "PlayerItemInventory", menuName = "GameSystem/RunTimeSet/PlayerItemInventory")]
-public class PlayerItemInventory : ItemInventory
+public class PlayerInventory : ItemRuntimeSet
 {
     [SerializeField] private ItemVariable LastEquippedItem;
     [SerializeField] private GameEvent OnItemEquip;

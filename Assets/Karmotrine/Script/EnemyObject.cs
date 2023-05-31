@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class EnemyObject : MonoBehaviour
 {
     public bool IsAlive => curHP != 0;
-    [SerializeField] private PlayerItemInventory playerItemInventory;
+    [FormerlySerializedAs("playerItemRuntimeSet")] [FormerlySerializedAs("playerItemInventory")] [SerializeField] private PlayerInventory playerInventory;
     [SerializeField] private ClickerStageManager clickerStageManager;
     private Enemy curEnemy;
     private int curHP;
@@ -49,6 +50,6 @@ public class EnemyObject : MonoBehaviour
             probability.Add(item.specialThing as Item, item.percentage);
 
         var newItem = probability.Get();
-        playerItemInventory.Add(newItem);
+        playerInventory.Add(newItem);
     }
 }

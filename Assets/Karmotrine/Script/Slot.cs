@@ -14,9 +14,9 @@ public class Slot : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI nameText;
     [SerializeField] protected TextMeshProUGUI descriptionText;
 
-    public virtual void SetSlot(SpecialThing _specialThing, int count = 1)
+    public virtual void SetSlot(SpecialThing specialThing, int count = 1)
     {
-        SpecialThing = _specialThing;
+        SpecialThing = specialThing;
         this.count = count;
 
         UpdateUI();

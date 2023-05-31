@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ItemInventory : RunTimeSet<Item>
+public abstract class ItemRuntimeSet : RunTimeSet<Item>
 {
     [System.NonSerialized] public Dictionary<int, int> itemCountDic = new();
 
@@ -10,19 +10,19 @@ public abstract class ItemInventory : RunTimeSet<Item>
         if (!Items.Contains(item))
         {
             Items.Add(item);
-            itemCountDic.Add(item.Id, 1);
+            itemCountDic.Add(item.ID, 1);
         }
-        else itemCountDic[item.Id] += 1;
+        else itemCountDic[item.ID] += 1;
     }
 
     public override void Remove(Item item)
     {
         if (Items.Contains(item))
         {
-            if (itemCountDic[item.Id] > 1) itemCountDic[item.Id] -= 1;
-            else if (itemCountDic[item.Id] == 1)
+            if (itemCountDic[item.ID] > 1) itemCountDic[item.ID] -= 1;
+            else if (itemCountDic[item.ID] == 1)
             {
-                itemCountDic.Remove(item.Id);
+                itemCountDic.Remove(item.ID);
                 Items.Remove(item);
             }
             else Debug.LogWarning($"RunTimeSet<Item> : Item.count�� ������ �� �� ����, {item.name}");
@@ -39,7 +39,7 @@ public abstract class ItemInventory : RunTimeSet<Item>
         {
             if (itemCountDic != null)
             {
-                int itemCount = itemCountDic[Items[0].Id];
+                int itemCount = itemCountDic[Items[0].ID];
                 for (int j = 0; j < itemCount; j++)
                 {
                     Remove(Items[0]);

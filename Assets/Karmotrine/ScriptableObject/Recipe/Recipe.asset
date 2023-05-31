@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 174d297548e42a942b80acfb0cb7718e, type: 3}
-  m_Name: Stage
+  m_Script: {fileID: 11500000, guid: b3a3c9004633b04479e2f567687c2430, type: 3}
+  m_Name: Recipe
   m_EditorClassIdentifier: 
-  Id: 0
-  name: 
-  description: 
-  sprite: {fileID: 0}
-  Enemies:
-  - specialThing: {fileID: 11400000, guid: a2f2db0ef5f63a64b95ddd943023c650, type: 2}
-    percentage: 100
+  ingredients:
+  - {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
+  percentage: 100
