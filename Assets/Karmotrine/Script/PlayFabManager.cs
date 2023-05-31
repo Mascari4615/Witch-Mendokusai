@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class PlayFabManager : MonoBehaviour
 {
@@ -16,29 +17,66 @@ public class PlayFabManager : MonoBehaviour
 
 	private void Start()
 	{
-		Login();
-		PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+			.AddOauthScope("profile")
+			.RequestServerAuthCode(false)
+			.Build();
+		PlayGamesPlatform.InitializeInstance(config);
+		PlayGamesPlatform.DebugLogEnabled = true;
+		PlayGamesPlatform.Activate();
+		
+		// Login();
 	}
-
-	internal void ProcessAuthentication(SignInStatus status)
+	
+	public void Login()
 	{
-		if (status == SignInStatus.Success)
-		{
-			GoogleStatusText.text = "Success";
-			// Continue with Play Games Services
-		}
-		else
-		{
-			GoogleStatusText.text = "Fail";
+		Social.localUser.Authenticate((bool success) => {
 
-			// Disable your integration with Play Games Services or show a login button
-			// to ask users to sign-in. Clicking it should call
-			// PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
-		}
-	}
-	private void Login()
-	{
-		var request = new LoginWithCustomIDRequest
+			if (success)
+			{
+				GoogleStatusText.text = "Google Signed In";
+				var serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
+				GoogleStatusText.text = "Server Auth Code: " + serverAuthCode;
+
+				PlayFabClientAPI.LoginWithGoogleAccount(new LoginWithGoogleAccountRequest()
+				{
+					TitleId = PlayFabSettings.TitleId,
+					ServerAuthCode = serverAuthCode,
+					CreateAccount = true
+				}, (result) =>
+				{
+					GoogleStatusText.text = "Signed In as " + result.PlayFabId;
+					
+					Debug.Log("Successful login/account create!");
+
+					string name = result.InfoResultPayload.PlayerProfile?.DisplayName;
+
+					if (name != null)
+					{
+						DataManager.Instance.LocalDisplayName = name;
+						// TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
+						SubmitNickname("Temp");
+					}
+					else
+					{
+						// TODO : MainMenuManager.Instance.OpenNicknamePanel();
+						SubmitNickname("Temp");
+					}
+
+					LoadPlayerData();
+					GetAppearance();
+					GetTitleData();
+					GetVirtualCurrencies();
+				}, OnError);
+			}
+			else
+			{
+				Debug.Log("Google Failed to Authorize your login");
+			}
+
+		});
+
+		/*var request = new LoginWithCustomIDRequest
 		{
 			CustomId = SystemInfo.deviceUniqueIdentifier,
 			CreateAccount = true,
@@ -71,7 +109,7 @@ public class PlayFabManager : MonoBehaviour
 			GetAppearance();
 			GetTitleData();
 			GetVirtualCurrencies();
-		}, OnError);
+		}, OnError);*/
 	}
 
 	public void SubmitNickname(string name)
