@@ -11,25 +11,25 @@ using UnityEngine.SceneManagement;
 
 public class PlayFabManager : MonoBehaviour
 {
-	private string Sans = "WaWAWAwaaWawwWa";
-	float secondsLeftToRefreshEnergy = 1;
-	public TextMeshProUGUI GoogleStatusText;
+    float secondsLeftToRefreshEnergy = 1;
+    [SerializeField] private TextMeshProUGUI GoogleStatusText;
 
-	private void Start()
-	{
-		PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
-			.AddOauthScope("profile")
-			.RequestServerAuthCode(false)
-			.Build();
-		PlayGamesPlatform.InitializeInstance(config);
-		PlayGamesPlatform.DebugLogEnabled = true;
-		PlayGamesPlatform.Activate();
-		
-		// Login();
-	}
-	
-	public void Login()
-	{
+    private void Start()
+    {
+        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+            .AddOauthScope("profile")
+            .RequestServerAuthCode(false)
+            .Build();
+        PlayGamesPlatform.InitializeInstance(config);
+        PlayGamesPlatform.DebugLogEnabled = true;
+        PlayGamesPlatform.Activate();
+
+        // Login();
+    }
+
+    public void Login()
+    {
+#if !UNITY_EDITOR
 		Social.localUser.Authenticate((bool success) => {
 
 			if (success)
@@ -49,366 +49,382 @@ public class PlayFabManager : MonoBehaviour
 					
 					Debug.Log("Successful login/account create!");
 
-					string name = result.InfoResultPayload.PlayerProfile?.DisplayName;
+					string name = result?.InfoResultPayload?.PlayerProfile?.DisplayName;
+					Debug.Log("A");
 
 					if (name != null)
 					{
 						DataManager.Instance.LocalDisplayName = name;
 						// TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
-						SubmitNickname("Temp");
+						SubmitNickname(result.PlayFabId);
 					}
 					else
 					{
 						// TODO : MainMenuManager.Instance.OpenNicknamePanel();
-						SubmitNickname("Temp");
+						SubmitNickname(result.PlayFabId);
 					}
+					Debug.Log("B");
 
 					LoadPlayerData();
+					Debug.Log("C");
+
 					GetAppearance();
-					GetTitleData();
-					GetVirtualCurrencies();
+					Debug.Log("D");
+
+                    GetTitleData();
+					Debug.Log("E");
+					
+                    GetVirtualCurrencies();
+					Debug.Log("F");
+
+                    SceneManager.LoadScene(1);
 				}, OnError);
 			}
 			else
 			{
 				Debug.Log("Google Failed to Authorize your login");
 			}
-
 		});
+#else
+        var request = new LoginWithCustomIDRequest
+        {
+            CustomId = SystemInfo.deviceUniqueIdentifier,
+            CreateAccount = true,
 
-		/*var request = new LoginWithCustomIDRequest
-		{
-			CustomId = SystemInfo.deviceUniqueIdentifier,
-			CreateAccount = true,
+            InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
+            {
+                GetPlayerProfile = true
+            }
+        };
 
-			InfoRequestParameters = new GetPlayerCombinedInfoRequestParams
-			{
-				GetPlayerProfile = true
-			}
-		};
+        PlayFabClientAPI.LoginWithCustomID(request, result =>
+        {
+            Debug.Log("Successful login/account create!");
 
-		PlayFabClientAPI.LoginWithCustomID(request, result =>
-		{
-			Debug.Log("Successful login/account create!");
+            string name = result.InfoResultPayload.PlayerProfile?.DisplayName;
 
-			string name = result.InfoResultPayload.PlayerProfile?.DisplayName;
+            if (name != null)
+            {
+                DataManager.Instance.LocalDisplayName = name;
+                // TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
+                SubmitNickname("Temp");
+            }
+            else
+            {
+                // TODO : MainMenuManager.Instance.OpenNicknamePanel();
+                SubmitNickname("Temp");
+            }
 
-			if (name != null)
-			{
-				DataManager.Instance.LocalDisplayName = name;
-				// TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
-				SubmitNickname("Temp");
-			}
-			else
-			{
-				// TODO : MainMenuManager.Instance.OpenNicknamePanel();
-				SubmitNickname("Temp");
-			}
+            LoadPlayerData();
+            GetAppearance();
+            GetTitleData();
+            GetVirtualCurrencies();
+            
+            SceneManager.LoadScene(1);
+        }, OnError);
+#endif
+    }
 
-			LoadPlayerData();
-			GetAppearance();
-			GetTitleData();
-			GetVirtualCurrencies();
-		}, OnError);*/
-	}
+    public void SubmitNickname(string name)
+    {
+        var request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = name,
+        };
 
-	public void SubmitNickname(string name)
-	{
-		var request = new UpdateUserTitleDisplayNameRequest
-		{
-			DisplayName = name,
-		};
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
+        {
+            Debug.Log("Updated display name!");
 
-		PlayFabClientAPI.UpdateUserTitleDisplayName(request, result =>
-		{
-			Debug.Log("Updated display name!");
+            DataManager.Instance.LocalDisplayName = result.DisplayName;
+            // TODO : MainMenuManager.Instance.UpdateNickNameUI(result.DisplayName);
+        }, OnError);
+    }
 
-			DataManager.Instance.LocalDisplayName = result.DisplayName;
-			// TODO : MainMenuManager.Instance.UpdateNickNameUI(result.DisplayName);
-		}, OnError);
-	}
+    public void SendLeaderboard(int playTime)
+    {
+        var request = new UpdatePlayerStatisticsRequest
+        {
+            Statistics = new List<StatisticUpdate>
+            {
+                new StatisticUpdate
+                {
+                    StatisticName = "�÷��̽ð�",
+                    Value = playTime
+                }
+            }
+        };
 
-	public void SendLeaderboard(int playTime)
-	{
-		var request = new UpdatePlayerStatisticsRequest
-		{
-			Statistics = new List<StatisticUpdate>
-			{
-				new StatisticUpdate
-				{
-					StatisticName = "�÷��̽ð�",
-					Value = playTime
-				}
-			}
-		};
+        PlayFabClientAPI.UpdatePlayerStatistics(request, result =>
+        {
+            // Debug.Log("Successfull leaderboard sent");
+        }, OnError);
+    }
 
-		PlayFabClientAPI.UpdatePlayerStatistics(request, result =>
-		{
-			// Debug.Log("Successfull leaderboard sent");
-		}, OnError);
-	}
+    public void GetLeaderboard()
+    {
+        var request = new GetLeaderboardRequest
+        {
+            StatisticName = "�÷��̽ð�",
+            StartPosition = 0,
+            MaxResultsCount = 10
+        };
 
-	public void GetLeaderboard()
-	{
-		var request = new GetLeaderboardRequest
-		{
-			StatisticName = "�÷��̽ð�",
-			StartPosition = 0,
-			MaxResultsCount = 10
-		};
+        PlayFabClientAPI.GetLeaderboard(request, result =>
+        {
+            foreach (var item in result.Leaderboard)
+            {
+                Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue + " " + item.DisplayName);
+            }
+        }, OnError);
+    }
 
-		PlayFabClientAPI.GetLeaderboard(request, result =>
-		{
-			foreach (var item in result.Leaderboard)
-			{
-				Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue + " " + item.DisplayName);
-			}
-		}, OnError);
-	}
+    public void GetLeaderboardAroundPlayer()
+    {
+        var request = new GetLeaderboardAroundPlayerRequest
+        {
+            StatisticName = "�÷��̽ð�",
+            MaxResultsCount = 10
+            // Ȧ���� �ϸ� ����� ��ġ
+        };
+        PlayFabClientAPI.GetLeaderboardAroundPlayer(request, result =>
+        {
+            foreach (var item in result.Leaderboard)
+            {
+                Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue + " " + item.DisplayName);
+            }
+        }, OnError);
+    }
 
-	public void GetLeaderboardAroundPlayer()
-	{
-		var request = new GetLeaderboardAroundPlayerRequest
-		{
-			StatisticName = "�÷��̽ð�",
-			MaxResultsCount = 10
-			// Ȧ���� �ϸ� ����� ��ġ
-		};
-		PlayFabClientAPI.GetLeaderboardAroundPlayer(request, result =>
-		{
-			foreach (var item in result.Leaderboard)
-			{
-				Debug.Log(item.Position + " " + item.PlayFabId + " " + item.StatValue + " " + item.DisplayName);
-			}
-		}, OnError);
-	}
+    public void GetAppearance()
+    {
+        return;
 
-	public void GetAppearance()
-	{
-		PlayFabClientAPI.GetUserData(new GetUserDataRequest(), result =>
-		{
-			if (result.Data != null && result.Data.ContainsKey("Sans"))
-			{
-				Sans = result.Data["Sans"].Value + "Ang";
-			}
-			else
-			{
-				SaveUserData(nameof(Sans), Sans);
-			}
-		}, OnError);
-	}
+        /*PlayFabClientAPI.GetUserData(new GetUserDataRequest(), result =>
+        {
+            if (result.Data != null && result.Data.ContainsKey("Sans"))
+            {
+                Sans = result.Data["Sans"].Value + "Ang";
+            }
+            else
+            {
+                SaveUserData(nameof(Sans), Sans);
+            }
+        }, OnError);*/
+    }
 
-	public void SaveUserData(string _key, string _value)
-	{
-		var requset = new UpdateUserDataRequest
-		{
-			Data = new Dictionary<string, string>
-			{
-				{ _key, _value }
-			}
-		};
-		PlayFabClientAPI.UpdateUserData(requset, OnDataSend, OnError);
-	}
+    public void SaveUserData(string _key, string _value)
+    {
+        var requset = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                { _key, _value }
+            }
+        };
+        PlayFabClientAPI.UpdateUserData(requset, OnDataSend, OnError);
+    }
 
-	[ContextMenu(nameof(GetTitleData))]
-	private void GetTitleData()
-	{
-		PlayFabClientAPI.GetTitleData(new GetTitleDataRequest(), result =>
-		{
-			if (result.Data == null || result.Data.Count == 0)
-			{
-				Debug.Log("No TitleData!");
-				return;
-			}
+    [ContextMenu(nameof(GetTitleData))]
+    private void GetTitleData()
+    {
+        PlayFabClientAPI.GetTitleData(new GetTitleDataRequest(), result =>
+            {
+                if (result.Data == null || result.Data.Count == 0)
+                {
+                    Debug.Log("No TitleData!");
+                    return;
+                }
 
-			if (result.Data.ContainsKey("Message"))
-				Debug.Log(result.Data["Message"]);
+                if (result.Data.ContainsKey("Message"))
+                    Debug.Log(result.Data["Message"]);
 
-			if (result.Data.ContainsKey("Multiplier"))
-				Debug.Log(result.Data["Multiplier"]);
-		},
-		OnError);
-	}
+                if (result.Data.ContainsKey("Multiplier"))
+                    Debug.Log(result.Data["Multiplier"]);
+            },
+            OnError);
+    }
 
-	[ContextMenu(nameof(GetTitleNewsData))]
-	private void GetTitleNewsData()
-	{
-		PlayFabClientAPI.GetTitleNews(new GetTitleNewsRequest(),
-		result =>
-		{
-			if (result.News == null || result.News.Count == 0)
-			{
-				Debug.Log("No News!");
-				return;
-			}
+    [ContextMenu(nameof(GetTitleNewsData))]
+    private void GetTitleNewsData()
+    {
+        PlayFabClientAPI.GetTitleNews(new GetTitleNewsRequest(),
+            result =>
+            {
+                if (result.News == null || result.News.Count == 0)
+                {
+                    Debug.Log("No News!");
+                    return;
+                }
 
-			foreach (var item in result.News)
-			{
-				Debug.Log($"{item.Title} : {item.Body}");
-			}
-		},
-		OnError);
-	}
+                foreach (var item in result.News)
+                {
+                    Debug.Log($"{item.Title} : {item.Body}");
+                }
+            },
+            OnError);
+    }
 
-	public void GetVirtualCurrencies()
-	{
-		PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetUserInventorySuccess, OnError);
-	}
-	private void OnGetUserInventorySuccess(GetUserInventoryResult result)
-	{
-		// int angelCoins = result.VirtualCurrency["AC"];
-		// Debug.Log("AngelCoins" + angelCoins);
-		// secondsLeftToRefreshEnergy = result.VirtualCurrencyRechargeTimes["AC"].SecondsToRecharge;
-	}
+    public void GetVirtualCurrencies()
+    {
+        PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetUserInventorySuccess, OnError);
+    }
 
-	public void BuyItem()
-	{
-		var request = new SubtractUserVirtualCurrencyRequest
-		{
-			VirtualCurrency = "AC",
-			Amount = 10
-		};
-		PlayFabClientAPI.SubtractUserVirtualCurrency(request, result =>
-		{
-			Debug.Log("Bought item! " + "itemName");
-		}, OnError);
-	}
+    private void OnGetUserInventorySuccess(GetUserInventoryResult result)
+    {
+        // int angelCoins = result.VirtualCurrency["AC"];
+        // Debug.Log("AngelCoins" + angelCoins);
+        // secondsLeftToRefreshEnergy = result.VirtualCurrencyRechargeTimes["AC"].SecondsToRecharge;
+    }
 
-	public void SavePlayerData()
-	{
-		// List<GameData> gameDatas = new List<GameData>();
+    public void BuyItem()
+    {
+        var request = new SubtractUserVirtualCurrencyRequest
+        {
+            VirtualCurrency = "AC",
+            Amount = 10
+        };
+        PlayFabClientAPI.SubtractUserVirtualCurrency(request, result => { Debug.Log("Bought item! " + "itemName"); },
+            OnError);
+    }
 
-		/*BinaryFormatter bf = new();
-		FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Create);
+    public void SavePlayerData()
+    {
+        // List<GameData> gameDatas = new List<GameData>();
 
-		bf.Serialize(stream, gameData ?? CurGameData);
-		stream.Close();*/
+        /*BinaryFormatter bf = new();
+        FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Create);
 
-		var requset = new UpdateUserDataRequest
-		{
-			Data = new Dictionary<string, string>
-			{
-				{"Player", JsonConvert.SerializeObject(DataManager.Instance.CurGameData) },
-			}
-		};
-		PlayFabClientAPI.UpdateUserData(requset, OnDataSend, OnError);
-	}
+        bf.Serialize(stream, gameData ?? CurGameData);
+        stream.Close();*/
 
-	public void CreateAndSavePlayerData()
-	{
-		DataManager.Instance.CreateNewGameData();
-		SavePlayerData();
-	}
+        var requset = new UpdateUserDataRequest
+        {
+            Data = new Dictionary<string, string>
+            {
+                { "Player", JsonConvert.SerializeObject(DataManager.Instance.CurGameData) },
+            }
+        };
+        PlayFabClientAPI.UpdateUserData(requset, OnDataSend, OnError);
+    }
 
-	public void LoadPlayerData()
-	{
-		PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnPlayerDataRecieved, OnError);
+    public void CreateAndSavePlayerData()
+    {
+        DataManager.Instance.CreateNewGameData();
+        SavePlayerData();
+    }
 
-		/*if (File.Exists(Path.Combine(Application.streamingAssetsPath, "game.wak")))
-		{
-			BinaryFormatter bf = new();
-			FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Open);
+    public void LoadPlayerData()
+    {
+        PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnPlayerDataRecieved, OnError);
 
-			GameData data = bf.Deserialize(stream) as GameData;
+        /*if (File.Exists(Path.Combine(Application.streamingAssetsPath, "game.wak")))
+        {
+            BinaryFormatter bf = new();
+            FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Open);
 
-			stream.Close();
-			return data;
-		}
-		else
-		{
-			Debug.Log("�ش� ��� ������ �������� �ʾ� ���� ����ϴ�. " + Path.Combine(Application.streamingAssetsPath, "game.wak"));
-			BinaryFormatter bf = new();
-			FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Create);
-			bf.Serialize(stream, new GameData());
-			stream.Close();
-			stream = new FileStream(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Open);
-			GameData data = bf.Deserialize(stream) as GameData;
-			stream.Close();
-			return data;
-		}*/
-	}
-	private void OnPlayerDataRecieved(GetUserDataResult result)
-	{
-		Debug.Log("Recieved PlayerData!");
+            GameData data = bf.Deserialize(stream) as GameData;
 
-		if ((result.Data != null) && (result.Data.ContainsKey("Player")) && (result.Data["Player"] != null))
-		{
-			GameData gameData = JsonConvert.DeserializeObject<GameData>(result.Data["Player"].Value);
-			Debug.Log(gameData);
-			if (gameData == null)
-			{
-				CreateAndSavePlayerData();
-				return;
-			}
-			DataManager.Instance.SetGameData(gameData);
-			// List<GameData> gameDatas = JsonConvert.DeserializeObject<List<GameData>>(result.Data["Player"].Value);
-		}
-		else
-		{
-			Debug.Log("CreateAndSavePlayerData");
+            stream.Close();
+            return data;
+        }
+        else
+        {
+            Debug.Log("�ش� ��� ������ �������� �ʾ� ���� ����ϴ�. " + Path.Combine(Application.streamingAssetsPath, "game.wak"));
+            BinaryFormatter bf = new();
+            FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Create);
+            bf.Serialize(stream, new GameData());
+            stream.Close();
+            stream = new FileStream(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Open);
+            GameData data = bf.Deserialize(stream) as GameData;
+            stream.Close();
+            return data;
+        }*/
+    }
 
-			CreateAndSavePlayerData();
-		}
-	}
+    private void OnPlayerDataRecieved(GetUserDataResult result)
+    {
+        Debug.Log("Recieved PlayerData!");
 
-	private void OnDataSend(UpdateUserDataResult result)
-	{
-		Debug.Log("Successful user data send!");
-	}
+        if ((result.Data != null) && (result.Data.ContainsKey("Player")) && (result.Data["Player"] != null))
+        {
+            GameData gameData = JsonConvert.DeserializeObject<GameData>(result.Data["Player"].Value);
+            Debug.Log(gameData);
+            if (gameData == null)
+            {
+                CreateAndSavePlayerData();
+                return;
+            }
 
-	public void CloudScriptTest()
-	{
-		var request = new ExecuteCloudScriptRequest
-		{
-			FunctionName = "hello",
-			FunctionParameter = new
-			{
-				name = Sans
-			}
-		};
-		PlayFabClientAPI.ExecuteCloudScript(request, OnExecuteSuccess, OnError);
-	}
+            DataManager.Instance.SetGameData(gameData);
+            // List<GameData> gameDatas = JsonConvert.DeserializeObject<List<GameData>>(result.Data["Player"].Value);
+        }
+        else
+        {
+            Debug.Log("CreateAndSavePlayerData");
 
-	private void OnExecuteSuccess(ExecuteCloudScriptResult result)
-	{
-		if (result.FunctionResult != null)
-			Debug.Log(result.FunctionResult.ToString());
-	}
+            CreateAndSavePlayerData();
+        }
+    }
 
-	public void SendFeedback(string topic, string message)
-	{
-		var request = new ExecuteCloudScriptRequest
-		{
-			FunctionName = "sendFeedback",
-			FunctionParameter = new
-			{
-				topic,
-				message
-			}
-		};
-		PlayFabClientAPI.ExecuteCloudScript(request, OnExecuteSuccess, OnError);
-	}
+    private void OnDataSend(UpdateUserDataResult result)
+    {
+        Debug.Log("Successful user data send!");
+    }
 
-	private void Update()
-	{
-		/*secondsLeftToRefreshEnergy -= Time.deltaTime;
-		TimeSpan time = TimeSpan.FromSeconds(secondsLeftToRefreshEnergy);
-		// Debug.Log(time.ToString("mm':'ss"));
-		if (secondsLeftToRefreshEnergy < 0)
-			GetVirtualCurrencies();*/
-	}
+    public void CloudScriptTest()
+    {
+        var request = new ExecuteCloudScriptRequest
+        {
+            FunctionName = "hello",
+            FunctionParameter = new
+            {
+                name = "Sans"
+            }
+        };
+        PlayFabClientAPI.ExecuteCloudScript(request, OnExecuteSuccess, OnError);
+    }
 
-	private void OnError(PlayFabError error)
-	{
-		// Debug.Log("Error while logging in/creating account!");
-		Debug.Log($"{nameof(PlayFabManager)} ERROR");
-		Debug.Log(error.GenerateErrorReport());
-	}
+    private void OnExecuteSuccess(ExecuteCloudScriptResult result)
+    {
+        if (result.FunctionResult != null)
+            Debug.Log(result.FunctionResult.ToString());
+    }
+
+    public void SendFeedback(string topic, string message)
+    {
+        var request = new ExecuteCloudScriptRequest
+        {
+            FunctionName = "sendFeedback",
+            FunctionParameter = new
+            {
+                topic,
+                message
+            }
+        };
+        PlayFabClientAPI.ExecuteCloudScript(request, OnExecuteSuccess, OnError);
+    }
+
+    private void Update()
+    {
+        /*secondsLeftToRefreshEnergy -= Time.deltaTime;
+        TimeSpan time = TimeSpan.FromSeconds(secondsLeftToRefreshEnergy);
+        // Debug.Log(time.ToString("mm':'ss"));
+        if (secondsLeftToRefreshEnergy < 0)
+            GetVirtualCurrencies();*/
+    }
+
+    private void OnError(PlayFabError error)
+    {
+        // Debug.Log("Error while logging in/creating account!");
+        Debug.Log($"{nameof(PlayFabManager)} ERROR");
+        Debug.Log(error.GenerateErrorReport());
+    }
 
 #if UNITY_EDITOR
 #else
     // private void OnApplicationQuit() => SavePlayerData();
 #endif
 
-	private void OnApplicationQuit() => SavePlayerData();
+    private void OnApplicationQuit() => SavePlayerData();
 }

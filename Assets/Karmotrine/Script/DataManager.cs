@@ -89,7 +89,9 @@ public class DataManager : MonoBehaviour
     public void SetGameData(GameData gameData)
     {
         this.curGameData = gameData;
-        OnCurGameDataLoad.Invoke();
+        
+        Debug.Log(OnCurGameDataLoad == null);
+        // OnCurGameDataLoad.Invoke();
     }
 
     public Color GetGradeColor(Grade grade) => grade switch
