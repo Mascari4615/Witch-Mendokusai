@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,9 +8,11 @@ public class GoodsAmountUI : MonoBehaviour
 {
     [SerializeField] private IntVariable intVariable;
     [SerializeField] private TextMeshProUGUI text;
-
-    public void UpdateUI()
+    private int curValue;
+    
+    private void LateUpdate()
     {
-        text.text = intVariable.RuntimeValue.ToString();
+        curValue = (int)Mathf.SmoothStep(curValue, intVariable.RuntimeValue, .5f);
+        text.text = curValue.ToString("N0");
     }
 }
