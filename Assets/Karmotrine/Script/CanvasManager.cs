@@ -9,6 +9,7 @@ public class CanvasManager : MonoBehaviour
     {
         Home,
         BookShelf,
+        Inventory,
         PotionCraft
     }
     
