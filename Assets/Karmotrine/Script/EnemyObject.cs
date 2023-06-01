@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -31,6 +32,7 @@ public class EnemyObject : MonoBehaviour
 
     public void ReceiveAttack(int damage)
     {
+        RuntimeManager.PlayOneShot($"event:/Rock");
         curHP = Mathf.Clamp(curHP - damage, 0, int.MaxValue);
         
         hpBarText.text = $"{curHP} / {curEnemy.hp}";
@@ -38,7 +40,7 @@ public class EnemyObject : MonoBehaviour
 
         if (curHP != 0)
             return;
-
+        
         DropLoot();
         clickerStageManager.SpawnEnemy();
     }
