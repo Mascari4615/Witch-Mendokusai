@@ -8,7 +8,7 @@ using FMODUnity;
 public class EquipTooltip : MonoBehaviour
 {
     private readonly WaitForSeconds ws1 = new (1f);
-    private readonly Queue<Item> toolTipStacks = new();
+    private readonly Queue<ItemData> toolTipStacks = new();
     [SerializeField] private GameObject toolTip;
     [SerializeField] private TextMeshProUGUI nameField;
     [SerializeField] private Image image;
@@ -31,9 +31,9 @@ public class EquipTooltip : MonoBehaviour
 
         while (toolTipStacks.Count > 0)
         {
-            Item item = toolTipStacks.Dequeue();
-            nameField.text = item.name;
-            image.sprite = item.sprite;
+            var itemData = toolTipStacks.Dequeue();
+            nameField.text = itemData.Name;
+            image.sprite = itemData.sprite;
             yield return ws1;
         }
         

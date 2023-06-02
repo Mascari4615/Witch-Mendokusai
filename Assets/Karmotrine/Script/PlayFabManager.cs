@@ -290,14 +290,6 @@ public class PlayFabManager : MonoBehaviour
 
     public void SavePlayerData()
     {
-        // List<GameData> gameDatas = new List<GameData>();
-
-        /*BinaryFormatter bf = new();
-        FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Create);
-
-        bf.Serialize(stream, gameData ?? CurGameData);
-        stream.Close();*/
-
         var requset = new UpdateUserDataRequest
         {
             Data = new Dictionary<string, string>
@@ -356,7 +348,7 @@ public class PlayFabManager : MonoBehaviour
                 return;
             }
 
-            DataManager.Instance.SetGameData(gameData);
+            DataManager.Instance.LoadData(gameData);
             // List<GameData> gameDatas = JsonConvert.DeserializeObject<List<GameData>>(result.Data["Player"].Value);
         }
         else
@@ -420,11 +412,4 @@ public class PlayFabManager : MonoBehaviour
         Debug.Log($"{nameof(PlayFabManager)} ERROR");
         Debug.Log(error.GenerateErrorReport());
     }
-
-#if UNITY_EDITOR
-#else
-    // private void OnApplicationQuit() => SavePlayerData();
-#endif
-
-    private void OnApplicationQuit() => SavePlayerData();
 }

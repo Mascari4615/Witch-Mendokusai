@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7594b8abf66eb3c44835feffffce4db5, type: 3}
-  m_Name: Enemy 1
+  m_Script: {fileID: 11500000, guid: 174d297548e42a942b80acfb0cb7718e, type: 3}
+  m_Name: Forest Stage 0
   m_EditorClassIdentifier: 
   ID: 0
-  Name: 
+  name: 
   description: 
   sprite: {fileID: 0}
-  hp: 0
-  Loots:
-  - specialThing: {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
-    percentage: 0
+  Enemies:
+  - specialThing: {fileID: 11400000, guid: a2f2db0ef5f63a64b95ddd943023c650, type: 2}
+    percentage: 100
+  background: {fileID: 21300000, guid: 2847dc0f67feb49b4959b999a9ea4129, type: 3}

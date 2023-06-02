@@ -25,7 +25,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2233538775601197662}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -46,11 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5556df6acc8a264a989c9b166438e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curStageIndex: 0
   itemDataBuffer: {fileID: 11400000, guid: 4d0c33ceef025d74f874ac4a13e4f6ab, type: 2}
-  playerInventory: {fileID: 11400000, guid: a672408e84e5f1e4b99bcdf1debcff43, type: 2}
-  stageDataBuffer: {fileID: 11400000, guid: bf2dd249c1b5c7849a793510285221f5, type: 2}
-  PlayFabManager: {fileID: 2233538775601197659}
+  Inventory: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
+  CaveStageDataBuffer: {fileID: 11400000, guid: bf2dd249c1b5c7849a793510285221f5, type: 2}
+  ForestStageDataBuffer: {fileID: 11400000, guid: 103e6d5470fbefe4c886e7e8139ab5d1, type: 2}
+  AdventureStageDataBuffer: {fileID: 11400000, guid: d2df9fb201f7a2d409a61690532e3c5c, type: 2}
   LocalDisplayName: 
 --- !u!114 &2233538775601197659
 MonoBehaviour:

@@ -9,11 +9,11 @@ using UnityEngine.UI;
 public class EnemyObject : MonoBehaviour
 {
     public bool IsAlive => curHP != 0;
-    [FormerlySerializedAs("playerItemRuntimeSet")] [FormerlySerializedAs("playerItemInventory")] [SerializeField] private PlayerInventory playerInventory;
-    [SerializeField] private ClickerStageManager clickerStageManager;
+    [SerializeField] private Inventory inventory;
+    [SerializeField] private ClickerManager clickerManager;
     private Enemy curEnemy;
     private int curHP;
-    
+
     [SerializeField] private Image hpBar;
     [SerializeField] private TextMeshProUGUI hpBarText;
     [SerializeField] private TextMeshProUGUI nameText;
@@ -23,8 +23,8 @@ public class EnemyObject : MonoBehaviour
     {
         curEnemy = enemy;
         curHP = enemy.hp;
-        
-        nameText.text = enemy.name;
+
+        nameText.text = enemy.Name;
         hpBarText.text = $"{curHP} / {curEnemy.hp}";
         spriteRenderer.sprite = enemy.sprite;
         hpBar.fillAmount = 1;
@@ -34,24 +34,24 @@ public class EnemyObject : MonoBehaviour
     {
         RuntimeManager.PlayOneShot($"event:/Rock");
         curHP = Mathf.Clamp(curHP - damage, 0, int.MaxValue);
-        
+
         hpBarText.text = $"{curHP} / {curEnemy.hp}";
         hpBar.fillAmount = (float)curHP / curEnemy.hp;
 
         if (curHP != 0)
             return;
-        
+
         DropLoot();
-        clickerStageManager.SpawnEnemy();
+        clickerManager.SpawnEnemy();
     }
 
     private void DropLoot()
     {
-        Probability<Item> probability = new();
+        Probability<ItemData> probability = new();
         foreach (var item in curEnemy.Loots)
-            probability.Add(item.specialThing as Item, item.percentage);
+            probability.Add(item.specialThing as ItemData, item.percentage);
 
         var newItem = probability.Get();
-        playerInventory.Add(newItem);
+        inventory.Add(newItem);
     }
 }

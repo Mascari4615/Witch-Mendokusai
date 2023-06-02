@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -69,14 +70,20 @@ public class ToolTipTrigger : MonoBehaviour//, IPointerExitHandler, IPointerEnte
 
     public void Click()
     {
-        if (targetToolTip != null)
-        {
-            if (isSpecialThings)
-                targetToolTip.SetToolTip(specialThing);
-            else
-                targetToolTip.SetToolTip(sprite, header, description);
+        if (targetToolTip == null)
+            return;
+        
+        if (specialThing == null)
+            return;
+        
+        if (sprite == null && header == string.Empty && description == string.Empty)
+            return;
+        
+        if (isSpecialThings)
+            targetToolTip.SetToolTip(specialThing);
+        else
+            targetToolTip.SetToolTip(sprite, header, description);
 
-            targetToolTip.gameObject.SetActive(true);
-        }
+        targetToolTip.gameObject.SetActive(true);
     }
 }

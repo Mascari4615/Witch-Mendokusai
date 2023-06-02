@@ -6,10 +6,15 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-[Serializable] public class GameData
+[Serializable]
+public class GameData
 {
+    public List<ItemDataData> inventoryItems = new List<ItemDataData>();
+
     public int[] itemCount = Enumerable.Repeat(0, 100).ToArray();
     public int[] potionCount = Enumerable.Repeat(0, 100).ToArray();
+
+    public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
 }
 
 public class DataManager : MonoBehaviour
@@ -21,32 +26,32 @@ public class DataManager : MonoBehaviour
             : FindObjectOfType<DataManager>() ?? Instantiate(Resources.Load<DataManager>(nameof(DataManager)));
         private set => instance = value;
     }
+
     private static DataManager instance;
 
     public GameData CurGameData => curGameData;
     private GameData curGameData;
-    
-    public int curStageIndex;
-    
-    [Header("Item")] public ItemDataBuffer itemDataBuffer;
-    public readonly Dictionary<int, Item> ItemDic = new();
-    [FormerlySerializedAs("wgItemInven")] public PlayerInventory playerInventory;
-    private readonly Dictionary<int, Item> commonItemDic = new();
-    private readonly Dictionary<int, Item> unCommonItemDic = new();
-    private readonly Dictionary<int, Item> rareItemDic = new();
-    private readonly Dictionary<int, Item> legendItemDic = new();
-    
-    [Header("Stage")] public StageDataBuffer stageDataBuffer;
-    public readonly Dictionary<int, Stage> stageDic = new();
-    
+
+    [Header("Item")]
+    public ItemDataBuffer itemDataBuffer;
+    public Inventory Inventory;
+    public readonly Dictionary<int, ItemData> ItemDic = new();
+    private readonly Dictionary<int, ItemData> commonItemDic = new();
+    private readonly Dictionary<int, ItemData> unCommonItemDic = new();
+    private readonly Dictionary<int, ItemData> rareItemDic = new();
+    private readonly Dictionary<int, ItemData> legendItemDic = new();
+
+    [Header("Stage")]
+    public StageDataBuffer CaveStageDataBuffer;
+    public StageDataBuffer ForestStageDataBuffer;
+    public StageDataBuffer AdventureStageDataBuffer;
+    public readonly Dictionary<ClickerManager.ClickerType, Stage[]> stageDic = new();
+
     public Action OnCurGameDataLoad;
-
-    public PlayFabManager PlayFabManager;
-
     public string LocalDisplayName = "";
 
-    public readonly Dictionary<string, string[]> diedCommentDic = new();
-    
+    private PlayFabManager playFabManager;
+
     private void Awake()
     {
         if (Instance != this)
@@ -54,12 +59,13 @@ public class DataManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         DontDestroyOnLoad(gameObject);
 
-        foreach (Item item in itemDataBuffer.items)
+        foreach (var item in itemDataBuffer.items)
         {
             ItemDic.Add(item.ID, item);
-            switch (item.grade)
+            switch (item.Grade)
             {
                 case Grade.Common:
                     commonItemDic.Add(item.ID, item);
@@ -73,33 +79,44 @@ public class DataManager : MonoBehaviour
                 case Grade.Legendary:
                     legendItemDic.Add(item.ID, item);
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
-        foreach (Stage stage in stageDataBuffer.items) stageDic.Add(stage.ID, stage);
-        
-        PlayFabManager = GetComponent<PlayFabManager>();
+        stageDic.Add(ClickerManager.ClickerType.Forest, ForestStageDataBuffer.items);
+        stageDic.Add(ClickerManager.ClickerType.Adventure, AdventureStageDataBuffer.items);
+        stageDic.Add(ClickerManager.ClickerType.Cave, CaveStageDataBuffer.items);
+
+        playFabManager = GetComponent<PlayFabManager>();
     }
 
     public void CreateNewGameData()
     {
         curGameData = new GameData();
+        Inventory.InitItems(curGameData.inventoryItems);
     }
 
-    public void SetGameData(GameData gameData)
+    public void SaveData()
     {
-        this.curGameData = gameData;
-        
-        Debug.Log(OnCurGameDataLoad == null);
+        curGameData.inventoryItems = Inventory.GetInventoryData();
+        playFabManager.SavePlayerData();
+    }
+
+    public void LoadData(GameData saveData)
+    {
+        curGameData = saveData;
+        Inventory.InitItems(curGameData.inventoryItems);
+
         // OnCurGameDataLoad.Invoke();
     }
 
     public Color GetGradeColor(Grade grade) => grade switch
     {
         Grade.Common => Color.white,
-        Grade.Uncommon => new(43 / 255f, 123 / 255f, 1),
-        Grade.Rare => new(242 / 255f, 210 / 255f, 0),
-        Grade.Legendary => new(1, 0, 142 / 255f),
+        Grade.Uncommon => new Color(43 / 255f, 123 / 255f, 1),
+        Grade.Rare => new Color(242 / 255f, 210 / 255f, 0),
+        Grade.Legendary => new Color(1, 0, 142 / 255f),
         _ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
     };
 
@@ -114,4 +131,11 @@ public class DataManager : MonoBehaviour
         Grade.Legendary => legendItemDic.ElementAt(Random.Range(0, legendItemDic.Count)).Value.ID,
         _ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
     };
+    
+#if UNITY_EDITOR
+#else
+    // private void OnApplicationQuit() => SaveData();
+#endif
+
+    private void OnApplicationQuit() => SaveData();
 }

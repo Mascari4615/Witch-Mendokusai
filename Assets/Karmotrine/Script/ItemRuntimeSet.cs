@@ -1,33 +1,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ItemRuntimeSet : RunTimeSet<Item>
+public abstract class ItemRuntimeSet : RunTimeSet<ItemData>
 {
     [System.NonSerialized] public Dictionary<int, int> itemCountDic = new();
 
-    public override void Add(Item item)
+    public override void Add(ItemData itemData)
     {
-        if (!Items.Contains(item))
+        if (!Items.Contains(itemData))
         {
-            Items.Add(item);
-            itemCountDic.Add(item.ID, 1);
+            Items.Add(itemData);
+            itemCountDic.Add(itemData.ID, 1);
         }
-        else itemCountDic[item.ID] += 1;
+        else itemCountDic[itemData.ID] += 1;
     }
 
-    public override void Remove(Item item)
+    public override void Remove(ItemData itemData)
     {
-        if (Items.Contains(item))
+        if (Items.Contains(itemData))
         {
-            if (itemCountDic[item.ID] > 1) itemCountDic[item.ID] -= 1;
-            else if (itemCountDic[item.ID] == 1)
+            if (itemCountDic[itemData.ID] > 1) itemCountDic[itemData.ID] -= 1;
+            else if (itemCountDic[itemData.ID] == 1)
             {
-                itemCountDic.Remove(item.ID);
-                Items.Remove(item);
+                itemCountDic.Remove(itemData.ID);
+                Items.Remove(itemData);
             }
-            else Debug.LogWarning($"RunTimeSet<Item> : Item.count�� ������ �� �� ����, {item.name}");
+            else Debug.LogWarning($"RunTimeSet<Item> : Item.count�� ������ �� �� ����, {itemData.Name}");
         }
-        else Debug.LogWarning($"RunTimeSet<Item> : �������� �ʴ� ������ ���� �õ�, {item.name}");
+        else Debug.LogWarning($"RunTimeSet<Item> : �������� �ʴ� ������ ���� �õ�, {itemData.Name}");
     }
 
     public override void Clear()

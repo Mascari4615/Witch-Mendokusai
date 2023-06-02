@@ -3,4 +3,5 @@ using UnityEngine;
 public class Stage : SpecialThing
 {
     public SpecialThingWithPercentage[] Enemies;
+    public Sprite background;
 }

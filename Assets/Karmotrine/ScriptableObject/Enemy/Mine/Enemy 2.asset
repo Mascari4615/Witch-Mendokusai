@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7594b8abf66eb3c44835feffffce4db5, type: 3}
   m_Name: Enemy 2
   m_EditorClassIdentifier: 
-  Id: 0
-  name: 
+  ID: 0
+  Name: 
   description: 
   sprite: {fileID: 0}
+  hp: 0
   Loots:
-  - item: {fileID: 0}
+  - specialThing: {fileID: 11400000, guid: eeed87409dcb3054ba7b5e21d0b93da6, type: 2}
     percentage: 0

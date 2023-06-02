@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Serialization;
 
 public class Slot : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class Slot : MonoBehaviour
     [SerializeField] protected Image image;
     public SpecialThing SpecialThing { get; private set; }
     protected int count = 1;
+    public bool notOnlyOneItem = true;
+    public bool canPlayerSetItem = true;
     [SerializeField] protected TextMeshProUGUI countTextField;
     [SerializeField] protected TextMeshProUGUI priceText;
     [SerializeField] protected TextMeshProUGUI nameText;
@@ -19,6 +22,8 @@ public class Slot : MonoBehaviour
         SpecialThing = specialThing;
         this.count = count;
 
+        toolTipTrigger?.SetToolTip(SpecialThing);
+
         UpdateUI();
     }
 
@@ -26,15 +31,12 @@ public class Slot : MonoBehaviour
     {
         image.sprite = SpecialThing?.sprite;
 
-        if (toolTipTrigger != null)
-            toolTipTrigger.SetToolTip(SpecialThing);
-
         // if (countTextField != null) countTextField.text = DataManager.Instance.wgItemInven.itemCountDic[(SpecialThing as Item).ID].ToString();
         if (countTextField != null)
             countTextField.text = count.ToString();
 
         if (nameText != null)
-            nameText.text = SpecialThing?.name;
+            nameText.text = SpecialThing?.Name;
 
         // if (priceText != null)
         //	  priceText.text = (SpecialThing as HasPrice)?.price.ToString();

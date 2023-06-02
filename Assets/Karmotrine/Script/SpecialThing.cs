@@ -4,7 +4,7 @@ using UnityEngine.Serialization;
 public abstract class SpecialThing : ScriptableObject
 {
     [FormerlySerializedAs("Id")] public int ID;
-    public string name;
+    [FormerlySerializedAs("name")] public string Name;
     public string description;
     public Sprite sprite;
 }

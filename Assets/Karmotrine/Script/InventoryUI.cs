@@ -1,10 +1,11 @@
-using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
-public abstract class InventoryUI<T> : MonoBehaviour
+public class InventoryUI : MonoBehaviour
 {
-    [SerializeField] private RunTimeSet<T> Inventory;
+    [SerializeField] private Inventory inventory;
     [HideInInspector] public List<Slot> slots = new();
 
     private void Awake()
@@ -12,19 +13,20 @@ public abstract class InventoryUI<T> : MonoBehaviour
         slots = GetComponentsInChildren<Slot>().ToList();
     }
 
-    private void OnEnable() => Initialize();
+    private void OnEnable() => UpdateUI();
 
-    public void Initialize()
+    public void UpdateUI()
     {
-        for (int i = 0; i < slots.Count; i++)
+        for (var i = 0; i < slots.Count; i++)
         {
-            if (i < Inventory.Items.Count)
+            if (i < inventory.Capacity)
             {
-                slots[i].SetSlot(Inventory.Items[i] as SpecialThing);
+                slots[i].SetSlot(inventory.Items[i]?.Data);
                 slots[i].gameObject.SetActive(true);
             }
             else
             {
+                slots[i].SetSlot(null);
                 slots[i].gameObject.SetActive(false);
             }
         }

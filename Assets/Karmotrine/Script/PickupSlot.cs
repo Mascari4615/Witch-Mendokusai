@@ -7,23 +7,26 @@ using UnityEngine.EventSystems;
 
 public class PickupSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 {
-    private Camera camera;
     private Slot slot;
 
     private void Awake()
     {
         slot = GetComponent<Slot>();
-        camera = Camera.main;
     }
-    
-    // 마우스 드래그가 시작 됐을 때 발생하는 이벤트
+
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (slot.SpecialThing == null)
+            return;
+
         DragSlot.instance.SetSlot(slot);
     }
-    
+
     public void OnDrag(PointerEventData eventData)
     {
+        if (slot.SpecialThing == null)
+            return;
+
         DragSlot.instance.transform.position = eventData.position;
     }
 
@@ -33,16 +36,39 @@ public class PickupSlot : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDr
         DragSlot.instance.SetSlot(null);
     }
 
+    // DragSlot이 위에 떨어졌을 때
     public void OnDrop(PointerEventData eventData)
     {
-        if (DragSlot.instance.isHoldingSomething)
-            ChangeSlot();
+        if (!DragSlot.instance.isHoldingSomething)
+            return;
+        
+        if (!slot.canPlayerSetItem)
+            return;
+        
+        if (slot.notOnlyOneItem)
+        {
+            // ChangeSlot
+        }
+        else
+        {
+            if (slot.SpecialThing == null)
+            {
+                // DragSlot.HoldingSlot의 Item에서 하나만 가져오기 (빼오기)
+            }
+            else
+            {
+                // slot.SpecialThing을 아이템 인벤토리애 넣기
+                // DragSlot.HoldingSlot의 Item에서 하나만 가져오기 
+            }
+        }
+
+        ChangeSlot();
     }
 
     private void ChangeSlot()
     {
-        SpecialThing _tempItem = slot.SpecialThing;
-        slot.SetSlot(DragSlot.instance.TargetSlot.SpecialThing);
-        DragSlot.instance.TargetSlot.SetSlot(_tempItem);
+        var tempItem = slot.SpecialThing;
+        slot.SetSlot(DragSlot.instance.HoldingSlot.SpecialThing);
+        DragSlot.instance.HoldingSlot.SetSlot(tempItem);
     }
 }
