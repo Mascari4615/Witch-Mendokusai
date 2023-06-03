@@ -15,7 +15,20 @@ public class Inventory : ScriptableObject
 
     public void RegisterInventoryUI(InventoryUI inventoryUI)
     {
-        _inventoryUIs.Add(inventoryUI);
+        try
+        {
+            Debug.Log(_inventoryUIs[0].gameObject);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            _inventoryUIs.Clear();
+            // throw;
+        }
+        finally
+        {
+            _inventoryUIs.Add(inventoryUI);
+        }
     }
 
     public int Capacity { get; private set; }

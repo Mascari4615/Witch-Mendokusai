@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
+using MoreMountains.Feedbacks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -19,6 +20,8 @@ public class EnemyObject : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private SpriteRenderer spriteRenderer;
 
+    [SerializeField] private MMF_Player _mmfPlayer;
+
     public void Init(Enemy enemy)
     {
         curEnemy = enemy;
@@ -32,11 +35,13 @@ public class EnemyObject : MonoBehaviour
 
     public void ReceiveAttack(int damage)
     {
-        RuntimeManager.PlayOneShot($"event:/Rock");
+        // RuntimeManager.PlayOneShot($"event:/Rock");
         curHP = Mathf.Clamp(curHP - damage, 0, int.MaxValue);
 
         hpBarText.text = $"{curHP} / {curEnemy.hp}";
         hpBar.fillAmount = (float)curHP / curEnemy.hp;
+        
+        _mmfPlayer.PlayFeedbacks();
 
         if (curHP != 0)
             return;

@@ -51,4 +51,9 @@ public class ClickerManager : MonoBehaviour
         var newEnemy = probability.Get();
         enemyObject.Init(newEnemy);
     }
+
+    public void Click()
+    {
+        enemyObject.ReceiveAttack(3);
+    }
 }
