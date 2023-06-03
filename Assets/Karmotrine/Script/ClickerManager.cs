@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ClickerManager : MonoBehaviour
 {
-    [SerializeField] private GameObject clickerButton;
+    [SerializeField] private GameObject[] clickerUIs;
     [SerializeField] private EnemyObject[] enemyObjects;
     [SerializeField] private SpriteRenderer background;
     private Stage curStage;
@@ -17,8 +17,9 @@ public class ClickerManager : MonoBehaviour
     {
         var prevClickerType = curClickerType;
         curClickerType = contentType;
-        
-        clickerButton.SetActive(contentType != ContentType.Home);
+
+        foreach (var clickerUI in clickerUIs)
+            clickerUI.SetActive(contentType != ContentType.Home);
 
         if (contentType == ContentType.Home)
             return;

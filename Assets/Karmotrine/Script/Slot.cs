@@ -23,6 +23,7 @@ public class Slot : MonoBehaviour
         toolTipTrigger?.SetToolTip(specialThing);
 
         image.sprite = specialThing?.sprite;
+        image.color = specialThing != null ? Color.white : Color.white * 0;
 
         if (nameText != null)
             nameText.text = specialThing?.Name;
