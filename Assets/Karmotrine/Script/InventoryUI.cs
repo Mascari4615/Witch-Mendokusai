@@ -22,7 +22,7 @@ public class InventoryUI : MonoBehaviour
         inventory.RegisterInventoryUI(this);
     }
 
-    // private void OnEnable() => UpdateUI();
+    private void OnEnable() => UpdateUI();
 
     public void UpdateUI()
     {

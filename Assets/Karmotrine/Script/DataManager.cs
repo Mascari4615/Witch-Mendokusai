@@ -46,7 +46,7 @@ public class DataManager : MonoBehaviour
     public StageDataBuffer CaveStageDataBuffer;
     public StageDataBuffer ForestStageDataBuffer;
     public StageDataBuffer AdventureStageDataBuffer;
-    public readonly Dictionary<ClickerManager.ClickerType, Stage[]> stageDic = new();
+    public readonly Dictionary<ContentType, Stage[]> stageDic = new();
 
     public readonly Dictionary<string, int> craftDic = new();
 
@@ -101,9 +101,9 @@ public class DataManager : MonoBehaviour
             }
         }
 
-        stageDic.Add(ClickerManager.ClickerType.Forest, ForestStageDataBuffer.items);
-        stageDic.Add(ClickerManager.ClickerType.Adventure, AdventureStageDataBuffer.items);
-        stageDic.Add(ClickerManager.ClickerType.Cave, CaveStageDataBuffer.items);
+        stageDic.Add(ContentType.Forest, ForestStageDataBuffer.items);
+        stageDic.Add(ContentType.Adventure, AdventureStageDataBuffer.items);
+        stageDic.Add(ContentType.Cave, CaveStageDataBuffer.items);
 
         playFabManager = GetComponent<PlayFabManager>();
     }

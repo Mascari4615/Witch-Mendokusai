@@ -85,13 +85,13 @@ public class ItemSlot : Slot, IBeginDragHandler, IEndDragHandler, IDragHandler, 
 
             if (sum <= maxAmount)
             {
-                itemA.SetAmount(0);
-                itemB.SetAmount(sum);
+                itemA.SetAmount(sum);
+                itemB.SetAmount(0);
             }
             else
             {
-                itemA.SetAmount(sum - maxAmount);
-                itemB.SetAmount(maxAmount);
+                itemA.SetAmount(maxAmount);
+                itemB.SetAmount(sum - maxAmount);
             }
         }
         // 2. 일반적인 경우 : 슬롯 교체

@@ -18,7 +18,8 @@ public class PotionCraftManager : MonoBehaviour
 
     public void TryCraft()
     {
-        Debug.Log("TryCraft");
+        if (resultSlot.HasItem)
+            return;
 
         var recipeToList = new List<int>();
 
@@ -36,7 +37,7 @@ public class PotionCraftManager : MonoBehaviour
             return;
         var newItem = new Item(DataManager.Instance.ItemDic[DataManager.Instance.craftDic[key]]);
         craftTableInventory.SetItem(0, newItem);
-        
+
         Debug.Log(newItem);
     }
 }

@@ -24,7 +24,8 @@ public class PlayFabManager : MonoBehaviour
         PlayGamesPlatform.DebugLogEnabled = true;
         PlayGamesPlatform.Activate();
 
-        // Login();
+        if (SceneManager.GetActiveScene().buildIndex != 0)
+            Login();
     }
 
     public void Login()
@@ -119,7 +120,7 @@ public class PlayFabManager : MonoBehaviour
             GetAppearance();
             GetTitleData();
             GetVirtualCurrencies();
-            
+
             SceneManager.LoadScene(1);
         }, OnError);
 #endif

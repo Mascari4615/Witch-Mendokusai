@@ -5,26 +5,26 @@ using UnityEngine;
 
 public class ClickerManager : MonoBehaviour
 {
-    public enum ClickerType
-    {
-        Cave,
-        Forest,
-        Adventure,
-        None,
-    }
-    
-    [SerializeField] private EnemyObject enemyObject;
+    [SerializeField] private GameObject clickerButton;
+    [SerializeField] private EnemyObject[] enemyObjects;
     [SerializeField] private SpriteRenderer background;
     private Stage curStage;
-    private ClickerType curClickerType = ClickerType.None;
+    private ContentType curClickerType = ContentType.Home;
 
-    public void OpenClicker(int clickerType) => OpenClicker((ClickerType)clickerType);
-    public void OpenClicker(ClickerType clickerType)
+    private int curClickerIndex => (int)curClickerType - 1;
+    
+    public void OpenClicker(ContentType contentType)
     {
-        if (curClickerType == clickerType)
-            return;
+        var prevClickerType = curClickerType;
+        curClickerType = contentType;
+        
+        clickerButton.SetActive(contentType != ContentType.Home);
 
-        curClickerType = clickerType;
+        if (contentType == ContentType.Home)
+            return;
+        
+        if (prevClickerType == contentType)
+            return;
         
         SetStage();
         SpawnEnemy();
@@ -34,12 +34,12 @@ public class ClickerManager : MonoBehaviour
     {
         int curStageIndex = DataManager.Instance.CurGameData.curStageIndex[(int)curClickerType];
         curStage = DataManager.Instance.stageDic[curClickerType][curStageIndex];
-        background.sprite = curStage.background;
+        // background.sprite = curStage.background;
     }
 
     public void SpawnEnemy()
     {
-        if (enemyObject.IsAlive)
+        if (enemyObjects[curClickerIndex].IsAlive)
         {
             // TODO : Clear Cur Enemy
         }
@@ -49,11 +49,11 @@ public class ClickerManager : MonoBehaviour
             probability.Add(enemy.specialThing as Enemy, enemy.percentage);
 
         var newEnemy = probability.Get();
-        enemyObject.Init(newEnemy);
+        enemyObjects[curClickerIndex].Init(newEnemy);
     }
 
     public void Click()
     {
-        enemyObject.ReceiveAttack(3);
+        enemyObjects[curClickerIndex].ReceiveAttack(3);
     }
 }

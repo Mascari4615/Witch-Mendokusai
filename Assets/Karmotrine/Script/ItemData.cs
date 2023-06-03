@@ -12,7 +12,7 @@ public class ItemData : SpecialThing
     [SerializeField] private Grade grade;
     [SerializeField] private ItemType type;
     [SerializeField] private Recipe[] recipes;
-    [SerializeField] private int maxAmount;
+    [SerializeField] private int maxAmount = 500;
 
     public Item CreateItem()
     {

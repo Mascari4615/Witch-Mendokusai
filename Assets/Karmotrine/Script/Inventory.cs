@@ -240,7 +240,12 @@ public class Inventory : ScriptableObject
     public void UpdateSlot(int index)
     {
         if (!IsValidIndex(index)) return;
-
+        
+        if (_items[index] != null)
+            if (_items[index].Data.IsCountable)
+                if (_items[index].IsEmpty)
+                    _items[index] = null;
+        
         Item item = _items[index];
 
         foreach (var inventoryUI in _inventoryUIs)
@@ -249,20 +254,9 @@ public class Inventory : ScriptableObject
             
             // 1. 아이템이 슬롯에 존재하는 경우
             if (item != null)
-            {
                 inventoryUI.UpdateSlotFilterState(index, item.Data);
-            }
-        }
-
-        // 1-1-1. 수량이 0인 경우, 아이템 제거
-        if (item == null) return;
-        if (!item.Data.IsCountable) return;
-        if (item.IsEmpty)
-        {
-            _items[index] = null;
         }
     }
-
 }
 
 [Serializable]
