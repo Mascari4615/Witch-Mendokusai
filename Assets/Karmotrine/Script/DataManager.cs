@@ -48,7 +48,7 @@ public class DataManager : MonoBehaviour
     public StageDataBuffer AdventureStageDataBuffer;
     public readonly Dictionary<ClickerManager.ClickerType, Stage[]> stageDic = new();
 
-    public readonly Dictionary<List<int>, int> craftDic = new();
+    public readonly Dictionary<string, int> craftDic = new();
 
     public Action OnCurGameDataLoad;
     public string LocalDisplayName = "";
@@ -97,7 +97,7 @@ public class DataManager : MonoBehaviour
                     recipeToList.Add(ingredient.ID);
                 
                 recipeToList.Sort();
-                craftDic.Add(recipeToList, item.ID);
+                craftDic.Add(String.Join(',', recipeToList), item.ID);
             }
         }
 

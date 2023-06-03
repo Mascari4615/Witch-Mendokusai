@@ -211,6 +211,7 @@ public class Inventory : ScriptableObject
             return;
 
         _items[index] = item;
+        UpdateSlot(index);
     }
 
     // OnItemRemove.Raise();

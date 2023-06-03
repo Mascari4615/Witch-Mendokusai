@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -30,10 +31,10 @@ public class PotionCraftManager : MonoBehaviour
         }
 
         recipeToList.Sort();
-
-        if (!DataManager.Instance.craftDic.ContainsKey(recipeToList))
+        var key = String.Join(',', recipeToList);
+        if (!DataManager.Instance.craftDic.ContainsKey(key))
             return;
-        var newItem = new Item(DataManager.Instance.ItemDic[DataManager.Instance.craftDic[recipeToList]]);
+        var newItem = new Item(DataManager.Instance.ItemDic[DataManager.Instance.craftDic[key]]);
         craftTableInventory.SetItem(0, newItem);
         
         Debug.Log(newItem);
