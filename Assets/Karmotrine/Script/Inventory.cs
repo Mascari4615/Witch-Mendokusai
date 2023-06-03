@@ -10,14 +10,21 @@ public class Inventory : ScriptableObject
     [SerializeField] private GameEvent OnItemEquip;
     [SerializeField] private GameEvent OnItemRemove;
     
-    [System.NonSerialized] public Item[] Items;
+    [System.NonSerialized] public Item[] _items;
+    [System.NonSerialized] private List<InventoryUI> _inventoryUIs = new List<InventoryUI>();
+
+    public void RegisterInventoryUI(InventoryUI inventoryUI)
+    {
+        _inventoryUIs.Add(inventoryUI);
+    }
+
     public int Capacity { get; private set; }
     
     private int FindEmptySlotIndex(int startIndex = 0)
     {
         for (int i = startIndex; i < Capacity; i++)
         {
-            if (Items[i] == null)
+            if (_items[i] == null)
                 return i;
         }
 
@@ -28,7 +35,7 @@ public class Inventory : ScriptableObject
     {
         for (int i = startIndex; i < Capacity; i++)
         {
-            var current = Items[i];
+            var current = _items[i];
             if (current == null)
                 continue;
 
@@ -77,7 +84,7 @@ public class Inventory : ScriptableObject
                         // CountableItem ci = Items[index] as CountableItem;
                         // amount = ci.AddAmountAndGetExcess(amount);
 
-                        amount = Items[index].AddAmountAndGetExcess(amount);
+                        amount = _items[index].AddAmountAndGetExcess(amount);
                         
                         UpdateSlot(index);
                     }
@@ -103,7 +110,7 @@ public class Inventory : ScriptableObject
 
                         // 슬롯에 추가
                         // Items[index] = ci;
-                        Items[index] = i;
+                        _items[index] = i;
 
                         // 남은 개수 계산
                         // amount = (amount > ciData.MaxAmount) ? (amount - ciData.MaxAmount) : 0;
@@ -124,7 +131,7 @@ public class Inventory : ScriptableObject
                 if (index != -1)
                 {
                     // 아이템을 생성하여 슬롯에 추가
-                    Items[index] = itemData.CreateItem();
+                    _items[index] = itemData.CreateItem();
                     amount = 0;
 
                     UpdateSlot(index);
@@ -145,7 +152,7 @@ public class Inventory : ScriptableObject
                 }
 
                 // 아이템을 생성하여 슬롯에 추가
-                Items[index] = itemData.CreateItem();
+                _items[index] = itemData.CreateItem();
 
                 UpdateSlot(index);
             }
@@ -157,42 +164,97 @@ public class Inventory : ScriptableObject
         return amount;
     }
 
-    [SerializeField] private GameEvent inventoryChange;
-    private void UpdateSlot(int index)
-    {
-        // ?
-    }
-
-    public void InitItems(List<ItemDataData> savedItems)
+    public void InitItems(List<InventorySlotData> savedItems)
     {
         Capacity = 30;
         var temp = new Item[Capacity];
         foreach (var itemData in savedItems)
             temp[itemData.slotIndex] = new Item(DataManager.Instance.ItemDic[itemData.itemID], itemData.itemAmount);
-        Items = temp;
+        _items = temp;
     }
 
-    public List<ItemDataData> GetInventoryData()
+    public List<InventorySlotData> GetInventoryData()
     {
-        List<ItemDataData> temp = new(Capacity);
-        for (int i = 0; i < Items.Length; i++)
+        List<InventorySlotData> temp = new(Capacity);
+        for (int i = 0; i < _items.Length; i++)
         {
-            if (Items[i] == null)
+            if (_items[i] == null)
                 continue;
             
-            temp.Add(new ItemDataData(i, Items[i]));
+            temp.Add(new InventorySlotData(i, _items[i]));
         }
 
         return temp;
     }
+    private bool IsValidIndex(int index)
+    {
+        return index >= 0 && index < Capacity;
+    }
+    public ItemData GetItemData(int index)
+    {
+        if (!IsValidIndex(index)) return null;
+        if (_items[index] == null) return null;
+
+        return _items[index].Data;
+    }
+    public Item GetItem(int index)
+    {
+        if (!IsValidIndex(index)) return null;
+        if (_items[index] == null) return null;
+
+        return _items[index];
+    }
+
+    public void SetItem(int index, Item item)
+    {
+        if (!IsValidIndex(index))
+            return;
+
+        _items[index] = item;
+    }
 
     // OnItemRemove.Raise();
+    
+    private void UpdateSlot(params int[] indices)
+    {
+        foreach (var i in indices)
+        {
+            UpdateSlot(i);
+        }
+    }
+    
+    public void UpdateSlot(int index)
+    {
+        if (!IsValidIndex(index)) return;
+
+        Item item = _items[index];
+
+        foreach (var inventoryUI in _inventoryUIs)
+        {
+            inventoryUI.UpdateSlotUI(index, item);
+            
+            // 1. 아이템이 슬롯에 존재하는 경우
+            if (item != null)
+            {
+                inventoryUI.UpdateSlotFilterState(index, item.Data);
+            }
+        }
+
+        // 1-1-1. 수량이 0인 경우, 아이템 제거
+        if (item == null) return;
+        if (!item.Data.IsCountable) return;
+        if (item.IsEmpty)
+        {
+            _items[index] = null;
+        }
+    }
+
 }
 
 [Serializable]
-public struct ItemDataData
+public struct InventorySlotData
 {
-    public ItemDataData(int slotIndex, Item item)
+    public InventorySlotData(int slotIndex, Item item)
     {
         this.slotIndex = slotIndex;
         itemID = item.Data.ID;

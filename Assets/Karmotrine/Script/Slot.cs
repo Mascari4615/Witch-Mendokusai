@@ -1,47 +1,36 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.Serialization;
 
 public class Slot : MonoBehaviour
 {
+    public int Index { get; private set; }
+    public Sprite Sprite => image.sprite;
+    public bool HasItem => image.sprite != null;
+
     public ToolTipTrigger toolTipTrigger;
+
     [SerializeField] protected Image image;
-    public SpecialThing SpecialThing { get; private set; }
-    protected int count = 1;
-    public bool notOnlyOneItem = true;
-    public bool canPlayerSetItem = true;
-    [SerializeField] protected TextMeshProUGUI countTextField;
-    [SerializeField] protected TextMeshProUGUI priceText;
     [SerializeField] protected TextMeshProUGUI nameText;
+    [SerializeField] protected TextMeshProUGUI countTextField;
     [SerializeField] protected TextMeshProUGUI descriptionText;
 
-    public virtual void SetSlot(SpecialThing specialThing, int count = 1)
+    public void SetSlotIndex(int index) => Index = index;
+    public virtual void UpdateUI(SpecialThing specialThing, int amount = 1)
     {
-        SpecialThing = specialThing;
-        this.count = count;
+        toolTipTrigger?.SetToolTip(specialThing);
 
-        toolTipTrigger?.SetToolTip(SpecialThing);
-
-        UpdateUI();
-    }
-
-    protected virtual void UpdateUI()
-    {
-        image.sprite = SpecialThing?.sprite;
-
-        // if (countTextField != null) countTextField.text = DataManager.Instance.wgItemInven.itemCountDic[(SpecialThing as Item).ID].ToString();
-        if (countTextField != null)
-            countTextField.text = count.ToString();
+        image.sprite = specialThing?.sprite;
 
         if (nameText != null)
-            nameText.text = SpecialThing?.Name;
-
-        // if (priceText != null)
-        //	  priceText.text = (SpecialThing as HasPrice)?.price.ToString();
+            nameText.text = specialThing?.Name;
+        
+        if (countTextField != null)
+            countTextField.text = HasItem ? amount.ToString() : string.Empty;
 
         if (descriptionText != null)
-            descriptionText.text = SpecialThing?.description;
+            descriptionText.text = specialThing?.description;
     }
 }

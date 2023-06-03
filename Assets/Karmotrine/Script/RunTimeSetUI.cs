@@ -11,6 +11,9 @@ public abstract class RunTimeSetUI<T> : MonoBehaviour
     private void Awake()
     {
         slots = GetComponentsInChildren<Slot>().ToList();
+
+        for (int i = 0; i < slots.Count; i++)
+            slots[i].SetSlotIndex(i);
     }
 
     private void OnEnable() => UpdateUI();
@@ -21,12 +24,12 @@ public abstract class RunTimeSetUI<T> : MonoBehaviour
         {
             if (i < runTimeSet.Items.Count)
             {
-                slots[i].SetSlot(runTimeSet.Items[i] as SpecialThing);
+                slots[i].UpdateUI(runTimeSet.Items[i] as SpecialThing);
                 // slots[i].gameObject.SetActive(true);
             }
             else
             {
-                slots[i].SetSlot(null);
+                slots[i].UpdateUI(null);
                 // slots[i].gameObject.SetActive(false);
             }
         }

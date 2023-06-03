@@ -7,11 +7,11 @@ using UnityEngine.UI;
 
 public class DragSlot : MonoBehaviour
 {
-    public bool isHoldingSomething => holdingSlot != null;
-    public Slot HoldingSlot => holdingSlot;
+    public bool isHoldingSomething => _holdingSlot != null;
+    public ItemSlot HoldingSlot => _holdingSlot;
     
     static public DragSlot instance;
-    private Slot holdingSlot;
+    private ItemSlot _holdingSlot;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Image specialThingImage;
 
@@ -20,14 +20,14 @@ public class DragSlot : MonoBehaviour
         instance = this;
     }
 
-    public void SetSlot(Slot slot)
+    public void SetSlot(ItemSlot slot)
     {
-        holdingSlot = slot;
+        _holdingSlot = slot;
         
         if (slot == null)
             return;
         
-        specialThingImage.sprite = slot.SpecialThing.sprite;
+        specialThingImage.sprite = slot.Sprite;
         SetColor(1);
     }
     

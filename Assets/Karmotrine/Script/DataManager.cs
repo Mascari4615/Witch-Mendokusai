@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 [Serializable]
 public class GameData
 {
-    public List<ItemDataData> inventoryItems = new List<ItemDataData>();
+    public List<InventorySlotData> inventoryItems = new List<InventorySlotData>();
 
     public int[] itemCount = Enumerable.Repeat(0, 100).ToArray();
     public int[] potionCount = Enumerable.Repeat(0, 100).ToArray();
@@ -36,6 +36,7 @@ public class DataManager : MonoBehaviour
     public ItemDataBuffer itemDataBuffer;
     public Inventory Inventory;
     public readonly Dictionary<int, ItemData> ItemDic = new();
+    public readonly Dictionary<int, ItemData> PotionDIc = new();
     private readonly Dictionary<int, ItemData> commonItemDic = new();
     private readonly Dictionary<int, ItemData> unCommonItemDic = new();
     private readonly Dictionary<int, ItemData> rareItemDic = new();
@@ -46,6 +47,8 @@ public class DataManager : MonoBehaviour
     public StageDataBuffer ForestStageDataBuffer;
     public StageDataBuffer AdventureStageDataBuffer;
     public readonly Dictionary<ClickerManager.ClickerType, Stage[]> stageDic = new();
+
+    public readonly Dictionary<List<int>, int> craftDic = new();
 
     public Action OnCurGameDataLoad;
     public string LocalDisplayName = "";
@@ -84,6 +87,20 @@ public class DataManager : MonoBehaviour
             }
         }
 
+        foreach (var item in itemDataBuffer.items)
+        {
+            foreach (var recipe in item.Recipes)
+            {
+                var recipeToList = new List<int>();
+
+                foreach (var ingredient in recipe.ingredients)
+                    recipeToList.Add(ingredient.ID);
+                
+                recipeToList.Sort();
+                craftDic.Add(recipeToList, item.ID);
+            }
+        }
+
         stageDic.Add(ClickerManager.ClickerType.Forest, ForestStageDataBuffer.items);
         stageDic.Add(ClickerManager.ClickerType.Adventure, AdventureStageDataBuffer.items);
         stageDic.Add(ClickerManager.ClickerType.Cave, CaveStageDataBuffer.items);
@@ -99,6 +116,12 @@ public class DataManager : MonoBehaviour
 
     public void SaveData()
     {
+        if (curGameData == null)
+        {
+            Debug.Log("?");
+            return;
+        }
+
         curGameData.inventoryItems = Inventory.GetInventoryData();
         playFabManager.SavePlayerData();
     }

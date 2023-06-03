@@ -223,9 +223,8 @@ GameObject:
   - component: {fileID: 3804310833563014345}
   - component: {fileID: 303906278514802484}
   - component: {fileID: 451694239489095257}
-  - component: {fileID: 4202238354008328933}
   - component: {fileID: 8678552878948442558}
-  - component: {fileID: 4732525087149238274}
+  - component: {fileID: 7967681509669967411}
   m_Layer: 5
   m_Name: ItemSlot
   m_TagString: Untagged
@@ -349,24 +348,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4202238354008328933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6907260733322050985}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 566d8f0d17f8f4b4f8e8aa13033ea0dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toolTipTrigger: {fileID: 8678552878948442558}
-  image: {fileID: 3284377982588290254}
-  countTextField: {fileID: 8790839238283397343}
-  priceText: {fileID: 0}
-  nameText: {fileID: 0}
-  descriptionText: {fileID: 0}
 --- !u!114 &8678552878948442558
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -381,7 +362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetToolTip: {fileID: 0}
   isSpecialThings: 1
---- !u!114 &4732525087149238274
+--- !u!114 &7967681509669967411
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -390,6 +371,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6907260733322050985}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: de5bdefa59222b444972d2c358be61d4, type: 3}
+  m_Script: {fileID: 11500000, guid: e2df6eda1efeb1342a11a30522326724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toolTipTrigger: {fileID: 8678552878948442558}
+  notOnlyOneItem: 1
+  canPlayerSetItem: 1
+  image: {fileID: 3284377982588290254}
+  nameText: {fileID: 0}
+  countTextField: {fileID: 8790839238283397343}
+  descriptionText: {fileID: 0}
