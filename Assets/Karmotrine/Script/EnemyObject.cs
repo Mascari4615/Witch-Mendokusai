@@ -14,7 +14,7 @@ namespace Karmotrine.Script
 
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private MMF_Player mmfPlayer;
-    
+
         protected Enemy curEnemy;
         private int curHP;
 
@@ -26,6 +26,8 @@ namespace Karmotrine.Script
             CanvasManager.Instance.HpBar.UpdateEnemy(enemy, curHP);
             SetHp(enemy.maxHp);
             spriteRenderer.sprite = enemy.sprite;
+            
+            gameObject.SetActive(true);
         }
 
         public void ReceiveAttack(int damage)
@@ -56,6 +58,8 @@ namespace Karmotrine.Script
 
             var newItem = probability.Get();
             inventory.Add(newItem);
+
+            gameObject.SetActive(false);
         }
     }
 }

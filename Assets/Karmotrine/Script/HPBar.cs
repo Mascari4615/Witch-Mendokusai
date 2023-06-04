@@ -20,13 +20,12 @@ public class HPBar : MonoBehaviour
         curEnemy = targetEnemy;
         nameText.text = curEnemy.Name;
 
-        _canvasGroup.alpha = 1;
-
         UpdateUI(curHp);
     }
 
     public void UpdateUI(int curHp)
     {
+        _canvasGroup.alpha = 1;
         hpBarText.text = $"{curHp} / {curEnemy.maxHp}";
         hpBar.fillAmount = (float)curHp / curEnemy.maxHp;
 
@@ -35,5 +34,10 @@ public class HPBar : MonoBehaviour
             if (disableOnDied)
                 _canvasGroup.alpha = 0;
         }
+    }
+
+    public void Disable()
+    {
+        _canvasGroup.alpha = 0;
     }
 }

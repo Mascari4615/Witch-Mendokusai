@@ -118,9 +118,12 @@ public class CaveManager : MonoBehaviour
     private void StartCurStage()
     {
         _camera.Priority = 1000;
-
+        
+        CanvasManager.Instance.HpBar.Disable();
+        
         caveDoll.transform.localPosition = Vector3.zero;
         caveDoll.gameObject.SetActive(true);
+        caveDoll.SetState(CaveDoll.CaveDollState.Idle);
     }
 
     public void Exit()
