@@ -48,7 +48,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDataBuffer: {fileID: 11400000, guid: 4d0c33ceef025d74f874ac4a13e4f6ab, type: 2}
   Inventory: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
-  CaveStageDataBuffer: {fileID: 11400000, guid: bf2dd249c1b5c7849a793510285221f5, type: 2}
+  CaveIdleStageDataBuffer: {fileID: 11400000, guid: bf2dd249c1b5c7849a793510285221f5, type: 2}
+  CaveGameStageDataBuffer: {fileID: 11400000, guid: aa23ef5b8c2630b4a936fdb312e152be, type: 2}
   ForestStageDataBuffer: {fileID: 11400000, guid: 103e6d5470fbefe4c886e7e8139ab5d1, type: 2}
   AdventureStageDataBuffer: {fileID: 11400000, guid: d2df9fb201f7a2d409a61690532e3c5c, type: 2}
   LocalDisplayName: 
@@ -100,7 +101,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -10, y: 10}
+  m_AnchoredPosition: {x: -15, y: 15}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &6066850588109937546
@@ -158,8 +159,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 30
-  m_fontSizeBase: 30
+  m_fontSize: 15
+  m_fontSizeBase: 15
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

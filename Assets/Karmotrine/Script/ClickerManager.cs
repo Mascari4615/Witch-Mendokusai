@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Karmotrine.Script;
 using UnityEngine;
 
 public class ClickerManager : MonoBehaviour
@@ -8,11 +9,18 @@ public class ClickerManager : MonoBehaviour
     [SerializeField] private GameObject[] clickerUIs;
     [SerializeField] private EnemyObject[] enemyObjects;
     [SerializeField] private SpriteRenderer background;
+    
     private Stage curStage;
     private ContentType curClickerType = ContentType.Home;
 
     private int curClickerIndex => (int)curClickerType - 1;
-    
+
+    private void Awake()
+    {
+        foreach (var enemyObject in enemyObjects)
+            enemyObject.OnEnemyDied += SpawnEnemy;
+    }
+
     public void OpenClicker(ContentType contentType)
     {
         var prevClickerType = curClickerType;
@@ -46,7 +54,7 @@ public class ClickerManager : MonoBehaviour
         }
         
         Probability<Enemy> probability = new();
-        foreach (var enemy in curStage.Enemies)
+        foreach (var enemy in curStage.specialThingWithPercentages)
             probability.Add(enemy.specialThing as Enemy, enemy.percentage);
 
         var newEnemy = probability.Get();

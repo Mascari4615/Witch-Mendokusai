@@ -29,7 +29,7 @@ public class ItemEquipMsg : MonoBehaviour
             equipMsgElements[curElementIndex].SetAndPop(itemData);
             equipMsgElements[curElementIndex].transform.SetAsFirstSibling();
             curElementIndex = (curElementIndex + 1) % equipMsgElements.Length;
-            RuntimeManager.PlayOneShot($"event:/Equip");
+            RuntimeManager.PlayOneShot($"event:/SFX/Equip");
             yield return ws01;
         }
     }

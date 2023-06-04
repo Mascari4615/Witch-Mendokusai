@@ -43,14 +43,19 @@ public class DataManager : MonoBehaviour
     private readonly Dictionary<int, ItemData> legendItemDic = new();
 
     [Header("Stage")]
-    public StageDataBuffer CaveStageDataBuffer;
+    public StageDataBuffer CaveIdleStageDataBuffer;
+    public StageDataBuffer CaveGameStageDataBuffer;
     public StageDataBuffer ForestStageDataBuffer;
     public StageDataBuffer AdventureStageDataBuffer;
     public readonly Dictionary<ContentType, Stage[]> stageDic = new();
+    public readonly Dictionary<int, Stage> caveIdleStageDic = new();
+    public readonly Dictionary<int, Stage> caveGameStageDic = new();
 
     public readonly Dictionary<string, int> craftDic = new();
 
     public Action OnCurGameDataLoad;
+    // DataManager.Instance.OnCurGameDataLoad += UpdateVolume;
+
     public string LocalDisplayName = "";
 
     private PlayFabManager playFabManager;
@@ -103,7 +108,12 @@ public class DataManager : MonoBehaviour
 
         stageDic.Add(ContentType.Forest, ForestStageDataBuffer.items);
         stageDic.Add(ContentType.Adventure, AdventureStageDataBuffer.items);
-        stageDic.Add(ContentType.Cave, CaveStageDataBuffer.items);
+        stageDic.Add(ContentType.Cave, CaveIdleStageDataBuffer.items);
+
+        foreach (var caveStageData in CaveIdleStageDataBuffer.items)
+            caveIdleStageDic.Add(caveStageData.ID, caveStageData);
+        foreach (var caveStageData in CaveGameStageDataBuffer.items)
+            caveGameStageDic.Add(caveStageData.ID, caveStageData);
 
         playFabManager = GetComponent<PlayFabManager>();
     }

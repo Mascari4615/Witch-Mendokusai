@@ -1,62 +1,61 @@
-using System.Collections;
-using System.Collections.Generic;
-using FMODUnity;
+using System;
 using MoreMountains.Feedbacks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class EnemyObject : MonoBehaviour
+namespace Karmotrine.Script
 {
-    public bool IsAlive => curHP != 0;
-    [SerializeField] private Inventory inventory;
-    [SerializeField] private ClickerManager clickerManager;
-    private Enemy curEnemy;
-    private int curHP;
-
-    [SerializeField] private Image hpBar;
-    [SerializeField] private TextMeshProUGUI hpBarText;
-    [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private SpriteRenderer spriteRenderer;
-
-    [SerializeField] private MMF_Player _mmfPlayer;
-
-    public void Init(Enemy enemy)
+    public class EnemyObject : MonoBehaviour
     {
-        curEnemy = enemy;
-        curHP = enemy.hp;
+        [SerializeField] private Inventory inventory;
+        public Action OnEnemyDied;
 
-        nameText.text = enemy.Name;
-        hpBarText.text = $"{curHP} / {curEnemy.hp}";
-        spriteRenderer.sprite = enemy.sprite;
-        hpBar.fillAmount = 1;
-    }
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private MMF_Player mmfPlayer;
+    
+        protected Enemy curEnemy;
+        private int curHP;
 
-    public void ReceiveAttack(int damage)
-    {
-        // RuntimeManager.PlayOneShot($"event:/Rock");
-        curHP = Mathf.Clamp(curHP - damage, 0, int.MaxValue);
+        public bool IsAlive => curHP != 0;
 
-        hpBarText.text = $"{curHP} / {curEnemy.hp}";
-        hpBar.fillAmount = (float)curHP / curEnemy.hp;
-        
-        _mmfPlayer.PlayFeedbacks();
+        public virtual void Init(Enemy enemy)
+        {
+            curEnemy = enemy;
+            CanvasManager.Instance.HpBar.UpdateEnemy(enemy, curHP);
+            SetHp(enemy.maxHp);
+            spriteRenderer.sprite = enemy.sprite;
+        }
 
-        if (curHP != 0)
-            return;
+        public void ReceiveAttack(int damage)
+        {
+            SetHp(Mathf.Clamp(curHP - damage, 0, int.MaxValue));
+            mmfPlayer.PlayFeedbacks();
+            if (curHP == 0)
+                Die();
+        }
 
-        DropLoot();
-        clickerManager.SpawnEnemy();
-    }
+        protected void SetHp(int newHp)
+        {
+            curHP = newHp;
+            CanvasManager.Instance.HpBar.UpdateUI(curHP);
+        }
 
-    private void DropLoot()
-    {
-        Probability<ItemData> probability = new();
-        foreach (var item in curEnemy.Loots)
-            probability.Add(item.specialThing as ItemData, item.percentage);
+        protected virtual void Die()
+        {
+            DropLoot();
+            OnEnemyDied?.Invoke();
+        }
 
-        var newItem = probability.Get();
-        inventory.Add(newItem);
+        protected virtual void DropLoot()
+        {
+            Probability<ItemData> probability = new();
+            foreach (var item in curEnemy.Loots)
+                probability.Add(item.specialThing as ItemData, item.percentage);
+
+            var newItem = probability.Get();
+            inventory.Add(newItem);
+        }
     }
 }

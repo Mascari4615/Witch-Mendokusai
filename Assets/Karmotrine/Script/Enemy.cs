@@ -1,7 +1,9 @@
 using UnityEngine;
+using UnityEngine.Serialization;
+
 [CreateAssetMenu(fileName = nameof(Enemy), menuName = "Variable/Enemy")]
 public class Enemy : SpecialThing
 {
-    public int hp;
+    [FormerlySerializedAs("hp")] public int maxHp;
     public SpecialThingWithPercentage[] Loots;
 }

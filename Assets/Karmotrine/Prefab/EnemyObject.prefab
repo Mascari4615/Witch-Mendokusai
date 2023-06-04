@@ -409,7 +409,7 @@ MonoBehaviour:
       Data2: 1124714438
       Data3: -584651102
       Data4: 612485037
-    Path: event:/Rock
+    Path: event:/SFX/Rock
   Event: 
   PlayEvent: 0
   StopEvent: 0
@@ -1129,12 +1129,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inventory: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
-  clickerManager: {fileID: 0}
-  hpBar: {fileID: 0}
-  hpBarText: {fileID: 0}
-  nameText: {fileID: 0}
   spriteRenderer: {fileID: 8055835415836478215}
-  _mmfPlayer: {fileID: 8055835415991487927}
+  mmfPlayer: {fileID: 8055835415991487927}
 --- !u!1 &8055835417284362979
 GameObject:
   m_ObjectHideFlags: 0
@@ -2791,7 +2787,7 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: 08e28f98c220b024a89372c3697cd85c, type: 3}
+    - sprite: {fileID: 21300000, guid: 4090289b14081c74d9929da1e8cd9bb9, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
