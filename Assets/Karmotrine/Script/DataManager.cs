@@ -45,9 +45,9 @@ public class DataManager : Singleton<DataManager>
 
     public string LocalDisplayName = "";
 
-    private PlayFabManager playFabManager;
+    private PlayFabManager _playFabManager;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
@@ -96,7 +96,7 @@ public class DataManager : Singleton<DataManager>
         foreach (var caveStageData in CaveGameStageDataBuffer.items)
             caveGameStageDic.Add(caveStageData.ID, caveStageData);
 
-        playFabManager = GetComponent<PlayFabManager>();
+        _playFabManager = GetComponent<PlayFabManager>();
     }
 
     public void CreateNewGameData()
@@ -114,7 +114,7 @@ public class DataManager : Singleton<DataManager>
         }
 
         curGameData.inventoryItems = Inventory.GetInventoryData();
-        playFabManager.SavePlayerData();
+        _playFabManager.SavePlayerData();
     }
 
     public void LoadData(GameData saveData)
@@ -145,11 +145,6 @@ public class DataManager : Singleton<DataManager>
         Grade.Legendary => legendItemDic.ElementAt(Random.Range(0, legendItemDic.Count)).Value.ID,
         _ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
     };
-
-#if UNITY_EDITOR
-#else
-    // private void OnApplicationQuit() => SaveData();
-#endif
 
     private void OnApplicationQuit() => SaveData();
 }

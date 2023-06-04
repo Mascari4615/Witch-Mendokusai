@@ -19,7 +19,7 @@ public class AudioManager : Singleton<AudioManager>
     private readonly string[] _bgmTitles = { "Happy" };
     private int _i = 0;
 
-    private void Awake()
+    protected override void Awake()
     {
         base.Awake();
 
