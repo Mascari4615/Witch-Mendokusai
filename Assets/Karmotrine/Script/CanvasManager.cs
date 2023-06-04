@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CanvasManager : MonoBehaviour
+public class CanvasManager : Singleton<CanvasManager>
 {
     public enum CanvasType
     {
@@ -14,9 +14,6 @@ public class CanvasManager : MonoBehaviour
         PotionCraft
     }
 
-    public static CanvasManager Instance => instance;
-    private static CanvasManager instance;
-    
     [SerializeField] private GameObject[] canvasList;
     private CanvasType curCanvas = CanvasType.Home;
 
@@ -36,11 +33,6 @@ public class CanvasManager : MonoBehaviour
         {
             canvasList[i].gameObject.SetActive(i == (int)canvasType);
         }
-    }
-
-    private void Awake()
-    {
-        instance = this;
     }
 
     private void Start()

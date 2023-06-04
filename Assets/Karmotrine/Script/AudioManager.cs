@@ -3,23 +3,13 @@ using FMODUnity;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class AudioManager : MonoBehaviour
-{
+public class AudioManager : Singleton<AudioManager>
+{ 
     public enum BusType
     {
         Master,
         BGM,
         SFX
-    }
-    
-    private static AudioManager instance;
-
-    public static AudioManager Instance
-    {
-        get => instance
-            ? instance
-            : FindObjectOfType<AudioManager>() ?? Instantiate(Resources.Load<AudioManager>("Audio_Manager"));
-        private set => instance = value;
     }
 
     private readonly Bus[] _buses = new Bus[3];
@@ -31,14 +21,8 @@ public class AudioManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
+        base.Awake();
 
-        DontDestroyOnLoad(gameObject);
-        
         _buses[0] = RuntimeManager.GetBus("bus:/");
         _buses[1] = RuntimeManager.GetBus("bus:/BGM");
         _buses[2] = RuntimeManager.GetBus("bus:/SFX");
@@ -63,6 +47,7 @@ public class AudioManager : MonoBehaviour
         {
             UpdateVolume();
         }
+
         // TODO : else if (DataManager.Instance.CurGameData.muteOnOutfocus)
         {
             // TODO : 	master.setVolume(0);
@@ -71,12 +56,12 @@ public class AudioManager : MonoBehaviour
         // if (SceneManager.GetActiveScene().buildIndex == 0)
         {
             _bgmEvent.getPlaybackState(out _pbState);
-            
+
             if (_pbState != PLAYBACK_STATE.STOPPED)
                 return;
-            
+
             _i = (_i + 1) % _bgmTitles.Length;
-            
+
             _bgmEvent = RuntimeManager.CreateInstance($"event:/BGM/{_bgmTitles[_i]}");
             _bgmEvent.start();
         }
@@ -90,7 +75,7 @@ public class AudioManager : MonoBehaviour
         _bgmEvent = RuntimeManager.CreateInstance($"event:/BGM/{musicName}");
         _bgmEvent.start();
     }
-    
+
     public float GetVolume(BusType busType)
     {
         var volume = 1f;

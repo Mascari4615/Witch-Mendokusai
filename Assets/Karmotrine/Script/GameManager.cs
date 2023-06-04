@@ -11,31 +11,11 @@ public enum ContentType
     Adventure,
 }
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    public static GameManager Instance
-    {
-        get => instance
-            ? instance
-            : FindObjectOfType<GameManager>() ?? Instantiate(Resources.Load<GameManager>(nameof(GameManager)));
-        private set => instance = value;
-    }
-    private static GameManager instance;
-
     private ContentType _curContent = ContentType.Home;
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private ClickerManager clickerManager;
-
-    private void Awake()
-    {
-        if (Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        DontDestroyOnLoad(gameObject);
-    }
 
     private void Start()
     {

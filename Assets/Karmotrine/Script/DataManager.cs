@@ -11,29 +11,17 @@ public class GameData
 {
     public List<InventorySlotData> inventoryItems = new List<InventorySlotData>();
 
-    public int[] itemCount = Enumerable.Repeat(0, 100).ToArray();
-    public int[] potionCount = Enumerable.Repeat(0, 100).ToArray();
+    public int[] stoneKillCount = Enumerable.Repeat(-1, 1000).ToArray();
 
     public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
 }
 
-public class DataManager : MonoBehaviour
+public class DataManager : Singleton<DataManager>
 {
-    public static DataManager Instance
-    {
-        get => instance
-            ? instance
-            : FindObjectOfType<DataManager>() ?? Instantiate(Resources.Load<DataManager>(nameof(DataManager)));
-        private set => instance = value;
-    }
-
-    private static DataManager instance;
-
     public GameData CurGameData => curGameData;
     private GameData curGameData;
 
-    [Header("Item")]
-    public ItemDataBuffer itemDataBuffer;
+    [Header("Item")] public ItemDataBuffer itemDataBuffer;
     public Inventory Inventory;
     public readonly Dictionary<int, ItemData> ItemDic = new();
     public readonly Dictionary<int, ItemData> PotionDIc = new();
@@ -42,8 +30,7 @@ public class DataManager : MonoBehaviour
     private readonly Dictionary<int, ItemData> rareItemDic = new();
     private readonly Dictionary<int, ItemData> legendItemDic = new();
 
-    [Header("Stage")]
-    public StageDataBuffer CaveIdleStageDataBuffer;
+    [Header("Stage")] public StageDataBuffer CaveIdleStageDataBuffer;
     public StageDataBuffer CaveGameStageDataBuffer;
     public StageDataBuffer ForestStageDataBuffer;
     public StageDataBuffer AdventureStageDataBuffer;
@@ -62,13 +49,7 @@ public class DataManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        DontDestroyOnLoad(gameObject);
+        base.Awake();
 
         foreach (var item in itemDataBuffer.items)
         {
@@ -100,7 +81,7 @@ public class DataManager : MonoBehaviour
 
                 foreach (var ingredient in recipe.ingredients)
                     recipeToList.Add(ingredient.ID);
-                
+
                 recipeToList.Sort();
                 craftDic.Add(String.Join(',', recipeToList), item.ID);
             }
@@ -164,7 +145,7 @@ public class DataManager : MonoBehaviour
         Grade.Legendary => legendItemDic.ElementAt(Random.Range(0, legendItemDic.Count)).Value.ID,
         _ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
     };
-    
+
 #if UNITY_EDITOR
 #else
     // private void OnApplicationQuit() => SaveData();
