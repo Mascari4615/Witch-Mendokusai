@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174d297548e42a942b80acfb0cb7718e, type: 3}
   m_Name: Adventure Stage 2
   m_EditorClassIdentifier: 
-  ID: 2
+  id: 2
   name: 
   description: 
-  sprite: {fileID: 0}
-  Enemies: []
+  thumbnail: {fileID: 0}
+  specialThingWithPercentages:
+  - artifact: {fileID: 11400000, guid: a2f2db0ef5f63a64b95ddd943023c650, type: 2}
+    percentage: 100
   background: {fileID: 21300000, guid: 5acbbec193243484b90fe6917a830b55, type: 3}

@@ -18,32 +18,33 @@ public class GameData
 
 public class DataManager : Singleton<DataManager>
 {
-    public GameData CurGameData => curGameData;
-    private GameData curGameData;
+    public GameData CurGameData { get; private set; }
 
     [Header("Item")] public ItemDataBuffer itemDataBuffer;
-    public Inventory Inventory;
+    public Inventory inventory;
     public readonly Dictionary<int, ItemData> ItemDic = new();
     public readonly Dictionary<int, ItemData> PotionDIc = new();
-    private readonly Dictionary<int, ItemData> commonItemDic = new();
-    private readonly Dictionary<int, ItemData> unCommonItemDic = new();
-    private readonly Dictionary<int, ItemData> rareItemDic = new();
-    private readonly Dictionary<int, ItemData> legendItemDic = new();
+    private readonly Dictionary<int, ItemData> _commonItemDic = new();
+    private readonly Dictionary<int, ItemData> _unCommonItemDic = new();
+    private readonly Dictionary<int, ItemData> _rareItemDic = new();
+    private readonly Dictionary<int, ItemData> _legendItemDic = new();
 
-    [Header("Stage")] public StageDataBuffer CaveIdleStageDataBuffer;
-    public StageDataBuffer CaveGameStageDataBuffer;
-    public StageDataBuffer ForestStageDataBuffer;
-    public StageDataBuffer AdventureStageDataBuffer;
-    public readonly Dictionary<ContentType, Stage[]> stageDic = new();
-    public readonly Dictionary<int, Stage> caveIdleStageDic = new();
-    public readonly Dictionary<int, Stage> caveGameStageDic = new();
+    [Header("Stage")] public StageDataBuffer caveIdleStageDataBuffer;
+    public StageDataBuffer caveGameStageDataBuffer;
+    public StageDataBuffer forestStageDataBuffer;
+    public StageDataBuffer adventureStageDataBuffer;
+    public readonly Dictionary<ContentType, Stage[]> StageDic = new();
+    public readonly Dictionary<int, Stage> CaveIdleStageDic = new();
+    public readonly Dictionary<int, Stage> CaveGameStageDic = new();
 
-    public readonly Dictionary<string, int> craftDic = new();
+    public readonly Dictionary<string, int> CraftDic = new();
 
+    [FormerlySerializedAs("OnCurGameDataLoad")]
     public Action OnCurGameDataLoad;
     // DataManager.Instance.OnCurGameDataLoad += UpdateVolume;
 
-    public string LocalDisplayName = "";
+    [FormerlySerializedAs("LocalDisplayName")]
+    public string localDisplayName = "";
 
     private PlayFabManager _playFabManager;
 
@@ -57,16 +58,16 @@ public class DataManager : Singleton<DataManager>
             switch (item.Grade)
             {
                 case Grade.Common:
-                    commonItemDic.Add(item.ID, item);
+                    _commonItemDic.Add(item.ID, item);
                     break;
                 case Grade.Uncommon:
-                    unCommonItemDic.Add(item.ID, item);
+                    _commonItemDic.Add(item.ID, item);
                     break;
                 case Grade.Rare:
-                    rareItemDic.Add(item.ID, item);
+                    _rareItemDic.Add(item.ID, item);
                     break;
                 case Grade.Legendary:
-                    legendItemDic.Add(item.ID, item);
+                    _legendItemDic.Add(item.ID, item);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -77,50 +78,46 @@ public class DataManager : Singleton<DataManager>
         {
             foreach (var recipe in item.Recipes)
             {
-                var recipeToList = new List<int>();
-
-                foreach (var ingredient in recipe.ingredients)
-                    recipeToList.Add(ingredient.ID);
-
+                var recipeToList = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
                 recipeToList.Sort();
-                craftDic.Add(String.Join(',', recipeToList), item.ID);
+                CraftDic.Add(string.Join(',', recipeToList), item.ID);
             }
         }
 
-        stageDic.Add(ContentType.Forest, ForestStageDataBuffer.items);
-        stageDic.Add(ContentType.Adventure, AdventureStageDataBuffer.items);
-        stageDic.Add(ContentType.Cave, CaveIdleStageDataBuffer.items);
+        StageDic.Add(ContentType.Forest, forestStageDataBuffer.items);
+        StageDic.Add(ContentType.Adventure, adventureStageDataBuffer.items);
+        StageDic.Add(ContentType.Cave, caveIdleStageDataBuffer.items);
 
-        foreach (var caveStageData in CaveIdleStageDataBuffer.items)
-            caveIdleStageDic.Add(caveStageData.ID, caveStageData);
-        foreach (var caveStageData in CaveGameStageDataBuffer.items)
-            caveGameStageDic.Add(caveStageData.ID, caveStageData);
+        foreach (var caveStageData in caveIdleStageDataBuffer.items)
+            CaveIdleStageDic.Add(caveStageData.ID, caveStageData);
+        foreach (var caveStageData in caveGameStageDataBuffer.items)
+            CaveGameStageDic.Add(caveStageData.ID, caveStageData);
 
         _playFabManager = GetComponent<PlayFabManager>();
     }
 
     public void CreateNewGameData()
     {
-        curGameData = new GameData();
-        Inventory.InitItems(curGameData.inventoryItems);
+        CurGameData = new GameData();
+        inventory.InitItems(CurGameData.inventoryItems);
     }
 
     public void SaveData()
     {
-        if (curGameData == null)
+        if (CurGameData == null)
         {
             Debug.Log("?");
             return;
         }
 
-        curGameData.inventoryItems = Inventory.GetInventoryData();
+        CurGameData.inventoryItems = inventory.GetInventoryData();
         _playFabManager.SavePlayerData();
     }
 
     public void LoadData(GameData saveData)
     {
-        curGameData = saveData;
-        Inventory.InitItems(curGameData.inventoryItems);
+        CurGameData = saveData;
+        inventory.InitItems(CurGameData.inventoryItems);
 
         // OnCurGameDataLoad.Invoke();
     }
@@ -139,10 +136,10 @@ public class DataManager : Singleton<DataManager>
 
     public int GetRandomItemID(Grade grade) => grade switch
     {
-        Grade.Common => commonItemDic.ElementAt(Random.Range(0, commonItemDic.Count)).Value.ID,
-        Grade.Uncommon => unCommonItemDic.ElementAt(Random.Range(0, unCommonItemDic.Count)).Value.ID,
-        Grade.Rare => rareItemDic.ElementAt(Random.Range(0, rareItemDic.Count)).Value.ID,
-        Grade.Legendary => legendItemDic.ElementAt(Random.Range(0, legendItemDic.Count)).Value.ID,
+        Grade.Common => _commonItemDic.ElementAt(Random.Range(0, _commonItemDic.Count)).Value.ID,
+        Grade.Uncommon => _unCommonItemDic.ElementAt(Random.Range(0, _unCommonItemDic.Count)).Value.ID,
+        Grade.Rare => _rareItemDic.ElementAt(Random.Range(0, _rareItemDic.Count)).Value.ID,
+        Grade.Legendary => _legendItemDic.ElementAt(Random.Range(0, _legendItemDic.Count)).Value.ID,
         _ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
     };
 

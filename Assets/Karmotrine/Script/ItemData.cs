@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = nameof(ItemData), menuName = "Variable/ItemData")]
-public class ItemData : SpecialThing
+public class ItemData : Artifact
 {
     public Grade Grade => grade;
     public ItemType Type => type;

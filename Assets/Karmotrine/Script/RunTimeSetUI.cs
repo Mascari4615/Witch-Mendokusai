@@ -24,7 +24,7 @@ public abstract class RunTimeSetUI<T> : MonoBehaviour
         {
             if (i < runTimeSet.Items.Count)
             {
-                slots[i].UpdateUI(runTimeSet.Items[i] as SpecialThing);
+                slots[i].UpdateUI(runTimeSet.Items[i] as Artifact);
                 // slots[i].gameObject.SetActive(true);
             }
             else

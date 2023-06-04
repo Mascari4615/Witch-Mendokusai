@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174d297548e42a942b80acfb0cb7718e, type: 3}
   m_Name: Forest Stage 0
   m_EditorClassIdentifier: 
-  ID: 0
+  id: 0
   name: 
   description: 
-  sprite: {fileID: 0}
-  Enemies:
-  - specialThing: {fileID: 11400000, guid: a2f2db0ef5f63a64b95ddd943023c650, type: 2}
+  thumbnail: {fileID: 0}
+  specialThingWithPercentages:
+  - artifact: {fileID: 11400000, guid: a2f2db0ef5f63a64b95ddd943023c650, type: 2}
     percentage: 100
-  background: {fileID: 21300000, guid: 2847dc0f67feb49b4959b999a9ea4129, type: 3}
+  background: {fileID: 0}

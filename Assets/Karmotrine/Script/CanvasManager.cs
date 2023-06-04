@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CanvasManager : Singleton<CanvasManager>
@@ -15,21 +16,21 @@ public class CanvasManager : Singleton<CanvasManager>
     }
 
     [SerializeField] private GameObject[] canvasList;
-    private CanvasType curCanvas = CanvasType.Home;
+    private CanvasType _curCanvas = CanvasType.Home;
 
     [SerializeField] private Slider masterVolumeSlider;
     [SerializeField] private Slider bgmVolumeSlider;
     [SerializeField] private Slider sfxVolumeSlider;
 
-    [SerializeField] private HPBar _hpBar;
-    public HPBar HpBar => _hpBar;
+    [SerializeField] private HPBar hpBar;
+    public HPBar HpBar => hpBar;
 
     public void OpenCanvas(int canvasType) => OpenCanvas((CanvasType)canvasType);
     public void OpenCanvas(CanvasType canvasType)
     {
-        curCanvas = canvasType;
+        _curCanvas = canvasType;
 
-        for (int i = 0; i < canvasList.Length; i++)
+        for (var i = 0; i < canvasList.Length; i++)
         {
             canvasList[i].gameObject.SetActive(i == (int)canvasType);
         }

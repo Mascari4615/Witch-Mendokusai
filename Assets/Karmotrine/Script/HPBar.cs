@@ -2,42 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class HPBar : MonoBehaviour
 {
     [SerializeField] private Image hpBar;
-    [SerializeField] private CanvasGroup _canvasGroup;
+    [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TextMeshProUGUI hpBarText;
     [SerializeField] private TextMeshProUGUI nameText;
 
     [SerializeField] private bool disableOnDied = false;
 
-    private Enemy curEnemy;
+    private Enemy _curEnemy;
 
     public void UpdateEnemy(Enemy targetEnemy, int curHp)
     {
-        curEnemy = targetEnemy;
-        nameText.text = curEnemy.Name;
+        _curEnemy = targetEnemy;
+        nameText.text = _curEnemy.Name;
 
         UpdateUI(curHp);
     }
 
     public void UpdateUI(int curHp)
     {
-        _canvasGroup.alpha = 1;
-        hpBarText.text = $"{curHp} / {curEnemy.maxHp}";
-        hpBar.fillAmount = (float)curHp / curEnemy.maxHp;
+        canvasGroup.alpha = 1;
+        hpBarText.text = $"{curHp} / {_curEnemy.MaxHp}";
+        hpBar.fillAmount = (float)curHp / _curEnemy.MaxHp;
 
-        if (curHp == 0)
-        {
-            if (disableOnDied)
-                _canvasGroup.alpha = 0;
-        }
+        if (curHp != 0)
+            return;
+        
+        if (disableOnDied)
+            canvasGroup.alpha = 0;
     }
 
     public void Disable()
     {
-        _canvasGroup.alpha = 0;
+        canvasGroup.alpha = 0;
     }
 }

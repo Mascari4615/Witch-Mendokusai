@@ -9,8 +9,8 @@ public class ToolTip : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionField;
     [SerializeField] private TextMeshProUGUI gradeText;
 
-    public void SetToolTip(SpecialThing specialThing) =>
-        SetToolTip(specialThing.sprite, specialThing.name, specialThing.description);
+    public void SetToolTip(Artifact artifact) =>
+        SetToolTip(artifact.Thumbnail, artifact.Name, artifact.Description);
 
     public void SetToolTip(Sprite sprite, string header, string description)
     {

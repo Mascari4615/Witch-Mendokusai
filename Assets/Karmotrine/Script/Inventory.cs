@@ -1,17 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Karmotrine.Script;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
 public class Inventory : ScriptableObject
 {
-    [SerializeField] private ItemVariable LastEquippedItem;
-    [SerializeField] private GameEvent OnItemEquip;
-    [SerializeField] private GameEvent OnItemRemove;
-    
-    [System.NonSerialized] public Item[] _items;
-    [System.NonSerialized] private List<InventoryUI> _inventoryUIs = new List<InventoryUI>();
+    [SerializeField] private ItemVariable lastEquippedItem;
+    [SerializeField] private GameEvent onItemEquip;
+    [SerializeField] private GameEvent onItemRemove;
+
+    [field: System.NonSerialized] public Item[] Items { get; private set; }
+    [System.NonSerialized] private readonly List<InventoryUI> _inventoryUIs = new List<InventoryUI>();
 
     public void RegisterInventoryUI(InventoryUI inventoryUI)
     {
@@ -32,12 +34,12 @@ public class Inventory : ScriptableObject
     }
 
     public int Capacity { get; private set; }
-    
+
     private int FindEmptySlotIndex(int startIndex = 0)
     {
-        for (int i = startIndex; i < Capacity; i++)
+        for (var i = startIndex; i < Capacity; i++)
         {
-            if (_items[i] == null)
+            if (Items[i] == null)
                 return i;
         }
 
@@ -46,18 +48,18 @@ public class Inventory : ScriptableObject
 
     private int FindItemSlotIndex(ItemData target, int startIndex = 0)
     {
-        for (int i = startIndex; i < Capacity; i++)
+        for (var i = startIndex; i < Capacity; i++)
         {
-            var current = _items[i];
+            var current = Items[i];
             if (current == null)
                 continue;
 
             // 아이템 종류 일치, 개수 여유 확인
-            if (current.Data == target && current is Item ci)
-            {
-                if (!ci.IsMax)
-                    return i;
-            }
+            if (current.Data != target)
+                continue;
+
+            if (!current.IsMax)
+                return i;
         }
 
         return -1;
@@ -75,7 +77,7 @@ public class Inventory : ScriptableObject
         // if (itemData is CountableItemData ciData)
         if (itemData.IsCountable)
         {
-            bool findNextCountable = true;
+            var findNextCountable = true;
             index = -1;
 
             while (amount > 0)
@@ -97,8 +99,8 @@ public class Inventory : ScriptableObject
                         // CountableItem ci = Items[index] as CountableItem;
                         // amount = ci.AddAmountAndGetExcess(amount);
 
-                        amount = _items[index].AddAmountAndGetExcess(amount);
-                        
+                        amount = Items[index].AddAmountAndGetExcess(amount);
+
                         UpdateSlot(index);
                     }
                 }
@@ -118,12 +120,12 @@ public class Inventory : ScriptableObject
                         // 새로운 아이템 생성
                         // CountableItem ci = ciData.CreateItem() as CountableItem;
                         // ci.SetAmount(amount);
-                        Item i = itemData.CreateItem();
+                        var i = itemData.CreateItem();
                         i.SetAmount(amount);
 
                         // 슬롯에 추가
                         // Items[index] = ci;
-                        _items[index] = i;
+                        Items[index] = i;
 
                         // 남은 개수 계산
                         // amount = (amount > ciData.MaxAmount) ? (amount - ciData.MaxAmount) : 0;
@@ -144,7 +146,7 @@ public class Inventory : ScriptableObject
                 if (index != -1)
                 {
                     // 아이템을 생성하여 슬롯에 추가
-                    _items[index] = itemData.CreateItem();
+                    Items[index] = itemData.CreateItem();
                     amount = 0;
 
                     UpdateSlot(index);
@@ -165,15 +167,15 @@ public class Inventory : ScriptableObject
                 }
 
                 // 아이템을 생성하여 슬롯에 추가
-                _items[index] = itemData.CreateItem();
+                Items[index] = itemData.CreateItem();
 
                 UpdateSlot(index);
             }
         }
-        
-        LastEquippedItem.RuntimeValue = itemData;
-        OnItemEquip.Raise();
-        
+
+        lastEquippedItem.RuntimeValue = itemData;
+        onItemEquip.Raise();
+
         return amount;
     }
 
@@ -183,39 +185,38 @@ public class Inventory : ScriptableObject
         var temp = new Item[Capacity];
         foreach (var itemData in savedItems)
             temp[itemData.slotIndex] = new Item(DataManager.Instance.ItemDic[itemData.itemID], itemData.itemAmount);
-        _items = temp;
+        Items = temp;
     }
 
     public List<InventorySlotData> GetInventoryData()
     {
         List<InventorySlotData> temp = new(Capacity);
-        for (int i = 0; i < _items.Length; i++)
+        for (var i = 0; i < Items.Length; i++)
         {
-            if (_items[i] == null)
+            if (Items[i] == null)
                 continue;
-            
-            temp.Add(new InventorySlotData(i, _items[i]));
+
+            temp.Add(new InventorySlotData(i, Items[i]));
         }
 
         return temp;
     }
+
     private bool IsValidIndex(int index)
     {
         return index >= 0 && index < Capacity;
     }
+
     public ItemData GetItemData(int index)
     {
         if (!IsValidIndex(index)) return null;
-        if (_items[index] == null) return null;
-
-        return _items[index].Data;
+        return Items[index] == null ? null : Items[index].Data;
     }
+
     public Item GetItem(int index)
     {
         if (!IsValidIndex(index)) return null;
-        if (_items[index] == null) return null;
-
-        return _items[index];
+        return Items[index] ?? null;
     }
 
     public void SetItem(int index, Item item)
@@ -223,12 +224,12 @@ public class Inventory : ScriptableObject
         if (!IsValidIndex(index))
             return;
 
-        _items[index] = item;
+        Items[index] = item;
         UpdateSlot(index);
     }
 
     // OnItemRemove.Raise();
-    
+
     private void UpdateSlot(params int[] indices)
     {
         foreach (var i in indices)
@@ -236,22 +237,22 @@ public class Inventory : ScriptableObject
             UpdateSlot(i);
         }
     }
-    
+
     public void UpdateSlot(int index)
     {
         if (!IsValidIndex(index)) return;
-        
-        if (_items[index] != null)
-            if (_items[index].Data.IsCountable)
-                if (_items[index].IsEmpty)
-                    _items[index] = null;
-        
-        Item item = _items[index];
+
+        if (Items[index] != null)
+            if (Items[index].Data.IsCountable)
+                if (Items[index].IsEmpty)
+                    Items[index] = null;
+
+        var item = Items[index];
 
         foreach (var inventoryUI in _inventoryUIs)
         {
             inventoryUI.UpdateSlotUI(index, item);
-            
+
             // 1. 아이템이 슬롯에 존재하는 경우
             if (item != null)
                 inventoryUI.UpdateSlotFilterState(index, item.Data);
@@ -268,7 +269,7 @@ public struct InventorySlotData
         itemID = item.Data.ID;
         itemAmount = item.Amount;
     }
-    
+
     public int slotIndex;
     public int itemID;
     public int itemAmount;

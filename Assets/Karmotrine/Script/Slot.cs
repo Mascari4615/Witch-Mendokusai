@@ -18,20 +18,20 @@ public class Slot : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI descriptionText;
 
     public void SetSlotIndex(int index) => Index = index;
-    public virtual void UpdateUI(SpecialThing specialThing, int amount = 1)
+    public virtual void UpdateUI(Artifact artifact, int amount = 1)
     {
-        toolTipTrigger?.SetToolTip(specialThing);
+        toolTipTrigger?.SetToolTip(artifact);
 
-        image.sprite = specialThing?.sprite;
-        image.color = specialThing != null ? Color.white : Color.white * 0;
+        image.sprite = artifact?.Thumbnail;
+        image.color = artifact != null ? Color.white : Color.white * 0;
 
         if (nameText != null)
-            nameText.text = specialThing?.Name;
+            nameText.text = artifact?.Name;
         
         if (countTextField != null)
             countTextField.text = HasItem ? amount.ToString() : string.Empty;
 
         if (descriptionText != null)
-            descriptionText.text = specialThing?.description;
+            descriptionText.text = artifact?.Description;
     }
 }

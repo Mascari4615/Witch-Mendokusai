@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeebad81cf1c0aa47905b14bff6d7577, type: 3}
   m_Name: GoldPerSec
   m_EditorClassIdentifier: 
-  InitialValue: 0
-  GameEvent: {fileID: 11400000, guid: 9529281a04f6b16439036db283988be1, type: 2}
+  initialValue: 1
+  gameEvent: {fileID: 0}

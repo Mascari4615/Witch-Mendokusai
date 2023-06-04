@@ -106,7 +106,7 @@ public class PlayFabManager : MonoBehaviour
 
             if (name != null)
             {
-                DataManager.Instance.LocalDisplayName = name;
+                DataManager.Instance.localDisplayName = name;
                 // TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
                 SubmitNickname("Temp");
             }
@@ -137,7 +137,7 @@ public class PlayFabManager : MonoBehaviour
         {
             Debug.Log("Updated display name!");
 
-            DataManager.Instance.LocalDisplayName = result.DisplayName;
+            DataManager.Instance.localDisplayName = result.DisplayName;
             // TODO : MainMenuManager.Instance.UpdateNickNameUI(result.DisplayName);
         }, OnError);
     }

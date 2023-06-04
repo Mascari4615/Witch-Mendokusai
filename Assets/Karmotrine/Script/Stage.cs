@@ -2,8 +2,11 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = nameof(Stage), menuName = "Variable/Stage")]
-public class Stage : SpecialThing
+public class Stage : Artifact
 {
-    [FormerlySerializedAs("Enemies")] public SpecialThingWithPercentage[] specialThingWithPercentages;
-    public Sprite background;
+    public ArtifactWithPercentage[] SpecialThingWithPercentages => specialThingWithPercentages;
+    public Sprite Background => background;
+
+    [SerializeField] private ArtifactWithPercentage[] specialThingWithPercentages;
+    [SerializeField] private Sprite background;
 }

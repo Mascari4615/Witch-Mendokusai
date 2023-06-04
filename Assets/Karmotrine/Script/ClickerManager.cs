@@ -10,10 +10,10 @@ public class ClickerManager : MonoBehaviour
     [SerializeField] private EnemyObject[] enemyObjects;
     [SerializeField] private SpriteRenderer background;
     
-    private Stage curStage;
-    private ContentType curClickerType = ContentType.Home;
+    private Stage _curStage;
+    private ContentType _curClickerType = ContentType.Home;
 
-    private int curClickerIndex => (int)curClickerType - 1;
+    private int CurClickerIndex => (int)_curClickerType - 1;
 
     private void Awake()
     {
@@ -23,8 +23,8 @@ public class ClickerManager : MonoBehaviour
 
     public void OpenClicker(ContentType contentType)
     {
-        var prevClickerType = curClickerType;
-        curClickerType = contentType;
+        var prevClickerType = _curClickerType;
+        _curClickerType = contentType;
 
         foreach (var clickerUI in clickerUIs)
             clickerUI.SetActive(contentType != ContentType.Home);
@@ -41,28 +41,28 @@ public class ClickerManager : MonoBehaviour
 
     public void SetStage()
     {
-        int curStageIndex = DataManager.Instance.CurGameData.curStageIndex[(int)curClickerType];
-        curStage = DataManager.Instance.stageDic[curClickerType][curStageIndex];
+        var curStageIndex = DataManager.Instance.CurGameData.curStageIndex[(int)_curClickerType];
+        _curStage = DataManager.Instance.StageDic[_curClickerType][curStageIndex];
         // background.sprite = curStage.background;
     }
 
     public void SpawnEnemy()
     {
-        if (enemyObjects[curClickerIndex].IsAlive)
+        if (enemyObjects[CurClickerIndex].IsAlive)
         {
             // TODO : Clear Cur Enemy
         }
         
         Probability<Enemy> probability = new();
-        foreach (var enemy in curStage.specialThingWithPercentages)
-            probability.Add(enemy.specialThing as Enemy, enemy.percentage);
+        foreach (var enemy in _curStage.SpecialThingWithPercentages)
+            probability.Add(enemy.Artifact as Enemy, enemy.Percentage);
 
         var newEnemy = probability.Get();
-        enemyObjects[curClickerIndex].Init(newEnemy);
+        enemyObjects[CurClickerIndex].Init(newEnemy);
     }
 
     public void Click()
     {
-        enemyObjects[curClickerIndex].ReceiveAttack(3);
+        enemyObjects[CurClickerIndex].ReceiveAttack(3);
     }
 }

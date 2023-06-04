@@ -1,24 +1,22 @@
+using Karmotrine.Script;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class CustomVariable<T> : ScriptableObject, ISerializationCallbackReceiver
 {
-    [SerializeField] private T InitialValue;
+    [SerializeField] private T initialValue;
     public T RuntimeValue
     {
-        get
-        {
-            return runtimeValue;
-        }
+        get => _runtimeValue;
         set
         {
-            runtimeValue = value;
-            if (GameEvent is not null)
-                GameEvent.Raise();
+            _runtimeValue = value;
+            gameEvent?.Raise();
         }
     }
-    [System.NonSerialized] private T runtimeValue;
-    [SerializeField] private GameEvent GameEvent;
+    [System.NonSerialized] private T _runtimeValue;
+    [SerializeField] private GameEvent gameEvent;
 
-    public void OnAfterDeserialize() { RuntimeValue = InitialValue; }
+    public void OnAfterDeserialize() { RuntimeValue = initialValue; }
     public void OnBeforeSerialize() { }
 }

@@ -13,7 +13,7 @@ public class StoneObject : EnemyObject
 
     public override void Init(Enemy enemy)
     {
-        _life = ((StoneData)enemy).life;
+        _life = ((StoneData)enemy).Life;
         base.Init(enemy);
     }
 
@@ -24,6 +24,6 @@ public class StoneObject : EnemyObject
         if (_life == 0)
             base.Die();
         else
-            SetHp(curEnemy.maxHp);
+            SetHp(CurEnemy.MaxHp);
     }
 }

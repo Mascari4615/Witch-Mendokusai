@@ -6,7 +6,7 @@ public class ToolTipTrigger : MonoBehaviour//, IPointerExitHandler, IPointerEnte
 {
     [SerializeField] private ToolTip targetToolTip;
     [SerializeField] private bool isSpecialThings = true;
-    private SpecialThing specialThing;
+    private Artifact _artifact;
 
     private Sprite sprite;
     private string header;
@@ -14,8 +14,8 @@ public class ToolTipTrigger : MonoBehaviour//, IPointerExitHandler, IPointerEnte
 
     private bool isShowingThis = false;
 
-    public void SetToolTip(SpecialThing _specialThing) =>
-        specialThing = _specialThing;
+    public void SetToolTip(Artifact artifact) =>
+        _artifact = artifact;
 
     public void SetToolTip(Sprite _sprite, string _name, string _description)
     {
@@ -73,14 +73,14 @@ public class ToolTipTrigger : MonoBehaviour//, IPointerExitHandler, IPointerEnte
         if (targetToolTip == null)
             return;
         
-        if (specialThing == null)
+        if (_artifact == null)
             return;
         
         if (sprite == null && header == string.Empty && description == string.Empty)
             return;
         
         if (isSpecialThings)
-            targetToolTip.SetToolTip(specialThing);
+            targetToolTip.SetToolTip(_artifact);
         else
             targetToolTip.SetToolTip(sprite, header, description);
 

@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 407b301529499e04eb8cd38eab71fe92, type: 3}
   m_Name: Inventory
   m_EditorClassIdentifier: 
-  LastEquippedItem: {fileID: 11400000, guid: 6a7cb1e0ea5550d43bcc42699083f84d, type: 2}
-  OnItemEquip: {fileID: 11400000, guid: 10f0d3d758811034c9299a3806d8b285, type: 2}
-  OnItemRemove: {fileID: 0}
-  inventoryChange: {fileID: 11400000, guid: 10f0d3d758811034c9299a3806d8b285, type: 2}
+  lastEquippedItem: {fileID: 11400000, guid: 6a7cb1e0ea5550d43bcc42699083f84d, type: 2}
+  onItemEquip: {fileID: 11400000, guid: 10f0d3d758811034c9299a3806d8b285, type: 2}
+  onItemRemove: {fileID: 0}

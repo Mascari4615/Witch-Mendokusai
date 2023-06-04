@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Karmotrine;
+using Karmotrine.Script;
 using UnityEngine;
 
 public class UpgradeManager : MonoBehaviour

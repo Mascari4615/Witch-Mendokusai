@@ -6,5 +6,6 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = nameof(StoneData), menuName = "Variable/StoneData")]
 public class StoneData : Enemy
 {
-    public int life;
+    public int Life => life;
+    [SerializeField] private int life;
 }

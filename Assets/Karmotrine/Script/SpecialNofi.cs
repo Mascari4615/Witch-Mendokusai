@@ -33,7 +33,7 @@ public class SpecialNofi : MonoBehaviour
         {
             var itemData = toolTipStacks.Dequeue();
             nameField.text = itemData.Name;
-            image.sprite = itemData.sprite;
+            image.sprite = itemData.Thumbnail;
             yield return ws1;
         }
         

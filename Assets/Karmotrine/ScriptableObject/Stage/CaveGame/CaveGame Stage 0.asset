@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 174d297548e42a942b80acfb0cb7718e, type: 3}
   m_Name: CaveGame Stage 0
   m_EditorClassIdentifier: 
-  ID: 0
-  Name: 
+  id: 0
+  name: 
   description: 
-  sprite: {fileID: 21300000, guid: 1dbb32844fe958247b3bd7594c2e84d4, type: 3}
+  thumbnail: {fileID: 0}
   specialThingWithPercentages:
-  - specialThing: {fileID: 11400000, guid: 274623c794fa31d43aa85f546ea78e6f, type: 2}
+  - artifact: {fileID: 11400000, guid: 274623c794fa31d43aa85f546ea78e6f, type: 2}
     percentage: 80
-  - specialThing: {fileID: 11400000, guid: f597ae8b97af5504bbb983750140f5c1, type: 2}
+  - artifact: {fileID: 11400000, guid: f597ae8b97af5504bbb983750140f5c1, type: 2}
     percentage: 20
   background: {fileID: 21300000, guid: 1dbb32844fe958247b3bd7594c2e84d4, type: 3}

@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f70b42faa188b4b4087cc14509e5411f, type: 3}
   m_Name: StoneData 0
   m_EditorClassIdentifier: 
-  ID: 0
-  Name: "\uC774\uB984"
+  id: 0
+  name: 
   description: "\uC124\uBA85"
-  sprite: {fileID: 21300000, guid: 08e28f98c220b024a89372c3697cd85c, type: 3}
+  thumbnail: {fileID: 21300000, guid: 08e28f98c220b024a89372c3697cd85c, type: 3}
   maxHp: 5
-  Loots:
-  - specialThing: {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
+  loots:
+  - artifact: {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
     percentage: 100
   life: 3

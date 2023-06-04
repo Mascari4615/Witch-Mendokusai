@@ -33,9 +33,9 @@ public class PotionCraftManager : MonoBehaviour
 
         recipeToList.Sort();
         var key = String.Join(',', recipeToList);
-        if (!DataManager.Instance.craftDic.ContainsKey(key))
+        if (!DataManager.Instance.CraftDic.ContainsKey(key))
             return;
-        var newItem = new Item(DataManager.Instance.ItemDic[DataManager.Instance.craftDic[key]]);
+        var newItem = new Item(DataManager.Instance.ItemDic[DataManager.Instance.CraftDic[key]]);
         craftTableInventory.SetItem(0, newItem);
 
         Debug.Log(newItem);

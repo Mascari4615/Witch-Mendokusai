@@ -47,12 +47,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemDataBuffer: {fileID: 11400000, guid: 4d0c33ceef025d74f874ac4a13e4f6ab, type: 2}
-  Inventory: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
-  CaveIdleStageDataBuffer: {fileID: 11400000, guid: bf2dd249c1b5c7849a793510285221f5, type: 2}
-  CaveGameStageDataBuffer: {fileID: 11400000, guid: aa23ef5b8c2630b4a936fdb312e152be, type: 2}
-  ForestStageDataBuffer: {fileID: 11400000, guid: 103e6d5470fbefe4c886e7e8139ab5d1, type: 2}
-  AdventureStageDataBuffer: {fileID: 11400000, guid: d2df9fb201f7a2d409a61690532e3c5c, type: 2}
-  LocalDisplayName: 
+  inventory: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
+  caveIdleStageDataBuffer: {fileID: 11400000, guid: bf2dd249c1b5c7849a793510285221f5, type: 2}
+  caveGameStageDataBuffer: {fileID: 11400000, guid: aa23ef5b8c2630b4a936fdb312e152be, type: 2}
+  forestStageDataBuffer: {fileID: 11400000, guid: 103e6d5470fbefe4c886e7e8139ab5d1, type: 2}
+  adventureStageDataBuffer: {fileID: 11400000, guid: d2df9fb201f7a2d409a61690532e3c5c, type: 2}
+  localDisplayName: 
 --- !u!114 &2233538775601197659
 MonoBehaviour:
   m_ObjectHideFlags: 0

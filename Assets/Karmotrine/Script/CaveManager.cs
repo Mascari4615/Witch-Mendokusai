@@ -8,57 +8,60 @@ using Random = UnityEngine.Random;
 
 public class CaveManager : MonoBehaviour
 {
-    private Stage curStage;
-    private Dictionary<Vector2Int, int> curCaveData = new Dictionary<Vector2Int, int>();
+    private Stage _curStage;
+    private Dictionary<Vector2Int, int> _curCaveData = new Dictionary<Vector2Int, int>();
 
     [SerializeField] private SpriteRenderer background;
     [SerializeField] private StoneObject stonePrefab;
     [SerializeField] private Transform stoneParent;
     [SerializeField] private int stoneAmount;
-    private List<StoneObject> stoneObjects = new List<StoneObject>();
+    private readonly List<StoneObject> _stoneObjects = new List<StoneObject>();
     [SerializeField] private GameObject[] stairs;
 
-    [SerializeField] private CinemachineVirtualCamera _camera;
-    [FormerlySerializedAs("caveUnitMove")] [FormerlySerializedAs("_touchMove")] [SerializeField] private CaveDoll caveDoll;
-    
+    [SerializeField] private new CinemachineVirtualCamera camera;
+
+    [SerializeField] private CaveDoll caveDoll;
+
     [ContextMenu("Test")]
     public void Test()
     {
         Enter(0);
     }
-    
+
     public void Enter(int caveID)
     {
-        curStage = DataManager.Instance.caveGameStageDic[caveID];
+        _curStage = DataManager.Instance.CaveGameStageDic[caveID];
         GenerateCave();
         StartCurStage();
     }
 
     private void GenerateCave()
     {
-        background.sprite = curStage.background;
+        background.sprite = _curStage.Background;
 
-        curCaveData = new Dictionary<Vector2Int, int>();
+        _curCaveData = new Dictionary<Vector2Int, int>();
 
         GenerateStructures(1);
         GenerateMinerals(stoneAmount);
 
         void GenerateStructures(int amount)
         {
-            for (int i = 0; i < amount; i++)
+            for (var i = 0; i < amount; i++)
             {
                 while (true)
                 {
-                    Vector2Int randomCoordinate = new();
-                    randomCoordinate.x = Random.Range(-49, 49 + 1);
-                    randomCoordinate.y = Random.Range(-49, 49 + 1);
+                    Vector2Int randomCoordinate = new()
+                    {
+                        x = Random.Range(-49, 49 + 1),
+                        y = Random.Range(-49, 49 + 1)
+                    };
                     // 100 - 1(=점 기준) - 1(=좌표 0)
                     // 구조물 크기 1이라고 가정
 
                     if (IsEmpty(randomCoordinate))
                     {
                         stairs[i].transform.localPosition = new Vector2(randomCoordinate.x, randomCoordinate.y);
-                        curCaveData.Add(randomCoordinate, 1);
+                        _curCaveData.Add(randomCoordinate, 1);
                         break;
                     }
                 }
@@ -69,58 +72,60 @@ public class CaveManager : MonoBehaviour
 
         void GenerateMinerals(int amount)
         {
-            if (stoneObjects.Count < amount)
+            if (_stoneObjects.Count < amount)
             {
-                var diff = amount - stoneObjects.Count;
-                for (int i = 0; i < diff; i++)
+                var diff = amount - _stoneObjects.Count;
+                for (var i = 0; i < diff; i++)
                 {
                     var g = Instantiate(stonePrefab, stoneParent);
-                    stoneObjects.Add(g);
+                    _stoneObjects.Add(g);
                 }
             }
 
-            for (int i = 0; i < stoneObjects.Count; i++)
+            for (var i = 0; i < _stoneObjects.Count; i++)
             {
-                stoneObjects[i].gameObject.SetActive(i < amount);
+                _stoneObjects[i].gameObject.SetActive(i < amount);
                 if (i >= amount)
                     continue;
 
                 while (true)
                 {
-                    Vector2Int randomCoordinate = new();
-                    randomCoordinate.x = Random.Range(-49, 49 + 1);
-                    randomCoordinate.y = Random.Range(-49, 49 + 1);
+                    Vector2Int randomCoordinate = new()
+                    {
+                        x = Random.Range(-49, 49 + 1),
+                        y = Random.Range(-49, 49 + 1)
+                    };
                     // 100 - 1(=점 기준) - 1(=좌표 0)
                     // 구조물 크기 1이라고 가정
 
-                    if (IsEmpty(randomCoordinate))
-                    {
-                        Probability<StoneData> probability = new();
-                        foreach (var stone in curStage.specialThingWithPercentages)
-                            probability.Add(stone.specialThing as StoneData, stone.percentage);
-                        var stoneData = probability.Get();
+                    if (!IsEmpty(randomCoordinate))
+                        continue;
+                    
+                    Probability<StoneData> probability = new();
+                    foreach (var stone in _curStage.SpecialThingWithPercentages)
+                        probability.Add(stone.Artifact as StoneData, stone.Percentage);
 
-                        stoneObjects[i].Init(stoneData);
-                        stoneObjects[i].transform.localPosition = new Vector2(randomCoordinate.x, randomCoordinate.y);
-                        curCaveData.Add(randomCoordinate, 1);
-                        break;
-                    }
+                    var stoneData = probability.Get();
+
+                    _stoneObjects[i].Init(stoneData);
+                    _stoneObjects[i].transform.localPosition = new Vector2(randomCoordinate.x, randomCoordinate.y);
+                    _curCaveData.Add(randomCoordinate, 1);
+                    break;
                 }
             }
         }
 
         bool IsEmpty(Vector2Int coordinate)
         {
-            return !curCaveData.ContainsKey(coordinate);
+            return !_curCaveData.ContainsKey(coordinate);
         }
     }
 
     private void StartCurStage()
     {
-        _camera.Priority = 1000;
-        
+        camera.Priority = 1000;
         CanvasManager.Instance.HpBar.Disable();
-        
+
         caveDoll.transform.localPosition = Vector3.zero;
         caveDoll.gameObject.SetActive(true);
         caveDoll.SetState(CaveDoll.CaveDollState.Idle);
@@ -128,8 +133,7 @@ public class CaveManager : MonoBehaviour
 
     public void Exit()
     {
-        _camera.Priority = -1000;
-       
+        camera.Priority = -1000;
         caveDoll.gameObject.SetActive(false);
     }
 }

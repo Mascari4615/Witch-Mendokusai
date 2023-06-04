@@ -3,7 +3,8 @@ using UnityEngine;
 
 public abstract class RunTimeSet<T> : ScriptableObject
 {
-    [System.NonSerialized] public readonly List<T> Items = new();
+    public List<T> Items => _items;
+    [System.NonSerialized] private readonly List<T> _items = new();
 
     public virtual void Add(T t)
     {

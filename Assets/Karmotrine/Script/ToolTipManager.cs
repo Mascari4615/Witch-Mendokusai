@@ -31,9 +31,9 @@ public class ToolTipManager : MonoBehaviour
         toolTip.gameObject.SetActive(true);
     }
 
-    public void Show(SpecialThing specialThing)
+    public void Show(Artifact artifact)
     {
-        toolTip.SetToolTip(specialThing);
+        toolTip.SetToolTip(artifact);
         toolTip.transform.position = GetVec();
         toolTip.gameObject.SetActive(true);
     }

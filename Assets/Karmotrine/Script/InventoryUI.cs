@@ -30,7 +30,7 @@ public class InventoryUI : MonoBehaviour
         {
             if (i < inventory.Capacity)
             {
-                slots[i].UpdateUI(inventory._items[i]?.Data, inventory._items[i] != null ? inventory._items[i].Amount : 1);
+                slots[i].UpdateUI(inventory.Items[i]?.Data, inventory.Items[i] != null ? inventory.Items[i].Amount : 1);
                 slots[i].gameObject.SetActive(true);
             }
             else

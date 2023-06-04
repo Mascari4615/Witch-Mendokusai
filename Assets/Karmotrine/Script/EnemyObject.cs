@@ -15,33 +15,33 @@ namespace Karmotrine.Script
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private MMF_Player mmfPlayer;
 
-        protected Enemy curEnemy;
-        private int curHP;
+        protected Enemy CurEnemy;
+        private int _curHp;
 
-        public bool IsAlive => curHP != 0;
+        public bool IsAlive => _curHp != 0;
 
         public virtual void Init(Enemy enemy)
         {
-            curEnemy = enemy;
-            CanvasManager.Instance.HpBar.UpdateEnemy(enemy, curHP);
-            SetHp(enemy.maxHp);
-            spriteRenderer.sprite = enemy.sprite;
+            CurEnemy = enemy;
+            CanvasManager.Instance.HpBar.UpdateEnemy(enemy, _curHp);
+            SetHp(enemy.MaxHp);
+            spriteRenderer.sprite = enemy.Thumbnail;
             
             gameObject.SetActive(true);
         }
 
         public void ReceiveAttack(int damage)
         {
-            SetHp(Mathf.Clamp(curHP - damage, 0, int.MaxValue));
+            SetHp(Mathf.Clamp(_curHp - damage, 0, int.MaxValue));
             mmfPlayer.PlayFeedbacks();
-            if (curHP == 0)
+            if (_curHp == 0)
                 Die();
         }
 
         protected void SetHp(int newHp)
         {
-            curHP = newHp;
-            CanvasManager.Instance.HpBar.UpdateUI(curHP);
+            _curHp = newHp;
+            CanvasManager.Instance.HpBar.UpdateUI(_curHp);
         }
 
         protected virtual void Die()
@@ -53,8 +53,8 @@ namespace Karmotrine.Script
         protected virtual void DropLoot()
         {
             Probability<ItemData> probability = new();
-            foreach (var item in curEnemy.Loots)
-                probability.Add(item.specialThing as ItemData, item.percentage);
+            foreach (var item in CurEnemy.Loots)
+                probability.Add(item.Artifact as ItemData, item.Percentage);
 
             var newItem = probability.Get();
             inventory.Add(newItem);
