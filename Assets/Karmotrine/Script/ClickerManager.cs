@@ -21,15 +21,18 @@ public class ClickerManager : MonoBehaviour
             enemyObject.OnEnemyDied += SpawnEnemy;
     }
 
-    public void OpenClicker(ContentType contentType)
+    public void TryOpenClicker(ContentType contentType)
     {
         var prevClickerType = _curClickerType;
         _curClickerType = contentType;
 
-        foreach (var clickerUI in clickerUIs)
-            clickerUI.SetActive(contentType != ContentType.Home);
+        var isCurContentClicker =
+            contentType is (ContentType.AdventureIdle or ContentType.CaveIdle or ContentType.ForestIdle);
 
-        if (contentType == ContentType.Home)
+        foreach (var clickerUI in clickerUIs)
+            clickerUI.SetActive(isCurContentClicker);
+
+        if (!isCurContentClicker)
             return;
         
         if (prevClickerType == contentType)

@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
-public class CaveManager : MonoBehaviour
+public class CaveManager : Singleton<CaveManager>
 {
     private Stage _curStage;
     private Dictionary<Vector2Int, int> _curCaveData = new Dictionary<Vector2Int, int>();
@@ -20,12 +20,21 @@ public class CaveManager : MonoBehaviour
 
     [SerializeField] private new CinemachineVirtualCamera camera;
 
-    [SerializeField] private CaveDoll caveDoll;
+    [FormerlySerializedAs("caveDoll")] [SerializeField] private MiningDoll miningDoll;
 
     [ContextMenu("Test")]
     public void Test()
     {
-        Enter(0);
+        if (GameManager.Instance.CurContent != ContentType.CaveGame)
+        {
+            GameManager.Instance.SetContent(ContentType.CaveGame);
+            Enter(0);
+        }
+        else
+        {
+            Exit();
+            GameManager.Instance.SetContent(ContentType.CaveIdle);
+        }
     }
 
     public void Enter(int caveID)
@@ -126,14 +135,14 @@ public class CaveManager : MonoBehaviour
         camera.Priority = 1000;
         CanvasManager.Instance.HpBar.Disable();
 
-        caveDoll.transform.localPosition = Vector3.zero;
-        caveDoll.gameObject.SetActive(true);
-        caveDoll.SetState(CaveDoll.CaveDollState.Idle);
+        miningDoll.transform.localPosition = Vector3.zero;
+        miningDoll.gameObject.SetActive(true);
+        miningDoll.SetState(MiningDoll.CaveDollState.Idle);
     }
 
     public void Exit()
     {
         camera.Priority = -1000;
-        caveDoll.gameObject.SetActive(false);
+        miningDoll.gameObject.SetActive(false);
     }
 }

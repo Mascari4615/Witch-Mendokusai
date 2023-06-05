@@ -55,7 +55,7 @@ public class PlayFabManager : MonoBehaviour
 
 					if (name != null)
 					{
-						DataManager.Instance.LocalDisplayName = name;
+						DataManager.Instance.localDisplayName = name;
 						// TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
 						SubmitNickname(result.PlayFabId);
 					}

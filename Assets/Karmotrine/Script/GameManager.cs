@@ -6,14 +6,16 @@ using UnityEngine;
 public enum ContentType
 {
     Home,
-    Cave,
-    Forest,
-    Adventure,
+    CaveIdle,
+    ForestIdle,
+    AdventureIdle,
+    CaveGame,
 }
 
 public class GameManager : Singleton<GameManager>
 {
-    private ContentType _curContent = ContentType.Home;
+    public ContentType CurContent { get; private set; } = ContentType.Home;
+
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private ClickerManager clickerManager;
 
@@ -25,8 +27,8 @@ public class GameManager : Singleton<GameManager>
     public void SetContent(int newContent) => SetContent((ContentType)newContent);
     public void SetContent(ContentType newContent)
     {
-        _curContent = newContent;
-        cameraManager.SetCamera((int)_curContent);
-        clickerManager.OpenClicker(newContent);
+        CurContent = newContent;
+        cameraManager.SetCamera((int)CurContent);
+        clickerManager.TryOpenClicker(newContent);
     }
 }

@@ -42,8 +42,7 @@ public class DataManager : Singleton<DataManager>
     [FormerlySerializedAs("OnCurGameDataLoad")]
     public Action OnCurGameDataLoad;
     // DataManager.Instance.OnCurGameDataLoad += UpdateVolume;
-
-    [FormerlySerializedAs("LocalDisplayName")]
+    
     public string localDisplayName = "";
 
     private PlayFabManager _playFabManager;
@@ -84,9 +83,9 @@ public class DataManager : Singleton<DataManager>
             }
         }
 
-        StageDic.Add(ContentType.Forest, forestStageDataBuffer.items);
-        StageDic.Add(ContentType.Adventure, adventureStageDataBuffer.items);
-        StageDic.Add(ContentType.Cave, caveIdleStageDataBuffer.items);
+        StageDic.Add(ContentType.ForestIdle, forestStageDataBuffer.items);
+        StageDic.Add(ContentType.AdventureIdle, adventureStageDataBuffer.items);
+        StageDic.Add(ContentType.CaveIdle, caveIdleStageDataBuffer.items);
 
         foreach (var caveStageData in caveIdleStageDataBuffer.items)
             CaveIdleStageDic.Add(caveStageData.ID, caveStageData);
