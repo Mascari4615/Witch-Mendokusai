@@ -1,0 +1,44 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Template name="KarmoToolBar" src="project://database/Assets/Editor/KarmoWindow/KarmoToolBar.uxml?fileID=9197481963319205126&amp;guid=a7974ba152f1f584fbd76f0bbcfbcf92&amp;type=3#KarmoToolBar" />
+    <Style src="project://database/Assets/Editor/KarmoWindow/KarmoWindow.uss?fileID=7433441132597879392&amp;guid=64264a0eb7a52bd4c8efefbc975445c5&amp;type=3#KarmoWindow" />
+    <ui:VisualElement name="my-world" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-grow: 1;">
+        <ui:VisualElement name="table" class="karmo-panel" style="flex-grow: 1; width: 25%;">
+            <ui:Instance template="KarmoToolBar" name="KarmoToolBar" />
+            <ui:ListView focusable="true" name="TableList" />
+        </ui:VisualElement>
+        <ui:VisualElement name="entry" class="karmo-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 25%;">
+            <ui:Instance template="KarmoToolBar" name="KarmoToolBar" />
+            <ui:ScrollView name="entryList">
+                <ui:Foldout text="Facts" name="Facts" class="entry-foldout">
+                    <ui:ListView focusable="true" name="FactList" />
+                </ui:Foldout>
+                <ui:Foldout text="Rules" name="Rules" class="entry-foldout">
+                    <ui:ListView focusable="true" name="RuleList" />
+                </ui:Foldout>
+                <ui:Foldout text="Events" name="Events" class="entry-foldout">
+                    <ui:ListView focusable="true" name="EventList" />
+                </ui:Foldout>
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="visualElement" class="karmo-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 50%;">
+            <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="entry-foldout" style="height: 21px;" />
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 60%;">
+                <ui:VisualElement name="VisualElement" style="flex-direction: row; justify-content: center; margin-top: 10px; margin-bottom: 10px;">
+                    <ui:Button text="Previous" display-tooltip-when-elided="true" name="Button" class="entry-flow-button" />
+                    <ui:Button text="Branches" display-tooltip-when-elided="true" name="Button" class="entry-flow-button" />
+                    <ui:Button text="Next" display-tooltip-when-elided="true" name="Button" class="entry-flow-button" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); min-width: auto; min-height: auto;">
+                    <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); height: 40%;">
+                <ui:VisualElement name="VisualElement" style="flex-direction: row; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); border-bottom-width: 1px;">
+                    <ui:Button text="Criteria" display-tooltip-when-elided="true" name="Button" style="margin-bottom: -1.5px; border-bottom-right-radius: 0; border-bottom-left-radius: 0; border-bottom-width: 0; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); background-color: rgb(56, 56, 56);" />
+                    <ui:Button text="Modifications" display-tooltip-when-elided="true" name="Button" style="margin-bottom: -1.5px; border-bottom-right-radius: 0; border-bottom-left-radius: 0; border-bottom-width: 0; border-left-color: rgb(35, 35, 35); border-right-color: rgb(35, 35, 35); border-top-color: rgb(35, 35, 35); border-bottom-color: rgb(35, 35, 35); background-color: rgb(56, 56, 56);" />
+                </ui:VisualElement>
+                <ui:VisualElement />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

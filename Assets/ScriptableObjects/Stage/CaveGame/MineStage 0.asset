@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7a4a1db1d324b24285ffb797dba99a1, type: 3}
+  m_Name: MineStage 0
+  m_EditorClassIdentifier: 
+  id: 0
+  name: fdsdf
+  description: werwe
+  thumbnail: {fileID: 21300000, guid: 23555262850667a4184e73eb470944bd, type: 3}
+  specialThingWithPercentages:
+  - artifact: {fileID: 11400000, guid: 274623c794fa31d43aa85f546ea78e6f, type: 2}
+    percentage: 80
+  - artifact: {fileID: 11400000, guid: f597ae8b97af5504bbb983750140f5c1, type: 2}
+    percentage: 15
+  - artifact: {fileID: 11400000, guid: f536f1b6fb08e014cbaaaa9b939be93a, type: 2}
+    percentage: 5
+  background: {fileID: 21300000, guid: 1dbb32844fe958247b3bd7594c2e84d4, type: 3}
+  stoneAmount: 1000

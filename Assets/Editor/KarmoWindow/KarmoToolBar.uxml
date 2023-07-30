@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <uie:Toolbar>
+        <uie:ToolbarSearchField focusable="true" style="width: 80%;" />
+        <uie:ToolbarButton text="+" display-tooltip-when-elided="true" style="width: 10%; -unity-font-style: bold; -unity-text-align: upper-center; -unity-font: url(&apos;project://database/Assets/Fonts/%EA%B0%88%EB%AC%B4%EB%A6%AC/Galmuri9.ttf?fileID=12800000&amp;guid=5622a071d36c59e4abafcad788860137&amp;type=3#Galmuri9&apos;); border-left-width: 0; border-right-width: 0;" />
+        <uie:ToolbarButton text="-" display-tooltip-when-elided="true" style="width: 10%; -unity-text-align: upper-center; -unity-font: url(&apos;project://database/Assets/Fonts/%EA%B0%88%EB%AC%B4%EB%A6%AC/Galmuri9.ttf?fileID=12800000&amp;guid=5622a071d36c59e4abafcad788860137&amp;type=3#Galmuri9&apos;); -unity-font-style: bold; border-left-width: 0; border-right-width: 0;" />
+    </uie:Toolbar>
+</ui:UXML>

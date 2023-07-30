@@ -1,0 +1,27 @@
+:root {
+    flex-grow: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.karmo-panel {
+    border-left-width: 0.5px;
+    border-right-width: 0.5px;
+    border-left-color: rgb(35, 35, 35);
+    border-right-color: rgb(35, 35, 35);
+    border-top-color: rgb(35, 35, 35);
+    border-bottom-color: rgb(35, 35, 35);
+    height: 100%;
+}
+
+.entry-foldout {
+    border-bottom-width: 1px;
+    border-left-color: rgb(35, 35, 35);
+    border-right-color: rgb(35, 35, 35);
+    border-top-color: rgb(35, 35, 35);
+    border-bottom-color: rgb(35, 35, 35);
+}
+
+.entry-flow-button {
+    width: 76px;
+}
