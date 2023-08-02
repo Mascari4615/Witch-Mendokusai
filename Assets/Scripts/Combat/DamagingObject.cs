@@ -24,7 +24,11 @@ public class DamagingObject : SkillComponent
                 Debug.Log(nameof(OnTriggerEnter));
                 hitable.ReceiveAttack(damage);
             }
-
+            else if (hitable is PlayerObject && !usedByPlayer)
+            {
+                Debug.Log(nameof(OnTriggerEnter));
+                hitable.ReceiveAttack(damage);
+            }
         }
     }
 

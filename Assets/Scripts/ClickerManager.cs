@@ -17,8 +17,8 @@ public class ClickerManager : MonoBehaviour
 
     private void Awake()
     {
-        foreach (var enemyObject in enemyObjects)
-            enemyObject.OnEnemyDied += SpawnEnemy;
+       // foreach (var enemyObject in enemyObjects)
+       //     enemyObject.OnEnemyDied += SpawnEnemy;
     }
 
     public void TryOpenClicker(ContentType contentType)

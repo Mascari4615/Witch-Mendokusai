@@ -5,14 +5,17 @@ using UnityEngine;
 
 public class ChatManager : Singleton<ChatManager>
 {
-    private List<ChatData> curChatDatas;
+    private List<LineData> curChatDatas;
     private int curChatIndex = 0;
 
     [SerializeField] private UIChatCanvas uiChatCanvas;
     [SerializeField] private CinemachineTargetGroup chatTargetGroup;
+
+    [SerializeField] private BoolVariable isChatting;
     
-    public void StartChat(List<ChatData> chatDatas, Transform unitTransform)
+    public void StartChat(List<LineData> chatDatas, Transform unitTransform)
     {
+        isChatting.RuntimeValue = true;
         GameManager.Instance.SetPlayerState(PlayerState.Interact);
         curChatDatas = chatDatas;
         chatTargetGroup.m_Targets[1].target = unitTransform;
@@ -22,9 +25,9 @@ public class ChatManager : Singleton<ChatManager>
 
     public void NextChat()
     {
-        if (uiChatCanvas.IsChating)
+        if (uiChatCanvas.IsPrinting)
         {
-            uiChatCanvas.SkipChat();
+            uiChatCanvas.SkipLine();
             return;
         }
 
@@ -34,11 +37,12 @@ public class ChatManager : Singleton<ChatManager>
             return;
         }
 
-        uiChatCanvas.StartChat(curChatDatas[curChatIndex++]);
+        uiChatCanvas.StartLine(curChatDatas[curChatIndex++]);
     }
 
     public void EndChat()
     {
+        isChatting.RuntimeValue = false;
         GameManager.Instance.SetPlayerState(PlayerState.Peaceful);
         curChatDatas = null;
         

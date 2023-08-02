@@ -4,13 +4,15 @@ using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-public class UnitObject : MonoBehaviour 
+public class UnitObject : MonoBehaviour
 {
     public Unit UnitData => unitData;
     [SerializeField] protected Unit unitData;
     
     public UnitSkillHandler UnitSkillHandler => unitSkillHandler;
     protected UnitSkillHandler unitSkillHandler;
+    
+    [SerializeField] protected SpriteRenderer spriteRenderer;
     
     public int CurHp { get; protected set; }
     public int MaxHp { get; protected set; }
@@ -23,6 +25,8 @@ public class UnitObject : MonoBehaviour
     {
         if (unitData != null)
             Init(unitData);
+        
+        spriteRenderer.material.SetFloat("_Emission", 0);
     }
 
     public virtual void Init(Unit unitData)
@@ -69,7 +73,11 @@ public class UnitObject : MonoBehaviour
     
     protected virtual void Die()
     {
-        gameObject.SetActive(false);
+        OnDie();
+    }
+    
+    protected virtual void OnDie()
+    {
     }
 }
 

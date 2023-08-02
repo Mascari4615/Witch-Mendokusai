@@ -18,6 +18,7 @@ public class FindPlayer : ActionNode
 
     protected override State OnUpdate()
     {
+        blackboard.moveToPosition = PlayerController.Instance.transform.position;
         return IsPlayerNear() ? State.Success : State.Failure;
     }
 

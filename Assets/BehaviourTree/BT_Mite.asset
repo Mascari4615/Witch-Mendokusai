@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d285eb63c2cdd74180de7cfceaa96ad, type: 3}
-  m_Name: BT_Monster
+  m_Name: BT_Mite
   m_EditorClassIdentifier: 
   rootNode:
     rid: 6724720436475330577
@@ -23,17 +23,33 @@ MonoBehaviour:
   - rid: 6724720436475330583
   - rid: 6724720436475330584
   - rid: 6724720436475330587
-  - rid: 6724720436475330588
   - rid: 6724720436475330590
   - rid: 6724720436475330591
+  - rid: 4581400030769053697
   treeState: 0
   blackboard:
     moveToPosition: {x: 0, y: 0, z: 0}
-  viewPosition: {x: 299.33334, y: 40.666668, z: 0}
-  viewScale: {x: 0.7561437, y: 0.7561437, z: 1}
+  viewPosition: {x: 284, y: -196.5, z: 0}
+  viewScale: {x: 0.65751624, y: 0.65751624, z: 1}
   references:
     version: 2
     RefIds:
+    - rid: 4581400030769053697
+      type: {class: MoveToPosition, ns: , asm: Assembly-CSharp}
+      data:
+        state: 0
+        started: 0
+        guid: d4b5cd1609d256b4ea7cb13ad8ba21de
+        position: {x: -141.50012, y: 660.0001}
+        blackboard:
+          moveToPosition: {x: 0, y: 0, z: 0}
+        description: 
+        drawGizmos: 1
+        speed: 1
+        stoppingDistance: 0.1
+        updateRotation: 0
+        acceleration: 40
+        tolerance: 1
     - rid: 6724720436475330577
       type: {class: RootNode, ns: TheKiwiCoder, asm: Assembly-CSharp}
       data:
@@ -114,7 +130,7 @@ MonoBehaviour:
         children:
         - rid: 6724720436475330584
         - rid: 6724720436475330580
-        - rid: 6724720436475330588
+        - rid: 4581400030769053697
     - rid: 6724720436475330584
       type: {class: FindPlayer, ns: , asm: Assembly-CSharp}
       data:
@@ -139,18 +155,6 @@ MonoBehaviour:
         description: 
         drawGizmos: 0
         duration: 1
-    - rid: 6724720436475330588
-      type: {class: UseSkill, ns: , asm: Assembly-CSharp}
-      data:
-        state: 0
-        started: 0
-        guid: 82a5f95d6fde0b84c972b40292a82da7
-        position: {x: -141.99995, y: 660}
-        blackboard:
-          moveToPosition: {x: 0, y: 0, z: 0}
-        description: 
-        drawGizmos: 0
-        skillButtonIndex: 0
     - rid: 6724720436475330590
       type: {class: Wait, ns: TheKiwiCoder, asm: Assembly-CSharp}
       data:

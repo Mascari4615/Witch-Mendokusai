@@ -13,7 +13,7 @@ Shader "Karmotrine/BillboardShader"
     {
         Tags
         {
-            "RenderType" = "Opaque" "Queue" = "Geometry" "RenderPipeline" = "UniversalPipeline" "DisableBatching" = "True"
+            "RenderType" = "Transparent" "Queue" = "Transparent" "RenderPipeline" = "UniversalPipeline" "DisableBatching" = "True"
         }
 
         Pass
@@ -24,7 +24,16 @@ Shader "Karmotrine/BillboardShader"
                 "LightMode" = "SRPDefaultUnlit"
             }
             Cull Off
-
+            
+            // Sprite의 투명한 부분이 불투명하게 보이는 문제
+            //https://forum.unity.com/threads/shader-on-sprite-makes-transparent-part-visible.546508/
+            Blend SrcAlpha OneMinusSrcAlpha
+            
+            // 기존에 사용하던 Alpha Cutoff는 위 상황에서 의도한대로 작동하지 않음
+            // 하지만 Cutoff 부분을 제거하면,
+            // 피격 효과용으로 주던 Emission이 Color에 더해지는 거라 불투명한 부분이 그대로 노출되므로,
+            // Cutoff는 Emission이 활성화되었을 때 기능하도록 수정  
+            
             HLSLPROGRAM
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
@@ -147,8 +156,9 @@ Shader "Karmotrine/BillboardShader"
                 float2 mainTexUV = i.uv.xy * _MainTex_ST.xy + _MainTex_ST.zw;
                 float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, mainTexUV);
 
-                clip(col.a - _Cutoff);
                 col *= _Color;
+                
+                clip(col.a - _Cutoff  * _Emission);
                 col += _EmissionColor * _Emission;
                 return col;
             }

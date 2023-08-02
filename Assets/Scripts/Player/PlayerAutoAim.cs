@@ -93,12 +93,18 @@ public class PlayerAutoAim : MonoBehaviour
                 if (targetChanged)
                     targetMarkerAnimator.SetTrigger("ON");
                 
-                targetMarker.transform.position = curNearestTarget.transform.position;
+                // targetMarker.transform.position = curNearestTarget.transform.position;
                 playerAutoAimDirection.RuntimeValue = (curNearestTarget.transform.position - transform.position).normalized;
             }
 
             yield return new WaitForSeconds(.2f);
         }
+    }
+
+    private void Update()
+    {
+        if (curNearestTarget)
+            targetMarker.transform.position = curNearestTarget.transform.position;
     }
 
     /*public IEnumerator ChangeTarget()

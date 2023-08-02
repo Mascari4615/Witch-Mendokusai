@@ -75,9 +75,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 622202209388757171, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3178157855139304415, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_RootOrder
-      value: 16
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3178157855139304415, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -121,7 +125,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Name
-      value: Unit Variant
+      value: Witch
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

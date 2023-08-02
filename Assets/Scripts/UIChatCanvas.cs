@@ -9,56 +9,65 @@ public class UIChatCanvas : MonoBehaviour
 {
     [SerializeField] private Image unitImage;
     [SerializeField] private TextMeshProUGUI unitName;
-    [SerializeField] private TextMeshProUGUI chatText;
+    [SerializeField] private TextMeshProUGUI lineText;
 
-    private ChatData chatData;
-    private Coroutine chatLoop;
+    private LineData _lineData;
+    private Coroutine lineLoop;
     private WaitForSeconds ws01 = new WaitForSeconds(.1f);
 
-    public bool IsChating { get; private set; } = false;
+    public bool IsPrinting { get; private set; } = false;
 
-    public void StartChat(ChatData chatData)
+    public void StartLine(LineData lineData)
     {
-        if (chatLoop != null)
-            StopCoroutine(chatLoop);
+        if (lineLoop != null)
+            StopCoroutine(lineLoop);
 
-        var unit = DataManager.Instance.UnitDic[chatData.unitID];
+        var unit = DataManager.Instance.UnitDic[lineData.unitID];
         
         // TODO : 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
         
         unitImage.sprite = unit.Thumbnail;
         unitName.text = unit.Name;
-        chatText.text = string.Empty;
+        lineText.text = string.Empty;
 
-        this.chatData = chatData;
+        this._lineData = lineData;
         
-        chatLoop = StartCoroutine(ChatLoop());
+        lineLoop = StartCoroutine(LineLoop());
     }
 
-    public IEnumerator ChatLoop()
+    public IEnumerator LineLoop()
     {
-        IsChating = true;
+        IsPrinting = true;
 
-        foreach (var c in chatData.chat)
+        foreach (var c in _lineData.line)
         {
-            chatText.text += c;
+            lineText.text += c;
             RuntimeManager.PlayOneShot("event:/SFX/Equip");
             yield return ws01;
         }
         
-        IsChating = false;
+        EndLine();
     }
 
-    public void SkipChat()
+    private void EndLine()
     {
-        if (IsChating == false)
+        IsPrinting = false;
+        if (_lineData.additionalData.Equals("0"))
+        {
+            Debug.Log("Hawawaaaaaaaaaaaaaaaaaaaaaaaaa");
+        }
+    }
+
+    public void SkipLine()
+    {
+        if (IsPrinting == false)
             return;
         
-        if (chatLoop != null)
-            StopCoroutine(chatLoop);
+        if (lineLoop != null)
+            StopCoroutine(lineLoop);
 
-        chatText.text = chatData.chat;
+        lineText.text = _lineData.line;
 
-        IsChating = false;
+        EndLine();
     }
 }

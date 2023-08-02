@@ -7,10 +7,10 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 1f;
     [SerializeField] private Rigidbody playerRigidBody;
-    
+
     [SerializeField] private FloatVariable joystickX;
     [SerializeField] private FloatVariable joystickY;
-    
+
     [SerializeField] private Vector3Variable playerMoveDirection;
     [SerializeField] private Vector3Variable playerLookDirection;
 
@@ -18,7 +18,9 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private SpriteRenderer playerSprite;
     [SerializeField] private BoolVariable isPlayerButton0Down;
-    
+
+    [SerializeField] private BoolVariable isChatting;
+
     private void Start()
     {
         UpdateLookDirection(Vector3.right);
@@ -53,7 +55,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        playerRigidBody.velocity = moveDirection * (movementSpeed * (isPlayerButton0Down.RuntimeValue ? .5f : 1));
+        if (!isChatting.RuntimeValue)
+            playerRigidBody.velocity = moveDirection * (movementSpeed * (isPlayerButton0Down.RuntimeValue ? .5f : 1));
     }
 
     public void TeleportTo(Vector3 targetPos)

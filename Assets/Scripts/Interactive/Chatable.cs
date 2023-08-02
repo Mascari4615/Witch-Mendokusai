@@ -7,15 +7,15 @@ using UnityEngine;
 public class Chatable : InteractiveObject
 {
     [SerializeField] private TextAsset chatScripts;
-    private Dictionary<string, List<ChatData>> chatDataDic = new Dictionary<string, List<ChatData>>();
+    private Dictionary<string, List<LineData>> chatDataDic = new Dictionary<string, List<LineData>>();
 
     public override void Interact()
     {
-        TryGetChatData("테스트", out List<ChatData> chatDatas);
+        TryGetChatData("테스트", out List<LineData> chatDatas);
         ChatManager.Instance.StartChat(chatDatas, transform);
     }
     
-    public bool TryGetChatData(string eventName, out List<ChatData> chatDatas)
+    public bool TryGetChatData(string eventName, out List<LineData> chatDatas)
     {
         if (chatDataDic.Count == 0)
             InitChatDic();
@@ -29,7 +29,8 @@ public class Chatable : InteractiveObject
             Debug.Log("It's BOM");
         
         // var bytes = Encoding.GetEncoding(1252).GetBytes(chatScripts.text);
-        var myString = Encoding.UTF8.GetString(chatScripts.bytes);
+        // var myString = Encoding.UTF8.GetString(chatScripts.bytes);
+        var myString = chatScripts.text;
         
         Debug.Log(myString);
         
@@ -37,7 +38,7 @@ public class Chatable : InteractiveObject
         var rows = csvText.Split(new[] { '\n' });
 
         var eventName = string.Empty;
-        var chatDatas = new List<ChatData>();
+        var lineDatas = new List<LineData>();
         
         for (int i = 1; i < rows.Length; i++)
         {
@@ -45,39 +46,39 @@ public class Chatable : InteractiveObject
 
             if (columns[0] == "end")
             {
-                chatDataDic.Add(eventName, chatDatas);
+                chatDataDic.Add(eventName, lineDatas);
                 continue;
             }
 
             if (columns[0] != string.Empty)
             {
                 eventName = columns[0];
-                chatDatas = new List<ChatData>();
+                lineDatas = new List<LineData>();
             }
 
-            var chatData = new ChatData(ref columns);
-            chatDatas.Add(chatData);
+            var chatData = new LineData(ref columns);
+            lineDatas.Add(chatData);
         }
     }
 }
 
-public struct ChatData
+public struct LineData
 {
     public int unitID;
-    public string chat;
+    public string line;
     public string additionalData;
 
-    public ChatData(string unitID, string chat, string additionalData)
+    public LineData(string unitID, string line, string additionalData)
     {
         this.unitID = int.Parse(unitID);
-        this.chat = chat;
+        this.line = line;
         this.additionalData = additionalData;
     }
 
-    public ChatData(ref string[] columns)
+    public LineData(ref string[] columns)
     {
         this.unitID = int.Parse(columns[1]);
-        this.chat = columns[2];
-        this.additionalData = columns[3];
+        this.line = columns[2];
+        this.additionalData = columns[3].TrimEnd('\r', '\n', ' ');
     }
 }
