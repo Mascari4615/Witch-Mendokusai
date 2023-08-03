@@ -38,13 +38,14 @@ public class MonsterSpawner : MonoBehaviour
     private void SpawnMonster()
     {
         var o = ObjectManager.Instance.PopObject(monsterObjectPrefab);
-        o.GetComponent<EnemyObject>().Init(targetObject);
-        o.SetActive(true);
-
+        
         Vector3 randomOffset = Random.insideUnitCircle * spawnRange;
         randomOffset.z = randomOffset.y;
         randomOffset.y = 0;
         
         o.transform.position = transform.position + randomOffset;
+        
+        o.GetComponent<EnemyObject>().Init(targetObject);
+        o.SetActive(true);
     }
 }

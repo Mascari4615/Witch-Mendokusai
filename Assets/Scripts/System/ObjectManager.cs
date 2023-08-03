@@ -43,7 +43,7 @@ public class ObjectManager : Singleton<ObjectManager>
                 CreateObject(5);
 
             var o = _stack.Pop();
-            o.SetActive(true);
+            // o.SetActive(true);
             
             return o;
         }

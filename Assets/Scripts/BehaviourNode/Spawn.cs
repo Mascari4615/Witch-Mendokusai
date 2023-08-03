@@ -19,7 +19,7 @@ namespace TheKiwiCoder
 
         protected override State OnUpdate()
         {
-            ObjectManager.Instance?.PopObject(spawnObject);
+            ObjectManager.Instance?.PopObject(spawnObject).SetActive(true);
             return State.Success;
         }
     }

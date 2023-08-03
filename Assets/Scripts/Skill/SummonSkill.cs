@@ -17,6 +17,8 @@ public class SummonSkill : Skill
         {
             skillObject.InitContext(unitObject);
         }
+        
+        o.SetActive(true);
 
         return true;
     }
