@@ -4,17 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CombatUIManager : MonoBehaviour
+public class JRPG_UIManager : MonoBehaviour
 {
     [SerializeField] private List<UI_CombatTurnIcon> turnIcons;
     [SerializeField] private Transform[] turnIconPos;
     
-    [SerializeField] private CombatManager combatManager;
+    [SerializeField] private JRPG_Manager combatManager;
     [SerializeField] private GameObject skillPanel;
 
     public void UpdatePanel()
     {
-        skillPanel.SetActive(combatManager.CurState == CombatManager.CombatStage.MyTurn);
+        skillPanel.SetActive(combatManager.CurState == JRPG_Manager.CombatStage.MyTurn);
     }
 
     public void UpdateTurnUI()
@@ -25,7 +25,7 @@ public class CombatUIManager : MonoBehaviour
         }
         
         var units = combatManager.UnitInstances;
-        var notReadyUnits = new List<UnitInstance>();
+        var notReadyUnits = new List<JRPG_UnitInstance>();
         var turnOrder = 0;
 
         foreach (var unit in units)

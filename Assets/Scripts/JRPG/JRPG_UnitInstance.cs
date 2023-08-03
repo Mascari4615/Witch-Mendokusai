@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitInstance : MonoBehaviour
+public class JRPG_UnitInstance : MonoBehaviour
 {
     public static int GOAL = 10000;
     
