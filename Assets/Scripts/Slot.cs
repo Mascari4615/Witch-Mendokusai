@@ -12,10 +12,17 @@ public class Slot : MonoBehaviour
 
     public ToolTipTrigger toolTipTrigger;
 
+    [SerializeField] protected Artifact defaultArtifact;
     [SerializeField] protected Image image;
     [SerializeField] protected TextMeshProUGUI nameText;
     [SerializeField] protected TextMeshProUGUI countTextField;
     [SerializeField] protected TextMeshProUGUI descriptionText;
+
+    private void Awake()
+    {
+        if (defaultArtifact != null)
+            UpdateUI(defaultArtifact);
+    }
 
     public void SetSlotIndex(int index) => Index = index;
     public virtual void UpdateUI(Artifact artifact, int amount = 1)

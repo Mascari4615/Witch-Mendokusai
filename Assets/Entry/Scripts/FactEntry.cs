@@ -6,7 +6,16 @@ using UnityEngine;
 public class FactEntry : BaseEntry
 {
     public int Value => value;
+    public FactEntryScopeType Scope => scope;
     
     [SerializeField] private int value;
-    // TODO : Scope
+    [SerializeField] private FactEntryScopeType scope;
+}
+
+public enum FactEntryScopeType
+{
+    Global,
+    Area,
+    Scene,
+    Temporary
 }

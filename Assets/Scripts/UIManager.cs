@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -12,8 +13,12 @@ public class UIManager : Singleton<UIManager>
         Home,
         BookShelf,
         Inventory,
+        Settings,
         PotionCraft
     }
+
+    public CutSceneModule CutSceneModule => cutSceneModule;
+    [SerializeField] private CutSceneModule cutSceneModule;
 
     [SerializeField] private GameObject[] canvasList;
     [SerializeField] private GameObject[] menuPanelList;
@@ -31,21 +36,17 @@ public class UIManager : Singleton<UIManager>
         _curCanvas = canvasType;
 
         for (var i = 0; i < canvasList.Length; i++)
-        {
-            canvasList[i].gameObject.SetActive(i == (int)canvasType);
-        }
+            canvasList[i].gameObject.SetActive(i == (int)_curCanvas);
     }
     
-    public void OpenPanel(int canvasType) => OpenPanel((PlayerState)canvasType);
-    public void OpenPanel(PlayerState canvasType)
+    public void OpenPanel(int canvasType) => OpenPanel((MenuPanelType)canvasType);
+    public void OpenPanel(MenuPanelType menuType)
     {
-        Debug.Log($"{nameof(OpenCanvas)}, {canvasType}");
-        _curCanvas = canvasType;
+        Debug.Log($"{nameof(OpenPanel)}, {menuType}");
+        _curMenuPanel = menuType;
 
-        for (var i = 0; i < canvasList.Length; i++)
-        {
-            canvasList[i].gameObject.SetActive(i == (int)canvasType);
-        }
+        for (var i = 0; i < menuPanelList.Length; i++)
+            menuPanelList[i].gameObject.SetActive(i == (int)_curMenuPanel);
     }
 
 

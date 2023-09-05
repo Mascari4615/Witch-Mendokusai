@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class JRPG_UIManager : MonoBehaviour
 {
-    [SerializeField] private List<UI_CombatTurnIcon> turnIcons;
+    [SerializeField] private List<UI_JRPGTurnIcon> turnIcons;
     [SerializeField] private Transform[] turnIconPos;
     
     [SerializeField] private JRPG_Manager combatManager;

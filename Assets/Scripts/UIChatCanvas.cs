@@ -42,7 +42,8 @@ public class UIChatCanvas : MonoBehaviour
         foreach (var c in _lineData.line)
         {
             lineText.text += c;
-            RuntimeManager.PlayOneShot("event:/SFX/Equip");
+            if (c != ' ')
+                RuntimeManager.PlayOneShot("event:/SFX/Equip");
             yield return ws01;
         }
         

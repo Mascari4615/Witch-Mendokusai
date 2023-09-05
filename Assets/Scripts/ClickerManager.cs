@@ -10,7 +10,7 @@ public class ClickerManager : MonoBehaviour
     [SerializeField] private EnemyObject[] enemyObjects;
     [SerializeField] private SpriteRenderer background;
     
-    private Stage _curStage;
+    private ClickerStage _curClickerStage;
     private ContentType _curClickerType = ContentType.Home;
 
     private int CurClickerIndex => (int)_curClickerType - 1;
@@ -45,7 +45,7 @@ public class ClickerManager : MonoBehaviour
     public void SetStage()
     {
         var curStageIndex = DataManager.Instance.CurGameData.curStageIndex[(int)_curClickerType];
-        _curStage = DataManager.Instance.StageDic[_curClickerType][curStageIndex];
+        _curClickerStage = DataManager.Instance.StageDic[_curClickerType][curStageIndex];
         // background.sprite = curStage.background;
     }
 
@@ -57,7 +57,7 @@ public class ClickerManager : MonoBehaviour
         }
         
         Probability<Enemy> probability = new();
-        foreach (var enemy in _curStage.SpecialThingWithPercentages)
+        foreach (var enemy in _curClickerStage.SpecialThingWithPercentages)
             probability.Add(enemy.Artifact as Enemy, enemy.Percentage);
 
         var newEnemy = probability.Get();

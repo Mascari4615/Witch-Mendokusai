@@ -28,7 +28,8 @@ Shader "Karmotrine/BillboardShader"
             // Sprite의 투명한 부분이 불투명하게 보이는 문제
             //https://forum.unity.com/threads/shader-on-sprite-makes-transparent-part-visible.546508/
             Blend SrcAlpha OneMinusSrcAlpha
-            
+            ZWrite Off
+                
             // 기존에 사용하던 Alpha Cutoff는 위 상황에서 의도한대로 작동하지 않음
             // 하지만 Cutoff 부분을 제거하면,
             // 피격 효과용으로 주던 Emission이 Color에 더해지는 거라 불투명한 부분이 그대로 노출되므로,

@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : Singleton<PlayerController>
 {
     [SerializeField] private BoolVariable canInteract;
+    [SerializeField] private BoolVariable isPlayerButton0Down;
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private PlayerObject playerObject;
 
@@ -22,13 +23,19 @@ public class PlayerController : Singleton<PlayerController>
         }
         else
         {
-            playerObject.UseSkill(0);   
+            playerObject.UseSkill(0);
         }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-            PlayerButton0();
+        if (canInteract.RuntimeValue && Input.GetKeyDown(KeyCode.Space))
+        {
+            playerInteraction.Interaction();
+        }
+        else if (isPlayerButton0Down.RuntimeValue || Input.GetKey(KeyCode.Space))
+        {
+            playerObject.UseSkill(0);
+        }
     }
 }

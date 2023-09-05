@@ -10,7 +10,7 @@ public abstract class Artifact : ScriptableObject
     
     [SerializeField] private int id;
     [SerializeField] private new string name;
-    [SerializeField] private string description;
+    [SerializeField, TextArea] private string description;
     [SerializeField] private Sprite thumbnail;
 }
 

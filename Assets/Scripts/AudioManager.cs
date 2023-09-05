@@ -77,7 +77,7 @@ public class AudioManager : Singleton<AudioManager>
     public float GetVolume(BusType busType)
     {
         var volume = 1f;
-        var key = $"Volume{busType}";
+        var key = $"Volume{(int)busType}";
 
         if (!PlayerPrefs.HasKey(key))
             PlayerPrefs.SetFloat(key, 1);
@@ -88,7 +88,7 @@ public class AudioManager : Singleton<AudioManager>
 
     public void SetVolume(BusType busType, float volume)
     {
-        var key = $"Volume{busType}";
+        var key = $"Volume{(int)busType}";
         PlayerPrefs.SetFloat(key, volume);
         _buses[(int)busType].setVolume(volume);
 

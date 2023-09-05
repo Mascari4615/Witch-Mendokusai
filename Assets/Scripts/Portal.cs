@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
+    [SerializeField] private int targetStageID;
+    
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.TryGetComponent(out Doll doll))
-        {
-            doll.OnPortalEnter();
-        }
+        if (other.gameObject.CompareTag("Player"))
+            StageManager.Instance.LoadStage(targetStageID);
     }
 }

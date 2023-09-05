@@ -20,6 +20,7 @@ namespace Karmotrine.Script
         protected override void OnReceiveAttack(int damage)
         {
             base.OnReceiveAttack(damage);
+            CombatManager.Instance.PopDamage(transform.position, damage);
 
             if (!IsAlive)
             {
@@ -128,7 +129,14 @@ namespace Karmotrine.Script
 
             var newItem = probability.Get();
             inventory.Add(newItem);
+
+            //
+            GameObject exp = ObjectManager.Instance.PopObject(expPrefab);
+            exp.transform.position = transform.position;
+            exp.gameObject.SetActive(true);
         }
+
+        [SerializeField] private GameObject expPrefab;
 
         private IEnumerator FlashRoutine()
         {

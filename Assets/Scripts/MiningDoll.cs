@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 
-public class MiningDoll : Doll
+public class MiningDoll : MonoBehaviour
 {
     public enum CaveDollState
     {

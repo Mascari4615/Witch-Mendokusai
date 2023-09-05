@@ -15,6 +15,14 @@ MonoBehaviour:
   id: 0
   key: 
   triggeredBy: []
-  triggers: []
-  criteria: []
-  modifications: []
+  triggers:
+  - {fileID: 11400000, guid: 35aa60e4d9668404fbcdccbe3c0a43d2, type: 2}
+  - {fileID: 11400000, guid: 35aa60e4d9668404fbcdccbe3c0a43d2, type: 2}
+  criteria:
+  - FactEntry: {fileID: 0}
+    ComparisonOperator: 0
+    Value: 0
+  modifications:
+  - FactEntry: {fileID: 0}
+    ArithmeticOperator: 0
+    Value: 0

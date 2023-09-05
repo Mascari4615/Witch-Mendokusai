@@ -36,9 +36,9 @@ public class DataManager : Singleton<DataManager>
     public MineStageDataBuffer caveGameStageDataBuffer;
     public StageDataBuffer forestStageDataBuffer;
     public StageDataBuffer adventureStageDataBuffer;
-    public readonly Dictionary<ContentType, Stage[]> StageDic = new();
-    public readonly Dictionary<int, Stage> CaveIdleStageDic = new();
-    public readonly Dictionary<int, MineStage> CaveGameStageDic = new();
+    public readonly Dictionary<ContentType, ClickerStage[]> StageDic = new();
+    public readonly Dictionary<int, ClickerStage> CaveIdleStageDic = new();
+    public readonly Dictionary<int, MineClickerStage> CaveGameStageDic = new();
 
     public readonly Dictionary<string, int> CraftDic = new();
 

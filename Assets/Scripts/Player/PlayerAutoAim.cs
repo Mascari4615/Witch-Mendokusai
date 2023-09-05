@@ -12,6 +12,7 @@ public class PlayerAutoAim : MonoBehaviour
     // [SerializeField] private float blendSpeed;
 
     [SerializeField] private GameObject targetMarker;
+    [SerializeField] private Transform targetPos;
     [SerializeField] private Animator targetMarkerAnimator;
 
     [SerializeField] private Vector3Variable playerAutoAimDirection;
@@ -30,7 +31,7 @@ public class PlayerAutoAim : MonoBehaviour
 
         foreach (var target in GameManager.Instance.EnemyRuntimeSet.Items)
         {
-            Debug.Log(target.gameObject.name);
+            // Debug.Log(target.gameObject.name);
             var distance = Vector3.Distance(playerPos, target.transform.position);
 
             if (distance > maxDistance)
@@ -60,7 +61,7 @@ public class PlayerAutoAim : MonoBehaviour
             if (target == null)
             {
                 curNearestTarget = null;
-                targetGroup.m_Targets[1].target = null;
+                // targetGroup.m_Targets[1].target = null;
                 playerAutoAimDirection.RuntimeValue = Vector3.zero;
 
                 if (targetMarker.activeSelf)
@@ -84,7 +85,8 @@ public class PlayerAutoAim : MonoBehaviour
 
                     // changeTarget = StartCoroutine(ChangeTarget());
 
-                    targetGroup.m_Targets[1].target = curNearestTarget.transform;
+                    targetPos.position = curNearestTarget.transform.position;
+                    // targetGroup.m_Targets[1].target = curNearestTarget.transform;
                 }
 
                 if (!targetMarker.activeSelf)
@@ -97,7 +99,12 @@ public class PlayerAutoAim : MonoBehaviour
                 playerAutoAimDirection.RuntimeValue = (curNearestTarget.transform.position - transform.position).normalized;
             }
 
-            yield return new WaitForSeconds(.2f);
+            targetGroup.m_Targets[1].target =
+                Vector3.Distance(PlayerController.Instance.transform.position, targetPos.transform.position) > maxDistance
+                    ? null
+                    : targetPos;
+
+            yield return new WaitForSeconds(.3f);
         }
     }
 

@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         if (!isChatting.RuntimeValue)
-            playerRigidBody.velocity = moveDirection * (movementSpeed * (isPlayerButton0Down.RuntimeValue ? .5f : 1));
+            playerRigidBody.velocity = moveDirection * (movementSpeed * ((Input.GetKey(KeyCode.Space) || isPlayerButton0Down.RuntimeValue) ? .5f : 1));
     }
 
     public void TeleportTo(Vector3 targetPos)

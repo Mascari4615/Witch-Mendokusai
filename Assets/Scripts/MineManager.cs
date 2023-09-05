@@ -18,7 +18,7 @@ public class MineManager: Singleton<MineManager>
     private readonly List<StoneObject> _stoneObjects = new List<StoneObject>();
     private Dictionary<Vector2Int, int> _curMineStoneData = new Dictionary<Vector2Int, int>();
 
-    private MineStage _curStage;
+    private MineClickerStage _curClickerStage;
     private int _curLevel;
     
     [ContextMenu("Test")]
@@ -38,7 +38,7 @@ public class MineManager: Singleton<MineManager>
 
     public void EnterMine(int caveID)
     {
-        _curStage = DataManager.Instance.CaveGameStageDic[caveID];
+        _curClickerStage = DataManager.Instance.CaveGameStageDic[caveID];
         GenerateCave();
         StartCurStage();
     }
@@ -50,13 +50,13 @@ public class MineManager: Singleton<MineManager>
 
     private void GenerateCave()
     {
-        Debug.Log(_curStage);
+        Debug.Log(_curClickerStage);
         // background.sprite = _curStage.Background;
 
         _curMineStoneData = new Dictionary<Vector2Int, int>();
 
         GenerateStructures(1);
-        GenerateMinerals(_curStage.StoneAmount);
+        GenerateMinerals(_curClickerStage.StoneAmount);
 
         void GenerateStructures(int amount)
         {
@@ -116,7 +116,7 @@ public class MineManager: Singleton<MineManager>
                         continue;
                     
                     Probability<StoneData> probability = new();
-                    foreach (var stone in _curStage.SpecialThingWithPercentages)
+                    foreach (var stone in _curClickerStage.SpecialThingWithPercentages)
                         probability.Add(stone.Artifact as StoneData, stone.Percentage);
 
                     var stoneData = probability.Get();
