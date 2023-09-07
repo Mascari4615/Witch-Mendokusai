@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FMODUnity;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -12,13 +13,33 @@ public class MasteryManager : MonoBehaviour
     [SerializeField] private MasteryRuntimeSet masteryRuntimeSet;
     [SerializeField] private GameObject selectMasteryPanel;
     [SerializeField] private Image[] buttonImages;
+
+    [SerializeField] private TextMeshProUGUI stackText;
+
     // [SerializeField] private ToolTipTrigger[] toolTipTriggers;
-    private int selectMasteryStack = 0;
+    private int _selectMasteryStack;
+
+    private int SelectMasteryStack
+    {
+        get => _selectMasteryStack;
+        set
+        {
+            _selectMasteryStack = value;
+            stackText.text = _selectMasteryStack > 1 ? $"x{_selectMasteryStack}" : string.Empty;
+        }
+    }
+
     private readonly Mastery[] randomMasteries = new Mastery[3];
 
     private void Awake()
     {
+        Init();
+    }
+
+    private void Init()
+    {
         selectMasteryPanel.SetActive(false);
+        SelectMasteryStack = 0;
     }
 
     private void Initialize()
@@ -35,11 +56,9 @@ public class MasteryManager : MonoBehaviour
         }
     }
 
-    public void SetSelectMasteryPanelOff() => selectMasteryPanel.SetActive(false);
-
     public void LevelUp()
     {
-        selectMasteryStack++;
+        SelectMasteryStack++;
 
         if (selectMasteryPanel.activeSelf == false)
         {
@@ -52,11 +71,11 @@ public class MasteryManager : MonoBehaviour
     {
         RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
         // ToolTipManager.Instance.Hide();
-        selectMasteryStack--;
+        SelectMasteryStack--;
 
         masteryRuntimeSet.Add(randomMasteries[i]);
 
-        if (selectMasteryStack > 0)
+        if (SelectMasteryStack > 0)
         {
             Initialize();
             selectMasteryPanel.SetActive(true);
