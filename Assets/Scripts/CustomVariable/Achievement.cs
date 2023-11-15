@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[CreateAssetMenu(fileName = nameof(Achievement), menuName = "Variable/Page")]
+[CreateAssetMenu(fileName = nameof(Achievement), menuName = "Variable/Achievement")]
 public class Achievement : Artifact
 {
     public bool Unlock => unlock;

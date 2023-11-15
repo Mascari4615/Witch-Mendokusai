@@ -30,7 +30,7 @@ public class ObjectManager : Singleton<ObjectManager>
         {
             if (_stack.Contains(targetObject))
             {
-                Debug.Log($"{targetObject.name}, 이미 스택에 존재합니다");
+                // Debug.Log($"{targetObject.name}, 이미 스택에 존재합니다");
                 return;
             }
             
@@ -82,7 +82,7 @@ public class ObjectManager : Singleton<ObjectManager>
         else
         {
             _objectPoolDic[objectName] = new ObjectPool(targetObject);
-            _objectPoolDic[objectName].CreateObject(5);
+            _objectPoolDic[objectName].CreateObject(1);
             return _objectPoolDic[objectName].Pop();
         }
     }

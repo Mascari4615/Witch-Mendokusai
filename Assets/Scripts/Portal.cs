@@ -3,13 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Portal : MonoBehaviour
+public class Portal : InteractiveObject
 {
-    [SerializeField] private int targetStageID;
-    
-    private void OnTriggerEnter2D(Collider2D other)
+    public Transform TpPos => tpPos;
+
+    [SerializeField] private Stage targetStage;
+    [SerializeField] private int targetPortalIndex;
+    [SerializeField] private Transform tpPos;
+
+    public override void Interact()
     {
-        if (other.gameObject.CompareTag("Player"))
-            StageManager.Instance.LoadStage(targetStageID);
+        StageManager.Instance.LoadStage(targetStage, targetPortalIndex);
+    }
+
+    public void Active()
+    {
+        gameObject.layer = 0;
     }
 }

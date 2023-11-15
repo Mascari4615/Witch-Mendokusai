@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Item
 {
+    public Guid Guid { get; private set; }
     public ItemData Data { get; private set; }
     public int MaxAmount => Data.MaxAmount;
     public int Amount { get; protected set; }
-    public Item(ItemData data, int amount = 1)
+    public Item(Guid guid, ItemData data, int amount = 1)
     {
+        Guid = guid;
         Data = data;
         SetAmount(amount);
     }

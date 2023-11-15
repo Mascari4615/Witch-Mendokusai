@@ -13,9 +13,9 @@ public class Inventory : ScriptableObject
     [SerializeField] private GameEvent onItemRemove;
 
     [field: System.NonSerialized] public Item[] Items { get; private set; }
-    [System.NonSerialized] private readonly List<InventoryUI> _inventoryUIs = new List<InventoryUI>();
+    [System.NonSerialized] private readonly List<UIItemInventory> _inventoryUIs = new List<UIItemInventory>();
 
-    public void RegisterInventoryUI(InventoryUI inventoryUI)
+    public void RegisterInventoryUI(UIItemInventory uiItemInventory)
     {
         try
         {
@@ -29,7 +29,7 @@ public class Inventory : ScriptableObject
         }
         finally
         {
-            _inventoryUIs.Add(inventoryUI);
+            _inventoryUIs.Add(uiItemInventory);
         }
     }
 
@@ -46,7 +46,7 @@ public class Inventory : ScriptableObject
         return -1;
     }
 
-    private int FindItemSlotIndex(ItemData target, int startIndex = 0)
+    public int FindItemSlotIndex(ItemData target, int startIndex = 0)
     {
         for (var i = startIndex; i < Capacity; i++)
         {
@@ -59,6 +59,24 @@ public class Inventory : ScriptableObject
                 continue;
 
             if (!current.IsMax)
+                return i;
+        }
+
+        return -1;
+    }
+
+    public int FindEquipmentByGuid(Guid? guid)
+    {
+        if (guid == null)
+            return -1;
+        
+        for (var i = 0; i < Capacity; i++)
+        {
+            var current = Items[i];
+            if (current == null)
+                continue;
+            
+            if (current.Guid == guid)
                 return i;
         }
 
@@ -184,7 +202,7 @@ public class Inventory : ScriptableObject
         Capacity = 30;
         var temp = new Item[Capacity];
         foreach (var itemData in savedItems)
-            temp[itemData.slotIndex] = new Item(DataManager.Instance.ItemDic[itemData.itemID], itemData.itemAmount);
+            temp[itemData.slotIndex] = new Item(itemData.Guid, DataManager.Instance.ItemDic[itemData.itemID], itemData.itemAmount);
         Items = temp;
     }
 
@@ -254,23 +272,8 @@ public class Inventory : ScriptableObject
             inventoryUI.UpdateSlotUI(index, item);
 
             // 1. 아이템이 슬롯에 존재하는 경우
-            if (item != null)
-                inventoryUI.UpdateSlotFilterState(index, item.Data);
+            //if (item != null)
+              //  inventoryUI.UpdateSlotFilterState(index, item.Data);
         }
     }
-}
-
-[Serializable]
-public struct InventorySlotData
-{
-    public InventorySlotData(int slotIndex, Item item)
-    {
-        this.slotIndex = slotIndex;
-        itemID = item.Data.ID;
-        itemAmount = item.Amount;
-    }
-
-    public int slotIndex;
-    public int itemID;
-    public int itemAmount;
 }

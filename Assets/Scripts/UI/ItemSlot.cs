@@ -12,11 +12,15 @@ public class ItemSlot : Slot, IBeginDragHandler, IEndDragHandler, IDragHandler, 
     
     public bool onlyOneItem = false;
     public bool canPlayerSetItem = true;
+    public bool canDrag = true;
 
     public void SetInventory(Inventory inventory) => _inventory = inventory;
     
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!canDrag)
+            return;
+        
         if (!HasItem)
             return;
 
@@ -25,6 +29,9 @@ public class ItemSlot : Slot, IBeginDragHandler, IEndDragHandler, IDragHandler, 
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!canDrag)
+            return;
+        
         if (!HasItem)
             return;
 
@@ -33,6 +40,9 @@ public class ItemSlot : Slot, IBeginDragHandler, IEndDragHandler, IDragHandler, 
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!canDrag)
+            return;
+        
         DragSlot.instance.SetColor(0);
         DragSlot.instance.SetSlot(null);
     }
@@ -40,6 +50,9 @@ public class ItemSlot : Slot, IBeginDragHandler, IEndDragHandler, IDragHandler, 
     // DragSlot이 위에 떨어졌을 때
     public void OnDrop(PointerEventData eventData)
     {
+        if (!canDrag)
+            return;
+        
         if (!DragSlot.instance.isHoldingSomething)
             return;
         

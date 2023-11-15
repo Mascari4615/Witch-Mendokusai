@@ -6,47 +6,46 @@ using UnityEngine;
 
 public interface IHitable
 {
-	public void ReceiveAttack(int damage);
+    public void ReceiveAttack(int damage);
 }
 
 public class DamagingObject : SkillComponent
 {
-	[SerializeField] private int damage;
+    [SerializeField] private int damage;
+    [SerializeField] private bool disableWhenHit;
 
-	private bool usedByPlayer = false;
-	private bool vaild = false;
+    [SerializeField] private bool usedByPlayer = false;
+    private bool vaild = true;
 
-	public void OnTriggerEnter(Collider other)
-	{
-		if (vaild == false)
-			return;
+    public void OnTriggerEnter(Collider other)
+    {
+        if (vaild == false)
+            return;
 
-		if (other.TryGetComponent(out IHitable hitable))
-		{
-			if (hitable is EnemyObject && usedByPlayer)
-			{
-				Debug.Log(nameof(OnTriggerEnter));
-				hitable.ReceiveAttack(damage);
-				TurnOff();
-			}
-			else if (hitable is PlayerObject && !usedByPlayer)
-			{
-				Debug.Log(nameof(OnTriggerEnter));
-				hitable.ReceiveAttack(damage);
-				TurnOff();
-			}
-		}
-	}
+        if (other.TryGetComponent(out IHitable hitable))
+        {
+            switch (hitable)
+            {
+                case EnemyObject when usedByPlayer:
+                case PlayerObject when !usedByPlayer:
+                    // Debug.Log(nameof(OnTriggerEnter));
+                    hitable.ReceiveAttack(damage);
+                    if (disableWhenHit)
+                        TurnOff();
+                    break;
+            }
+        }
+    }
 
-	public override void InitContext(SkillObject skillObject)
-	{
-		usedByPlayer = skillObject.UsedByPlayer;
-		vaild = true;
-	}
+    public override void InitContext(SkillObject skillObject)
+    {
+        usedByPlayer = skillObject.UsedByPlayer;
+        vaild = true;
+    }
 
-	private void TurnOff()
-	{
-		vaild = false;
-		gameObject.SetActive(false);
-	}
+    private void TurnOff()
+    {
+        vaild = false;
+        gameObject.SetActive(false);
+    }
 }

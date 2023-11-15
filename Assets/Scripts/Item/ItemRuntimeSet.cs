@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ItemRuntimeSet : RunTimeSet<ItemData>
+public abstract class ItemRuntimeSet : RuntimeSet<ItemData>
 {
     [System.NonSerialized] public Dictionary<int, int> itemCountDic = new();
 

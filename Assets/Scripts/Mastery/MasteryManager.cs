@@ -10,11 +10,13 @@ using Random = UnityEngine.Random;
 
 public class MasteryManager : MonoBehaviour
 {
-    [SerializeField] private MasteryRuntimeSet masteryRuntimeSet;
+    [SerializeField] private MasteryRuntimeSet masterySet;
+    [SerializeField] private MasteryRuntimeSet selectMasterySet;
     [SerializeField] private GameObject selectMasteryPanel;
     [SerializeField] private Image[] buttonImages;
-
+    [SerializeField] private TextMeshProUGUI[] texts;
     [SerializeField] private TextMeshProUGUI stackText;
+    private int[] _choices = new int[3];
 
     // [SerializeField] private ToolTipTrigger[] toolTipTriggers;
     private int _selectMasteryStack;
@@ -29,31 +31,25 @@ public class MasteryManager : MonoBehaviour
         }
     }
 
-    private readonly Mastery[] randomMasteries = new Mastery[3];
 
     private void Awake()
     {
-        Init();
-    }
-
-    private void Init()
-    {
+             
         selectMasteryPanel.SetActive(false);
         SelectMasteryStack = 0;
     }
 
-    private void Initialize()
+    public void Init()
     {
-        // TODO : 가지고 있는 스킬의 마스터리에 대해서만 작동하도록
-        List<Mastery> temp = DataManager.Instance.MasteryBuffer.items.ToList();
-        for (int i = 0; i < 3; i++)
-        {
-            int random = Random.Range(0, temp.Count);
-            randomMasteries[i] = temp[random];
-            buttonImages[i].sprite = randomMasteries[i].Thumbnail;
-            //  toolTipTriggers[i].SetToolTip(randomMasteries[i]);
-            temp.RemoveAt(random);
-        }
+        masterySet.Items.Clear();
+
+        masterySet.Items.AddRange(DataManager.Instance.CurDoll.Masteries);
+        masterySet.Items.AddRange(DataManager.Instance.CurStuff(0)!.Masteries);
+        masterySet.Items.AddRange(DataManager.Instance.CurStuff(1)!.Masteries);
+        masterySet.Items.AddRange(DataManager.Instance.CurStuff(2)!.Masteries);
+        
+        selectMasteryPanel.SetActive(false);
+        SelectMasteryStack = 0;
     }
 
     public void LevelUp()
@@ -62,7 +58,7 @@ public class MasteryManager : MonoBehaviour
 
         if (selectMasteryPanel.activeSelf == false)
         {
-            Initialize();
+            ShowMasterys();
             selectMasteryPanel.SetActive(true);
         }
     }
@@ -72,14 +68,38 @@ public class MasteryManager : MonoBehaviour
         RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
         // ToolTipManager.Instance.Hide();
         SelectMasteryStack--;
-
-        masteryRuntimeSet.Add(randomMasteries[i]);
+        
+        Mastery randomMastery = masterySet.Items[_choices[i]];
+        selectMasterySet.Add(randomMastery);
+        masterySet.Items.RemoveAt(_choices[i]);
 
         if (SelectMasteryStack > 0)
         {
-            Initialize();
+            ShowMasterys();
             selectMasteryPanel.SetActive(true);
         }
         else selectMasteryPanel.SetActive(false);
+    }
+
+    public void ShowMasterys()
+    {
+        _choices = new int[] { -1, -1, -1 };
+        
+        for (int i = 0; i < _choices.Length;)
+        {
+            int randomIndex = Random.Range(0, masterySet.Items.Count);
+            
+            if (_choices.Contains(randomIndex))
+                continue;
+            
+            Mastery randomMastery = masterySet.Items[randomIndex];
+            buttonImages[i].sprite = randomMastery.Thumbnail;
+            texts[i].text = randomMastery.Name;
+       
+            // toolTipTriggers[i].SetToolTip(randomMasteries[i]);
+            
+            _choices[i] = randomIndex;
+            i++;
+        }
     }
 }

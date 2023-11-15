@@ -34,7 +34,7 @@ public class UnitObject : MonoBehaviour
         this.unitData = unitData;
         unitSkillHandler = new UnitSkillHandler();
         
-        Debug.Log(unitSkillHandler);
+        // Debug.Log(unitSkillHandler);
         
         MaxHp = unitData.MaxHp;
         SetHp(unitData.MaxHp);

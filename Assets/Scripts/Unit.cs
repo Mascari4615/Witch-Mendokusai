@@ -8,8 +8,10 @@ public class Unit : Artifact
     public float Speed => speed;
     public int MaxHp => maxHp;
     public Skill[] DefaultSkills => defaultSkills;
-
+    public Material Material => material;
+    
     [SerializeField] private float speed = 1f;
     [SerializeField] private int maxHp;
     [SerializeField] private Skill[] defaultSkills;
+    [SerializeField] private Material material;
 }

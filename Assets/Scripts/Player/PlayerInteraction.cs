@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Karmotrine.Script;
@@ -6,6 +7,7 @@ using UnityEngine;
 
 public class PlayerInteraction : MonoBehaviour
 {
+    [SerializeField] private Collider collider;
     [SerializeField] private BoolVariable canInteract;
     private Dictionary<int, InteractiveObject> nearInterativeObjects = new Dictionary<int, InteractiveObject>();
 
@@ -13,7 +15,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (nearInterativeObjects.Count == 0)
             return null;
-        
+
         var nearest = nearInterativeObjects.Values.OrderBy(
                 x => Vector3.Distance(transform.position, x.transform.position))
             .First();
@@ -29,7 +31,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         GetNearestInteractiveObject()?.Interact();
     }
-
+    
     public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Interactive"))
@@ -58,5 +60,10 @@ public class PlayerInteraction : MonoBehaviour
     {
         canInteract.RuntimeValue = nearInterativeObjects.Count > 0;
         Debug.Log(nameof(UpdateCanInteractVariable) + nearInterativeObjects.Count);
+    }
+    
+    public void SetLayer(int layer)
+    {
+        gameObject.layer = layer;
     }
 }

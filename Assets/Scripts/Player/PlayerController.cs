@@ -9,6 +9,7 @@ public class PlayerController : Singleton<PlayerController>
     [SerializeField] private BoolVariable isPlayerButton0Down;
     [SerializeField] private PlayerInteraction playerInteraction;
     [SerializeField] private PlayerObject playerObject;
+    public GameObject playerExpCollider;
 
     public void TeleportTo(Vector3 targetPos)
     {
@@ -37,5 +38,23 @@ public class PlayerController : Singleton<PlayerController>
         {
             playerObject.UseSkill(0);
         }
+    }
+
+    [SerializeField] private IntVariable maxHP;
+    
+    public void SetDoll(DollData dollData)
+    {
+        // 인형 선택시 호출?
+    }
+
+    private void UpdateDollData()
+    {
+        // TOOD : 뭐 이런 초기화 작업들?
+        // maxHP.RuntimeValue = dolldat.MaxHp;
+    }
+
+    public void SetInteractionColliderLayer(int layer)
+    {
+        playerInteraction.SetLayer(layer);
     }
 }

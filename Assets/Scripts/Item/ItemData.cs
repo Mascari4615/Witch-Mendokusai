@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -9,7 +10,7 @@ public class ItemData : Artifact
     public Recipe[] Recipes => recipes;
     public int MaxAmount => maxAmount;
     public bool IsCountable => MaxAmount != 1;
-    
+
     [SerializeField] private Grade grade;
     [SerializeField] private ItemType type;
     [SerializeField] private Recipe[] recipes;
@@ -17,14 +18,15 @@ public class ItemData : Artifact
 
     public Item CreateItem()
     {
-        return new Item(this);
+        return new Item(Guid.NewGuid(), this);
     }
 }
 
 public enum ItemType
 {
     Loot,
-    Potion
+    Potion,
+    Equipment
 }
 
 public enum Grade

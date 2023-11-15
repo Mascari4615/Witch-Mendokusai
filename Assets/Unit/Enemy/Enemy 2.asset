@@ -16,7 +16,10 @@ MonoBehaviour:
   name: 
   description: 
   thumbnail: {fileID: 21300000, guid: 08e28f98c220b024a89372c3697cd85c, type: 3}
+  speed: 1
   maxHp: 10
+  defaultSkills: []
+  material: {fileID: 2100000, guid: aa9294a944b603544b85d5b9c42eeda6, type: 2}
   loots:
   - artifact: {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
     percentage: 100

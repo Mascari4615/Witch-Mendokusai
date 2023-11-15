@@ -2,11 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
-using MoreMountains.Feedbacks;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace Karmotrine.Script
 {
@@ -184,6 +180,7 @@ namespace Karmotrine.Script
             // collider2D.enabled = true;
             // Rigidbody2D.bodyType = RigidbodyType2D.Dynamic;
             // Rigidbody2D.velocity = Vector3.zero;
+            spriteRenderer.sharedMaterial = unitData.Material;
             GameManager.Instance?.EnemyRuntimeSet.Add(gameObject);
             hpBar.localScale = Vector3.one;
             // Animator.SetTrigger("AWAKE");

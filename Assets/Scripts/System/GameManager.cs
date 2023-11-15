@@ -3,10 +3,7 @@ using UnityEngine;
 public enum ContentType
 {
     Home,
-    CaveIdle,
-    ForestIdle,
-    AdventureIdle,
-    CaveGame
+    Combat,
 }
 
 public enum PlayerState
@@ -19,13 +16,12 @@ public enum PlayerState
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private CameraManager cameraManager;
-    [SerializeField] private ClickerManager clickerManager;
     [SerializeField] private UIManager uiManager;
     public ContentType CurContent { get; private set; } = ContentType.Home;
     public PlayerState CurPlayerState { get; private set; } = PlayerState.Peaceful;
 
-    [SerializeField] private GameObjectRunTimeSet enemyRuntimeSet;
-    public GameObjectRunTimeSet EnemyRuntimeSet => enemyRuntimeSet;
+    [SerializeField] private GameObjectRuntimeSet enemyRuntimeSet;
+    public GameObjectRuntimeSet EnemyRuntimeSet => enemyRuntimeSet;
 
     protected override void Awake()
     {
@@ -51,7 +47,7 @@ public class GameManager : Singleton<GameManager>
     {
         CurContent = newContent;
         // cameraManager.SetCamera((int)CurContent);
-        clickerManager.TryOpenClicker(newContent);
+        // clickerManager.TryOpenClicker(newContent);
     }
 
     public void SetPlayerState(int newPlayerState)
