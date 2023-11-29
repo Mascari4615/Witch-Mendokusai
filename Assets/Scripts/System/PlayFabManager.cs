@@ -21,13 +21,13 @@ public class PlayFabManager : Singleton<PlayFabManager>
         if (Logined)
             return;
         
-        PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
+        /*PlayGamesClientConfiguration config = new PlayGamesClientConfiguration.Builder()
             .AddOauthScope("profile")
             .RequestServerAuthCode(false)
             .Build();
         PlayGamesPlatform.InitializeInstance(config);
         PlayGamesPlatform.DebugLogEnabled = true;
-        PlayGamesPlatform.Activate();
+        PlayGamesPlatform.Activate();*/
 
         if (SceneManager.GetActiveScene().buildIndex != 0)
             Login();

@@ -38,7 +38,7 @@ public class GameManager : Singleton<GameManager>
         // Application.targetFrameRate = 30;
     }
 
-    public void SetContent(int newContent)
+	public void SetContent(int newContent)
     {
         SetContent((ContentType)newContent);
     }

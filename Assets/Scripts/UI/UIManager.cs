@@ -13,7 +13,6 @@ public class UIManager : Singleton<UIManager>
         Home,
         BookShelf,
         Inventory,
-        Settings,
         PotionCraft
     }
 
@@ -28,6 +27,9 @@ public class UIManager : Singleton<UIManager>
     [SerializeField] private Slider masterVolumeSlider;
     [SerializeField] private Slider bgmVolumeSlider;
     [SerializeField] private Slider sfxVolumeSlider;
+
+    [SerializeField] private GameObject settingPanel;
+    [SerializeField] private BoolVariable IsPaused;
 
     public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
     public void OpenCanvas(PlayerState canvasType)
@@ -102,5 +104,10 @@ public class UIManager : Singleton<UIManager>
     {
         menuPanel.SetActive(active);
         menuButton.transform.rotation = Quaternion.Euler(0, 0, active? -180 : 0);
+    }
+
+    public void OnPausedChange()
+    {
+        settingPanel.SetActive(IsPaused.RuntimeValue);
     }
 }
