@@ -5,37 +5,40 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 
-public class FadeTackMixer : PlayableBehaviour
+namespace Mascari4615
 {
-    public override void ProcessFrame(Playable playable, FrameData info, object playerData)
-    {
+	public class FadeTackMixer : PlayableBehaviour
+	{
+		public override void ProcessFrame(Playable playable, FrameData info, object playerData)
+		{
 #if UNITY_EDITOR
-        CanvasGroup canvasGroup = Object.FindObjectOfType<UIManager>().CutSceneModule.FadeCanvasGroup;
+			CanvasGroup canvasGroup = Object.FindObjectOfType<UIManager>().CutSceneModule.FadeCanvasGroup;
 #else
         CanvasGroup canvasGroup = UIManager.Instance.CutSceneModule.FadeCanvasGroup;
 #endif
 
-        float currentAlpha = 0f;
+			float currentAlpha = 0f;
 
-        if (!canvasGroup)
-            return;
+			if (!canvasGroup)
+				return;
 
-        int inputCount = playable.GetInputCount();
-        for (int i = 0; i < inputCount; i++)
-        {
-            float inputWeight = playable.GetInputWeight(i);
+			int inputCount = playable.GetInputCount();
+			for (int i = 0; i < inputCount; i++)
+			{
+				float inputWeight = playable.GetInputWeight(i);
 
-            if (inputWeight > 0f)
-            {
-                ScriptPlayable<FadeBehaviour> inputPlayable =
-                    (ScriptPlayable<FadeBehaviour>)playable.GetInput(i);
+				if (inputWeight > 0f)
+				{
+					ScriptPlayable<FadeBehaviour> inputPlayable =
+						(ScriptPlayable<FadeBehaviour>)playable.GetInput(i);
 
-                FadeBehaviour input = inputPlayable.GetBehaviour();
-                // currentAlpha = input.alpha;
-                currentAlpha = inputWeight;
-            }
-        }
+					FadeBehaviour input = inputPlayable.GetBehaviour();
+					// currentAlpha = input.alpha;
+					currentAlpha = inputWeight;
+				}
+			}
 
-        canvasGroup.alpha = currentAlpha;
-    }
+			canvasGroup.alpha = currentAlpha;
+		}
+	}
 }

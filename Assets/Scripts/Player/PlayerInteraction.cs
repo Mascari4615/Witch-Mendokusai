@@ -2,68 +2,70 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Karmotrine.Script;
 using UnityEngine;
 
-public class PlayerInteraction : MonoBehaviour
+namespace Mascari4615
 {
-    [SerializeField] private Collider collider;
-    [SerializeField] private BoolVariable canInteract;
-    private Dictionary<int, InteractiveObject> nearInterativeObjects = new Dictionary<int, InteractiveObject>();
+	public class PlayerInteraction : MonoBehaviour
+	{
+		[SerializeField] private Collider collider;
+		[SerializeField] private BoolVariable canInteract;
+		private Dictionary<int, InteractiveObject> nearInterativeObjects = new Dictionary<int, InteractiveObject>();
 
-    private InteractiveObject GetNearestInteractiveObject()
-    {
-        if (nearInterativeObjects.Count == 0)
-            return null;
+		private InteractiveObject GetNearestInteractiveObject()
+		{
+			if (nearInterativeObjects.Count == 0)
+				return null;
 
-        var nearest = nearInterativeObjects.Values.OrderBy(
-                x => Vector3.Distance(transform.position, x.transform.position))
-            .First();
-        return nearest;
-    }
+			var nearest = nearInterativeObjects.Values.OrderBy(
+					x => Vector3.Distance(transform.position, x.transform.position))
+				.First();
+			return nearest;
+		}
 
-    private void Start()
-    {
-        UpdateCanInteractVariable();
-    }
+		private void Start()
+		{
+			UpdateCanInteractVariable();
+		}
 
-    public void Interaction()
-    {
-        GetNearestInteractiveObject()?.Interact();
-    }
-    
-    public void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Interactive"))
-        {
-            if (other.TryGetComponent(out InteractiveObject interactiveObject))
-            {
-                nearInterativeObjects.Add(other.gameObject.GetInstanceID(), interactiveObject);
-                UpdateCanInteractVariable();
-            }
-        }
-    }
+		public void Interaction()
+		{
+			GetNearestInteractiveObject()?.Interact();
+		}
 
-    public void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Interactive"))
-        {
-            if (nearInterativeObjects.ContainsKey(other.gameObject.GetInstanceID()))
-            {
-                nearInterativeObjects.Remove(other.gameObject.GetInstanceID());
-                UpdateCanInteractVariable();
-            }
-        }
-    }
+		public void OnTriggerEnter(Collider other)
+		{
+			if (other.CompareTag("Interactive"))
+			{
+				if (other.TryGetComponent(out InteractiveObject interactiveObject))
+				{
+					nearInterativeObjects.Add(other.gameObject.GetInstanceID(), interactiveObject);
+					UpdateCanInteractVariable();
+				}
+			}
+		}
 
-    private void UpdateCanInteractVariable()
-    {
-        canInteract.RuntimeValue = nearInterativeObjects.Count > 0;
-        Debug.Log(nameof(UpdateCanInteractVariable) + nearInterativeObjects.Count);
-    }
-    
-    public void SetLayer(int layer)
-    {
-        gameObject.layer = layer;
-    }
+		public void OnTriggerExit(Collider other)
+		{
+			if (other.CompareTag("Interactive"))
+			{
+				if (nearInterativeObjects.ContainsKey(other.gameObject.GetInstanceID()))
+				{
+					nearInterativeObjects.Remove(other.gameObject.GetInstanceID());
+					UpdateCanInteractVariable();
+				}
+			}
+		}
+
+		private void UpdateCanInteractVariable()
+		{
+			canInteract.RuntimeValue = nearInterativeObjects.Count > 0;
+			Debug.Log(nameof(UpdateCanInteractVariable) + nearInterativeObjects.Count);
+		}
+
+		public void SetLayer(int layer)
+		{
+			gameObject.layer = layer;
+		}
+	}
 }

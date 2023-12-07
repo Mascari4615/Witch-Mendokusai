@@ -5,12 +5,15 @@ using UnityEngine.Timeline;
 using TMPro;
 using UnityEngine.Playables;
 
-[TrackBindingType(typeof(TextMeshProUGUI))]
-[TrackClipType(typeof(SubtitleClip))]
-public class SubtitleTrack : TrackAsset
+namespace Mascari4615
 {
-    public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
-    {
-        return ScriptPlayable<SubtitleTackMixer>.Create(graph, inputCount);
-    }
+	[TrackBindingType(typeof(TextMeshProUGUI))]
+	[TrackClipType(typeof(SubtitleClip))]
+	public class SubtitleTrack : TrackAsset
+	{
+		public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
+		{
+			return ScriptPlayable<SubtitleTackMixer>.Create(graph, inputCount);
+		}
+	}
 }

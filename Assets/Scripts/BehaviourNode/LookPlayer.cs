@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using TheKiwiCoder;
 using UnityEngine;
 
-namespace TheKiwiCoder
+namespace Mascari4615
 {
     [System.Serializable]
-    public class LookPlayer : ActionNode
-    {
-        protected override void OnStart()
+    public class LookPlayer // : ActionNode
+	{
+/*        protected override void OnStart()
         {
         }
 
@@ -24,6 +25,6 @@ namespace TheKiwiCoder
         protected bool IsPlayerOnLeft()
         {
             return PlayerController.Instance.transform.position.x < context.transform.position.x;
-        }
+        }*/
     }
 }

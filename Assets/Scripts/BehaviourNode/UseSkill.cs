@@ -4,9 +4,9 @@ using UnityEngine;
 using TheKiwiCoder;
 
 [System.Serializable]
-public class UseSkill : ActionNode
+public class UseSkill // : ActionNode
 {
-    [SerializeField] private int skillButtonIndex;
+/*    [SerializeField] private int skillButtonIndex;
     
     protected override void OnStart()
     {
@@ -20,5 +20,5 @@ public class UseSkill : ActionNode
     {
         context.enemyObject.UseSkill(skillButtonIndex);
         return State.Success;
-    }
+    }*/
 }

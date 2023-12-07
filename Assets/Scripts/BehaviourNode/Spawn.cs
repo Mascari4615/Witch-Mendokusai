@@ -5,9 +5,9 @@ using UnityEngine;
 namespace TheKiwiCoder
 {
     [System.Serializable]
-    public class Spawn : ActionNode
+    public class Spawn // : ActionNode
     {
-        [SerializeField] private GameObject spawnObject;
+/*        [SerializeField] private GameObject spawnObject;
         
         protected override void OnStart()
         {
@@ -21,6 +21,6 @@ namespace TheKiwiCoder
         {
             ObjectManager.Instance?.PopObject(spawnObject).SetActive(true);
             return State.Success;
-        }
+        }*/
     }
 }

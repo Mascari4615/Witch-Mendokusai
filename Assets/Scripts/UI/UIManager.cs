@@ -6,108 +6,151 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class UIManager : Singleton<UIManager>
+namespace Mascari4615
 {
-    public enum MenuPanelType
-    {
-        Home,
-        BookShelf,
-        Inventory,
-        PotionCraft
-    }
+	public class UIManager : Singleton<UIManager>
+	{
+		public enum MenuPanelType
+		{
+			Home,
+			BookShelf,
+			Inventory,
+			PotionCraft
+		}
 
-    public CutSceneModule CutSceneModule => cutSceneModule;
-    [SerializeField] private CutSceneModule cutSceneModule;
+		public CutSceneModule CutSceneModule => cutSceneModule;
+		[SerializeField] private CutSceneModule cutSceneModule;
 
-    [SerializeField] private GameObject[] canvasList;
-    [SerializeField] private GameObject[] menuPanelList;
-    private PlayerState _curCanvas = PlayerState.Peaceful;
-    private MenuPanelType _curMenuPanel = MenuPanelType.Home;
+		[SerializeField] private GameObject[] canvasList;
+		[SerializeField] private GameObject[] menuPanelList;
+		private PlayerState _curCanvas = PlayerState.Peaceful;
+		private MenuPanelType _curMenuPanel = MenuPanelType.Home;
 
-    [SerializeField] private Slider masterVolumeSlider;
-    [SerializeField] private Slider bgmVolumeSlider;
-    [SerializeField] private Slider sfxVolumeSlider;
+		[SerializeField] private Slider masterVolumeSlider;
+		[SerializeField] private Slider bgmVolumeSlider;
+		[SerializeField] private Slider sfxVolumeSlider;
 
-    [SerializeField] private GameObject settingPanel;
-    [SerializeField] private BoolVariable IsPaused;
+		[SerializeField] private GameObject settingPanel;
+		[SerializeField] private BoolVariable IsPaused;
 
-    public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
-    public void OpenCanvas(PlayerState canvasType)
-    {
-        Debug.Log($"{nameof(OpenCanvas)}, {canvasType}");
-        _curCanvas = canvasType;
+		public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
+		public void OpenCanvas(PlayerState canvasType)
+		{
+			Debug.Log($"{nameof(OpenCanvas)}, {canvasType}");
+			_curCanvas = canvasType;
 
-        for (var i = 0; i < canvasList.Length; i++)
-            canvasList[i].gameObject.SetActive(i == (int)_curCanvas);
-    }
-    
-    public void OpenPanel(int canvasType) => OpenPanel((MenuPanelType)canvasType);
-    public void OpenPanel(MenuPanelType menuType)
-    {
-        Debug.Log($"{nameof(OpenPanel)}, {menuType}");
-        _curMenuPanel = menuType;
+			for (var i = 0; i < canvasList.Length; i++)
+				canvasList[i].gameObject.SetActive(i == (int)_curCanvas);
+		}
 
-        for (var i = 0; i < menuPanelList.Length; i++)
-            menuPanelList[i].gameObject.SetActive(i == (int)_curMenuPanel);
-    }
+		public void OpenPanel(int canvasType) => OpenPanel((MenuPanelType)canvasType);
+		public void OpenPanel(MenuPanelType menuType)
+		{
+			Debug.Log($"{nameof(OpenPanel)}, {menuType}");
+			_curMenuPanel = menuType;
 
+			for (var i = 0; i < menuPanelList.Length; i++)
+				menuPanelList[i].gameObject.SetActive(i == (int)_curMenuPanel);
 
-    private void Start()
-    {
-        OpenCanvas(PlayerState.Peaceful);
-        InitVolumeSliderValue();
-        SetMenuActive(false);
-    }
+			SetMenuActive(false);
+		}
 
-    private void InitVolumeSliderValue()
-    {
-        masterVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.Master);
-        bgmVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.BGM);
-        sfxVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.SFX);
-    }
+		public void OpenShopPanel()
+		{
 
-    public void UpdateVolume(int busType) => UpdateVolume((AudioManager.BusType)busType);
-    public void UpdateVolume(AudioManager.BusType busType)
-    {
-        switch (busType)
-        {
-            case AudioManager.BusType.Master:
-                AudioManager.Instance.SetVolume(AudioManager.BusType.Master, masterVolumeSlider.value);
-                break;
-            case AudioManager.BusType.BGM:
-                AudioManager.Instance.SetVolume(AudioManager.BusType.BGM, bgmVolumeSlider.value);
-                break;
-            case AudioManager.BusType.SFX:
-                AudioManager.Instance.SetVolume(AudioManager.BusType.SFX, sfxVolumeSlider.value);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(busType), busType, null);
-        }
-    }
+		}
 
-    [SerializeField] private Toggle framerateToggle;
-    
-    public void ToggleFramerate()
-    {
-        Application.targetFrameRate = framerateToggle.isOn ? 60 : 30;
-    }
+		private void Start()
+		{
+			OpenCanvas(PlayerState.Peaceful);
+			InitVolumeSliderValue();
+			SetMenuActive(false);
+		}
 
-    [SerializeField] private GameObject menuPanel;
-    [SerializeField] private GameObject menuButton;
+		private void InitVolumeSliderValue()
+		{
+			masterVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.Master);
+			bgmVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.BGM);
+			sfxVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.SFX);
+		}
 
-    public void ToggleMenu()
-    {
-        SetMenuActive(!menuPanel.activeSelf);
-    }
+		public void UpdateVolume(int busType) => UpdateVolume((AudioManager.BusType)busType);
+		public void UpdateVolume(AudioManager.BusType busType)
+		{
+			switch (busType)
+			{
+				case AudioManager.BusType.Master:
+					AudioManager.Instance.SetVolume(AudioManager.BusType.Master, masterVolumeSlider.value);
+					break;
+				case AudioManager.BusType.BGM:
+					AudioManager.Instance.SetVolume(AudioManager.BusType.BGM, bgmVolumeSlider.value);
+					break;
+				case AudioManager.BusType.SFX:
+					AudioManager.Instance.SetVolume(AudioManager.BusType.SFX, sfxVolumeSlider.value);
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(busType), busType, null);
+			}
+		}
 
-    public void SetMenuActive(bool active)
-    {
-        menuPanel.SetActive(active);
-        menuButton.transform.rotation = Quaternion.Euler(0, 0, active? -180 : 0);
-    }
+		[SerializeField] private Toggle framerateToggle;
 
-    public void OnPausedChange()
-    {
-        settingPanel.SetActive(IsPaused.RuntimeValue);
-    }
+		public void ToggleFramerate()
+		{
+			Application.targetFrameRate = framerateToggle.isOn ? 60 : 30;
+		}
+
+		[SerializeField] private GameObject menuPanel;
+		[SerializeField] private GameObject menuButton;
+
+		public void ToggleMenu()
+		{
+			SetMenuActive(!menuPanel.activeSelf);
+		}
+
+		public void SetMenuActive(bool active)
+		{
+			menuPanel.SetActive(active);
+			menuButton.transform.rotation = Quaternion.Euler(0, 0, active ? -180 : 0);
+		}
+
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.C))
+			{
+				if (_curMenuPanel != MenuPanelType.Inventory)
+					OpenPanel(MenuPanelType.Inventory);
+				else
+					OpenPanel(MenuPanelType.Home);
+			}
+
+			if (Input.GetKeyDown(KeyCode.Tab))
+			{
+				SetMenuActive(true);
+			}
+			else if (Input.GetKeyUp(KeyCode.Tab))
+			{
+				SetMenuActive(false);
+			}
+
+			if (Input.GetKeyDown(KeyCode.Escape))
+			{
+				if (settingPanel.activeSelf)
+				{
+					settingPanel.SetActive(false);
+					TimeManager.Instance.Resume();
+				}
+				else
+				{
+					if (TimeManager.Instance.Paused)
+						return;
+
+					settingPanel.SetActive(true);
+					TimeManager.Instance.Pause();
+				}
+
+				// settingPanel.SetActive(!settingPanel.activeSelf);
+			}
+		}
+	}
 }

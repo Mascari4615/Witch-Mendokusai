@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 510c61cdec524e86b647525bb5947f82, type: 3}
   m_Name: Game Main Camera Blur Config
   m_EditorClassIdentifier: 
-  radius: 2
-  iteration: 1
-  maxDepth: 6
-  strength: 8
+  radius: 1.0475
+  iteration: 2
+  maxDepth: 100
+  strength: 4.19

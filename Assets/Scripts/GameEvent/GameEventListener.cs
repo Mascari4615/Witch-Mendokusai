@@ -1,22 +1,24 @@
-using Karmotrine.Script;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GameEventListener : MonoBehaviour
+namespace Mascari4615
 {
-    public GameEvent Event;
-    public UnityEvent Response;
+	public class GameEventListener : MonoBehaviour
+	{
+		public GameEvent Event;
+		public UnityEvent Response;
 
-    private void OnEnable()
-    { Event.RegisterListener(this); }
+		private void OnEnable()
+		{ Event.RegisterListener(this); }
 
-    private void OnDisable()
-    { Event.UnregisterListener(this); }
+		private void OnDisable()
+		{ Event.UnregisterListener(this); }
 
-    public void OnEventRaised()
-    {
-        // Debug.Log($"{name} : OnEventRaised");
-        Response.Invoke();
-        // Debug.Log($"{name} : OnEventRaisedEnd");
-    }
+		public void OnEventRaised()
+		{
+			// Debug.Log($"{name} : OnEventRaised");
+			Response.Invoke();
+			// Debug.Log($"{name} : OnEventRaisedEnd");
+		}
+	}
 }

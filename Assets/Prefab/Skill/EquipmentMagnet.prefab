@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8642857329060324153}
   - component: {fileID: 5613864090284240812}
   - component: {fileID: 9041963066847525245}
+  - component: {fileID: 484168760439726006}
   m_Layer: 0
   m_Name: EquipmentMagnet
   m_TagString: Untagged
@@ -74,3 +75,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   statDictionary: {fileID: 11400000, guid: d683d1dc8d5f6344791cdf9a6122e182, type: 2}
+--- !u!114 &484168760439726006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7050511653448900852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040dd685ef626fa4bb47dbffe8e0f113, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

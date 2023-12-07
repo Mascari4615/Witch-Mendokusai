@@ -1,64 +1,69 @@
 using UnityEngine;
 
-public enum ContentType
+namespace Mascari4615
 {
-    Home,
-    Combat,
-}
+	public enum ContentType
+	{
+		Home,
+		Combat,
+	}
 
-public enum PlayerState
-{
-    Peaceful,
-    Interact,
-    Combat
-}
+	public enum PlayerState
+	{
+		Peaceful,
+		Interact,
+		Combat
+	}
 
-public class GameManager : Singleton<GameManager>
-{
-    [SerializeField] private CameraManager cameraManager;
-    [SerializeField] private UIManager uiManager;
-    public ContentType CurContent { get; private set; } = ContentType.Home;
-    public PlayerState CurPlayerState { get; private set; } = PlayerState.Peaceful;
+	public class GameManager : Singleton<GameManager>
+	{
+		[SerializeField] private CameraManager cameraManager;
+		[SerializeField] private UIManager uiManager;
+		public ContentType CurContent { get; private set; } = ContentType.Home;
+		public PlayerState CurPlayerState { get; private set; } = PlayerState.Peaceful;
 
-    [SerializeField] private GameObjectRuntimeSet enemyRuntimeSet;
-    public GameObjectRuntimeSet EnemyRuntimeSet => enemyRuntimeSet;
+		[SerializeField] private GameObjectDataBuffer enemyDataBuffer;
+		public GameObjectDataBuffer EnemyDataBuffer => enemyDataBuffer;
+		[SerializeField] private GameObjectDataBuffer dropItemDataBuffer;
+		public GameObjectDataBuffer DropItemDataBuffer => dropItemDataBuffer;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        enemyRuntimeSet.Items.Clear();
-    }
+		protected override void Awake()
+		{
+			base.Awake();
+			enemyDataBuffer.RuntimeItems.Clear();
+		}
 
-    private void Start()
-    {
-        SetContent(ContentType.Home);
-        SetPlayerState(PlayerState.Peaceful);
+		private void Start()
+		{
+			SetContent(ContentType.Home);
+			SetPlayerState(PlayerState.Peaceful);
 
-        // if (Application.isMobilePlatform)
-        // Application.targetFrameRate = 30;
-    }
+			// if (Application.isMobilePlatform)
+			// Application.targetFrameRate = 30;
+		}
 
-	public void SetContent(int newContent)
-    {
-        SetContent((ContentType)newContent);
-    }
+		public void SetContent(int newContent)
+		{
+			SetContent((ContentType)newContent);
+		}
 
-    public void SetContent(ContentType newContent)
-    {
-        CurContent = newContent;
-        // cameraManager.SetCamera((int)CurContent);
-        // clickerManager.TryOpenClicker(newContent);
-    }
+		public void SetContent(ContentType newContent)
+		{
+			CurContent = newContent;
+			// cameraManager.SetCamera((int)CurContent);
+			// clickerManager.TryOpenClicker(newContent);
+		}
 
-    public void SetPlayerState(int newPlayerState)
-    {
-        SetPlayerState((PlayerState)newPlayerState);
-    }
+		public void SetPlayerState(int newPlayerState)
+		{
+			SetPlayerState((PlayerState)newPlayerState);
+		}
 
-    public void SetPlayerState(PlayerState newPlayerState)
-    {
-        CurPlayerState = newPlayerState;
-        cameraManager.SetCamera((int)CurPlayerState);
-        uiManager.OpenCanvas(CurPlayerState);
-    }
+		public void SetPlayerState(PlayerState newPlayerState)
+		{
+			CurPlayerState = newPlayerState;
+			cameraManager.SetCamera((int)CurPlayerState);
+			uiManager.OpenCanvas(CurPlayerState);
+		}
+	}
 }

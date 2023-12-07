@@ -1,4 +1,8 @@
 using System;
 using UnityEngine;
-[CreateAssetMenu(fileName = nameof(DateTimeVarialbe), menuName = "Variable/DateTime")]
-public class DateTimeVarialbe : CustomVariable<DateTime> { }
+
+namespace Mascari4615
+{
+	[CreateAssetMenu(fileName = nameof(DateTimeVarialbe), menuName = "Variable/DateTime")]
+	public class DateTimeVarialbe : CustomVariable<DateTime> { }
+}

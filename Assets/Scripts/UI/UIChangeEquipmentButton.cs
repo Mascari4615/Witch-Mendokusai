@@ -2,13 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIChangeEquipmentButton : MonoBehaviour
+namespace Mascari4615
 {
-    [SerializeField] private UIDollStatePanel uiDollStatePanel;
-    [SerializeField] private Slot slot;
+	public class UIChangeEquipmentButton : MonoBehaviour
+	{
+		[SerializeField] private UIDollStatePanel uiDollStatePanel;
+		[SerializeField] private Slot slot;
 
-    public void ChangeEquipment()
-    {
-        uiDollStatePanel.ApplyNewArtifact(slot.Index);
-    }
+		public void ChangeEquipment()
+		{
+			uiDollStatePanel.ApplyNewArtifact(slot.Index);
+		}
+	}
 }

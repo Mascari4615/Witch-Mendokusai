@@ -1,3 +1,7 @@
 using UnityEngine;
-[CreateAssetMenu(fileName = nameof(FloatVariable), menuName = "Variable/Float")]
-public class FloatVariable : CustomVariable<float> { }
+
+namespace Mascari4615
+{
+	[CreateAssetMenu(fileName = nameof(FloatVariable), menuName = "Variable/Float")]
+	public class FloatVariable : CustomVariable<float> { }
+}

@@ -2,13 +2,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TimeManager : MonoBehaviour
+namespace Mascari4615
 {
-    [SerializeField] private BoolVariable IsPaused;
-
-	private void Update()
+	public class TimeManager : Singleton<TimeManager>
 	{
-		if (Input.GetKeyDown(KeyCode.Escape))
-			IsPaused.RuntimeValue = !IsPaused.RuntimeValue;
+		[SerializeField] private BoolVariable IsPaused;
+		public bool Paused => IsPaused.RuntimeValue;
+
+		protected override void Awake()
+		{
+			base.Awake();
+			IsPaused.GameEvent.AddCallback(UpdateTimeScale);
+		}
+
+		public void UpdateTimeScale()
+		{
+			Time.timeScale = IsPaused.RuntimeValue ? 0 : 1;
+		}
+
+		public void Pause()
+		{
+			IsPaused.RuntimeValue = true;
+		}
+
+		public void Resume()
+		{
+			IsPaused.RuntimeValue = false;
+		}
 	}
 }

@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillObject : MonoBehaviour
+namespace Mascari4615
 {
-    [field: Header("Context")] public UnitObject User { get; private set; }
-    public bool UsedByPlayer { get; private set; }
-
-    [SerializeField] private SkillComponent[] _skillComponents;
-
-    public void InitContext(UnitObject unitObject)
+    public class SkillObject : MonoBehaviour
     {
-        User = unitObject;
-        UsedByPlayer = (unitObject is PlayerObject);
+        [field: Header("Context")] public UnitObject User { get; private set; }
+        public bool UsedByPlayer { get; private set; }
 
-        foreach (var skillComponent in _skillComponents)
-            skillComponent.InitContext(this);
+        [SerializeField] private SkillComponent[] _skillComponents;
+
+        public void InitContext(UnitObject unitObject)
+        {
+            User = unitObject;
+            UsedByPlayer = (unitObject is PlayerObject);
+
+            foreach (var skillComponent in _skillComponents)
+                skillComponent.InitContext(this);
+        }
     }
-}
 
-public abstract class SkillComponent : MonoBehaviour
-{
-    public abstract void InitContext(SkillObject skillObject);
+    public abstract class SkillComponent : MonoBehaviour
+    {
+        public abstract void InitContext(SkillObject skillObject);
+    }
 }

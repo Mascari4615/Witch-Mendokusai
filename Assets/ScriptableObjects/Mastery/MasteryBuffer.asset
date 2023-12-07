@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59ac079d1f767674baea9654dea57e26, type: 3}
+  m_Script: {fileID: 11500000, guid: c0b87dbf16680c44481ad8da28f16bd9, type: 3}
   m_Name: MasteryBuffer
   m_EditorClassIdentifier: 
-  items:
+  InitItems:
   - {fileID: 11400000, guid: 2f3f5785a2390f84aa4debf9bf23d620, type: 2}
   - {fileID: 11400000, guid: eb76f7811566a714cb7c41c4aa0a3c1a, type: 2}
   - {fileID: 11400000, guid: 69c9d6917984e9541b5bc2b3e59e3dec, type: 2}
@@ -28,3 +28,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b8d0fa80aa021c746988d676c5688e51, type: 2}
   - {fileID: 11400000, guid: a2b374b50b8827542b0b89546c016809, type: 2}
   - {fileID: 11400000, guid: d5c98a8c185a42245b58386c8edbec97, type: 2}
+  useEffect: 0

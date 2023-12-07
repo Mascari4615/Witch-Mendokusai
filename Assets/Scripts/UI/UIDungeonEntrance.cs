@@ -3,43 +3,46 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class UIDungeonEntrance : MonoBehaviour
+namespace Mascari4615
 {
-    [SerializeField] private GameObject[] dungeonSelectButtons;
-    private int _curDungeonIndex = 0;
-    private List<Dungeon> _dungeonDatas;
+	public class UIDungeonEntrance : MonoBehaviour
+	{
+		[SerializeField] private GameObject[] dungeonSelectButtons;
+		private int _curDungeonIndex = 0;
+		private List<Dungeon> _dungeonDatas;
 
-    [SerializeField] private TextMeshProUGUI dungeonNameText;
-    [SerializeField] private TextMeshProUGUI dungeonDescriptionText;
+		[SerializeField] private TextMeshProUGUI dungeonNameText;
+		[SerializeField] private TextMeshProUGUI dungeonDescriptionText;
 
-    public void OpenCanvas(List<Dungeon> dungeonDatas)
-    {
-        Debug.Log(nameof(OpenCanvas));
-        gameObject.SetActive(true);
-        for (int i = 0; i < dungeonSelectButtons.Length; i++)
-            dungeonSelectButtons[i].gameObject.SetActive(dungeonDatas.Count > i);
+		public void OpenCanvas(List<Dungeon> dungeonDatas)
+		{
+			Debug.Log(nameof(OpenCanvas));
+			gameObject.SetActive(true);
+			for (int i = 0; i < dungeonSelectButtons.Length; i++)
+				dungeonSelectButtons[i].gameObject.SetActive(dungeonDatas.Count > i);
 
-        this._dungeonDatas = dungeonDatas;
-        SelectDungeon(0);
-    }
+			this._dungeonDatas = dungeonDatas;
+			SelectDungeon(0);
+		}
 
-    public void SelectDungeon(int index)
-    {
-        _curDungeonIndex = index;
-        UpdateDungeonPanel();
-    }
+		public void SelectDungeon(int index)
+		{
+			_curDungeonIndex = index;
+			UpdateDungeonPanel();
+		}
 
-    private void UpdateDungeonPanel()
-    {
-        Dungeon curDungeon = _dungeonDatas[_curDungeonIndex];
+		private void UpdateDungeonPanel()
+		{
+			Dungeon curDungeon = _dungeonDatas[_curDungeonIndex];
 
-        dungeonNameText.text = curDungeon.Name;
-        dungeonDescriptionText.text = curDungeon.Description;
-    }
+			dungeonNameText.text = curDungeon.Name;
+			dungeonDescriptionText.text = curDungeon.Description;
+		}
 
-    public void StartCombat()
-    {
-        CombatManager.Instance.StartCombat(_dungeonDatas[_curDungeonIndex]);
-        gameObject.SetActive(false);
-    }
+		public void StartCombat()
+		{
+			CombatManager.Instance.StartCombat(_dungeonDatas[_curDungeonIndex]);
+			gameObject.SetActive(false);
+		}
+	}
 }

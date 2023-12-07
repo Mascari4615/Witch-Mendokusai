@@ -48,7 +48,8 @@ MonoBehaviour:
   dontDestroyOnLoad: 0
   cameraManager: {fileID: 0}
   uiManager: {fileID: 0}
-  enemyRuntimeSet: {fileID: 11400000, guid: 9759fc7f40fcd45498c9fd47e84483d0, type: 2}
+  enemyDataBuffer: {fileID: 11400000, guid: 9759fc7f40fcd45498c9fd47e84483d0, type: 2}
+  dropItemDataBuffer: {fileID: 11400000, guid: 48a5ce890510d5145af6b7b0b34507d5, type: 2}
 --- !u!1 &1764007026537530021
 GameObject:
   m_ObjectHideFlags: 0

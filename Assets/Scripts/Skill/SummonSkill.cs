@@ -2,24 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = nameof(SummonSkill), menuName = "Skill/SummonSkill")]
-public class SummonSkill : Skill
+namespace Mascari4615
 {
-    [SerializeField] private GameObject prefab;
+	[CreateAssetMenu(fileName = nameof(SummonSkill), menuName = "Skill/SummonSkill")]
+	public class SummonSkill : Skill
+	{
+		[SerializeField] private GameObject prefab;
 
-    public override bool Use(UnitObject unitObject)
-    {
-        var o = ObjectManager.Instance.PopObject(prefab);
-        
-        o.transform.position = unitObject.transform.position;
+		public override bool Use(UnitObject unitObject)
+		{
+			var o = ObjectManager.Instance.PopObject(prefab);
 
-        if (o.TryGetComponent(out SkillObject skillObject))
-        {
-            skillObject.InitContext(unitObject);
-        }
-        
-        o.SetActive(true);
+			o.transform.position = unitObject.transform.position;
 
-        return true;
-    }
+			if (o.TryGetComponent(out SkillObject skillObject))
+			{
+				skillObject.InitContext(unitObject);
+			}
+
+			o.SetActive(true);
+
+			return true;
+		}
+	}
 }

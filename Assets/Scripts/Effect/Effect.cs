@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public abstract class Effect : Artifact
+namespace Mascari4615
 {
-    public abstract void OnEquip();
-    public abstract void OnRemove();
+	public abstract class Effect : Artifact
+	{
+		public abstract void OnEquip();
+		public abstract void OnRemove();
+	}
 }

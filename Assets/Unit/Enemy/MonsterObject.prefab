@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 622202209388757171, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1512278065530053246, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -73,9 +77,6 @@ PrefabInstance:
       addedObject: {fileID: 2785671053450697428}
     - targetCorrespondingSourceObject: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7371003348515847868}
-    - targetCorrespondingSourceObject: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5389770000558939686}
     - targetCorrespondingSourceObject: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       insertIndex: -1
@@ -115,19 +116,6 @@ MonoBehaviour:
   lastHitEnemyObject: {fileID: 11400000, guid: 02651b9ff301b0e4fac2091ae8860410, type: 2}
   expPrefab: {fileID: 2294495901960982391, guid: f5ae612bf513475408710e27f5207d79, type: 3}
   hpBar: {fileID: 5591941910199305167}
---- !u!114 &7371003348515847868
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1848531686881178565}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58c6f9b140a52a14881ec09eaebb66eb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tree: {fileID: 11400000, guid: 4f687d3ed86cf57449a02259a433106a, type: 2}
 --- !u!114 &5389770000558939686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,7 +174,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.26
+  m_Radius: 0.2
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
@@ -224,7 +212,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be52fa4d7844f244785765fb5681a0b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 1
+  damage: 5
+  disableWhenHit: 0
+  usedByPlayer: 0
 --- !u!212 &3636146261913355018 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1512278065530053246, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}

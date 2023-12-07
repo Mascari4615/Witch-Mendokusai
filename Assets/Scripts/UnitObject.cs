@@ -4,145 +4,147 @@ using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using UnityEngine;
 
-public class UnitObject : MonoBehaviour
+namespace Mascari4615
 {
-    public Unit UnitData => unitData;
-    [SerializeField] protected Unit unitData;
-    
-    public UnitSkillHandler UnitSkillHandler => unitSkillHandler;
-    protected UnitSkillHandler unitSkillHandler;
-    
-    [SerializeField] protected SpriteRenderer spriteRenderer;
-    
-    public int CurHp { get; protected set; }
-    public int MaxHp { get; protected set; }
+	public class UnitObject : MonoBehaviour
+	{
+		public Unit UnitData => unitData;
+		[SerializeField] protected Unit unitData;
 
-    public bool IsAlive => CurHp != 0;
-    
-    [SerializeField] private MMF_Player mmfPlayer;
+		public UnitSkillHandler UnitSkillHandler => unitSkillHandler;
+		protected UnitSkillHandler unitSkillHandler;
 
-    protected virtual void Awake()
-    {
-        if (unitData != null)
-            Init(unitData);
-        
-        spriteRenderer.material.SetFloat("_Emission", 0);
-    }
+		[SerializeField] protected SpriteRenderer spriteRenderer;
 
-    public virtual void Init(Unit unitData)
-    {
-        this.unitData = unitData;
-        unitSkillHandler = new UnitSkillHandler();
-        
-        // Debug.Log(unitSkillHandler);
-        
-        MaxHp = unitData.MaxHp;
-        SetHp(unitData.MaxHp);
+		public int CurHp { get; protected set; }
+		public int MaxHp { get; protected set; }
 
-        for (int i = 0; i < unitData.DefaultSkills.Length; i++)
-            unitSkillHandler.SetSkill(i, unitData.DefaultSkills[i]);
-    }
+		public bool IsAlive => CurHp > 0;
 
-    public virtual bool UseSkill(int index)
-    {
-        return unitSkillHandler.UseSkill(this, index);
-    }
+		[SerializeField] private MMF_Player mmfPlayer;
 
-    protected virtual void Update()
-    {
-        unitSkillHandler?.Tick(Time.deltaTime);
-    }
-    
-    protected virtual void SetHp(int newHp)
-    {
-        CurHp = newHp;
-    }
-    
-    public void ReceiveAttack(int damage)
-    {
-        SetHp(Mathf.Clamp(CurHp - damage, 0, int.MaxValue));
-        OnReceiveAttack(damage);
-        if (CurHp == 0)
-            Die();
-    }
-    protected virtual void OnReceiveAttack(int damage)
-    {
-        mmfPlayer?.PlayFeedbacks();
-        // Override 해줘
-    }
-    
-    protected virtual void Die()
-    {
-        OnDie();
-    }
-    
-    protected virtual void OnDie()
-    {
-    }
-}
+		protected virtual void Awake()
+		{
+			if (unitData != null)
+				Init(unitData);
 
-public class UnitSkillHandler
-{
-    private Dictionary<int, (Skill skill, SkillCoolTime skillCoolTime)> skillDic = new ();
+			spriteRenderer.material.SetFloat("_Emission", 0);
+		}
 
-    public void SetSkill(int skillButtonIndex, Skill skill)
-    {
-        skillDic[skillButtonIndex] = (skill, new SkillCoolTime(skill));
-    }
+		public virtual void Init(Unit unitData)
+		{
+			this.unitData = unitData;
+			unitSkillHandler = new UnitSkillHandler();
 
-    public bool UseSkill(UnitObject unitObject, int skillButtonIndex)
-    {
-        if (skillDic.TryGetValue(skillButtonIndex, out var value))
-        {
-            if (IsReady(skillButtonIndex))
-            {
-                value.skill.Use(unitObject);
-                skillDic[skillButtonIndex].skillCoolTime.ResetCooltime();
-                return true;
-            }
-        }
+			// Debug.Log(unitSkillHandler);
 
-        return false;
-    }
+			MaxHp = unitData.MaxHp;
+			SetHp(unitData.MaxHp);
 
-    public bool IsReady(int skillButtonIndex)
-    {
-        return skillDic[skillButtonIndex].skillCoolTime.IsReady;
-    }
+			for (int i = 0; i < unitData.DefaultSkills.Length; i++)
+				unitSkillHandler.SetSkill(i, unitData.DefaultSkills[i]);
+		}
 
-    public void Tick(float delta)
-    {
-        foreach (var skillSlot in skillDic.Values)
-        {
-            skillSlot.skillCoolTime.Tick(delta);
-        }
-    }
-}
+		public virtual bool UseSkill(int index)
+		{
+			return unitSkillHandler.UseSkill(this, index);
+		}
 
-public class SkillCoolTime
-{
-    public float CurCooltime { get; private set; }
-    public float Cooltime { get; private set; }
-    public bool IsReady => CurCooltime == 0;
+		protected virtual void Update()
+		{
+			unitSkillHandler?.Tick(Time.deltaTime);
+		}
 
-    public SkillCoolTime(Skill skill)
-    {
-        this.Cooltime = skill.Cooltime;
-    }
+		protected virtual void SetHp(int newHp)
+		{
+			CurHp = newHp;
+		}
 
-    public void Tick(float delta)
-    {
-        if (IsReady)
-            return;
+		public void ReceiveAttack(int damage)
+		{
+			SetHp(Mathf.Clamp(CurHp - damage, 0, int.MaxValue));
+			OnReceiveAttack(damage);
+			if (CurHp <= 0)
+				Die();
+		}
+		protected virtual void OnReceiveAttack(int damage)
+		{
+			mmfPlayer?.PlayFeedbacks();
+			// Override 해줘
+		}
 
-        CurCooltime -= delta;
+		protected virtual void Die()
+		{
+			OnDie();
+		}
+		protected virtual void OnDie()
+		{
+		}
+	}
 
-        if (CurCooltime <= 0)
-            CurCooltime = 0;
-    }
+	public class UnitSkillHandler
+	{
+		public Dictionary<int, (Skill skill, SkillCoolTime skillCoolTime)> SkillDic { get; private set; } = new();
 
-    public void ResetCooltime()
-    {
-        CurCooltime = Cooltime;
-    }
+		public void SetSkill(int skillButtonIndex, Skill skill)
+		{
+			SkillDic[skillButtonIndex] = (skill, new SkillCoolTime(skill));
+		}
+
+		public bool UseSkill(UnitObject unitObject, int skillButtonIndex)
+		{
+			if (SkillDic.TryGetValue(skillButtonIndex, out var value))
+			{
+				if (IsReady(skillButtonIndex))
+				{
+					value.skill.Use(unitObject);
+					SkillDic[skillButtonIndex].skillCoolTime.ResetCooltime();
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public bool IsReady(int skillButtonIndex)
+		{
+			return SkillDic[skillButtonIndex].skillCoolTime.IsReady;
+		}
+
+		public void Tick(float delta)
+		{
+			foreach (var skillSlot in SkillDic.Values)
+			{
+				skillSlot.skillCoolTime.Tick(delta);
+			}
+		}
+	}
+
+	public class SkillCoolTime
+	{
+		public float CurCooltime { get; private set; }
+		public float Cooltime { get; private set; }
+		public bool IsReady => CurCooltime == 0;
+
+		public SkillCoolTime(Skill skill)
+		{
+			this.Cooltime = skill.Cooltime;
+		}
+
+		public void Tick(float delta)
+		{
+			if (IsReady)
+				return;
+
+			CurCooltime -= delta;
+
+			if (CurCooltime <= 0)
+				CurCooltime = 0;
+		}
+
+		public void ResetCooltime()
+		{
+			CurCooltime = Cooltime;
+		}
+	}
 }

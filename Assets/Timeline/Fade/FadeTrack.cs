@@ -5,12 +5,15 @@ using UnityEngine.Timeline;
 using TMPro;
 using UnityEngine.Playables;
 
-// [TrackBindingType(typeof(TextMeshProUGUI))]
-[TrackClipType(typeof(FadeClip))]
-public class FadeTrack : TrackAsset
+namespace Mascari4615
 {
-    public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
-    {
-        return ScriptPlayable<FadeTackMixer>.Create(graph, inputCount);
-    }
+	// [TrackBindingType(typeof(TextMeshProUGUI))]
+	[TrackClipType(typeof(FadeClip))]
+	public class FadeTrack : TrackAsset
+	{
+		public override Playable CreateTrackMixer(PlayableGraph graph, GameObject go, int inputCount)
+		{
+			return ScriptPlayable<FadeTackMixer>.Create(graph, inputCount);
+		}
+	}
 }
