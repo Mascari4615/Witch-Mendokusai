@@ -9,13 +9,13 @@ using UnityEngine.UIElements;
 
 public class MyWorldWindow : EditorWindow
 {
-    private const string ENTRY_DIRECTORY_PATH = "Assets/Entry/";
+    private const string ENTRY_DIRECTORY_PATH = "Assets/_Mascari4615/Entry/";
 
     private List<FactEntry> factEntries = new();
     private List<RuleEntry> ruleEntries = new();
     private List<EventEntry> eventEntries = new();
 
-    [MenuItem("Karmo/MyWorld")]
+    [MenuItem("Mascari4615/MyWorld")]
     static void CreateMenu()
     {
         var window = GetWindow<MyWorldWindow>();
