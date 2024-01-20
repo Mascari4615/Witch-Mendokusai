@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.34, z: 4}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8430718174910910933}
@@ -115,11 +115,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1026304796196325022}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be52fa4d7844f244785765fb5681a0b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d69003b7dc14cf4c92040a754f13df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 3
-  disableWhenHit: 0
+  damage: 6
+  useHitCount: 0
+  hitCount: 1
+  disableWhenInvaild: 0
   usedByPlayer: 1
 --- !u!1 &6801824561751640565
 GameObject:

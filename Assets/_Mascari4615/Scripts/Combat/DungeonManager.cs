@@ -10,6 +10,7 @@ namespace Mascari4615
 {
 	public class DungeonManager : Singleton<DungeonManager>
 	{
+		[field: Header("_" + nameof(DungeonManager))]
 		[SerializeField] private MasteryManager masteryManager;
 		[SerializeField] private MonsterSpawner monsterSpawner;
 
@@ -19,6 +20,8 @@ namespace Mascari4615
 
 		[SerializeField] private DateTimeVarialbe combatStartTime;
 		[SerializeField] private ExpManager expChecker;
+
+		private TimeSpan dungeonTime;
 
 		public void OpenDungeonEntranceUI(List<Dungeon> dungeonDatas)
 		{
@@ -48,7 +51,6 @@ namespace Mascari4615
 
 			monsterSpawner.StartWave(dungeon);
 
-			uiCombatCanvas.InitTime();
 			uiCombatCanvas.UpdateExp();
 			uiCombatCanvas.SetActive(true);
 
@@ -62,15 +64,21 @@ namespace Mascari4615
 				effect.OnEquip();
 			foreach (var effect in DataManager.Instance.CurStuff(2)!.Effects)
 				effect.OnEquip();
-		}
+
+			StartCoroutine(CombatLoop());
+			dungeonTime = new TimeSpan(0, 0, 15, 0, 0);
+;		}
 
 		private IEnumerator CombatLoop()
 		{
 			Debug.Log(nameof(CombatLoop));
 			var ws01 = new WaitForSeconds(.1f);
 
-			// while (true)
+			while (true)
 			{
+				dungeonTime -= new TimeSpan(0, 0, 0, 0, 100);
+				uiCombatCanvas.UpdateTime(dungeonTime);
+
 				yield return ws01;
 			}
 		}
@@ -92,6 +100,8 @@ namespace Mascari4615
 				effect.OnRemove();
 			foreach (var effect in DataManager.Instance.CurStuff(2)!.Effects)
 				effect.OnRemove();
+
+			StopAllCoroutines();
 		}
 	}
 }

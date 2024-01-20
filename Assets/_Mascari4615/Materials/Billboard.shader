@@ -1,4 +1,4 @@
-Shader "Karmotrine/BillboardShader"
+Shader "Mascari4615/BillboardShader"
 {
     Properties
     {

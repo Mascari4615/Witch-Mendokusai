@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30284bfe5bd403f4a94529bd768db142, type: 3}
+  m_Name: Robot
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 1
+  <Name>k__BackingField: Robot
+  <Description>k__BackingField: 
+  <Thumbnail>k__BackingField: {fileID: -879822008, guid: bbd7dc40015022146bb2bc7dbec9e92c, type: 3}
+  <Prefab>k__BackingField: {fileID: 1848531686881178565, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+  <MoveSpeed>k__BackingField: 1.2
+  <MaxHp>k__BackingField: 25
+  <DefaultSkills>k__BackingField: []
+  <Material>k__BackingField: {fileID: 0}
+  <Loots>k__BackingField:
+  - <Artifact>k__BackingField: {fileID: 11400000, guid: d378a444c9e6e5247a642288eb65d49c, type: 2}
+    <Percentage>k__BackingField: 4.19

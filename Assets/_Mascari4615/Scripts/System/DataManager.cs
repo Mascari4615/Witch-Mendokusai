@@ -11,34 +11,21 @@ namespace Mascari4615
 {
 	public class DataManager : Singleton<DataManager>
 	{
+		private SOManager soManager;
+
 		public GameData CurGameData { get; private set; }
 
-		[Header("Quest")] public QuestDataBuffer QuestDataBuffer;
 		public readonly Dictionary<int, Quest> QuestDic = new();
-
-		[Header("Unit")] public Unit[] units;
 		public readonly Dictionary<int, Unit> UnitDic = new();
-
-		[Header("Doll")] public DollData[] dolls;
 		private readonly Dictionary<int, DollData> _dollDic = new();
-
-		[Header("Item")] public ItemDataBuffer itemDataBuffer;
-		public Inventory itemInventory;
-		public Inventory equipInventory;
-		public ItemDataBuffer shopKeeperItemBuffer;
 		public readonly Dictionary<int, ItemData> ItemDic = new();
 		public readonly Dictionary<int, ItemData> PotionDIc = new();
 		private readonly Dictionary<int, ItemData> _commonItemDic = new();
 		private readonly Dictionary<int, ItemData> _unCommonItemDic = new();
 		private readonly Dictionary<int, ItemData> _rareItemDic = new();
 		private readonly Dictionary<int, ItemData> _legendItemDic = new();
-
-		[Header("Stage")] public StageDataBuffer StageDataBuffer;
 		public readonly Dictionary<int, Stage> StageDic = new();
-
-		[Header("Mastery")] public MasteryDataBuffer MasteryDataBuffer;
 		private readonly Dictionary<int, Mastery> _masteryDic = new();
-
 		public readonly Dictionary<string, int> CraftDic = new();
 
 		public Action OnCurGameDataLoad;
@@ -52,7 +39,9 @@ namespace Mascari4615
 		{
 			base.Awake();
 
-			foreach (var item in itemDataBuffer.InitItems)
+			soManager = SOManager.Instance;
+
+			foreach (var item in soManager.ItemDataBuffer.InitItems)
 			{
 				ItemDic.Add(item.ID, item);
 				switch (item.Grade)
@@ -74,7 +63,7 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (var item in itemDataBuffer.InitItems)
+			foreach (var item in soManager.ItemDataBuffer.InitItems)
 			{
 				foreach (var recipe in item.Recipes)
 				{
@@ -84,17 +73,17 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (var stage in StageDataBuffer.InitItems)
+			foreach (var stage in soManager.StageDataBuffer.InitItems)
 				StageDic.Add(stage.ID, stage);
 
-			foreach (var unit in units)
+			foreach (var unit in soManager.Units)
 				UnitDic.Add(unit.ID, unit);
-			foreach (var doll in dolls)
+			foreach (var doll in soManager.Dolls)
 				_dollDic.Add(doll.ID, doll);
-			foreach (var quest in QuestDataBuffer.InitItems)
+			foreach (var quest in soManager.QuestDataBuffer.InitItems)
 				QuestDic.Add(quest.ID, quest);
 
-			foreach (var mastery in MasteryDataBuffer.InitItems)
+			foreach (var mastery in soManager.MasteryDataBuffer.InitItems)
 				_masteryDic.Add(mastery.ID, mastery);
 		}
 
@@ -104,17 +93,17 @@ namespace Mascari4615
 		{
 			CurGameData = new GameData();
 
-			itemInventory.InitItems(CurGameData.itemInventoryItems);
-			equipInventory.InitItems(CurGameData.equipmentInventoryItems);
+			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
+			soManager.EquipInventory.InitItems(CurGameData.equipmentInventoryItems);
 
-			equipInventory.Add(stuffs[0], 1);
-			equipInventory.Add(stuffs[1], 1);
-			equipInventory.Add(stuffs[2], 1);
-			equipInventory.Add(stuffs[3], 1);
+			soManager.EquipInventory.Add(stuffs[0], 1);
+			soManager.EquipInventory.Add(stuffs[1], 1);
+			soManager.EquipInventory.Add(stuffs[2], 1);
+			soManager.EquipInventory.Add(stuffs[3], 1);
 
-			CurGameData.CurStuffs[0] = equipInventory.GetItem(equipInventory.FindItemSlotIndex(stuffs[0])).Guid;
-			CurGameData.CurStuffs[1] = equipInventory.GetItem(equipInventory.FindItemSlotIndex(stuffs[1])).Guid;
-			CurGameData.CurStuffs[2] = equipInventory.GetItem(equipInventory.FindItemSlotIndex(stuffs[2])).Guid;
+			CurGameData.CurStuffs[0] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(stuffs[0])).Guid;
+			CurGameData.CurStuffs[1] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(stuffs[1])).Guid;
+			CurGameData.CurStuffs[2] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(stuffs[2])).Guid;
 		}
 
 		public void SaveData()
@@ -125,16 +114,16 @@ namespace Mascari4615
 				return;
 			}
 
-			CurGameData.itemInventoryItems = itemInventory.GetInventoryData();
-			CurGameData.equipmentInventoryItems = equipInventory.GetInventoryData();
+			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
+			CurGameData.equipmentInventoryItems = soManager.EquipInventory.GetInventoryData();
 			_playFabManager.SavePlayerData();
 		}
 
 		public void LoadData(GameData saveData)
 		{
 			CurGameData = saveData;
-			itemInventory.InitItems(CurGameData.itemInventoryItems);
-			equipInventory.InitItems(CurGameData.equipmentInventoryItems);
+			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
+			soManager.EquipInventory.InitItems(CurGameData.equipmentInventoryItems);
 			// OnCurGameDataLoad.Invoke();
 		}
 
@@ -164,8 +153,8 @@ namespace Mascari4615
 		public DollData CurDoll => _dollDic[CurGameData.lastDollIndex];
 
 		[CanBeNull]
-		public EquipmentData CurStuff(int index) => (equipInventory
-			.GetItem(equipInventory.FindEquipmentByGuid(CurGameData.CurStuffs[index]))?
+		public EquipmentData CurStuff(int index) => (soManager.EquipInventory
+			.GetItem(soManager.EquipInventory.FindEquipmentByGuid(CurGameData.CurStuffs[index]))?
 			.Data as EquipmentData);
 	}
 

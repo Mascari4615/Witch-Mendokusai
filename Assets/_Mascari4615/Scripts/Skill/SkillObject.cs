@@ -6,7 +6,8 @@ namespace Mascari4615
 {
 	public class SkillObject : MonoBehaviour
 	{
-		[field: Header("Context")] public UnitObject User { get; private set; }
+		[field: Header("Context")]
+		public UnitObject User { get; private set; }
 		public bool UsedByPlayer { get; private set; }
 
 		[SerializeField] private SkillComponent[] _skillComponents;

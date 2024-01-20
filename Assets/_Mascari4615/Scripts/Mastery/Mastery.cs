@@ -7,18 +7,18 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = nameof(Mastery), menuName = "Variable/Mastery")]
 	public class Mastery : Artifact
 	{
-		public Effect[] Effects => effects;
-		[SerializeField] private Effect[] effects;
+		[field: Header("_" + nameof(Mastery))]
+		[field: SerializeField] public Effect[] Effects { get; private set; }
 
 		public void OnEquip()
 		{
-			foreach (var effect in effects)
+			foreach (var effect in Effects)
 				effect.OnEquip();
 		}
 
 		public void OnRemove()
 		{
-			foreach (var effect in effects)
+			foreach (var effect in Effects)
 				effect.OnRemove();
 		}
 	}

@@ -9,6 +9,7 @@ namespace Mascari4615
 {
 	public class UICombatCanvas : MonoBehaviour
 	{
+		[field: Header("_" + nameof(UICombatCanvas))]
 		[SerializeField] private CanvasGroup canvasGroup;
 		[SerializeField] private TextMeshProUGUI timeText;
 		[SerializeField] private TextMeshProUGUI levelText;
@@ -18,7 +19,6 @@ namespace Mascari4615
 		[SerializeField] private Image expBar;
 		[SerializeField] private float expBarLerpSpeed = 1f;
 
-		private DateTime startTime;
 		private Coroutine updateExpBarLerpRoutine;
 
 		public void SetActive(bool active)
@@ -26,14 +26,9 @@ namespace Mascari4615
 			canvasGroup.alpha = active ? 1 : 0;
 		}
 
-		public void InitTime()
+		public void UpdateTime(TimeSpan timeSpan)
 		{
-			startTime = DateTime.Now;
-		}
-
-		private void Update()
-		{
-			timeText.text = (DateTime.Now - startTime).ToString(@"mm\:ss");
+			timeText.text = timeSpan.ToString(@"mm\:ss");
 		}
 
 		public void UpdateExp()

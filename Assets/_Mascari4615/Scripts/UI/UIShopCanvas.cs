@@ -21,10 +21,10 @@ namespace Mascari4615
 
 		public void UpdateUI()
 		{
-			var items = DataManager.Instance.shopKeeperItemBuffer.RuntimeItems;
+			var items = SOManager.Instance.ShopKeeperItemBuffer.RuntimeItems;
 			for (var i = 0; i < slots.Count; i++)
 			{
-				if (i < DataManager.Instance.shopKeeperItemBuffer.RuntimeItems.Count)
+				if (i < SOManager.Instance.ShopKeeperItemBuffer.RuntimeItems.Count)
 				{
 					slots[i].Init(items[i], 1);
 					slots[i].gameObject.SetActive(true);

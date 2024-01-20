@@ -8,7 +8,7 @@ namespace Mascari4615
 {
 	public class MonsterSpawner : MonoBehaviour
 	{
-		[SerializeField] private GameObject monsterObjectPrefab;
+		[field: Header("_" + nameof(MonsterSpawner))]
 		[SerializeField] private GameObject spawnCirclePrefab;
 		private Dungeon _curDungeon;
 		[SerializeField] private float tick = .2f;
@@ -47,10 +47,10 @@ namespace Mascari4615
 			if (DateTime.Now - combatStartTime.RuntimeValue < TimeSpan.FromSeconds(monsterWave.SpawnTime))
 				return;
 
-			StartCoroutine(SpawnMonster(monsterWave.Monster, spawnDelay));
+			StartCoroutine(SpawnMonster(monsterWave.Monsters[Random.Range(0, monsterWave.Monsters.Length)], spawnDelay));
 		}
 
-		private IEnumerator SpawnMonster(Enemy monster, float spawnDelay)
+		private IEnumerator SpawnMonster(Monster monster, float spawnDelay)
 		{
 			Vector3 randomOffset = Random.insideUnitCircle * spawnRange;
 			randomOffset.z = randomOffset.y;
@@ -65,7 +65,7 @@ namespace Mascari4615
 
 			yield return new WaitForSeconds(spawnDelay);
 
-			GameObject monsterObject = ObjectManager.Instance.PopObject(monsterObjectPrefab);
+			GameObject monsterObject = ObjectManager.Instance.PopObject(monster.Prefab);
 			monsterObject.transform.position = spawnPos;
 			monsterObject.GetComponent<MonsterObject>().Init(monster);
 			monsterObject.SetActive(true);

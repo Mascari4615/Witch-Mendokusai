@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3614189860035360861}
   - component: {fileID: 7676953333559551506}
   - component: {fileID: 4393124974712460270}
+  - component: {fileID: 6578544286334601627}
   m_Layer: 6
   m_Name: Bullet
   m_TagString: Untagged
@@ -47,13 +48,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1521986667925735823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1ae7a4192f9106408da696993245a95, type: 3}
+  m_Script: {fileID: 11500000, guid: 7a67f1bf8a811724eb89ed12bd5be10e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveDirection: {x: 1, y: 0, z: 0}
-  moveSpeed: 10
-  playerAimDirection: {fileID: 11400000, guid: 1c678395060d7744f81c93703fdf31ce, type: 2}
-  playerAutoAimDirection: {fileID: 11400000, guid: 7c5d20dff5b99ab4dad6744002b3dcef, type: 2}
+  moveSpeed: 6
 --- !u!114 &5976393549530359583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,11 +107,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1521986667925735823}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be52fa4d7844f244785765fb5681a0b9, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d69003b7dc14cf4c92040a754f13df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 6
-  disableWhenHit: 1
+  damage: 12
+  useHitCount: 1
+  hitCount: 2
+  disableWhenInvaild: 1
   usedByPlayer: 0
 --- !u!114 &4393124974712460270
 MonoBehaviour:
@@ -130,6 +130,37 @@ MonoBehaviour:
   _skillComponents:
   - {fileID: 1320119107605725228}
   - {fileID: 7676953333559551506}
+--- !u!114 &6578544286334601627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521986667925735823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 266100344
+      Data2: 1086675566
+      Data3: -722300749
+      Data4: -1263024502
+    Path: event:/SFX/Punch
+  Event: 
+  PlayEvent: 11
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  AllowNonRigidbodyDoppler: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &3298769757758643920
 GameObject:
   m_ObjectHideFlags: 0

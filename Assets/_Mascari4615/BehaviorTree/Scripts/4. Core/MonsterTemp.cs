@@ -10,12 +10,13 @@ namespace Mascari4615
 {
 	public class MonsterTemp : MonoBehaviour
 	{
+		[field: Header("_" + nameof(MonsterTemp))]
 		[SerializeField] private float sight = 5f;
 
-		[SerializeField] private Rigidbody rb;
-		[SerializeField] private MonsterObject enemyObject;
-		[SerializeField] private SpriteRenderer spriteRenderer;
-		[SerializeField] private NavMeshAgent agent;
+		private Rigidbody rb;
+		private MonsterObject monsterObject;
+		private SpriteRenderer spriteRenderer;
+		private NavMeshAgent agent;
 
 		[SerializeField] private float randomMoveDistance;
 
@@ -28,21 +29,48 @@ namespace Mascari4615
 		public float tolerance = 1.0f;
 
 		private Node _rootNode;
+		[SerializeField] private float tick = .1f;
 
 		private void Awake()
 		{
+			rb = GetComponent<Rigidbody>();
+			monsterObject = GetComponent<MonsterObject>();
+			spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+			agent = GetComponent<NavMeshAgent>();
+
 			MakeNode();
 		}
 
-		private void Start()
+		private void Init()
 		{
 			pivot = transform.position;
 
 			agent.stoppingDistance = stoppingDistance;
-			agent.speed = enemyObject.UnitData.Speed;
+			agent.speed = monsterObject.UnitData.MoveSpeed;
 			// agent.destination = moveDest;
 			agent.updateRotation = updateRotation;
 			agent.acceleration = acceleration;
+		}
+
+		private void OnEnable()
+		{
+			Init();
+			StartCoroutine(Loop());
+		}
+
+		private void OnDisable()
+		{
+			StopAllCoroutines();
+		}
+
+		private IEnumerator Loop()
+		{
+			WaitForSeconds waitForTick = new WaitForSeconds(tick);
+			while (true)
+			{
+				_rootNode.Update();
+				yield return waitForTick;
+			}
 		}
 
 		// ParallelNode
@@ -52,10 +80,9 @@ namespace Mascari4615
 		// 실행중이면 IsRunning State로 기록하고,
 		// 다시 Root에서 내려올 때 확인
 
-		private void Update()
+		/*private void Update()
 		{
-			_rootNode.Update();
-		}
+		}*/
 
 		/// <summary> BT 노드 조립 </summary>
 		private void MakeNode()
@@ -150,7 +177,7 @@ namespace Mascari4615
 
 		protected void UseSkill(int skillIndex)
 		{
-			enemyObject.UseSkill(skillIndex);
+			monsterObject.UseSkill(skillIndex);
 		}
 	}
 }

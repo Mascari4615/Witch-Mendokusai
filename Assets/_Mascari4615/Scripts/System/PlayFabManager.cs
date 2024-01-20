@@ -37,63 +37,63 @@ namespace Mascari4615
 
 		public void Login()
 		{
-#if !UNITY_EDITOR
-		Social.localUser.Authenticate((bool success) => {
+			/*#if !UNITY_EDITOR
+					Social.localUser.Authenticate((bool success) => {
 
-			if (success)
-			{
-				GoogleStatusText.text = "Google Signed In";
-				var serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
-				GoogleStatusText.text = "Server Auth Code: " + serverAuthCode;
+						if (success)
+						{
+							GoogleStatusText.text = "Google Signed In";
+							var serverAuthCode = PlayGamesPlatform.Instance.GetServerAuthCode();
+							GoogleStatusText.text = "Server Auth Code: " + serverAuthCode;
 
-				PlayFabClientAPI.LoginWithGoogleAccount(new LoginWithGoogleAccountRequest()
-				{
-					TitleId = PlayFabSettings.TitleId,
-					ServerAuthCode = serverAuthCode,
-					CreateAccount = true
-				}, (result) =>
-				{
-					GoogleStatusText.text = "Signed In as " + result.PlayFabId;
-					
-					Debug.Log("Successful login/account create!");
+							PlayFabClientAPI.LoginWithGoogleAccount(new LoginWithGoogleAccountRequest()
+							{
+								TitleId = PlayFabSettings.TitleId,
+								ServerAuthCode = serverAuthCode,
+								CreateAccount = true
+							}, (result) =>
+							{
+								GoogleStatusText.text = "Signed In as " + result.PlayFabId;
 
-					string name = result?.InfoResultPayload?.PlayerProfile?.DisplayName;
-					Debug.Log("A");
+								Debug.Log("Successful login/account create!");
 
-					if (name != null)
-					{
-						DataManager.Instance.localDisplayName = name;
-						// TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
-						SubmitNickname(result.PlayFabId);
-					}
-					else
-					{
-						// TODO : MainMenuManager.Instance.OpenNicknamePanel();
-						SubmitNickname(result.PlayFabId);
-					}
-					Debug.Log("B");
+								string name = result?.InfoResultPayload?.PlayerProfile?.DisplayName;
+								Debug.Log("A");
 
-					LoadPlayerData();
-					Debug.Log("C");
+								if (name != null)
+								{
+									DataManager.Instance.localDisplayName = name;
+									// TODO : MainMenuManager.Instance.UpdateNickNameUI(name);
+									SubmitNickname(result.PlayFabId);
+								}
+								else
+								{
+									// TODO : MainMenuManager.Instance.OpenNicknamePanel();
+									SubmitNickname(result.PlayFabId);
+								}
+								Debug.Log("B");
 
-					GetAppearance();
-					Debug.Log("D");
+								LoadPlayerData();
+								Debug.Log("C");
 
-                    GetTitleData();
-					Debug.Log("E");
-					
-                    GetVirtualCurrencies();
-					Debug.Log("F");
+								GetAppearance();
+								Debug.Log("D");
 
-                    SceneManager.LoadScene(1);
-				}, OnError);
-			}
-			else
-			{
-				Debug.Log("Google Failed to Authorize your login");
-			}
-		});
-#else
+								GetTitleData();
+								Debug.Log("E");
+
+								GetVirtualCurrencies();
+								Debug.Log("F");
+
+								SceneManager.LoadScene(1);
+							}, OnError);
+						}
+						else
+						{
+							Debug.Log("Google Failed to Authorize your login");
+						}
+					});
+			#else*/
 			var request = new LoginWithCustomIDRequest
 			{
 				CustomId = SystemInfo.deviceUniqueIdentifier,
@@ -132,7 +132,7 @@ namespace Mascari4615
 
 				SceneManager.LoadScene(1);
 			}, OnError);
-#endif
+// #endif
 		}
 
 		public void SubmitNickname(string name)

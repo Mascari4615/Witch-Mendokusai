@@ -10,7 +10,7 @@ namespace Mascari4615
 
 		private void Start()
 		{
-			QuestDataBuffer questDataBuffer = DataManager.Instance.QuestDataBuffer;
+			QuestDataBuffer questDataBuffer = SOManager.Instance.QuestDataBuffer;
 			foreach (Quest quest in questDataBuffer.InitItems)
 			{
 				QuestObject qo = ObjectManager.Instance.PopObject(questObject).GetComponent<QuestObject>();

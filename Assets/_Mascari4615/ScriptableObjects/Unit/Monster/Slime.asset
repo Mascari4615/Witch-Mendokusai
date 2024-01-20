@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30284bfe5bd403f4a94529bd768db142, type: 3}
+  m_Name: Slime
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 0
+  <Name>k__BackingField: Slime
+  <Description>k__BackingField: 
+  <Thumbnail>k__BackingField: {fileID: -1225876615, guid: 050d103a09fcd5e46a88776ad78dfb28, type: 3}
+  <Prefab>k__BackingField: {fileID: 1372646203921632543, guid: aa7d3a55916724f4594682e03ae7d161, type: 3}
+  <MoveSpeed>k__BackingField: 1.5
+  <MaxHp>k__BackingField: 10
+  <DefaultSkills>k__BackingField: []
+  <Material>k__BackingField: {fileID: 0}
+  <Loots>k__BackingField:
+  - <Artifact>k__BackingField: {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
+    <Percentage>k__BackingField: 6.98

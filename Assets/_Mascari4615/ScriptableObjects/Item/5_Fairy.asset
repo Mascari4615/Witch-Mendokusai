@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434a55e845928a541b5a736c21266c1b, type: 3}
+  m_Name: 5_Fairy
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 5
+  <Name>k__BackingField: 
+  <Description>k__BackingField: 
+  <Thumbnail>k__BackingField: {fileID: 0}
+  grade: 0
+  type: 2
+  recipes: []
+  maxAmount: 500
+  purchasePrice: 1
+  salePrice: 1
+  masteries:
+  - {fileID: 11400000, guid: 80c9d296c41a7a743b83b6d726635386, type: 2}
+  - {fileID: 11400000, guid: 8455ada86539be842851802121f8525d, type: 2}
+  - {fileID: 11400000, guid: 4f6d050ab26b75f4bb9656c5d3362318, type: 2}
+  effects: []

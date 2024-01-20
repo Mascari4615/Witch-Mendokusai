@@ -25,8 +25,8 @@ namespace Mascari4615
 			newDollIndex += (turnRight ? 1 : -1);
 
 			if (newDollIndex < 0)
-				newDollIndex = DataManager.Instance.dolls.Length - 1;
-			else if (newDollIndex == DataManager.Instance.dolls.Length)
+				newDollIndex = SOManager.Instance.Dolls.Length - 1;
+			else if (newDollIndex == SOManager.Instance.Dolls.Length)
 				newDollIndex = 0;
 
 			DataManager.Instance.CurGameData.lastDollIndex = newDollIndex;
