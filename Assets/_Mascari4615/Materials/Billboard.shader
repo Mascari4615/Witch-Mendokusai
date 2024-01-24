@@ -6,6 +6,7 @@ Shader "Mascari4615/BillboardShader"
         _Color ("Color", Color) = (1, 1, 1, 1)
         _Cutoff ("Cutoff", Float) = 0.5
         _Emission("Emission", float) = 0
+        _RotateVector("RotateVector", Vector) = (0,0,0,0)
         [HDR] _EmissionColor("Color", Color) = (0,0,0)
     }
 
@@ -25,6 +26,8 @@ Shader "Mascari4615/BillboardShader"
             }
             Cull Off
             
+            // https://darkcatgame.tistory.com/137
+
             // Sprite의 투명한 부분이 불투명하게 보이는 문제
             //https://forum.unity.com/threads/shader-on-sprite-makes-transparent-part-visible.546508/
             Blend SrcAlpha OneMinusSrcAlpha
@@ -75,6 +78,7 @@ Shader "Mascari4615/BillboardShader"
             float _Cutoff;
             float4 _EmissionColor;
             float _Emission;
+            float3 _RotateVector;
 
             v2f vert(appdata v)
             {

@@ -15,6 +15,7 @@ namespace Mascari4615
 		private Coroutine flashRoutine;
 		[SerializeField] private Transform hpBar;
 		[SerializeField] private GameObject expPrefab;
+		[SerializeField] private GameObject lootItemPrefab;
 
 		protected override void Awake()
 		{
@@ -129,12 +130,18 @@ namespace Mascari4615
 
 		protected virtual void DropLoot()
 		{
-			Probability<ItemData> probability = new();
+			Probability<ItemData> probability = new(shouldFill100Percent: true);
 			foreach (var item in (unitData as Monster).Loots)
 				probability.Add(item.Artifact as ItemData, item.Percentage);
 
-			var newItem = probability.Get();
-			SOManager.Instance.ItemInventory.Add(newItem);
+			ItemData dropItem = probability.Get();
+			if (dropItem != default)
+			{
+				GameObject lootItem = ObjectManager.Instance.PopObject(lootItemPrefab);
+				lootItem.transform.position = transform.position;
+				lootItem.gameObject.SetActive(true);
+				lootItem.GetComponent<ItemObject>().Init(dropItem);
+			}
 
 			//
 			GameObject exp = ObjectManager.Instance.PopObject(expPrefab);

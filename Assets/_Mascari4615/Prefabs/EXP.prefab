@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 601287520657229659}
   - component: {fileID: 6728180714652081365}
   - component: {fileID: 3728665865826991783}
-  - component: {fileID: -3172917983002754396}
+  - component: {fileID: 8148981159910237954}
   m_Layer: 0
   m_Name: EXP
   m_TagString: Untagged
@@ -42,7 +42,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2294495901960982391}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &6728180714652081365
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b12fa30a6655450409a4cf4940ae99b8, type: 2}
+  - {fileID: 2100000, guid: 273dfc6e0751a1445bb5305e8a778837, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -98,10 +98,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 1
-  amount: 2
   useBezierCurve: 0
---- !u!65 &-3172917983002754396
-BoxCollider:
+  amount: 2
+--- !u!135 &8148981159910237954
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -119,5 +119,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6, y: 6, z: 6}
+  m_Radius: 4
   m_Center: {x: 0, y: 0, z: 0}

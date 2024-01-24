@@ -27,19 +27,13 @@ namespace Mascari4615
 		public GameObjectBuffer SpawnCircleObjectBuffer => spawnCircleObjectBuffer;
 		[SerializeField] private GameObjectBuffer monsterObjectBuffer;
 		public GameObjectBuffer MonsterObjectBuffer => monsterObjectBuffer;
-		[SerializeField] private GameObjectBuffer dropItemObjectBuffer;
-		public GameObjectBuffer DropItemObjectBuffer => dropItemObjectBuffer;
 		[SerializeField] private GameObjectBuffer skillObjectBuffer;
 		public GameObjectBuffer SkillObjectBuffer => skillObjectBuffer;
 
 		protected override void Awake()
 		{
 			base.Awake();
-
-			spawnCircleObjectBuffer.RuntimeItems.Clear();
-			monsterObjectBuffer.RuntimeItems.Clear();
-			dropItemObjectBuffer.RuntimeItems.Clear();
-			skillObjectBuffer.RuntimeItems.Clear();
+			ClearDungeonObjects();
 		}
 
 		private void Start()
@@ -79,7 +73,7 @@ namespace Mascari4615
 		{
 			spawnCircleObjectBuffer.ClearObjects();
 			monsterObjectBuffer.ClearObjects();
-			dropItemObjectBuffer.ClearObjects();
+			SOManager.Instance.DropsBuffer.ClearObjects();
 			skillObjectBuffer.ClearObjects();
 		}
 	}

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 namespace Mascari4615
@@ -32,6 +33,7 @@ namespace Mascari4615
 		{
 			if (curExp.RuntimeValue >= maxExp.RuntimeValue)
 			{
+				RuntimeManager.PlayOneShot("event:/SFX/LevelUp", transform.position);
 				curExp.RuntimeValue -= maxExp.RuntimeValue;
 				maxExp.RuntimeValue += 10;
 				curLevel.RuntimeValue++;

@@ -2,47 +2,63 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Probability<T>
+namespace Mascari4615
 {
-    private readonly List<ProbabilityElement> probabilityList = new();
+	public class Probability<T>
+	{
+		private readonly List<ProbabilityElement> probabilityList = new();
+		private bool shouldFill100Percent = false;
 
-    private class ProbabilityElement
-    {
-        public readonly T Target;
-        public readonly float Probability;
+		public Probability(bool shouldFill100Percent = false)
+		{
+			this.shouldFill100Percent = shouldFill100Percent;
+		}
 
-        public ProbabilityElement(T target, float probability)
-        {
-            Target = target;
-            Probability = probability;
-        }
-    }
+		private class ProbabilityElement
+		{
+			public readonly T Target;
+			public readonly float Probability;
 
-    public void Add(T target, float probability)
-    {
-        probabilityList.Add(new ProbabilityElement(target, probability));
-    }
+			public ProbabilityElement(T target, float probability)
+			{
+				Target = target;
+				Probability = probability;
+			}
+		}
 
-    public T Get()
-    {
-        float totalProbability = probabilityList.Sum(t => t.Probability);
+		public void Add(T target, float probability)
+		{
+			probabilityList.Add(new ProbabilityElement(target, probability));
+		}
 
-        float pick = Random.value * totalProbability;
-        foreach (ProbabilityElement t in probabilityList)
-        {
-            if (pick < t.Probability)
-                return t.Target;
-            pick -= t.Probability;
-        }
+		public T Get()
+		{
+			float totalProbability = probabilityList.Sum(t => t.Probability);
 
-        /*float sum = 0;
-        foreach (ProbabilityElement t in probabilityList)
-        {
-            sum += t.probability;
-            if (pick >= sum)
-                return t.target;
-        }*/
+			if (shouldFill100Percent && (totalProbability < 100))
+			{
+				float remainPercent = 100 - totalProbability;
+				probabilityList.Add(new ProbabilityElement(default, remainPercent));
+				totalProbability = 100;
+			}
 
-        return default;
-    }
+			float pick = Random.value * totalProbability;
+			foreach (ProbabilityElement t in probabilityList)
+			{
+				if (pick < t.Probability)
+					return t.Target;
+				pick -= t.Probability;
+			}
+
+			/*float sum = 0;
+	        foreach (ProbabilityElement t in probabilityList)
+	        {
+	            sum += t.probability;
+	            if (pick >= sum)
+	                return t.target;
+	        }*/
+
+			return default;
+		}
+	}
 }

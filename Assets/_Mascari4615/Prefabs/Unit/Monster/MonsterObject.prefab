@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7714682292764009147, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7832280916129115842, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Controller
@@ -123,6 +123,7 @@ MonoBehaviour:
   dieEffectPrefab: {fileID: 2294495901960982391, guid: f5ae612bf513475408710e27f5207d79, type: 3}
   hpBar: {fileID: 5591941910199305167}
   expPrefab: {fileID: 2294495901960982391, guid: f5ae612bf513475408710e27f5207d79, type: 3}
+  lootItemPrefab: {fileID: 2678269809200631940, guid: 3b2d778d3303e0647b26b6d6063f89db, type: 3}
 --- !u!114 &5389770000558939686
 MonoBehaviour:
   m_ObjectHideFlags: 0

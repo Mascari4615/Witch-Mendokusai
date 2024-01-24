@@ -43,6 +43,7 @@ namespace Mascari4615
 
 		[field: Space(10), Header("Buffer")]
 		[field: SerializeField] public GameObjectBuffer SpawnCircleBuffer { get; private set; }
+		[field: SerializeField] public GameObjectBuffer DropsBuffer { get; private set; }
 		[field: SerializeField] public QuestDataBuffer QuestDataBuffer { get; private set; }
 		[field: SerializeField] public Unit[] Units { get; private set; }
 		[field: SerializeField] public DollData[] Dolls { get; private set; }

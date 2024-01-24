@@ -11,14 +11,11 @@ namespace Mascari4615
 
 		public override bool Use(UnitObject unitObject)
 		{
-			var o = ObjectManager.Instance.PopObject(prefab);
-
+			GameObject o = ObjectManager.Instance.PopObject(prefab);
 			o.transform.position = unitObject.transform.position;
 
 			if (o.TryGetComponent(out SkillObject skillObject))
-			{
 				skillObject.InitContext(unitObject);
-			}
 
 			o.SetActive(true);
 
