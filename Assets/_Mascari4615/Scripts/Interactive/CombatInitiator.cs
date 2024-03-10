@@ -19,7 +19,7 @@ namespace Mascari4615
 
 		public void Initiating()
 		{
-			DungeonManager.Instance.StartCombat(dungeon);
+			DungeonManager.Instance.StartDungeon(dungeon);
 		}
 	}
 }

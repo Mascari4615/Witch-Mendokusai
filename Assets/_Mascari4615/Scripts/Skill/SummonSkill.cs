@@ -9,7 +9,7 @@ namespace Mascari4615
 	{
 		[SerializeField] private GameObject prefab;
 
-		public override bool Use(UnitObject unitObject)
+		public override void ActualUse(UnitObject unitObject)
 		{
 			GameObject o = ObjectManager.Instance.PopObject(prefab);
 			o.transform.position = unitObject.transform.position;
@@ -18,8 +18,6 @@ namespace Mascari4615
 				skillObject.InitContext(unitObject);
 
 			o.SetActive(true);
-
-			return true;
 		}
 	}
 }

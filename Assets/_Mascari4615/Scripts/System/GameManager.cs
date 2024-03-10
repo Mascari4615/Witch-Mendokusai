@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Mascari4615
 {
@@ -33,7 +34,15 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
+			SceneManager.sceneLoaded += OnSceneLoaded;
 			ClearDungeonObjects();
+		}
+		private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+		{
+			spawnCircleObjectBuffer.ClearBuffer();
+			monsterObjectBuffer.ClearBuffer();
+			SOManager.Instance.DropsBuffer.ClearBuffer();
+			skillObjectBuffer.ClearBuffer();
 		}
 
 		private void Start()

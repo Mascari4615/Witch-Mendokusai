@@ -38,14 +38,14 @@ namespace Mascari4615
 			if (DataManager.Instance.CurGameData == null)
 				return;
 
-			curDollSlot.Init(DataManager.Instance.CurDoll);
+			curDollSlot.SetArtifact(DataManager.Instance.CurDoll);
 			for (int i = 0; i < curStuffsSlot.Length; i++)
 			{
 				Debug.Log(DataManager.Instance.CurGameData.CurStuffs.Length);
 				Debug.Log(DataManager.Instance.CurGameData.CurStuffs[0]);
 				Debug.Log(DataManager.Instance.CurGameData.CurStuffs[1]);
 				Debug.Log(DataManager.Instance.CurGameData.CurStuffs[2]);
-				curStuffsSlot[i].Init(DataManager.Instance.CurStuff(i));
+				curStuffsSlot[i].SetArtifact(DataManager.Instance.CurStuff(i));
 			}
 		}
 

@@ -26,12 +26,12 @@ namespace Mascari4615
 			{
 				if (i < dataBuffer.RuntimeItems.Count)
 				{
-					slots[i].Init(dataBuffer.RuntimeItems[i] as Artifact);
+					slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as Artifact);
 					// slots[i].gameObject.SetActive(true);
 				}
 				else
 				{
-					slots[i].Init(null);
+					slots[i].SetArtifact(null);
 					// slots[i].gameObject.SetActive(false);
 				}
 			}

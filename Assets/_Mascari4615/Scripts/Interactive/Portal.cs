@@ -18,6 +18,12 @@ namespace Mascari4615
 			StageManager.Instance.LoadStage(targetStage, targetPortalIndex);
 		}
 
+		public void OnTriggerEnter(Collider other)
+		{
+			if (other.CompareTag("Player"))
+				StageManager.Instance.LoadStage(targetStage, targetPortalIndex);
+		}
+
 		public void Active()
 		{
 			gameObject.layer = 0;

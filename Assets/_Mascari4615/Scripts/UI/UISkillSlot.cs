@@ -5,14 +5,12 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class UISkillSlot : MonoBehaviour
+	public class UISkillSlot : UISlot
 	{
-		[SerializeField] private Image skillIconImage;
 		[SerializeField] private Image coolTimeImage;
 
-		public void UpdateUI(Skill skill, SkillCoolTime skillCoolTime)
+		public void UpdateCooltime(Skill skill, SkillCoolTime skillCoolTime)
 		{
-			skillIconImage.sprite = skill.Thumbnail;
 			coolTimeImage.fillAmount = skillCoolTime.CurCooltime / skillCoolTime.Cooltime;
 		}
 	}

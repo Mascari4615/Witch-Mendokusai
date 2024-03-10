@@ -24,7 +24,10 @@ namespace Mascari4615
 		[field: Header("_" + nameof(SOManager))]
 		[field: Space(10), Header("PlayerData")]
 		[field: SerializeField] public IntVariable CurHp { get; private set; }
+		[field: SerializeField] public IntVariable MaxHp{ get; private set; }
 		[field: SerializeField] public IntVariable CurExp { get; private set; }
+		[field: SerializeField] public IntVariable MaxExp { get; private set; }
+		[field: SerializeField] public IntVariable CurLevel { get; private set; }
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickX { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }
@@ -35,11 +38,18 @@ namespace Mascari4615
 		[field: SerializeField] public Vector3Variable PlayerLookDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerAimDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerAutoAimDirection { get; private set; }
+		[field: SerializeField] public BoolVariable CanInteract { get; private set; }
 		[field: SerializeField] public BoolVariable IsChatting { get; private set; }
 		[field: SerializeField] public BoolVariable IsDashing { get; private set; }
+		[field: SerializeField] public BoolVariable IsGround { get; private set; }
+		[field: SerializeField] public BoolVariable IsCooling { get; private set; }
+		[field: SerializeField] public BoolVariable IsPaused { get; private set; }
+		[field: SerializeField] public BoolVariable IsDied { get; private set; }
 		[field: SerializeField] public StatDictionary StatDictionary { get; private set; }
 		[field: SerializeField] public EnemyObjectVariable LastHitEnemyObject { get; private set; }
 		[field: SerializeField] public IntVariable MonsterKill { get; private set; }
+		[field: SerializeField] public IntVariable CoolTimeBonus { get; private set; }
+		[field: SerializeField] public IntVariable DamageBonus { get; private set; }
 
 		[field: Space(10), Header("Buffer")]
 		[field: SerializeField] public GameObjectBuffer SpawnCircleBuffer { get; private set; }
@@ -58,5 +68,6 @@ namespace Mascari4615
 		[field: Space(10), Header("GameEvent")]
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }
 		[field: SerializeField] public GameEvent OnPlayerDied { get; private set; }
+		[field: SerializeField] public GameEvent OnDungeonStart { get; private set; }
 	}
 }

@@ -10,10 +10,10 @@ namespace Mascari4615
 {
 	public class UIManager : Singleton<UIManager>
 	{
-		public enum MenuPanelType
+		public enum TabMenuPanelType
 		{
-			Home,
-			BookShelf,
+			None = -1,
+			BookShelf = 0,
 			Inventory,
 			PotionCraft,
 		}
@@ -22,9 +22,9 @@ namespace Mascari4615
 		[SerializeField] private CutSceneModule cutSceneModule;
 
 		[SerializeField] private GameObject[] canvasList;
-		[SerializeField] private UIPanel[] menuPanelList;
+		[SerializeField] private UIPanel[] tabPanels;
 		private PlayerState _curCanvas = PlayerState.Peaceful;
-		private MenuPanelType _curMenuPanel = MenuPanelType.Home;
+		private TabMenuPanelType _curTabMenuPanel = TabMenuPanelType.None;
 
 		[SerializeField] private Slider masterVolumeSlider;
 		[SerializeField] private Slider bgmVolumeSlider;
@@ -32,6 +32,8 @@ namespace Mascari4615
 
 		[SerializeField] private GameObject settingPanel;
 		[SerializeField] private BoolVariable IsPaused;
+
+		[SerializeField] private Animator transitionAnimator;
 
 		public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
 		public void OpenCanvas(PlayerState canvasType)
@@ -43,17 +45,17 @@ namespace Mascari4615
 				canvasList[i].gameObject.SetActive(i == (int)_curCanvas);
 		}
 
-		public void OpenPanel(int canvasType) => OpenPanel((MenuPanelType)canvasType);
-		public void OpenPanel(MenuPanelType menuType)
+		public void OpenTabMenu(int canvasType) => OpenTabMenu((TabMenuPanelType)canvasType);
+		public void OpenTabMenu(TabMenuPanelType menuType)
 		{
-			Debug.Log($"{nameof(OpenPanel)}, {menuType}");
-			_curMenuPanel = menuType;
+			// Debug.Log($"{nameof(OpenTabMenu)}, {menuType}");
+			_curTabMenuPanel = menuType;
 
-			for (var i = 0; i < menuPanelList.Length; i++)
-				menuPanelList[i].gameObject.SetActive(i == (int)_curMenuPanel);
-			menuPanelList[(int)_curMenuPanel].Init();
+			for (var i = 0; i < tabPanels.Length; i++)
+				tabPanels[i].gameObject.SetActive(i == (int)_curTabMenuPanel);
 
-			SetMenuActive(false);
+			if (_curTabMenuPanel != TabMenuPanelType.None)
+				tabPanels[(int)_curTabMenuPanel].UpdateUI();
 		}
 
 		public void OpenShopPanel()
@@ -61,10 +63,18 @@ namespace Mascari4615
 
 		}
 
+		protected override void Awake()
+		{
+			base.Awake();
+
+			foreach (var tabPanel in tabPanels)
+				tabPanel.Init();
+		}
+
 		private void Start()
 		{
 			OpenCanvas(PlayerState.Peaceful);
-			OpenPanel(MenuPanelType.Home);
+			OpenTabMenu(TabMenuPanelType.None);
 			InitVolumeSliderValue();
 			SetMenuActive(false);
 		}
@@ -116,43 +126,51 @@ namespace Mascari4615
 			menuButton.transform.rotation = Quaternion.Euler(0, 0, active ? -180 : 0);
 		}
 
-		private void Update()
+		public void ToggleSetting()
 		{
-			if (Input.GetKeyDown(KeyCode.C))
+			if (settingPanel.activeSelf)
 			{
-				if (_curMenuPanel != MenuPanelType.Inventory)
-					OpenPanel(MenuPanelType.Inventory);
-				else
-					OpenPanel(MenuPanelType.Home);
+				settingPanel.SetActive(false);
+				TimeManager.Instance.Resume();
+			}
+			else
+			{
+				if (TimeManager.Instance.Paused)
+					return;
+
+				settingPanel.SetActive(true);
+				TimeManager.Instance.Pause();
 			}
 
-			if (Input.GetKeyDown(KeyCode.Tab))
-			{
-				SetMenuActive(true);
-			}
-			else if (Input.GetKeyUp(KeyCode.Tab))
-			{
-				SetMenuActive(false);
-			}
+			// settingPanel.SetActive(!settingPanel.activeSelf);
+		}
 
-			if (Input.GetKeyDown(KeyCode.Escape))
-			{
-				if (settingPanel.activeSelf)
-				{
-					settingPanel.SetActive(false);
-					TimeManager.Instance.Resume();
-				}
-				else
-				{
-					if (TimeManager.Instance.Paused)
-						return;
+		public void ToggleTabMenu()
+		{
+			if (_curTabMenuPanel != TabMenuPanelType.Inventory)
+				OpenTabMenu(TabMenuPanelType.Inventory);
+			else
+				OpenTabMenu(TabMenuPanelType.None);
+		}
 
-					settingPanel.SetActive(true);
-					TimeManager.Instance.Pause();
-				}
+		// 가상함수를 전달받아 처리
+		public void Transition(Action actionDuringTransition)
+		{
+			StartCoroutine(TransitionCoroutine(actionDuringTransition));
+		}
 
-				// settingPanel.SetActive(!settingPanel.activeSelf);
-			}
+		private IEnumerator TransitionCoroutine(Action actionDuringTransition)
+		{
+			AnimatorStateInfo animatorStateInfo = transitionAnimator.GetCurrentAnimatorStateInfo(0);
+			float duration = animatorStateInfo.length / animatorStateInfo.speedMultiplier;
+	
+			transitionAnimator.SetTrigger("IN");
+
+			yield return new WaitForSecondsRealtime(duration + .2f);
+			actionDuringTransition?.Invoke();
+			yield return new WaitForSecondsRealtime(.2f);
+
+			transitionAnimator.SetTrigger("OUT");
 		}
 	}
 }

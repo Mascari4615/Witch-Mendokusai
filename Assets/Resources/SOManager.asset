@@ -13,7 +13,10 @@ MonoBehaviour:
   m_Name: SOManager
   m_EditorClassIdentifier: 
   <CurHp>k__BackingField: {fileID: 11400000, guid: e17c1fbc32be8ce44adf70b3cc21f933, type: 2}
+  <MaxHp>k__BackingField: {fileID: 11400000, guid: f432416c7d9ce054789a2e0d6012600b, type: 2}
   <CurExp>k__BackingField: {fileID: 11400000, guid: ed4ed7749f8346343b8bb087f0fc3531, type: 2}
+  <MaxExp>k__BackingField: {fileID: 11400000, guid: 169e60f9c99d5ca4292e7c80f9b5d618, type: 2}
+  <CurLevel>k__BackingField: {fileID: 11400000, guid: 2fbe9aceae0721142b545da2065858e6, type: 2}
   <InvincibleTime>k__BackingField: {fileID: 11400000, guid: 7e722dc07ec340d479558ceb2eec1f67, type: 2}
   <JoystickX>k__BackingField: {fileID: 11400000, guid: 64d14713df42cdb45bb9d5777014f481, type: 2}
   <JoystickY>k__BackingField: {fileID: 11400000, guid: f3d01bea6a0a79043b38712d843e2c8a, type: 2}
@@ -24,11 +27,18 @@ MonoBehaviour:
   <PlayerLookDirection>k__BackingField: {fileID: 11400000, guid: a4bca88b221e11f43a05fb4d6ffd2fda, type: 2}
   <PlayerAimDirection>k__BackingField: {fileID: 11400000, guid: 1c678395060d7744f81c93703fdf31ce, type: 2}
   <PlayerAutoAimDirection>k__BackingField: {fileID: 11400000, guid: 7c5d20dff5b99ab4dad6744002b3dcef, type: 2}
+  <CanInteract>k__BackingField: {fileID: 11400000, guid: e87d7471d3956d045af650ff560e9da9, type: 2}
   <IsChatting>k__BackingField: {fileID: 11400000, guid: e3d50d44e99f55241a4419f3028b38da, type: 2}
   <IsDashing>k__BackingField: {fileID: 11400000, guid: b00496828438e7f45a2b804392e1e66f, type: 2}
+  <IsGround>k__BackingField: {fileID: 11400000, guid: da02191afb1c6184b8e5892f3a8e299c, type: 2}
+  <IsCooling>k__BackingField: {fileID: 11400000, guid: 9b0b32ea7bba5e3498bc220ff9d21fa9, type: 2}
+  <IsPaused>k__BackingField: {fileID: 11400000, guid: 7f9aa6174506c4343b5a72a2df031565, type: 2}
+  <IsDied>k__BackingField: {fileID: 11400000, guid: 3b39814c763708346a0bf164c41e2b7c, type: 2}
   <StatDictionary>k__BackingField: {fileID: 11400000, guid: d683d1dc8d5f6344791cdf9a6122e182, type: 2}
   <LastHitEnemyObject>k__BackingField: {fileID: 11400000, guid: 02651b9ff301b0e4fac2091ae8860410, type: 2}
   <MonsterKill>k__BackingField: {fileID: 11400000, guid: aba620c3bcae9414cab285eb43921073, type: 2}
+  <CoolTimeBonus>k__BackingField: {fileID: 11400000, guid: 0bbb5ade3c761254abf64a62dcbd7ea1, type: 2}
+  <DamageBonus>k__BackingField: {fileID: 11400000, guid: 95107c58bf3d9d74e944a2834c497295, type: 2}
   <SpawnCircleBuffer>k__BackingField: {fileID: 11400000, guid: 6dcc747bed18dc64fb970763cffdde18, type: 2}
   <DropsBuffer>k__BackingField: {fileID: 11400000, guid: 48a5ce890510d5145af6b7b0b34507d5, type: 2}
   <QuestDataBuffer>k__BackingField: {fileID: 11400000, guid: 5d1d254e533cbf54a8674e35c61f9580, type: 2}
@@ -46,3 +56,4 @@ MonoBehaviour:
   <SelectMasteryDataBuffer>k__BackingField: {fileID: 11400000, guid: f13c31923217cf246898171312ed6c19, type: 2}
   <OnPlayerHit>k__BackingField: {fileID: 11400000, guid: f76e99a695cb99b4daa6689fb44455db, type: 2}
   <OnPlayerDied>k__BackingField: {fileID: 11400000, guid: 5d18fed6aac604a479af521c42c711c7, type: 2}
+  <OnDungeonStart>k__BackingField: {fileID: 11400000, guid: fc00031ad31f90a408acc1412869de03, type: 2}

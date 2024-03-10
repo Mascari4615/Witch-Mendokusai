@@ -7,5 +7,6 @@ namespace Mascari4615
 	public class UIPanel : MonoBehaviour
 	{
 		public virtual void Init() { }
+		public virtual void UpdateUI() { }
 	}
 }

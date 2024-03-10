@@ -165,7 +165,10 @@ namespace Mascari4615
 
 		protected bool IsPlayerOnLeft()
 		{
-			return PlayerController.Instance.transform.position.x < transform.position.x;
+			// return PlayerController.Instance.transform.position.x < transform.position.x;
+
+			// HACK
+			return Camera.main.WorldToViewportPoint(transform.position).x > .5f;
 		}
 
 		[SerializeField] private GameObject spawnObject;

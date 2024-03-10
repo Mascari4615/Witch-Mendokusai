@@ -26,12 +26,12 @@ namespace Mascari4615
 			{
 				if (i < SOManager.Instance.ShopKeeperItemBuffer.RuntimeItems.Count)
 				{
-					slots[i].Init(items[i], 1);
+					slots[i].SetArtifact(items[i], 1);
 					slots[i].gameObject.SetActive(true);
 				}
 				else
 				{
-					slots[i].Init(null);
+					slots[i].SetArtifact(null);
 					slots[i].gameObject.SetActive(false);
 				}
 			}

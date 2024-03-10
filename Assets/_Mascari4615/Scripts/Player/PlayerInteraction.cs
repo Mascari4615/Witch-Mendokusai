@@ -9,7 +9,6 @@ namespace Mascari4615
 	public class PlayerInteraction : MonoBehaviour
 	{
 		[SerializeField] private Collider collider;
-		[SerializeField] private BoolVariable canInteract;
 		private Dictionary<int, InteractiveObject> nearInterativeObjects = new Dictionary<int, InteractiveObject>();
 
 		private InteractiveObject GetNearestInteractiveObject()
@@ -59,7 +58,7 @@ namespace Mascari4615
 
 		private void UpdateCanInteractVariable()
 		{
-			canInteract.RuntimeValue = nearInterativeObjects.Count > 0;
+			SOManager.Instance.CanInteract.RuntimeValue = nearInterativeObjects.Count > 0;
 			// Debug.Log(nameof(UpdateCanInteractVariable) + nearInterativeObjects.Count);
 		}
 

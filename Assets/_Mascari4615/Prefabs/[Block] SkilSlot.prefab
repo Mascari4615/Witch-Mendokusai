@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 8388792141128337790}
   - component: {fileID: 7662298888105534823}
   - component: {fileID: 6917513738460713056}
+  - component: {fileID: 7893340713583631101}
+  - component: {fileID: 2107161083084762893}
   m_Layer: 5
   m_Name: '[Block] SkilSlot'
   m_TagString: Untagged
@@ -78,7 +80,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 0.5
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &6917513738460713056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,8 +93,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fc1f27fa4347be459a0f89097fc619b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toolTipTrigger: {fileID: 2107161083084762893}
+  defaultArtifact: {fileID: 0}
+  image: {fileID: 713038206654281877}
+  nameText: {fileID: 0}
+  countTextField: {fileID: 0}
+  descriptionText: {fileID: 0}
   skillIconImage: {fileID: 713038206654281877}
   coolTimeImage: {fileID: 2334803524719860607}
+--- !u!114 &7893340713583631101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42480909273176616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 2, y: -2}
+  m_UseGraphicAlpha: 1
+--- !u!114 &2107161083084762893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 42480909273176616}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed213be8b708d5f4aab088f252c04e6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetToolTip: {fileID: 0}
+  isSpecialThings: 1
 --- !u!1 &773642381732858751
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +415,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 0.5
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &891900923136117531
 MonoBehaviour:
   m_ObjectHideFlags: 0

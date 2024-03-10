@@ -7,13 +7,16 @@ namespace Mascari4615
 	public class UIChapter : MonoBehaviour
 	{
 		private UIQuestSlot[] questSlots;
-		
-		private void Awake()
-		{
-			questSlots = GetComponentsInChildren<UIQuestSlot>(true);
-		}
 
 		public void Init()
+		{
+			questSlots = GetComponentsInChildren<UIQuestSlot>(true);
+
+			foreach (var slot in questSlots)
+				slot.Init();
+		}
+
+		public void UpdateUI()
 		{
 			foreach (var slot in questSlots)
 				slot.UpdateUI();

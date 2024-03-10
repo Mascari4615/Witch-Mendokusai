@@ -34,12 +34,12 @@ namespace Mascari4615
 			{
 				if (i < inventory.Capacity)
 				{
-					slots[i].Init(inventory.Items[i]?.Data, inventory.Items[i] != null ? inventory.Items[i].Amount : 1);
+					slots[i].SetArtifact(inventory.Items[i]?.Data, inventory.Items[i] != null ? inventory.Items[i].Amount : 1);
 					slots[i].gameObject.SetActive(true);
 				}
 				else
 				{
-					slots[i].Init(null);
+					slots[i].SetArtifact(null);
 					slots[i].gameObject.SetActive(false);
 				}
 			}
@@ -47,7 +47,7 @@ namespace Mascari4615
 
 		public void UpdateSlotUI(int index, Item item)
 		{
-			slots[index].Init(item?.Data, item?.Amount ?? 1);
+			slots[index].SetArtifact(item?.Data, item?.Amount ?? 1);
 			UpdateUI();
 		}
 	}

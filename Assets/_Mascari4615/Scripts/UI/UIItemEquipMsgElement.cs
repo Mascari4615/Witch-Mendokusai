@@ -14,7 +14,7 @@ namespace Mascari4615
 
 		public void SetAndPop(ItemData item)
 		{
-			_slot.Init(item);
+			_slot.SetArtifact(item);
 			_mmfPlayer.StopFeedbacks();
 			_mmfPlayer.PlayFeedbacks();
 		}

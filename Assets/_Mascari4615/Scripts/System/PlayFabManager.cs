@@ -130,7 +130,7 @@ namespace Mascari4615
 				GetTitleData();
 				GetVirtualCurrencies();
 
-				SceneManager.LoadScene(1);
+				// SceneManager.LoadScene(1);
 			}, OnError);
 // #endif
 		}

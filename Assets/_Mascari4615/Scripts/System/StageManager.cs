@@ -10,7 +10,6 @@ namespace Mascari4615
 		private const string NoCollision = "NO_CLLISION";
 		private const string Unit = "Unit";
 
-		[SerializeField] private UIStageResult uiStageResult;
 		[SerializeField] private GameObject homeStageObject;
 		[SerializeField] private Stage homeStage;
 
@@ -24,7 +23,6 @@ namespace Mascari4615
 		{
 			CurStageObject = homeStageObject.GetComponent<StageObject>();
 			CurStage = homeStage;
-			uiStageResult.SetActive(false);
 		}
 
 		public void LoadStage(Stage stage, int spawnPortalIndex)
@@ -39,6 +37,8 @@ namespace Mascari4615
 
 			// https://gall.dcinside.com/mgallery/board/view/?id=game_dev&no=99368
 			PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(NoCollision));
+			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate();
 			yield return new WaitForFixedUpdate();
 
 			// 마지막 스테이지를 현재 스테이지로 갱신하고, 비활성화 
@@ -64,29 +64,9 @@ namespace Mascari4615
 			lastPosDiff = newLastPosDiff;
 
 			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate();
+			yield return new WaitForFixedUpdate();
 			PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(Unit));
-		}
-
-		public void GameEnd()
-		{
-			TimeManager.Instance.Pause();
-
-			uiStageResult.Init();
-			uiStageResult.SetActive(true);
-		}
-
-		public void Continue()
-		{
-			// 집으로 돌아가기
-			TimeManager.Instance.Resume();
-			uiStageResult.SetActive(false);
-
-			GameManager.Instance.ClearDungeonObjects();
-
-			// Debug.Log(Instance.LastStage);
-			LoadStage(Instance.LastStage, -1);
-
-			GameManager.Instance.SetPlayerState(PlayerState.Peaceful);
 		}
 	}
 }

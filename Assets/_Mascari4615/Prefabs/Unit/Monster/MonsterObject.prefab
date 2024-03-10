@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2edf48f4d396b4c4cb675e7f08f88ba1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitData: {fileID: 11400000, guid: d3b4b260c0d5fcd478b6ccbf48fc8d43, type: 2}
+  unitData: {fileID: 11400000, guid: 473eb54ca0151684ca8411fd1914123f, type: 2}
   spriteRenderer: {fileID: 3636146261913355018}
   mmfPlayer: {fileID: 7384126293819498099}
   animator: {fileID: 0}
@@ -202,7 +202,7 @@ NavMeshAgent:
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 1
   m_BaseOffset: 0
@@ -220,13 +220,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5f712a80a63f584bbe8fea951da7b9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sight: 20
+  sight: 500
   randomMoveDistance: 0
   stoppingDistance: 0.1
   updateRotation: 0
   acceleration: 40
   tolerance: 1
-  tick: 0.1
+  tick: 0.05
   spawnObject: {fileID: 0}
 --- !u!114 &6490647397583080478
 MonoBehaviour:

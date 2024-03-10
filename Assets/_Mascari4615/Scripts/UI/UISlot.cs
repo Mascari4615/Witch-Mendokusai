@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 
-
 namespace Mascari4615
 {
 	public class UISlot : MonoBehaviour
@@ -21,15 +20,22 @@ namespace Mascari4615
 		[SerializeField] protected TextMeshProUGUI nameText;
 		[SerializeField] protected TextMeshProUGUI countTextField;
 		[SerializeField] protected TextMeshProUGUI descriptionText;
+		[SerializeField] private Image disableImage;
+		private Action<Artifact> selectAction;
 
 		private void Awake()
 		{
+			/// Init();
+		}
+
+		public void Init()
+		{
 			if (defaultArtifact != null)
-				Init(defaultArtifact);
+				SetArtifact(defaultArtifact);
 		}
 
 		public void SetSlotIndex(int index) => Index = index;
-		public virtual void Init(Artifact artifact, int amount = 1)
+		public virtual void SetArtifact(Artifact artifact, int amount = 1)
 		{
 			// Debug.Log(nameof(Init));
 			Artifact = artifact;
@@ -47,6 +53,21 @@ namespace Mascari4615
 
 			if (descriptionText != null)
 				descriptionText.text = artifact?.Description;
+		}
+
+		public void SetDisable(bool isDisable)
+		{
+			disableImage.gameObject.SetActive(isDisable);
+		}
+
+		public void SetSelectAction(Action<Artifact> action)
+		{
+			selectAction = action;
+		}
+
+		public void Select()
+		{
+			selectAction?.Invoke(Artifact);
 		}
 	}
 }

@@ -17,11 +17,6 @@ namespace Mascari4615
 		[SerializeField] private GameObject expPrefab;
 		[SerializeField] private GameObject lootItemPrefab;
 
-		protected override void Awake()
-		{
-			base.Awake();
-		}
-
 		protected virtual void OnEnable()
 		{
 			spriteRenderer.sharedMaterial = unitData.Material;
@@ -33,6 +28,13 @@ namespace Mascari4615
 		{
 			GameManager.Instance?.MonsterObjectBuffer.RemoveItem(gameObject);
 			StopAllCoroutines();
+		}
+
+		public void UpdateStatByDifficulty(Difficulty newDifficulty)
+		{
+			double persentage = (double)CurHp / MaxHp;
+			MaxHp = (int)(unitData.MaxHp * (1 + .7f * (int)newDifficulty));
+			SetHp((int)(unitData.MaxHp * persentage));
 		}
 
 		public override void ReceiveDamage(int damage)

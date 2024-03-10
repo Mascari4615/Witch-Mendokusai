@@ -15,6 +15,7 @@ namespace Mascari4615
 		public UnitSkillHandler UnitSkillHandler { get; protected set; }
 
 		[SerializeField] protected SpriteRenderer spriteRenderer;
+		private Vector3 originScale;
 
 		public int CurHp { get; protected set; }
 		public int MaxHp { get; protected set; }
@@ -26,6 +27,7 @@ namespace Mascari4615
 
 		protected virtual void Awake()
 		{
+			originScale = spriteRenderer.transform.localScale;
 			if (unitData != null)
 				Init(unitData);
 
@@ -43,6 +45,8 @@ namespace Mascari4615
 
 			for (int i = 0; i < unitData.DefaultSkills.Length; i++)
 				UnitSkillHandler.SetSkill(i, unitData.DefaultSkills[i]);
+
+			spriteRenderer.transform.localScale = originScale;
 		}
 
 		public virtual bool UseSkill(int index)
@@ -84,15 +88,18 @@ namespace Mascari4615
 	{
 		public Dictionary<int, (Skill skill, SkillCoolTime skillCoolTime)> SkillDic { get; private set; } = new();
 		private UnitObject unitObject;
+		private float coolTimeBonus = 0;
 
 		public UnitSkillHandler(UnitObject unitObject)
 		{
 			this.unitObject = unitObject;
 		}
 
+		private float CalcSkillCoolTime(float skillCoolTime) => skillCoolTime * (1f - (coolTimeBonus / 100f));
+
 		public void SetSkill(int skillIndex, Skill skill)
 		{
-			SkillDic[skillIndex] = (skill, new SkillCoolTime(skill));
+			SkillDic[skillIndex] = (skill, new SkillCoolTime(CalcSkillCoolTime(skill.Cooltime)));
 		}
 
 		public bool UseSkill(UnitObject unitObject, int skillButtonIndex)
@@ -110,9 +117,23 @@ namespace Mascari4615
 			return false;
 		}
 
+		public void SetCoolTimeBonus(float coolTimeBonus)
+		{
+			this.coolTimeBonus = coolTimeBonus;
+
+			foreach (var skillSlot in SkillDic.Values)
+				skillSlot.skillCoolTime.SetCoolTime(CalcSkillCoolTime(skillSlot.skill.Cooltime));
+		}
+
 		public bool IsReady(int skillButtonIndex)
 		{
-			return SkillDic[skillButtonIndex].skillCoolTime.IsReady;
+			if (SkillDic.TryGetValue(skillButtonIndex, out var value) == false)
+			{
+				Debug.LogError($"{unitObject.gameObject.name}, Invalid skillIndex");
+				return false;
+			}
+
+			return value.skillCoolTime.IsReady;
 		}
 
 		public void Tick(float delta)
@@ -137,9 +158,14 @@ namespace Mascari4615
 		public float Cooltime { get; private set; }
 		public bool IsReady => CurCooltime == 0;
 
-		public SkillCoolTime(Skill skill)
+		public SkillCoolTime(float coolTime)
 		{
-			this.Cooltime = skill.Cooltime;
+			this.Cooltime = coolTime;
+		}
+
+		public void SetCoolTime(float coolTime)
+		{
+			this.Cooltime = coolTime;
 		}
 
 		public void Tick(float delta)

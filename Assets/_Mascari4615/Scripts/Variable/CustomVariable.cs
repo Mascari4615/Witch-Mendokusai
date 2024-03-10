@@ -12,12 +12,11 @@ namespace Mascari4615
 			set
 			{
 				_runtimeValue = value;
-				gameEvent?.Raise();
+				GameEvent?.Raise();
 			}
 		}
 		[System.NonSerialized] private T _runtimeValue;
-		[SerializeField] private GameEvent gameEvent;
-		public GameEvent GameEvent => gameEvent;
+		[field: SerializeField] public GameEvent GameEvent { get; private set; }
 
 		public void OnAfterDeserialize() { RuntimeValue = initialValue; }
 		public void OnBeforeSerialize() { }

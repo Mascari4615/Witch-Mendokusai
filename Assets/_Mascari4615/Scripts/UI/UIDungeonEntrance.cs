@@ -41,7 +41,7 @@ namespace Mascari4615
 
 		public void StartCombat()
 		{
-			DungeonManager.Instance.StartCombat(_dungeonDatas[_curDungeonIndex]);
+			DungeonManager.Instance.StartDungeon(_dungeonDatas[_curDungeonIndex]);
 			gameObject.SetActive(false);
 		}
 	}

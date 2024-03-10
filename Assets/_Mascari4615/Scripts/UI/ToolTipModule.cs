@@ -35,6 +35,7 @@ namespace Mascari4615
 
 		public void Show(Artifact artifact)
 		{
+			// Debug.Log("Show");
 			toolTip.SetToolTip(artifact);
 			toolTip.transform.position = GetVec();
 			toolTip.gameObject.SetActive(true);
@@ -53,6 +54,10 @@ namespace Mascari4615
 				Mathf.Clamp(Input.mousePosition.y + 40, ToolTipPadding, Screen.height - toolTipHeight - ToolTipPadding), 0);
 		}
 
-		public void Hide() => toolTip.gameObject.SetActive(false);
+		public void Hide()
+		{
+			// Debug.Log("Hide");
+			toolTip.gameObject.SetActive(false);
+		}
 	}
 }

@@ -10,23 +10,21 @@ namespace Mascari4615
 		private static readonly int Update = Animator.StringToHash("UPDATE");
 
 		[SerializeField] private Animator animator;
-		[SerializeField] private BoolVariable canInteract;
-		[SerializeField] private BoolVariable isPlayerButton0Down;
 
 		public void UpdateIcon()
 		{
-			animator.SetInteger(State, canInteract.RuntimeValue ? 1 : 0);
+			animator.SetInteger(State, SOManager.Instance.CanInteract.RuntimeValue ? 1 : 0);
 			animator.SetTrigger(Update);
 		}
 
 		public void Down()
 		{
-			isPlayerButton0Down.RuntimeValue = true;
+			// isPlayerButton0Down.RuntimeValue = true;
 		}
 
 		public void Up()
 		{
-			isPlayerButton0Down.RuntimeValue = false;
+			// isPlayerButton0Down.RuntimeValue = false;
 		}
 	}
 }

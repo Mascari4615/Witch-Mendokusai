@@ -7,11 +7,8 @@ namespace Mascari4615
 {
 	public class PlayerController : Singleton<PlayerController>
 	{
-		[SerializeField] private BoolVariable canInteract;
-		[SerializeField] private BoolVariable isPlayerButton0Down;
 		[SerializeField] private PlayerInteraction playerInteraction;
-		public PlayerObject PlayerObject => playerObject;
-		[SerializeField] private PlayerObject playerObject;
+		[field: SerializeField]	public PlayerObject PlayerObject { get; private set; }
 		public GameObject playerExpCollider;
 
 		public void TeleportTo(Vector3 targetPos)
@@ -21,29 +18,30 @@ namespace Mascari4615
 
 		public void PlayerButton0()
 		{
-			if (canInteract.RuntimeValue)
+			if (SOManager.Instance.CanInteract.RuntimeValue)
 			{
 				playerInteraction.Interaction();
 			}
 			else
 			{
-				playerObject.UseSkill(0);
+				PlayerObject.UseSkill(0);
 			}
 		}
 
-		private void Update()
+		public void TryInteract()
 		{
-			if (canInteract.RuntimeValue && Input.GetKeyDown(KeyCode.F))
+			if (SOManager.Instance.CanInteract.RuntimeValue)
 			{
 				playerInteraction.Interaction();
 			}
-			else if (isPlayerButton0Down.RuntimeValue || Input.GetMouseButton(0))
-			{
-				playerObject.UseSkill(0);
-			}
 		}
 
-		[SerializeField] private IntVariable maxHP;
+		public void TryUseSkill(int skillIndex)
+		{
+			if (SOManager.Instance.IsCooling.RuntimeValue)
+				return;
+			PlayerObject.UseSkill(skillIndex);
+		}
 
 		public void SetDoll(DollData dollData)
 		{

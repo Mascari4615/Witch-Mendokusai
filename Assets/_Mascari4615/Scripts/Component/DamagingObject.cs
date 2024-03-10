@@ -36,7 +36,7 @@ namespace Mascari4615
 					case MonsterObject when usedByPlayer:
 					case PlayerObject when !usedByPlayer:
 						// Debug.Log(nameof(OnTriggerEnter));
-						hitable.ReceiveDamage(damage);
+						hitable.ReceiveDamage(CalcDamage());
 						if (useHitCount)
 						{
 							if (--curHitCount <= 0)
@@ -63,6 +63,18 @@ namespace Mascari4615
 		{
 			vaild = false;
 			gameObject.SetActive(false);
+		}
+
+		private int CalcDamage()
+		{
+			int calcDamage = damage;
+
+			if (usedByPlayer)
+			{
+				calcDamage = (int)(calcDamage * (1 + (SOManager.Instance.DamageBonus.RuntimeValue / 100f)));
+			}
+
+			return calcDamage;
 		}
 	}
 }
