@@ -9,6 +9,7 @@ namespace Mascari4615
 	{
 		[field: Header("_" + nameof(Mastery))]
 		[field: SerializeField] public Effect[] Effects { get; private set; }
+		[field: SerializeField] public int MaxStack { get; private set; }
 
 		public void OnEquip()
 		{

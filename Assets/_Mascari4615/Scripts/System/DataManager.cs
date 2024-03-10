@@ -17,15 +17,15 @@ namespace Mascari4615
 
 		public readonly Dictionary<int, Quest> QuestDic = new();
 		public readonly Dictionary<int, Unit> UnitDic = new();
-		private readonly Dictionary<int, DollData> _dollDic = new();
+		public readonly Dictionary<int, DollData> DollDic = new();
 		public readonly Dictionary<int, ItemData> ItemDic = new();
-		public readonly Dictionary<int, ItemData> PotionDIc = new();
-		private readonly Dictionary<int, ItemData> _commonItemDic = new();
-		private readonly Dictionary<int, ItemData> _unCommonItemDic = new();
-		private readonly Dictionary<int, ItemData> _rareItemDic = new();
-		private readonly Dictionary<int, ItemData> _legendItemDic = new();
+		public readonly Dictionary<int, ItemData> PotionDic = new();
+		public readonly Dictionary<int, ItemData> CommonItemDic = new();
+		public readonly Dictionary<int, ItemData> UncommonItemDic = new();
+		public readonly Dictionary<int, ItemData> RareItemDic = new();
+		public readonly Dictionary<int, ItemData> LegendItemDic = new();
 		public readonly Dictionary<int, Stage> StageDic = new();
-		private readonly Dictionary<int, Mastery> _masteryDic = new();
+		public readonly Dictionary<int, Mastery> MasteryDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
 
 		public Action OnCurGameDataLoad;
@@ -47,16 +47,16 @@ namespace Mascari4615
 				switch (item.Grade)
 				{
 					case Grade.Common:
-						_commonItemDic.Add(item.ID, item);
+						CommonItemDic.Add(item.ID, item);
 						break;
 					case Grade.Uncommon:
-						_commonItemDic.Add(item.ID, item);
+						UncommonItemDic.Add(item.ID, item);
 						break;
 					case Grade.Rare:
-						_rareItemDic.Add(item.ID, item);
+						RareItemDic.Add(item.ID, item);
 						break;
 					case Grade.Legendary:
-						_legendItemDic.Add(item.ID, item);
+						LegendItemDic.Add(item.ID, item);
 						break;
 					default:
 						throw new ArgumentOutOfRangeException();
@@ -79,15 +79,13 @@ namespace Mascari4615
 			foreach (var unit in soManager.Units)
 				UnitDic.Add(unit.ID, unit);
 			foreach (var doll in soManager.Dolls)
-				_dollDic.Add(doll.ID, doll);
+				DollDic.Add(doll.ID, doll);
 			foreach (var quest in soManager.QuestDataBuffer.InitItems)
 				QuestDic.Add(quest.ID, quest);
 
 			foreach (var mastery in soManager.MasteryDataBuffer.InitItems)
-				_masteryDic.Add(mastery.ID, mastery);
+				MasteryDic.Add(mastery.ID, mastery);
 		}
-
-		[SerializeField] private EquipmentData[] stuffs;
 
 		public void CreateNewGameData()
 		{
@@ -96,14 +94,18 @@ namespace Mascari4615
 			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
 			soManager.EquipInventory.InitItems(CurGameData.equipmentInventoryItems);
 
-			soManager.EquipInventory.Add(stuffs[0], 1);
-			soManager.EquipInventory.Add(stuffs[1], 1);
-			soManager.EquipInventory.Add(stuffs[2], 1);
-			soManager.EquipInventory.Add(stuffs[3], 1);
+			for (int i = 0; i < 3; i++)
+			{
+				EquipmentData equipmentData = DollDic[0].EquipmentDatas[i];
+				soManager.EquipInventory.Add(equipmentData);
 
-			CurGameData.CurStuffs[0] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(stuffs[0])).Guid;
-			CurGameData.CurStuffs[1] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(stuffs[1])).Guid;
-			CurGameData.CurStuffs[2] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(stuffs[2])).Guid;
+			Debug.Log(CurGameData.myDollDatas[0]);
+			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids);
+			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids[i]);
+			Debug.Log(soManager.EquipInventory.FindItemSlotIndex(equipmentData));
+			Debug.Log( soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(equipmentData)));
+				CurGameData.myDollDatas[0].equipmentGuids[i] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(equipmentData)).Guid;
+			}
 		}
 
 		public void SaveData()
@@ -141,32 +143,46 @@ namespace Mascari4615
 
 		public int GetRandomItemID(Grade grade) => grade switch
 		{
-			Grade.Common => _commonItemDic.ElementAt(Random.Range(0, _commonItemDic.Count)).Value.ID,
-			Grade.Uncommon => _unCommonItemDic.ElementAt(Random.Range(0, _unCommonItemDic.Count)).Value.ID,
-			Grade.Rare => _rareItemDic.ElementAt(Random.Range(0, _rareItemDic.Count)).Value.ID,
-			Grade.Legendary => _legendItemDic.ElementAt(Random.Range(0, _legendItemDic.Count)).Value.ID,
+			Grade.Common => CommonItemDic.ElementAt(Random.Range(0, CommonItemDic.Count)).Value.ID,
+			Grade.Uncommon => UncommonItemDic.ElementAt(Random.Range(0, UncommonItemDic.Count)).Value.ID,
+			Grade.Rare => RareItemDic.ElementAt(Random.Range(0, RareItemDic.Count)).Value.ID,
+			Grade.Legendary => LegendItemDic.ElementAt(Random.Range(0, LegendItemDic.Count)).Value.ID,
 			_ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
 		};
 
 		private void OnApplicationQuit() => SaveData();
 
-		public DollData CurDoll => _dollDic[CurGameData.lastDollIndex];
+		public DollData CurDoll => DollDic[CurGameData.lastDollIndex];
 
 		[CanBeNull]
-		public EquipmentData CurStuff(int index) => (soManager.EquipInventory
-			.GetItem(soManager.EquipInventory.FindEquipmentByGuid(CurGameData.CurStuffs[index]))?
-			.Data as EquipmentData);
+		public EquipmentData GetEquipment(int index)
+		{
+			Debug.Log(soManager);
+			Debug.Log(soManager.EquipInventory);
+			Debug.Log(CurGameData.myDollDatas[0]);
+			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids);
+			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids[index]);
+
+			return soManager.EquipInventory
+			.GetItem(soManager.EquipInventory.FindEquipmentByGuid(CurGameData.myDollDatas[0].equipmentGuids[index]))?
+			.Data as EquipmentData;
+		}
 	}
 
 	[Serializable]
 	public class GameData
 	{
-		public List<InventorySlotData> itemInventoryItems = new List<InventorySlotData>();
-		public List<InventorySlotData> equipmentInventoryItems = new List<InventorySlotData>();
+		public List<InventorySlotData> itemInventoryItems = new();
+		public List<InventorySlotData> equipmentInventoryItems = new();
 		public int lastDollIndex;
 		public MyDollData[] myDollDatas = new MyDollData[10];
-		public Guid?[] CurStuffs = new Guid?[3];
 		public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
+
+		public GameData()
+		{
+			for (int i = 0; i < 10; i++)
+				myDollDatas[i] = new MyDollData(1, 0, new Guid[3]);
+		}
 	}
 
 	[Serializable]
@@ -189,13 +205,15 @@ namespace Mascari4615
 	[Serializable]
 	public struct MyDollData
 	{
-		public MyDollData(int dollLevel, int dollExp)
+		public MyDollData(int dollLevel, int dollExp, Guid[] equipmentGuids)
 		{
 			this.dollLevel = dollLevel;
 			this.dollExp = dollExp;
+			this.equipmentGuids = equipmentGuids;
 		}
 
 		public int dollLevel;
 		public int dollExp;
+		public Guid[] equipmentGuids;
 	}
 }

@@ -74,11 +74,11 @@ namespace Mascari4615
 				masteryManager.Init();
 				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
 
-				foreach (var effect in DataManager.Instance.CurStuff(0)!.Effects)
+				foreach (var effect in DataManager.Instance.GetEquipment(0)!.Effects)
 					effect.OnEquip();
-				foreach (var effect in DataManager.Instance.CurStuff(1)!.Effects)
+				foreach (var effect in DataManager.Instance.GetEquipment(1)!.Effects)
 					effect.OnEquip();
-				foreach (var effect in DataManager.Instance.CurStuff(2)!.Effects)
+				foreach (var effect in DataManager.Instance.GetEquipment(2)!.Effects)
 					effect.OnEquip();
 
 				SOManager.Instance.OnDungeonStart.Raise();
@@ -132,7 +132,7 @@ namespace Mascari4615
 
 			for (int i = 0; i < 3; i++)
 			{
-				foreach (var effect in DataManager.Instance.CurStuff(i)!.Effects)
+				foreach (var effect in DataManager.Instance.GetEquipment(i)!.Effects)
 					effect.OnEquip();
 			}
 		}

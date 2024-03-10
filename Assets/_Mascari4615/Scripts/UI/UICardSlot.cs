@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIMasterySlot : UISlot
+	public class UICardSlot : UISlot
 	{
 
 	}

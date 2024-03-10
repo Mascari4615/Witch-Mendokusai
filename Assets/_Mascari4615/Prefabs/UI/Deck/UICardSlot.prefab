@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 3326426075928797440}
   - component: {fileID: 9108595229365379179}
   m_Layer: 5
-  m_Name: '[Button] SelectMastery0'
+  m_Name: UICardSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -240,7 +240,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   toolTipTrigger: {fileID: 3326426075928797440}
-  defaultArtifact: {fileID: 11400000, guid: 422be6e0d42738240b945183b3c1878a, type: 2}
+  defaultArtifact: {fileID: 11400000, guid: b8d0fa80aa021c746988d676c5688e51, type: 2}
   image: {fileID: 8508996012563484276}
   nameText: {fileID: 0}
   countTextField: {fileID: 452224081189531274}

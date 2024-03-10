@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using FMODUnity;
 using TMPro;
@@ -13,34 +14,170 @@ namespace Mascari4615
 {
 	public class MasteryManager : MonoBehaviour
 	{
-		[SerializeField] private MasteryDataBuffer masteryDataBuffer;
+		private readonly List<List<Mastery>> masteryDataBuffers = new(3) {new(), new(), new()};
 		[SerializeField] private MasteryDataBuffer selectMasteryDataBuffer;
-		[SerializeField] private GameObject selectMasteryPanel;
-		[SerializeField] private Image[] buttonImages;
+
 		[SerializeField] private UISkillSlot[] skillSlots;
-		[SerializeField] private TextMeshProUGUI[] texts;
 		[SerializeField] private TextMeshProUGUI stackText;
-		[SerializeField] private UIMasterySelectPanel[] masterySelectPanels;
-		private int[] _choices = new int[3];
 
-		// [SerializeField] private ToolTipTrigger[] toolTipTriggers;
-		private int _selectMasteryStack;
+		[SerializeField] private GameObject selectDeckPanel;
+		[SerializeField] private GameObject deckPanel;
+		[SerializeField] private UICardSlot[] selectButtons;
+		private readonly Dictionary<int, UIDeck> deckUIDic = new();
 
-		private int SelectMasteryStack
+		private int _levelUpStack;
+		private int LevelUpStack
 		{
-			get => _selectMasteryStack;
+			get => _levelUpStack;
 			set
 			{
-				_selectMasteryStack = value;
-				stackText.text = _selectMasteryStack > 1 ? $"x{_selectMasteryStack}" : string.Empty;
+				_levelUpStack = value;
+				stackText.text = _levelUpStack > 1 ? $"x{_levelUpStack}" : string.Empty;
 			}
 		}
 
 		private void Awake()
 		{
-			selectMasteryPanel.SetActive(false);
-			SelectMasteryStack = 0;
+			selectDeckPanel.SetActive(false);
+			deckPanel.SetActive(false);
+			foreach (UIDeck deckUI in deckUIDic.Values)
+				deckUI.gameObject.SetActive(false);
+			LevelUpStack = 0;
+
+			UIDeck[] deckUIs = FindObjectsOfType<UIDeck>(true);
+			foreach (UIDeck deckUI in deckUIs)
+				deckUIDic.Add(deckUI.EquipmentData.ID, deckUI);
 		}
+
+		public void Init()
+		{
+			selectDeckPanel.SetActive(false);
+			deckPanel.SetActive(false);
+			foreach (UIDeck deckUI in deckUIDic.Values)
+				deckUI.gameObject.SetActive(false);
+
+			while (selectMasteryDataBuffer.RuntimeItems.Count > 0)
+				selectMasteryDataBuffer.RemoveItem(selectMasteryDataBuffer.RuntimeItems[^1]);
+			selectMasteryDataBuffer.ClearBuffer();
+
+			foreach (List<Mastery> masteryDataBuffer in masteryDataBuffers)
+				masteryDataBuffer.Clear();
+
+			for (int i = 0; i < 3; i++)
+			{
+				EquipmentData equipment = DataManager.Instance.GetEquipment(i);
+
+				if (equipment == null)
+					continue;
+				masteryDataBuffers[i].AddRange(equipment.Masteries);
+
+				deckUIDic[equipment.ID].Init(
+					cardSelectAction: (Artifact a) =>
+					{
+						// SelectMastery(masterySlots[i].Atrifact as Mastery);
+						// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈
+
+						SelectCard(a as Mastery);
+					});
+
+				selectButtons[i].SetSelectAction(
+					(Artifact a) =>
+					{
+						SelectCard(a as Mastery);
+					});
+			}
+
+			LevelUpStack = 0;
+		}
+
+		public void LevelUp()
+		{
+			// if (masteryDataBuffer.RuntimeItems.Count < 3)
+			{
+				// Debug.Log("Not Enough Mastery Count");
+				// return;
+			}
+
+			LevelUpStack++;
+			selectDeckPanel.SetActive(true);
+			TimeManager.Instance.Pause();
+		}
+
+		public void ShowDeck(int index)
+		{
+			curIndex = index;
+			List<Mastery> masteryDataBuffer = masteryDataBuffers[index];
+		
+			deckPanel.SetActive(true);
+			selectDeckPanel.SetActive(false);
+			
+			if (masteryDataBuffer.Count < 3)
+			{
+				// Debug.Log("Not Enough Mastery Count");
+
+				LevelUpStack--;
+				return;
+			}
+
+			TimeManager.Instance.Pause();
+
+			List<Mastery> randomMasteries = new();
+
+			while (randomMasteries.Count < 3)
+			{
+				int randomIndex = Random.Range(0, masteryDataBuffer.Count);
+				Mastery randomMastery = masteryDataBuffer[randomIndex];
+
+				if (randomMasteries.Contains(randomMastery))
+					continue;
+
+				selectButtons[randomMasteries.Count].SetArtifact(randomMastery);
+				randomMasteries.Add(randomMastery);
+
+				// buttonImages[i].sprite = randomMastery.Thumbnail;
+				// texts[i].text = randomMastery.Name;
+			}
+
+			// TODO : 해당되는 마스터리 UI에만 적용되도록 수정
+			int equipmentID = DataManager.Instance.GetEquipment(index).ID;
+			deckUIDic[equipmentID].UpdateUI(randomMasteries);
+			
+			deckUIDic[equipmentID].gameObject.SetActive(true);
+		}
+		int curIndex = 0;
+
+		public void SelectCard(Mastery mastery)
+		{
+			TimeManager.Instance.Resume();
+			RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
+			// ToolTipManager.Instance.Hide();
+			LevelUpStack--;
+
+			selectMasteryDataBuffer.AddItem(mastery);
+
+			if (mastery.MaxStack == selectMasteryDataBuffer.RuntimeItems.Select(m => m == mastery).Count())
+			{
+				int index = masteryDataBuffers[curIndex].IndexOf(mastery);
+				masteryDataBuffers[curIndex].RemoveAt(index);
+			}
+
+			if (LevelUpStack > 0)
+			{
+				// ShowDeck();
+			}
+			else selectDeckPanel.SetActive(false);
+			deckPanel.SetActive(false);
+			foreach (UIDeck deckUI in deckUIDic.Values)
+				deckUI.gameObject.SetActive(false);
+		}
+
+		public void ClearMasteryEffect()
+		{
+			while (selectMasteryDataBuffer.RuntimeItems.Count > 0)
+				selectMasteryDataBuffer.RemoveItem(selectMasteryDataBuffer.RuntimeItems[^1]);
+		}
+
+		// ========
 
 		private void Update()
 		{
@@ -58,121 +195,6 @@ namespace Mascari4615
 
 			for (int i = 0; i < skillSlots.Length; i++)
 				skillSlots[i].gameObject.SetActive(i < skillCount);
-		}
-
-		public void Init()
-		{
-			while (selectMasteryDataBuffer.RuntimeItems.Count > 0)
-				selectMasteryDataBuffer.RemoveItem(selectMasteryDataBuffer.RuntimeItems[^1]);
-			selectMasteryDataBuffer.ClearBuffer();
-
-			masteryDataBuffer.ClearBuffer();
-
-			masteryDataBuffer.RuntimeItems.AddRange(DataManager.Instance.CurDoll.Masteries);
-			masteryDataBuffer.RuntimeItems.AddRange(DataManager.Instance.CurStuff(0)!.Masteries);
-			masteryDataBuffer.RuntimeItems.AddRange(DataManager.Instance.CurStuff(1)!.Masteries);
-			masteryDataBuffer.RuntimeItems.AddRange(DataManager.Instance.CurStuff(2)!.Masteries);
-
-			selectMasteryPanel.SetActive(false);
-			SelectMasteryStack = 0;
-
-			foreach (UIMasterySelectPanel masterySelectPanel in masterySelectPanels)
-				masterySelectPanel.Init();
-		}
-
-		public void LevelUp()
-		{
-			if (masteryDataBuffer.RuntimeItems.Count < 3)
-			{
-				// Debug.Log("Not Enough Mastery Count");
-				return;
-			}
-
-			SelectMasteryStack++;
-
-			if (selectMasteryPanel.activeSelf == false)
-				ShowMasterys();
-		}
-
-		public void ChooseAbility(int i)
-		{
-			TimeManager.Instance.Resume();
-			RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
-			// ToolTipManager.Instance.Hide();
-			SelectMasteryStack--;
-
-			Mastery randomMastery = masteryDataBuffer.RuntimeItems[_choices[i]];
-			selectMasteryDataBuffer.AddItem(randomMastery);
-			masteryDataBuffer.RuntimeItems.RemoveAt(_choices[i]);
-
-			if (SelectMasteryStack > 0)
-				ShowMasterys();
-			else selectMasteryPanel.SetActive(false);
-		}
-
-		public void SelectMastery(Mastery mastery)
-		{
-			TimeManager.Instance.Resume();
-			RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
-			// ToolTipManager.Instance.Hide();
-			SelectMasteryStack--;
-
-			selectMasteryDataBuffer.AddItem(mastery);
-
-			int index = masteryDataBuffer.RuntimeItems.IndexOf(mastery);
-			masteryDataBuffer.RuntimeItems.RemoveAt(index);
-
-			if (SelectMasteryStack > 0)
-				ShowMasterys();
-			else selectMasteryPanel.SetActive(false);
-		}
-
-		public void ClearMasteryEffect()
-		{
-			while (selectMasteryDataBuffer.RuntimeItems.Count > 0)
-				selectMasteryDataBuffer.RemoveItem(selectMasteryDataBuffer.RuntimeItems[^1]);
-		}
-
-		public void ShowMasterys()
-		{
-			if (masteryDataBuffer.RuntimeItems.Count < 3)
-			{
-				Debug.Log("Not Enough Mastery Count");
-
-				SelectMasteryStack = 0;
-				selectMasteryPanel.SetActive(false);
-				return;
-			}
-			TimeManager.Instance.Pause();
-			selectMasteryPanel.SetActive(true);
-
-			_choices = new int[] { -1, -1, -1 };
-			List<Mastery> randomMasteries = new ();
-
-			for (int i = 0; i < _choices.Length;)
-			{
-				int randomIndex = Random.Range(0, masteryDataBuffer.RuntimeItems.Count);
-
-				if (_choices.Contains(randomIndex))
-					continue;
-
-				Mastery randomMastery = masteryDataBuffer.RuntimeItems[randomIndex];
-				randomMasteries.Add(randomMastery);
-
-				buttonImages[i].sprite = randomMastery.Thumbnail;
-				texts[i].text = randomMastery.Name;
-
-				// toolTipTriggers[i].SetToolTip(randomMasteries[i]);
-
-				_choices[i] = randomIndex;
-				i++;
-			}
-
-			// TODO : 해당되는 마스터리 UI에만 적용되도록 수정
-			foreach (UIMasterySelectPanel masterySelectPanel in masterySelectPanels)
-			{
-				masterySelectPanel.UpdateUI(randomMasteries);
-			}
 		}
 	}
 }
