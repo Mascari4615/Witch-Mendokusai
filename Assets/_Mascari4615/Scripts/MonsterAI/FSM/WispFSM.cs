@@ -1,0 +1,49 @@
+using UnityEngine;
+
+namespace Mascari4615
+{
+	public class WispFSM : StateMachine<TempState>
+	{
+		[SerializeField] private float attackRange = 10f;
+
+		private BT_Idle idle;
+		private BT_RangeAttack attack;
+
+		private void Awake()
+		{
+			UnitObject unitObject = GetComponent<UnitObject>();
+
+			idle = new();
+			attack = new();
+
+			idle.Init(unitObject);
+			attack.Init(unitObject);
+
+			SetStateEvent(TempState.Idle, StateEvent.Update, () =>
+			{
+				CanSeePlayer();
+				idle.Update();
+			});
+
+			SetStateEvent(TempState.Attack, StateEvent.Update, () =>
+			{
+				// CanSeePlayer();
+				attack.Update();
+			});
+		}
+
+		private void CanSeePlayer()
+		{
+			if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < attackRange)
+			{
+				if (currentState != TempState.Attack)
+					ChangeState(TempState.Attack);
+			}
+			else
+			{
+				if (currentState != TempState.Idle)
+				ChangeState(TempState.Idle);
+			}
+		}
+	}
+}

@@ -3,18 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Feedbacks;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Mascari4615
 {
 	public class UnitObject : MonoBehaviour
 	{
-		[Header("_" + nameof(UnitObject))]
-		[SerializeField] protected Unit unitData;
-		public Unit UnitData => unitData;
-
+		[field: SerializeField] public Unit UnitData { get; private set; }
 		public UnitSkillHandler UnitSkillHandler { get; protected set; }
-
-		[SerializeField] protected SpriteRenderer spriteRenderer;
+		[field: SerializeField] public SpriteRenderer SpriteRenderer { get; protected set; }
+		public NavMeshAgent NavMeshAgent { get; protected set; }
 		private Vector3 originScale;
 
 		public int CurHp { get; protected set; }
@@ -25,19 +23,26 @@ namespace Mascari4615
 		[SerializeField] private MMF_Player mmfPlayer;
 		[SerializeField] protected Animator animator;
 
+		public float stoppingDistance = 0.1f;
+		public bool updateRotation = false;
+		public float acceleration = 40.0f;
+		public float tolerance = 1.0f;
+
 		protected virtual void Awake()
 		{
-			originScale = spriteRenderer.transform.localScale;
-			if (unitData != null)
-				Init(unitData);
+			originScale = SpriteRenderer.transform.localScale;
+			if (UnitData != null)
+				Init(UnitData);
 
 			mmfPlayer?.StopFeedbacks();
-			spriteRenderer.material.SetFloat("_Emission", 0);
+			SpriteRenderer.material.SetFloat("_Emission", 0);
+
+			NavMeshAgent = GetComponent<NavMeshAgent>();
 		}
 
 		public virtual void Init(Unit unitData)
 		{
-			this.unitData = unitData;
+			this.UnitData = unitData;
 			UnitSkillHandler = new UnitSkillHandler(this);
 
 			MaxHp = unitData.MaxHp;
@@ -46,7 +51,16 @@ namespace Mascari4615
 			for (int i = 0; i < unitData.DefaultSkills.Length; i++)
 				UnitSkillHandler.SetSkill(i, unitData.DefaultSkills[i]);
 
-			spriteRenderer.transform.localScale = originScale;
+			SpriteRenderer.transform.localScale = originScale;
+
+			if (NavMeshAgent)
+			{
+				NavMeshAgent.stoppingDistance = stoppingDistance;
+				NavMeshAgent.speed = UnitData.MoveSpeed;
+				// agent.destination = moveDest;
+				NavMeshAgent.updateRotation = updateRotation;
+				NavMeshAgent.acceleration = acceleration;
+			}
 		}
 
 		public virtual bool UseSkill(int index)

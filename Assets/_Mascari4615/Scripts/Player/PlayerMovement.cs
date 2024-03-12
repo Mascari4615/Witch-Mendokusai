@@ -8,16 +8,23 @@ namespace Mascari4615
 {
 	public class PlayerMovement : MonoBehaviour
 	{
-		[SerializeField] private Rigidbody playerRigidBody;
+		[SerializeField] private bool useRotate;
+		[SerializeField] private SpriteRenderer playerSprite;
+		private Rigidbody playerRigidBody;
+		private PlayerObject playerObject;
 
 		private Vector3 lastMoveDirection;
 		private Vector3 moveDirection;
 
-		[SerializeField] private SpriteRenderer playerSprite;
-
-		[SerializeField] private float rotateSpeed = 30;
-		[SerializeField] private float cameraRotateSpeed = 15;
+		private const float ROTATE_SPEED = 150;
+		private const float CAMERA_ROTATE_SPEED = 15;
 		private float yRotation = 0;
+
+		private void Awake()
+		{
+			playerRigidBody = GetComponent<Rigidbody>();
+			playerObject = GetComponent<PlayerObject>();
+		}
 
 		private void Start()
 		{
@@ -29,14 +36,7 @@ namespace Mascari4615
 			if (SOManager.Instance.IsDashing.RuntimeValue)
 				return;
 
-			if (Input.GetKey(KeyCode.Q))
-				yRotation += Time.deltaTime * rotateSpeed;
-			if (Input.GetKey(KeyCode.E))
-				yRotation -= Time.deltaTime * rotateSpeed;
-
-			Quaternion targetRotation = Quaternion.Euler(0, yRotation, 0);
-			// transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 5);
-			transform.rotation = targetRotation;
+			Rotate();
 
 			// bool d = Input.GetMouseButtonDown(1);
 			bool d = Input.GetKeyDown(KeyCode.Space);
@@ -47,11 +47,24 @@ namespace Mascari4615
 				TryMove();
 		}
 
+		private void Rotate()
+		{
+			if (useRotate == false)
+				return;
+
+			if (Input.GetKey(KeyCode.Q))
+				yRotation += Time.deltaTime * ROTATE_SPEED;
+			if (Input.GetKey(KeyCode.E))
+				yRotation -= Time.deltaTime * ROTATE_SPEED;
+
+			Quaternion targetRotation = Quaternion.Euler(0, yRotation, 0);
+			// transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * 5);
+			transform.rotation = targetRotation;
+			Camera.main.transform.parent.rotation = Quaternion.Lerp(Camera.main.transform.parent.rotation, targetRotation, Time.deltaTime * CAMERA_ROTATE_SPEED);
+		}
+
 		private void FixedUpdate()
 		{
-			Quaternion targetRotation = Quaternion.Euler(0, yRotation, 0);
-			Camera.main.transform.parent.rotation = Quaternion.Lerp(Camera.main.transform.parent.rotation, targetRotation, Time.deltaTime * cameraRotateSpeed);
-
 			if (SOManager.Instance.IsChatting.RuntimeValue)
 				return;
 
@@ -68,7 +81,7 @@ namespace Mascari4615
 			else if (SOManager.Instance.IsDashing.RuntimeValue)
 				finalVelocity = lastMoveDirection * SOManager.Instance.DashSpeed.RuntimeValue;
 			else
-				finalVelocity = moveDirection * SOManager.Instance.MovementSpeed.RuntimeValue;
+				finalVelocity = moveDirection * playerObject.UnitData.MoveSpeed * SOManager.Instance.MovementSpeed.RuntimeValue;
 
 			playerRigidBody.velocity = finalVelocity;
 			// playerRigidBody.AddForce(finalVelocity, ForceMode.VelocityChange);

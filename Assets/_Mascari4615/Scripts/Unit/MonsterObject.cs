@@ -19,7 +19,7 @@ namespace Mascari4615
 
 		protected virtual void OnEnable()
 		{
-			spriteRenderer.sharedMaterial = unitData.Material;
+			SpriteRenderer.sharedMaterial = UnitData.Material;
 			GameManager.Instance?.MonsterObjectBuffer.AddItem(gameObject);
 			hpBar.localScale = Vector3.one;
 		}
@@ -33,8 +33,8 @@ namespace Mascari4615
 		public void UpdateStatByDifficulty(Difficulty newDifficulty)
 		{
 			double persentage = (double)CurHp / MaxHp;
-			MaxHp = (int)(unitData.MaxHp * (1 + .7f * (int)newDifficulty));
-			SetHp((int)(unitData.MaxHp * persentage));
+			MaxHp = (int)(UnitData.MaxHp * (1 + .7f * (int)newDifficulty));
+			SetHp((int)(UnitData.MaxHp * persentage));
 		}
 
 		public override void ReceiveDamage(int damage)
@@ -43,7 +43,7 @@ namespace Mascari4615
 			DungeonManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damage);
 
 			SOManager.Instance.LastHitEnemyObject.RuntimeValue = this;
-			hpBar.localScale = new Vector3((float)CurHp / unitData.MaxHp, 1, 1);
+			hpBar.localScale = new Vector3((float)CurHp / UnitData.MaxHp, 1, 1);
 
 			GameObject hitEffect = ObjectManager.Instance.PopObject(hitEffectPrefab);
 			hitEffect.transform.position = transform.position + (Vector3.Normalize(PlayerController.Instance.transform.position - transform.position) * .5f);
@@ -133,7 +133,7 @@ namespace Mascari4615
 		protected virtual void DropLoot()
 		{
 			Probability<ItemData> probability = new(shouldFill100Percent: true);
-			foreach (var item in (unitData as Monster).Loots)
+			foreach (var item in (UnitData as Monster).Loots)
 				probability.Add(item.Artifact as ItemData, item.Percentage);
 
 			ItemData dropItem = probability.Get();
@@ -153,9 +153,9 @@ namespace Mascari4615
 
 		private IEnumerator FlashRoutine()
 		{
-			spriteRenderer.material.SetFloat("_Emission", 1);
+			SpriteRenderer.material.SetFloat("_Emission", 1);
 			yield return new WaitForSeconds(.1f);
-			spriteRenderer.material.SetFloat("_Emission", 0);
+			SpriteRenderer.material.SetFloat("_Emission", 0);
 			flashRoutine = null;
 		}
 

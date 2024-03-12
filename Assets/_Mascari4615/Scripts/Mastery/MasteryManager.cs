@@ -17,7 +17,6 @@ namespace Mascari4615
 		private readonly List<List<Mastery>> masteryDataBuffers = new(3) {new(), new(), new()};
 		[SerializeField] private MasteryDataBuffer selectMasteryDataBuffer;
 
-		[SerializeField] private UISkillSlot[] skillSlots;
 		[SerializeField] private TextMeshProUGUI stackText;
 
 		[SerializeField] private GameObject selectDeckPanel;
@@ -98,9 +97,15 @@ namespace Mascari4615
 				// return;
 			}
 
+			TimeManager.Instance.Pause();
+			StartCoroutine(LevelUpCoroutine());
+		}
+
+		private IEnumerator LevelUpCoroutine()
+		{
+			yield return new WaitForSecondsRealtime(1f);
 			LevelUpStack++;
 			selectDeckPanel.SetActive(true);
-			TimeManager.Instance.Pause();
 		}
 
 		public void ShowDeck(int index)
@@ -175,26 +180,6 @@ namespace Mascari4615
 		{
 			while (selectMasteryDataBuffer.RuntimeItems.Count > 0)
 				selectMasteryDataBuffer.RemoveItem(selectMasteryDataBuffer.RuntimeItems[^1]);
-		}
-
-		// ========
-
-		private void Update()
-		{
-			UpdateCurMasteryUI();
-		}
-
-		private void UpdateCurMasteryUI()
-		{
-			int skillCount = 0;
-			foreach ((Skill skill, SkillCoolTime skillCoolTime) in PlayerController.Instance.PlayerObject.UnitSkillHandler.SkillDic.Values)
-			{
-				skillSlots[skillCount].SetArtifact(skill);
-				skillSlots[skillCount++].UpdateCooltime(skill, skillCoolTime);
-			}
-
-			for (int i = 0; i < skillSlots.Length; i++)
-				skillSlots[i].gameObject.SetActive(i < skillCount);
 		}
 	}
 }

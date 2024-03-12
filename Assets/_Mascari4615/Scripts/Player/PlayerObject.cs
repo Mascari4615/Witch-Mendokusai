@@ -72,7 +72,7 @@ namespace Mascari4615
 				invicibleTimeByDeciSec--;
 				isWhite = !isWhite;
 
-				spriteRenderer.material.SetFloat("_Emission", isWhite ? 1 : 0);
+				SpriteRenderer.material.SetFloat("_Emission", isWhite ? 1 : 0);
 				yield return new WaitForSeconds(.1f);
 			}
 

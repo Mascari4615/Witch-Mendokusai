@@ -26,9 +26,9 @@ namespace Mascari4615
 		[SerializeField] private MonsterSpawner monsterSpawner;
 
 		[SerializeField] private UIDungeonEntrance uiDungeonEntrance;
-		[SerializeField] private UIDungeonCanvas uiCombatCanvas;
+		[SerializeField] private UIDungeon uiCombatCanvas;
 		[SerializeField] private UIDamage uiDamage;
-		[SerializeField] private UIStageResult uiStageResult;
+		[SerializeField] private UIDungeonResult uiStageResult;
 
 		[SerializeField] private ExpManager expChecker;
 

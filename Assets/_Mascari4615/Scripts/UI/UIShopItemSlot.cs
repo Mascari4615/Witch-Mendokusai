@@ -6,7 +6,7 @@ namespace Mascari4615
 {
 	public class UIShopItemSlot : UISlot
 	{
-		[SerializeField] private UIShopCanvas uiShopCanvas;
+		[SerializeField] private UIShop uiShopCanvas;
 
 		public void BuyItem()
 		{

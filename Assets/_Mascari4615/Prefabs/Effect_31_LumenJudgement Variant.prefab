@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1339483653101114487, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1339483653523732529, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
       propertyPath: m_Name
       value: Effect_31_LumenJudgement Variant
@@ -68,8 +72,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1339483653626414448, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1339483653626414451, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
       propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339483653737469000, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1339483653737469003, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
@@ -80,8 +92,28 @@ PrefabInstance:
       propertyPath: m_Materials.Array.size
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1339483653828941633, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339483654012411018, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339483654012411061, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1339483654160573297, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
       propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339483654160573302, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1339483654656423616, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1339483654656423619, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
@@ -90,6 +122,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8696512323916342677, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
       propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9011147939558864869, guid: b7016aae7bbdcd54fb4bf3a41bf01a60, type: 3}
+      propertyPath: useUnscaledTime
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
