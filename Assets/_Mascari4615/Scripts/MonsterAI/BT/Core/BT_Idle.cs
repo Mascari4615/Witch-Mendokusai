@@ -40,6 +40,7 @@ namespace Mascari4615
 		private void SetDestinationRandom()
 		{
 			Vector3 random = UnityEngine.Random.insideUnitCircle * randomMoveDistance;
+			random.z = random.y;
 			random.y = 0;
 
 			if (usePivot)
