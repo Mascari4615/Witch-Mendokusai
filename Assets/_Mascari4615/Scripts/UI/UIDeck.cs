@@ -13,7 +13,7 @@ namespace Mascari4615
 		[field: SerializeField] public EquipmentData EquipmentData { get; private set; }
 		private UICardSlot[] cardSlots;
 
-		public void Init(Action<Artifact> cardSelectAction)
+		public void Init(Action<UISlot> cardSelectAction)
 		{
 			cardSlots = GetComponentsInChildren<UICardSlot>(true);
 

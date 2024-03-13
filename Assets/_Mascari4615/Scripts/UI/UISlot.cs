@@ -21,7 +21,7 @@ namespace Mascari4615
 		[SerializeField] protected TextMeshProUGUI countTextField;
 		[SerializeField] protected TextMeshProUGUI descriptionText;
 		[SerializeField] private Image disableImage;
-		private Action<Artifact> selectAction;
+		private Action<UISlot> selectAction;
 
 		private void Awake()
 		{
@@ -60,14 +60,14 @@ namespace Mascari4615
 			disableImage.gameObject.SetActive(isDisable);
 		}
 
-		public void SetSelectAction(Action<Artifact> action)
+		public void SetSelectAction(Action<UISlot> action)
 		{
 			selectAction = action;
 		}
 
 		public void Select()
 		{
-			selectAction?.Invoke(Artifact);
+			selectAction?.Invoke(this);
 		}
 	}
 }

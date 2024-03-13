@@ -7,37 +7,25 @@ namespace Mascari4615
 {
 	public class ExpManager : MonoBehaviour
 	{
-		[SerializeField] private IntVariable curExp;
-		[SerializeField] private IntVariable maxExp;
-		[SerializeField] private IntVariable curLevel;
-		[SerializeField] private GameEvent onLevelUp;
+		private const int REQUIRE_EXP_INCREASEMENT = 25;
+		
 		[SerializeField] private GameObject levelUpEffect;
-
-		private int initMaxExp;
-		private int initLevel;
-
-		private void Awake()
-		{
-			initMaxExp = maxExp.RuntimeValue;
-			initLevel = curLevel.RuntimeValue;
-		}
 
 		public void Init()
 		{
-			curExp.RuntimeValue = 0;
-			maxExp.RuntimeValue = initMaxExp;
-			curLevel.RuntimeValue = initLevel;
+			SOManager.Instance.CurExp.RuntimeValue = 0;
+			SOManager.Instance.MaxExp.RuntimeValue = 100;
+			SOManager.Instance.CurLevel.RuntimeValue = 0;
 		}
 
 		public void UpdateLevel()
 		{
-			if (curExp.RuntimeValue >= maxExp.RuntimeValue)
+			if (SOManager.Instance.CurExp.RuntimeValue >= SOManager.Instance.MaxExp.RuntimeValue)
 			{
 				RuntimeManager.PlayOneShot("event:/SFX/LevelUp", transform.position);
-				curExp.RuntimeValue -= maxExp.RuntimeValue;
-				maxExp.RuntimeValue += 25;
-				curLevel.RuntimeValue++;
-				onLevelUp.Raise();
+				SOManager.Instance.CurExp.RuntimeValue -= SOManager.Instance.MaxExp.RuntimeValue;
+				SOManager.Instance.MaxExp.RuntimeValue += REQUIRE_EXP_INCREASEMENT;
+				SOManager.Instance.CurLevel.RuntimeValue++;
 
 				GameObject l = ObjectManager.Instance.PopObject(levelUpEffect);
 				l.transform.position = PlayerController.Instance.transform.position;
