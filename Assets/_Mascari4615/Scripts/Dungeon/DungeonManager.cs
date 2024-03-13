@@ -27,7 +27,6 @@ namespace Mascari4615
 
 		[SerializeField] private UIDungeonEntrance uiDungeonEntrance;
 		[SerializeField] private UIDungeon uiCombatCanvas;
-		[SerializeField] private UIDamage uiDamage;
 		[SerializeField] private UIDungeonResult uiStageResult;
 
 		[SerializeField] private ExpManager expChecker;
@@ -44,11 +43,6 @@ namespace Mascari4615
 		{
 			Debug.Log(nameof(OpenDungeonEntranceUI));
 			uiDungeonEntrance.OpenCanvas(dungeonDatas);
-		}
-
-		public void PopDamage(Vector3 pos, int damge)
-		{
-			StartCoroutine(uiDamage.DamageTextUI(pos, damge));
 		}
 
 		public void CombatIntro()

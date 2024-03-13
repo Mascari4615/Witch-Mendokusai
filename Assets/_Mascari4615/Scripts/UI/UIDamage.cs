@@ -23,6 +23,7 @@ public class UIDamage : MonoBehaviour
             mobHpBar.SetActive(false);
             mobHpBars.Push(mobHpBar);
         }*/
+		
 		for (int i = 0; i < damageTextsRoot.childCount; i++)
 		{
 			Animator damageUIAnimator = damageTextsRoot.GetChild(i).GetComponent<Animator>();

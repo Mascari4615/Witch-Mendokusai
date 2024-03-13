@@ -40,7 +40,7 @@ namespace Mascari4615
 		public override void ReceiveDamage(int damage)
 		{
 			base.ReceiveDamage(damage);
-			DungeonManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damage);
+			UIManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damage);
 
 			SOManager.Instance.LastHitEnemyObject.RuntimeValue = this;
 			hpBar.localScale = new Vector3((float)CurHp / UnitData.MaxHp, 1, 1);

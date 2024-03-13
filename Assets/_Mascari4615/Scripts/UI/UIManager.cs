@@ -31,7 +31,8 @@ namespace Mascari4615
 		[SerializeField] private Slider sfxVolumeSlider;
 
 		[SerializeField] private GameObject settingPanel;
-		[SerializeField] private BoolVariable IsPaused;
+		
+		[SerializeField] private UIDamage uiDamage;
 
 		[SerializeField] private Animator transitionAnimator;
 
@@ -151,6 +152,11 @@ namespace Mascari4615
 				OpenTabMenu(TabMenuPanelType.Inventory);
 			else
 				OpenTabMenu(TabMenuPanelType.None);
+		}
+
+		public void PopDamage(Vector3 pos, int damge)
+		{
+			StartCoroutine(uiDamage.DamageTextUI(pos, damge));
 		}
 
 		// 가상함수를 전달받아 처리

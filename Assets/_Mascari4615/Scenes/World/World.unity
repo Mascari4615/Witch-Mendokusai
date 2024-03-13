@@ -14333,7 +14333,7 @@ GameObject:
   - component: {fileID: 390357750}
   - component: {fileID: 390357751}
   m_Layer: 5
-  m_Name: UIDamage
+  m_Name: '[Block] UIDamage'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14346,13 +14346,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 390357749}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 893382994}
-  m_Father: {fileID: 1997551597}
+  m_Father: {fileID: 2003915130}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -15476,7 +15476,7 @@ Transform:
   m_GameObject: {fileID: 419465081}
   serializedVersion: 2
   m_LocalRotation: {x: 0.14366542, y: 0.000000014901161, z: -0.0000000037252903, w: 0.98962635}
-  m_LocalPosition: {x: -0.49800047, y: 3.4122021, z: -26.714647}
+  m_LocalPosition: {x: -0.49800047, y: 3.4122016, z: -26.714647}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -35091,7 +35091,7 @@ MonoBehaviour:
   bgmVolumeSlider: {fileID: 1732902118}
   sfxVolumeSlider: {fileID: 1269157233}
   settingPanel: {fileID: 1771731888}
-  IsPaused: {fileID: 11400000, guid: 7f9aa6174506c4343b5a72a2df031565, type: 2}
+  uiDamage: {fileID: 390357751}
   transitionAnimator: {fileID: 624124377}
   framerateToggle: {fileID: 182417722}
   menuPanel: {fileID: 1786787365}
@@ -37868,7 +37868,6 @@ MonoBehaviour:
   monsterSpawner: {fileID: 1032405773}
   uiDungeonEntrance: {fileID: 1500824929}
   uiCombatCanvas: {fileID: 1997551602}
-  uiDamage: {fileID: 390357751}
   uiStageResult: {fileID: 1707499913}
   expChecker: {fileID: 1099597014}
 --- !u!114 &980674220
@@ -83136,7 +83135,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 366181717}
-  - {fileID: 390357750}
   - {fileID: 1409396947}
   - {fileID: 1920899563}
   - {fileID: 1668721410}
@@ -83317,7 +83315,7 @@ GameObject:
   - component: {fileID: 2003915131}
   - component: {fileID: 2003915135}
   m_Layer: 5
-  m_Name: '[Canvas] Tooltop'
+  m_Name: '[Canvas] Info'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -83338,6 +83336,7 @@ RectTransform:
   - {fileID: 1700319098}
   - {fileID: 1297217957}
   - {fileID: 562460231}
+  - {fileID: 390357750}
   m_Father: {fileID: 931047120}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
