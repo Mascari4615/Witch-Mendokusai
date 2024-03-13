@@ -76,6 +76,7 @@ namespace Mascari4615
 				yield return new WaitForSeconds(.1f);
 			}
 
+			SpriteRenderer.material.SetFloat("_Emission", 0);
 			invincibleRoutine = null;
 		}
 

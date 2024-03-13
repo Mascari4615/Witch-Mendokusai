@@ -53,11 +53,10 @@ namespace Mascari4615
 		public void StartDungeon(Dungeon dungeon)
 		{
 			Debug.Log($"{nameof(StartDungeon)}");
-			UIManager.Instance.Transition(() => StartDungeon_());
+			StageManager.Instance.LoadStage(dungeon, 0, InitDungeonAndPlayer);
 
-			void StartDungeon_()
+			void InitDungeonAndPlayer()
 			{
-				StageManager.Instance.LoadStage(dungeon, 0);
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
 				GameManager.Instance.SetPlayerState(PlayerState.Combat);
 
@@ -85,7 +84,7 @@ namespace Mascari4615
 
 		private IEnumerator DungeonLoop(Dungeon dungeon)
 		{
-			Debug.Log(nameof(DungeonLoop));
+			// Debug.Log(nameof(DungeonLoop));
 			WaitForSeconds ws01 = new(.1f);
 
 			while (true)
@@ -116,20 +115,23 @@ namespace Mascari4615
 		public void Continue()
 		{
 			// 집으로 돌아가기
-			uiStageResult.SetActive(false);
+			StageManager.Instance.LoadStage(StageManager.Instance.LastStage, -1, ResetDungeonAndPlayer);
 
-			GameManager.Instance.ClearDungeonObjects();
-			GameManager.Instance.SetPlayerState(PlayerState.Peaceful);
-
-			StageManager.Instance.LoadStage(StageManager.Instance.LastStage, -1);
-
-			masteryManager.ClearMasteryEffect();
-			PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
-
-			for (int i = 0; i < 3; i++)
+			void ResetDungeonAndPlayer()
 			{
-				foreach (var effect in DataManager.Instance.GetEquipment(i)!.Effects)
-					effect.OnEquip();
+				uiStageResult.SetActive(false);
+
+				GameManager.Instance.ClearDungeonObjects();
+				GameManager.Instance.SetPlayerState(PlayerState.Peaceful);
+
+				masteryManager.ClearMasteryEffect();
+				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
+
+				for (int i = 0; i < 3; i++)
+				{
+					foreach (var effect in DataManager.Instance.GetEquipment(i)!.Effects)
+						effect.OnEquip();
+				}
 			}
 		}
 

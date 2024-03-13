@@ -24,6 +24,7 @@ namespace Mascari4615
 
 			DataManager.Instance.QuestDic[quest.ID].SetComplete();
 			gameObject.SetActive(false);
+			UIManager.Instance.Popup(quest);
 		}
 
 		private void OnDisable()

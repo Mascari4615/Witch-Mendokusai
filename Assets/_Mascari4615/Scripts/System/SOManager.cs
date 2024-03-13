@@ -69,5 +69,6 @@ namespace Mascari4615
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }
 		[field: SerializeField] public GameEvent OnPlayerDied { get; private set; }
 		[field: SerializeField] public GameEvent OnDungeonStart { get; private set; }
+		[field: SerializeField] public GameEvent OnLevelUp { get; private set; }
 	}
 }

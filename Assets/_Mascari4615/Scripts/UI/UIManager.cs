@@ -35,6 +35,7 @@ namespace Mascari4615
 		[SerializeField] private UIFloatingText uiDamage;
 
 		[SerializeField] private Animator transitionAnimator;
+		[SerializeField] private UIPopup popup;
 
 		public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
 		public void OpenCanvas(PlayerState canvasType)
@@ -162,6 +163,7 @@ namespace Mascari4615
 		// 가상함수를 전달받아 처리
 		public void Transition(Action actionDuringTransition)
 		{
+			// Debug.Log(nameof(Transition) + " " + actionDuringTransition);
 			StartCoroutine(TransitionCoroutine(ActionToCoroutine(actionDuringTransition)));
 
 			static IEnumerator ActionToCoroutine(Action action)
@@ -173,11 +175,13 @@ namespace Mascari4615
 
 		public void Transition(IEnumerator corountineDuringTransition)
 		{
+			// Debug.Log(nameof(Transition) + " " + corountineDuringTransition);
 			StartCoroutine(TransitionCoroutine(corountineDuringTransition));
 		}
 
 		private IEnumerator TransitionCoroutine(IEnumerator corountineDuringTransition)
 		{
+			// Debug.Log(nameof(TransitionCoroutine));
 			transitionAnimator.SetTrigger("IN");
 
 			AnimatorStateInfo animatorStateInfo = transitionAnimator.GetCurrentAnimatorStateInfo(0);
@@ -188,6 +192,11 @@ namespace Mascari4615
 			yield return new WaitForSecondsRealtime(.2f);
 
 			transitionAnimator.SetTrigger("OUT");
+		}
+
+		public void Popup(Artifact artifact)
+		{
+			popup.Popup(artifact);
 		}
 	}
 }

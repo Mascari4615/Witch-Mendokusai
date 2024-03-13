@@ -28,7 +28,7 @@ namespace Mascari4615
 
 		public void InitWaves(Dungeon curDungeon)
 		{
-			Debug.Log(nameof(InitWaves));
+			// Debug.Log(nameof(InitWaves));
 			waves.Clear();
 
 			foreach (MonsterWave monsterWave in curDungeon.MonsterWaves)

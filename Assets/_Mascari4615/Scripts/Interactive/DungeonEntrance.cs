@@ -10,7 +10,7 @@ namespace Mascari4615
 
 		public override void Interact()
 		{
-			Debug.Log(nameof(DungeonEntrance));
+			// Debug.Log(nameof(DungeonEntrance));
 			DungeonManager.Instance.OpenDungeonEntranceUI(dungeonDatas);
 		}
 	}

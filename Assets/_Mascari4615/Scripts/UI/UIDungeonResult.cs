@@ -22,10 +22,7 @@ namespace Mascari4615
 
 		public void Continue()
 		{
-			UIManager.Instance.Transition(() =>
-			{
-				DungeonManager.Instance.Continue();
-			});
+			DungeonManager.Instance.Continue();
 		}
 	}
 }

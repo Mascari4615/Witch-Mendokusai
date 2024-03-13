@@ -157,11 +157,11 @@ namespace Mascari4615
 		[CanBeNull]
 		public EquipmentData GetEquipment(int index)
 		{
-			Debug.Log(soManager);
-			Debug.Log(soManager.EquipInventory);
-			Debug.Log(CurGameData.myDollDatas[0]);
-			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids);
-			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids[index]);
+			// Debug.Log(soManager);
+			// Debug.Log(soManager.EquipInventory);
+			// Debug.Log(CurGameData.myDollDatas[0]);
+			// Debug.Log(CurGameData.myDollDatas[0].equipmentGuids);
+			// Debug.Log(CurGameData.myDollDatas[0].equipmentGuids[index]);
 
 			return soManager.EquipInventory
 			.GetItem(soManager.EquipInventory.FindEquipmentByGuid(CurGameData.myDollDatas[0].equipmentGuids[index]))?

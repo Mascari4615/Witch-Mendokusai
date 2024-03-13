@@ -14,7 +14,7 @@ namespace Mascari4615
 		public void Init()
 		{
 			SOManager.Instance.CurExp.RuntimeValue = 0;
-			SOManager.Instance.MaxExp.RuntimeValue = 100;
+			SOManager.Instance.MaxExp.RuntimeValue = REQUIRE_EXP_INCREASEMENT;
 			SOManager.Instance.CurLevel.RuntimeValue = 0;
 		}
 
@@ -26,6 +26,7 @@ namespace Mascari4615
 				SOManager.Instance.CurExp.RuntimeValue -= SOManager.Instance.MaxExp.RuntimeValue;
 				SOManager.Instance.MaxExp.RuntimeValue += REQUIRE_EXP_INCREASEMENT;
 				SOManager.Instance.CurLevel.RuntimeValue++;
+				SOManager.Instance.OnLevelUp.Raise();
 
 				GameObject l = ObjectManager.Instance.PopObject(levelUpEffect);
 				l.transform.position = PlayerController.Instance.transform.position;

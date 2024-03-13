@@ -25,7 +25,7 @@ namespace Mascari4615
 			CurStage = homeStage;
 		}
 
-		public void LoadStage(Stage stage, int spawnPortalIndex)
+		public void LoadStage(Stage stage, int spawnPortalIndex, Action action = null)
 		{
 			UIManager.Instance.Transition(LoadStage_());
 
@@ -66,6 +66,8 @@ namespace Mascari4615
 				yield return new WaitForFixedUpdate();
 				yield return new WaitForFixedUpdate();
 				PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(Unit));
+
+				action?.Invoke();
 			}
 		}
 	}
