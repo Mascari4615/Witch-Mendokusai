@@ -24,7 +24,7 @@ namespace Mascari4615
 
 			// UIManager
 			if (Input.GetKeyDown(KeyCode.C))
-				UIManager.Instance.ToggleTabMenu();
+				UIManager.Instance.Tab.ToggleTabMenu();
 			if (Input.GetKeyDown(KeyCode.Tab))
 				UIManager.Instance.ToggleMenu();
 			if (Input.GetKeyDown(KeyCode.Escape))

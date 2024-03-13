@@ -10,21 +10,11 @@ namespace Mascari4615
 {
 	public class UIManager : Singleton<UIManager>
 	{
-		public enum TabMenuPanelType
-		{
-			None = -1,
-			BookShelf = 0,
-			Inventory,
-			PotionCraft,
-		}
-
 		public CutSceneModule CutSceneModule => cutSceneModule;
 		[SerializeField] private CutSceneModule cutSceneModule;
 
 		[SerializeField] private GameObject[] canvasList;
-		[SerializeField] private UIPanel[] tabPanels;
 		private PlayerState _curCanvas = PlayerState.Peaceful;
-		private TabMenuPanelType _curTabMenuPanel = TabMenuPanelType.None;
 
 		[SerializeField] private Slider masterVolumeSlider;
 		[SerializeField] private Slider bgmVolumeSlider;
@@ -36,6 +26,7 @@ namespace Mascari4615
 
 		[SerializeField] private Animator transitionAnimator;
 		[SerializeField] private UIPopup popup;
+		public UITab Tab { get; private set;}
 
 		public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
 		public void OpenCanvas(PlayerState canvasType)
@@ -47,19 +38,6 @@ namespace Mascari4615
 				canvasList[i].gameObject.SetActive(i == (int)_curCanvas);
 		}
 
-		public void OpenTabMenu(int canvasType) => OpenTabMenu((TabMenuPanelType)canvasType);
-		public void OpenTabMenu(TabMenuPanelType menuType)
-		{
-			// Debug.Log($"{nameof(OpenTabMenu)}, {menuType}");
-			_curTabMenuPanel = menuType;
-
-			for (var i = 0; i < tabPanels.Length; i++)
-				tabPanels[i].gameObject.SetActive(i == (int)_curTabMenuPanel);
-
-			if (_curTabMenuPanel != TabMenuPanelType.None)
-				tabPanels[(int)_curTabMenuPanel].UpdateUI();
-		}
-
 		public void OpenShopPanel()
 		{
 
@@ -68,15 +46,12 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
-
-			foreach (var tabPanel in tabPanels)
-				tabPanel.Init();
+			Tab = FindObjectOfType<UITab>();
 		}
 
 		private void Start()
 		{
 			OpenCanvas(PlayerState.Peaceful);
-			OpenTabMenu(TabMenuPanelType.None);
 			InitVolumeSliderValue();
 			SetMenuActive(false);
 		}
@@ -145,14 +120,6 @@ namespace Mascari4615
 			}
 
 			// settingPanel.SetActive(!settingPanel.activeSelf);
-		}
-
-		public void ToggleTabMenu()
-		{
-			if (_curTabMenuPanel != TabMenuPanelType.Inventory)
-				OpenTabMenu(TabMenuPanelType.Inventory);
-			else
-				OpenTabMenu(TabMenuPanelType.None);
 		}
 
 		public void PopDamage(Vector3 pos, int damge)
