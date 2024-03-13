@@ -36,6 +36,9 @@ namespace Mascari4615
 
 				// https://gall.dcinside.com/mgallery/board/view/?id=game_dev&no=99368
 				PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(NoCollision));
+
+				// TimeScale 0이면 FixedUpdate가 호출되지 않기 때문에 임의로 조정
+				TimeManager.Instance.Resume();
 				yield return new WaitForFixedUpdate();
 				yield return new WaitForFixedUpdate();
 				yield return new WaitForFixedUpdate();
@@ -66,6 +69,7 @@ namespace Mascari4615
 				yield return new WaitForFixedUpdate();
 				yield return new WaitForFixedUpdate();
 				PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(Unit));
+				TimeManager.Instance.Pause();
 
 				action?.Invoke();
 			}

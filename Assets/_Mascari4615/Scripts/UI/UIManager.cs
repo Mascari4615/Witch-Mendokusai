@@ -148,6 +148,7 @@ namespace Mascari4615
 
 		private IEnumerator TransitionCoroutine(IEnumerator corountineDuringTransition)
 		{
+			TimeManager.Instance.Pause();
 			// Debug.Log(nameof(TransitionCoroutine));
 			transitionAnimator.SetTrigger("IN");
 
@@ -159,6 +160,7 @@ namespace Mascari4615
 			yield return new WaitForSecondsRealtime(.2f);
 
 			transitionAnimator.SetTrigger("OUT");
+			TimeManager.Instance.Resume();
 		}
 
 		public void Popup(Artifact artifact)
