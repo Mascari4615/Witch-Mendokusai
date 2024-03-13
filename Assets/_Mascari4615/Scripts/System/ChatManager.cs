@@ -10,13 +10,15 @@ namespace Mascari4615
 		private List<LineData> curChatDatas;
 		private int curChatIndex = 0;
 
-		[SerializeField] private UIChatCanvas uiChatCanvas;
+		[SerializeField] private UIChat uiChatCanvas;
 		[SerializeField] private CinemachineTargetGroup chatTargetGroup;
 
 		[SerializeField] private BoolVariable isChatting;
 
 		public void StartChat(List<LineData> chatDatas, Transform unitTransform)
 		{
+			uiChatCanvas.SetActive(true);
+
 			isChatting.RuntimeValue = true;
 			GameManager.Instance.SetPlayerState(PlayerState.Interact);
 			curChatDatas = chatDatas;
@@ -58,6 +60,8 @@ namespace Mascari4615
 			// chatTargetGroup.m_Targets[1].target = null;
 
 			curChatIndex = 0;
+
+			uiChatCanvas.SetActive(false);
 		}
 	}
 }

@@ -7,8 +7,9 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class UIChatCanvas : MonoBehaviour
+	public class UIChat : MonoBehaviour
 	{
+		[SerializeField] private CanvasGroup canvasGroup;
 		[SerializeField] private Image unitImage;
 		[SerializeField] private TextMeshProUGUI unitName;
 		[SerializeField] private TextMeshProUGUI lineText;
@@ -18,6 +19,13 @@ namespace Mascari4615
 		private WaitForSeconds ws01 = new WaitForSeconds(.1f);
 
 		public bool IsPrinting { get; private set; } = false;
+
+		public void SetActive(bool value)
+		{
+			canvasGroup.alpha = value ? 1 : 0;
+			canvasGroup.blocksRaycasts = value;
+			canvasGroup.interactable = value;
+		}
 
 		public void StartLine(LineData lineData)
 		{
