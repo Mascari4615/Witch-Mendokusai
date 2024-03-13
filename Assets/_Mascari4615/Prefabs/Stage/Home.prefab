@@ -527,7 +527,7 @@ GameObject:
   - component: {fileID: 4749557311634157662}
   - component: {fileID: 1174094065592895637}
   - component: {fileID: 1107905063298470586}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4781,7 +4781,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6279377062769318453, guid: d038d3660a81bcc439e3cb4de12794e0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -2
+      value: -3.011
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5221,6 +5221,10 @@ PrefabInstance:
       propertyPath: targetStage
       value: 
       objectReference: {fileID: 11400000, guid: e443c3a479c8e5348b8f16e0de2b41dc, type: 2}
+    - target: {fileID: 6279377062769318453, guid: d038d3660a81bcc439e3cb4de12794e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.54
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

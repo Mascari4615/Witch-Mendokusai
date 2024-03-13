@@ -27,8 +27,15 @@ namespace Mascari4615
 		private readonly Dictionary<(T, StateEvent), Action> stateEventDic = new();
 		private readonly Coroutine coroutine;
 
+		/// <summary>
+		/// 상태머신을 쓰기 전에 초기화를 해주는 함수.
+		/// OnEnable에서 호출됩니다.
+		/// </summary>
+		protected abstract void Init();
+
 		private void OnEnable()
 		{
+			Init();
 			ChangeState(default);
 		}
 

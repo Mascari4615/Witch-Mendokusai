@@ -8,14 +8,20 @@ namespace Mascari4615
 {
 	public abstract class BTRunner
 	{
-		private Node rootNode;
+		private readonly Node rootNode;
 		protected UnitObject unitObject;
 
-		public virtual void Init(UnitObject unitObject)
+		public BTRunner(UnitObject unitObject)
 		{
 			rootNode = MakeNode();
 			this.unitObject = unitObject;
 		}
+
+		// public virtual void Init(UnitObject unitObject)
+		// {
+		// 	rootNode = MakeNode();
+		// 	this.unitObject = unitObject;
+		// }
 
 		protected abstract Node MakeNode();
 		

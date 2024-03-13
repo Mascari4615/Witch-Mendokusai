@@ -9,14 +9,18 @@ namespace Mascari4615
 {
 	public class BT_RangeAttack : BTRunner
 	{
-		public BT_RangeAttack(float attackRange = 5f)
+		private float attackRange;
+
+		private Vector3 moveDest = Vector3.zero;
+
+		public BT_RangeAttack(UnitObject unitObject) : base(unitObject)
+		{
+		}
+
+		public void Init(float attackRange = 5f)
 		{
 			this.attackRange = attackRange;
 		}
-		
-		private readonly float attackRange;
-
-		private Vector3 moveDest = Vector3.zero;
 
 		protected override Node MakeNode()
 		{

@@ -13,11 +13,9 @@ namespace Mascari4615
 		{
 			UnitObject unitObject = GetComponent<UnitObject>();
 
-			idle = new();
-			attack = new();
+			idle = new(unitObject);
+			attack = new(unitObject);
 
-			idle.Init(unitObject);
-			attack.Init(unitObject);
 
 			SetStateEvent(TempState.Idle, StateEvent.Update, () =>
 			{
@@ -30,6 +28,11 @@ namespace Mascari4615
 				// CanSeePlayer();
 				attack.Update();
 			});
+		}
+
+		protected override void Init()
+		{
+			idle.Init();
 		}
 
 		private void CanSeePlayer()

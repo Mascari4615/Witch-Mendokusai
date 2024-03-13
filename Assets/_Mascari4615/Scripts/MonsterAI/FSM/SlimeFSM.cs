@@ -10,14 +10,17 @@ namespace Mascari4615
 		{
 			UnitObject unitObject = GetComponent<UnitObject>();
 
-			idle = new();
-
-			idle.Init(unitObject);
+			idle = new(unitObject);
 
 			SetStateEvent(TempState.Idle, StateEvent.Update, () =>
 			{
 				idle.Update();
 			});
+		}
+
+		protected override void Init()
+		{
+			idle.Init();
 		}
 	}
 }

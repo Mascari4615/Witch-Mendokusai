@@ -38,7 +38,7 @@ namespace Mascari4615
 		public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
 		public void OpenCanvas(PlayerState canvasType)
 		{
-			Debug.Log($"{nameof(OpenCanvas)}, {canvasType}");
+			// Debug.Log($"{nameof(OpenCanvas)}, {canvasType}");
 			_curCanvas = canvasType;
 
 			for (var i = 0; i < canvasList.Length; i++)

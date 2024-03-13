@@ -9,24 +9,31 @@ namespace Mascari4615
 {
 	public class BT_Idle : BTRunner
 	{
-		public BT_Idle(float randomMoveDistance = 10)
+		private float randomMoveDistance;
+		private bool usePivot;
+		
+		private Vector3 pivot = Vector3.zero;
+		private Vector3 moveDest = Vector3.zero;
+
+		public BT_Idle(UnitObject unitObject) : base(unitObject)
 		{
-			this.randomMoveDistance = randomMoveDistance;
 		}
 
-		private float randomMoveDistance;
-		
-		private Vector3 moveDest = Vector3.zero;
+		public void Init(float randomMoveDistance = 10, bool usePivot = false)
+		{
+			this.randomMoveDistance = randomMoveDistance;
+			this.usePivot = usePivot;
+		}
 
 		protected override Node MakeNode()
 		{
 			return
 				Sequence
 				(
+					Action(UpdateSpriteFlip),
 					Wait(3),
 					Action(SetDestinationRandom),
-					Action(MoveToDestination),
-					Action(UpdateSpriteFlip)
+					Action(MoveToDestination)
 				);
 		}
 
@@ -34,7 +41,11 @@ namespace Mascari4615
 		{
 			Vector3 random = UnityEngine.Random.insideUnitCircle * randomMoveDistance;
 			random.y = 0;
-			moveDest = unitObject.transform.position + random;
+
+			if (usePivot)
+				moveDest = pivot + random;
+			else
+				moveDest = unitObject.transform.position + random;
 		}
 
 		private void MoveToDestination()

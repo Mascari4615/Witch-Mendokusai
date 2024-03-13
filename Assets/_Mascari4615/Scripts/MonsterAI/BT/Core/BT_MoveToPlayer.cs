@@ -11,6 +11,10 @@ namespace Mascari4615
 	{
 		private Vector3 moveDest = Vector3.zero;
 
+		public BT_MoveToPlayer(UnitObject unitObject) : base(unitObject)
+		{
+		}
+
 		protected override Node MakeNode()
 		{
 			return
