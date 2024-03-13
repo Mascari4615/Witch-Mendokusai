@@ -156,21 +156,32 @@ namespace Mascari4615
 		// 가상함수를 전달받아 처리
 		public void Transition(Action actionDuringTransition)
 		{
-			StartCoroutine(TransitionCoroutine(actionDuringTransition));
+			StartCoroutine(TransitionCoroutine(ActionToCoroutine(actionDuringTransition)));
 		}
 
-		private IEnumerator TransitionCoroutine(Action actionDuringTransition)
+		public void Transition(IEnumerator corountineDuringTransition)
 		{
+			StartCoroutine(TransitionCoroutine(corountineDuringTransition));
+		}
+
+		private IEnumerator TransitionCoroutine(IEnumerator corountineDuringTransition)
+		{
+			transitionAnimator.SetTrigger("IN");
+			
 			AnimatorStateInfo animatorStateInfo = transitionAnimator.GetCurrentAnimatorStateInfo(0);
 			float duration = animatorStateInfo.length / animatorStateInfo.speedMultiplier;
 	
-			transitionAnimator.SetTrigger("IN");
-
 			yield return new WaitForSecondsRealtime(duration + .2f);
-			actionDuringTransition?.Invoke();
+			yield return StartCoroutine(corountineDuringTransition);
 			yield return new WaitForSecondsRealtime(.2f);
 
 			transitionAnimator.SetTrigger("OUT");
+		}
+
+		private IEnumerator ActionToCoroutine(Action action)
+		{
+			action();
+			yield return null;
 		}
 	}
 }

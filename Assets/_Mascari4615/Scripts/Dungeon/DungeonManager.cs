@@ -59,7 +59,9 @@ namespace Mascari4615
 		public void StartDungeon(Dungeon dungeon)
 		{
 			Debug.Log($"{nameof(StartDungeon)}");
-			UIManager.Instance.Transition(() =>
+			UIManager.Instance.Transition(() => StartDungeon_());
+
+			void StartDungeon_()
 			{
 				StageManager.Instance.LoadStage(dungeon, 0);
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
@@ -84,7 +86,7 @@ namespace Mascari4615
 				SOManager.Instance.OnDungeonStart.Raise();
 				StartCoroutine(DungeonLoop(dungeon));
 				DungeonCurTime = InitialDungeonTime;
-			});
+			}
 		}
 
 		private IEnumerator DungeonLoop(Dungeon dungeon)
