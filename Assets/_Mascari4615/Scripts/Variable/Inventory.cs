@@ -9,12 +9,8 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
 	public class Inventory : ScriptableObject
 	{
-		[SerializeField] private ItemVariable lastEquippedItem;
-		[SerializeField] private GameEvent onItemEquip;
-		[SerializeField] private GameEvent onItemRemove;
-
-		[field: System.NonSerialized] public Item[] Items { get; private set; }
-		[System.NonSerialized] private readonly List<UIItemInventory> _inventoryUIs = new List<UIItemInventory>();
+		public Item[] Items { get; private set; }
+		[NonSerialized] private readonly List<UIItemInventory> _inventoryUIs = new();
 
 		public void RegisterInventoryUI(UIItemInventory uiItemInventory)
 		{
@@ -192,9 +188,7 @@ namespace Mascari4615
 				}
 			}
 
-			lastEquippedItem.RuntimeValue = itemData;
-			onItemEquip.Raise();
-
+			SOManager.Instance.LastEquipedItem.RuntimeValue = itemData;
 			return amount;
 		}
 

@@ -43,7 +43,7 @@ namespace Mascari4615
 			PlayerObject.UseSkill(skillIndex);
 		}
 
-		public void SetDoll(DollData dollData)
+		public void SetDoll(Doll dollData)
 		{
 			// 인형 선택시 호출?
 		}

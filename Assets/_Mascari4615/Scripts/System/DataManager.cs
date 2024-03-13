@@ -17,7 +17,7 @@ namespace Mascari4615
 
 		public readonly Dictionary<int, Quest> QuestDic = new();
 		public readonly Dictionary<int, Unit> UnitDic = new();
-		public readonly Dictionary<int, DollData> DollDic = new();
+		public readonly Dictionary<int, Doll> DollDic = new();
 		public readonly Dictionary<int, ItemData> ItemDic = new();
 		public readonly Dictionary<int, ItemData> PotionDic = new();
 		public readonly Dictionary<int, ItemData> CommonItemDic = new();
@@ -89,22 +89,17 @@ namespace Mascari4615
 
 		public void CreateNewGameData()
 		{
+			Debug.Log(nameof(CreateNewGameData));
 			CurGameData = new GameData();
 
 			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
-			soManager.EquipInventory.InitItems(CurGameData.equipmentInventoryItems);
 
 			for (int i = 0; i < 3; i++)
 			{
 				EquipmentData equipmentData = DollDic[0].EquipmentDatas[i];
-				soManager.EquipInventory.Add(equipmentData);
+				soManager.ItemInventory.Add(equipmentData);
 
-			Debug.Log(CurGameData.myDollDatas[0]);
-			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids);
-			Debug.Log(CurGameData.myDollDatas[0].equipmentGuids[i]);
-			Debug.Log(soManager.EquipInventory.FindItemSlotIndex(equipmentData));
-			Debug.Log( soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(equipmentData)));
-				CurGameData.myDollDatas[0].equipmentGuids[i] = soManager.EquipInventory.GetItem(soManager.EquipInventory.FindItemSlotIndex(equipmentData)).Guid;
+				CurGameData.myDollDatas[0].equipmentGuids[i] = soManager.ItemInventory.GetItem(soManager.ItemInventory.FindItemSlotIndex(equipmentData)).Guid;
 			}
 		}
 
@@ -117,7 +112,6 @@ namespace Mascari4615
 			}
 
 			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
-			CurGameData.equipmentInventoryItems = soManager.EquipInventory.GetInventoryData();
 			_playFabManager.SavePlayerData();
 		}
 
@@ -125,7 +119,6 @@ namespace Mascari4615
 		{
 			CurGameData = saveData;
 			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
-			soManager.EquipInventory.InitItems(CurGameData.equipmentInventoryItems);
 			// OnCurGameDataLoad.Invoke();
 		}
 
@@ -152,19 +145,11 @@ namespace Mascari4615
 
 		private void OnApplicationQuit() => SaveData();
 
-		public DollData CurDoll => DollDic[CurGameData.lastDollIndex];
-
 		[CanBeNull]
 		public EquipmentData GetEquipment(int index)
 		{
-			// Debug.Log(soManager);
-			// Debug.Log(soManager.EquipInventory);
-			// Debug.Log(CurGameData.myDollDatas[0]);
-			// Debug.Log(CurGameData.myDollDatas[0].equipmentGuids);
-			// Debug.Log(CurGameData.myDollDatas[0].equipmentGuids[index]);
-
-			return soManager.EquipInventory
-			.GetItem(soManager.EquipInventory.FindEquipmentByGuid(CurGameData.myDollDatas[0].equipmentGuids[index]))?
+			return soManager.ItemInventory
+			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(CurGameData.myDollDatas[CurGameData.lastDollIndex].equipmentGuids[index]))?
 			.Data as EquipmentData;
 		}
 	}
@@ -173,7 +158,6 @@ namespace Mascari4615
 	public class GameData
 	{
 		public List<InventorySlotData> itemInventoryItems = new();
-		public List<InventorySlotData> equipmentInventoryItems = new();
 		public int lastDollIndex;
 		public MyDollData[] myDollDatas = new MyDollData[10];
 		public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
@@ -181,7 +165,7 @@ namespace Mascari4615
 		public GameData()
 		{
 			for (int i = 0; i < 10; i++)
-				myDollDatas[i] = new MyDollData(1, 0, new Guid[3]);
+				myDollDatas[i] = new MyDollData(1, 0, new Guid?[3] { null, null, null });
 		}
 	}
 
@@ -205,7 +189,7 @@ namespace Mascari4615
 	[Serializable]
 	public struct MyDollData
 	{
-		public MyDollData(int dollLevel, int dollExp, Guid[] equipmentGuids)
+		public MyDollData(int dollLevel, int dollExp, Guid?[] equipmentGuids)
 		{
 			this.dollLevel = dollLevel;
 			this.dollExp = dollExp;
@@ -214,6 +198,6 @@ namespace Mascari4615
 
 		public int dollLevel;
 		public int dollExp;
-		public Guid[] equipmentGuids;
+		public Guid?[] equipmentGuids;
 	}
 }

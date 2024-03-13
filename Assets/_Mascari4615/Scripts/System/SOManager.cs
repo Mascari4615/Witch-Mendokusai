@@ -50,16 +50,16 @@ namespace Mascari4615
 		[field: SerializeField] public IntVariable MonsterKill { get; private set; }
 		[field: SerializeField] public IntVariable CoolTimeBonus { get; private set; }
 		[field: SerializeField] public IntVariable DamageBonus { get; private set; }
+		[field: SerializeField] public ItemVariable LastEquipedItem { get; private set; }
 
 		[field: Space(10), Header("Buffer")]
 		[field: SerializeField] public GameObjectBuffer SpawnCircleBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer DropsBuffer { get; private set; }
 		[field: SerializeField] public QuestDataBuffer QuestDataBuffer { get; private set; }
 		[field: SerializeField] public Unit[] Units { get; private set; }
-		[field: SerializeField] public DollData[] Dolls { get; private set; }
+		[field: SerializeField] public Doll[] Dolls { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
-		[field: SerializeField] public Inventory EquipInventory { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ShopKeeperItemBuffer { get; private set; }
 		[field: SerializeField] public StageDataBuffer StageDataBuffer { get; private set; }
 		[field: SerializeField] public MasteryDataBuffer MasteryDataBuffer { get; private set; }

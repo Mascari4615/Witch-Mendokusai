@@ -3,8 +3,8 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(DollData), menuName = "Variable/Doll")]
-	public class DollData : Unit
+	[CreateAssetMenu(fileName = nameof(Doll), menuName = "Variable/Doll")]
+	public class Doll : Unit
 	{
 		[field: SerializeField] public EquipmentData[] EquipmentDatas { get; private set; }
 	}

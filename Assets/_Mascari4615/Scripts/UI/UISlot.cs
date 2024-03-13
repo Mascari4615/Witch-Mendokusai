@@ -67,6 +67,7 @@ namespace Mascari4615
 
 		public void Select()
 		{
+			Debug.Log("Select");
 			selectAction?.Invoke(this);
 		}
 	}
