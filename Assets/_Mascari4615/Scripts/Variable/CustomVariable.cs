@@ -5,7 +5,7 @@ namespace Mascari4615
 {
 	public abstract class CustomVariable<T> : ScriptableObject, ISerializationCallbackReceiver
 	{
-		[SerializeField] private T initialValue;
+		[field: SerializeField] public T InitialValue { get; private set; }
 		public T RuntimeValue
 		{
 			get => _runtimeValue;
@@ -18,7 +18,7 @@ namespace Mascari4615
 		[System.NonSerialized] private T _runtimeValue;
 		[field: SerializeField] public GameEvent GameEvent { get; private set; }
 
-		public void OnAfterDeserialize() { RuntimeValue = initialValue; }
+		public void OnAfterDeserialize() { RuntimeValue = InitialValue; }
 		public void OnBeforeSerialize() { }
 	}
 }
