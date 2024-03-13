@@ -31,8 +31,8 @@ namespace Mascari4615
 		[SerializeField] private Slider sfxVolumeSlider;
 
 		[SerializeField] private GameObject settingPanel;
-		
-		[SerializeField] private UIDamage uiDamage;
+
+		[SerializeField] private UIFloatingText uiDamage;
 
 		[SerializeField] private Animator transitionAnimator;
 
@@ -156,13 +156,19 @@ namespace Mascari4615
 
 		public void PopDamage(Vector3 pos, int damge)
 		{
-			StartCoroutine(uiDamage.DamageTextUI(pos, damge));
+			StartCoroutine(uiDamage.AniTextUI(pos, TextType.Damage, damge.ToString()));
 		}
 
 		// 가상함수를 전달받아 처리
 		public void Transition(Action actionDuringTransition)
 		{
 			StartCoroutine(TransitionCoroutine(ActionToCoroutine(actionDuringTransition)));
+
+			static IEnumerator ActionToCoroutine(Action action)
+			{
+				action();
+				yield return null;
+			}
 		}
 
 		public void Transition(IEnumerator corountineDuringTransition)
@@ -173,21 +179,15 @@ namespace Mascari4615
 		private IEnumerator TransitionCoroutine(IEnumerator corountineDuringTransition)
 		{
 			transitionAnimator.SetTrigger("IN");
-			
+
 			AnimatorStateInfo animatorStateInfo = transitionAnimator.GetCurrentAnimatorStateInfo(0);
 			float duration = animatorStateInfo.length / animatorStateInfo.speedMultiplier;
-	
+
 			yield return new WaitForSecondsRealtime(duration + .2f);
 			yield return StartCoroutine(corountineDuringTransition);
 			yield return new WaitForSecondsRealtime(.2f);
 
 			transitionAnimator.SetTrigger("OUT");
-		}
-
-		private IEnumerator ActionToCoroutine(Action action)
-		{
-			action();
-			yield return null;
 		}
 	}
 }
