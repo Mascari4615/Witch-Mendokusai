@@ -40,7 +40,7 @@ namespace Mascari4615
 				if (curChatDatas[^1].additionalData.Equals("0"))
 				{
 					Debug.Log("Hawawaaaaaaaaaaaaaaaaaaaaaaaaa");
-					UIManager.Instance.OpenShopPanel();
+					// UIManager.Instance.OpenShopPanel();
 				}
 				EndChat();
 				return;

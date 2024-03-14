@@ -16,7 +16,7 @@ namespace Mascari4615
 
 		private LineData _lineData;
 		private Coroutine lineLoop;
-		private WaitForSeconds ws01 = new WaitForSeconds(.1f);
+		private WaitForSecondsRealtime ws01 = new(.1f);
 
 		public bool IsPrinting { get; private set; } = false;
 

@@ -5,17 +5,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
 	public class UIManager : Singleton<UIManager>
 	{
-		public CutSceneModule CutSceneModule => cutSceneModule;
-		[SerializeField] private CutSceneModule cutSceneModule;
-
-		[SerializeField] private GameObject[] canvasList;
-		private PlayerState _curCanvas = PlayerState.Peaceful;
-
 		[SerializeField] private Slider masterVolumeSlider;
 		[SerializeField] private Slider bgmVolumeSlider;
 		[SerializeField] private Slider sfxVolumeSlider;
@@ -26,34 +21,27 @@ namespace Mascari4615
 
 		[SerializeField] private Animator transitionAnimator;
 		[SerializeField] private UIPopup popup;
-		public UITab Tab { get; private set;}
 
-		public void OpenCanvas(int canvasType) => OpenCanvas((PlayerState)canvasType);
-		public void OpenCanvas(PlayerState canvasType)
-		{
-			// Debug.Log($"{nameof(OpenCanvas)}, {canvasType}");
-			_curCanvas = canvasType;
+		[SerializeField] private Toggle framerateToggle;
 
-			for (var i = 0; i < canvasList.Length; i++)
-				canvasList[i].gameObject.SetActive(i == (int)_curCanvas);
-		}
-
-		public void OpenShopPanel()
-		{
-
-		}
+		public UITab Tab { get; private set; }
+		public CutSceneModule CutSceneModule { get; private set; }
 
 		protected override void Awake()
 		{
 			base.Awake();
-			Tab = FindObjectOfType<UITab>();
+			Tab = FindObjectOfType<UITab>(true);
+			CutSceneModule = FindObjectOfType<CutSceneModule>(true);
 		}
 
 		private void Start()
 		{
-			OpenCanvas(PlayerState.Peaceful);
 			InitVolumeSliderValue();
-			SetMenuActive(false);
+		}
+
+		private void Update()
+		{
+			SOManager.Instance.IsMouseOnUI.RuntimeValue = EventSystem.current.IsPointerOverGameObject();
 		}
 
 		private void InitVolumeSliderValue()
@@ -82,25 +70,9 @@ namespace Mascari4615
 			}
 		}
 
-		[SerializeField] private Toggle framerateToggle;
-
 		public void ToggleFramerate()
 		{
 			Application.targetFrameRate = framerateToggle.isOn ? 60 : 30;
-		}
-
-		[SerializeField] private GameObject menuPanel;
-		[SerializeField] private GameObject menuButton;
-
-		public void ToggleMenu()
-		{
-			SetMenuActive(!menuPanel.activeSelf);
-		}
-
-		public void SetMenuActive(bool active)
-		{
-			menuPanel.SetActive(active);
-			menuButton.transform.rotation = Quaternion.Euler(0, 0, active ? -180 : 0);
 		}
 
 		public void ToggleSetting()

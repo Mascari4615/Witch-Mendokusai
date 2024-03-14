@@ -38,7 +38,8 @@ namespace Mascari4615
 		{
 			// Debug.Log($"{nameof(ToggleTabMenu)}");
 			canvasGroup.alpha = canvasGroup.alpha > 0 ? 0 : 1;
-			canvasGroup.blocksRaycasts = !canvasGroup.blocksRaycasts;
+			canvasGroup.blocksRaycasts = canvasGroup.alpha > 0;
+			canvasGroup.interactable = canvasGroup.alpha > 0;
 		}
 	}
 }

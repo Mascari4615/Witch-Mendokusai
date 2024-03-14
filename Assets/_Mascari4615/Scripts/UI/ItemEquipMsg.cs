@@ -15,8 +15,9 @@ namespace Mascari4615
 
 		private int curElementIndex = 0;
 
-		private readonly WaitForSeconds ws01 = new(.1f);
+		private readonly WaitForSecondsRealtime ws01 = new(.1f);
 		private readonly Queue<ItemData> toolTipStacks = new();
+		
 		public void EquipItem()
 		{
 			toolTipStacks.Enqueue(lastEquippedItem.RuntimeValue);

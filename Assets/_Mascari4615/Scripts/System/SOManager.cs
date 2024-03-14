@@ -45,6 +45,7 @@ namespace Mascari4615
 		[field: SerializeField] public BoolVariable IsCooling { get; private set; }
 		[field: SerializeField] public BoolVariable IsPaused { get; private set; }
 		[field: SerializeField] public BoolVariable IsDied { get; private set; }
+		[field: SerializeField] public BoolVariable IsMouseOnUI { get; private set; }
 		[field: SerializeField] public StatDictionary StatDictionary { get; private set; }
 		[field: SerializeField] public EnemyObjectVariable LastHitEnemyObject { get; private set; }
 		[field: SerializeField] public IntVariable MonsterKill { get; private set; }

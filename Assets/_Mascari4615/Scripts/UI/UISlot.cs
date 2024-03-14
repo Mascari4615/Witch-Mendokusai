@@ -9,11 +9,11 @@ namespace Mascari4615
 	public class UISlot : MonoBehaviour
 	{
 		public int Index { get; private set; }
+		public ToolTipTrigger ToolTipTrigger { get; private set; }
+		public Artifact Artifact { get; private set; }
+
 		public Sprite Sprite => image.sprite;
 		public bool HasItem => image.sprite != null;
-
-		public ToolTipTrigger toolTipTrigger;
-		public Artifact Artifact { get; private set; }
 
 		[SerializeField] protected Artifact defaultArtifact;
 		[SerializeField] protected Image image;
@@ -23,15 +23,24 @@ namespace Mascari4615
 		[SerializeField] private Image disableImage;
 		private Action<UISlot> selectAction;
 
+		private bool isInit = false;
+
 		private void Awake()
 		{
-			/// Init();
+			Init();
 		}
 
 		public void Init()
 		{
+			if (isInit)
+				return;
+
 			if (defaultArtifact != null)
 				SetArtifact(defaultArtifact);
+
+			ToolTipTrigger = GetComponent<ToolTipTrigger>();
+
+			isInit = true;
 		}
 
 		public void SetSlotIndex(int index) => Index = index;
@@ -39,20 +48,19 @@ namespace Mascari4615
 		{
 			// Debug.Log(nameof(Init));
 			Artifact = artifact;
+			ToolTipTrigger?.SetToolTipContent(Artifact);
 
-			toolTipTrigger?.SetToolTip(artifact);
-
-			image.sprite = artifact?.Thumbnail;
-			image.color = artifact != null ? Color.white : Color.white * 0;
+			image.sprite = Artifact?.Thumbnail;
+			image.color = Artifact != null ? Color.white : Color.white * 0;
 
 			if (nameText != null)
-				nameText.text = artifact?.Name;
+				nameText.text = Artifact?.Name;
 
 			if (countTextField != null)
 				countTextField.text = HasItem ? amount.ToString() : string.Empty;
 
 			if (descriptionText != null)
-				descriptionText.text = artifact?.Description;
+				descriptionText.text = Artifact?.Description;
 		}
 
 		public void SetDisable(bool isDisable)
@@ -67,7 +75,7 @@ namespace Mascari4615
 
 		public void Select()
 		{
-			Debug.Log("Select");
+			// Debug.Log("Select");
 			selectAction?.Invoke(this);
 		}
 	}

@@ -19,7 +19,7 @@ namespace Mascari4615
 
 		public void SetCamera(int index)
 		{
-			cinemachineBrain.m_DefaultBlend.m_Style = index == (int)PlayerState.Combat ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
+			cinemachineBrain.m_DefaultBlend.m_Style = index == (int)PlayerState.Dungeon ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
 
 			for (int i = 0; i < virtualCameras.Length; i++)
 			{

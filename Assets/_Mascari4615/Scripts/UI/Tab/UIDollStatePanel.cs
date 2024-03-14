@@ -81,7 +81,7 @@ namespace Mascari4615
 
 		private void ApplyNewArtifact(int slotIndex)
 		{
-			Debug.Log("ApplyNewArtifact" + slotIndex);
+			// Debug.Log("ApplyNewArtifact" + slotIndex);
 
 			MyDollData[] myDollDatas = DataManager.Instance.CurGameData.myDollDatas;
 			int curDollIndex = DataManager.Instance.CurGameData.lastDollIndex;

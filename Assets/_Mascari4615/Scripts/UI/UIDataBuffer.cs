@@ -5,34 +5,51 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public abstract class UIDataBuffer<T> : MonoBehaviour
+	public abstract class UIDataBuffer<T> : MonoBehaviour where T : Artifact
 	{
+		public List<UISlot> Slots { get; private set; } = new();
 		[SerializeField] private DataBuffer<T> dataBuffer;
-		[HideInInspector] public List<UISlot> slots = new();
+		[SerializeField] private bool dontShowEmptySlot = false;
+		private bool isInit = false;
 
 		private void Awake()
 		{
-			slots = GetComponentsInChildren<UISlot>().ToList();
+			Init();
+		}
 
-			for (int i = 0; i < slots.Count; i++)
-				slots[i].SetSlotIndex(i);
+		public void Init()
+		{
+			if (isInit)
+				return;
+			
+			Slots = GetComponentsInChildren<UISlot>(true).ToList();
+
+			for (int i = 0; i < Slots.Count; i++)
+			{
+				Slots[i].SetSlotIndex(i);
+				Slots[i].Init();
+			}
+
+			isInit = true;
 		}
 
 		private void OnEnable() => UpdateUI();
 
 		public void UpdateUI()
 		{
-			for (int i = 0; i < slots.Count; i++)
+			for (int i = 0; i < Slots.Count; i++)
 			{
 				if (i < dataBuffer.RuntimeItems.Count)
 				{
-					slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as Artifact);
-					// slots[i].gameObject.SetActive(true);
+					Slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as T);
+					Slots[i].gameObject.SetActive(true);
 				}
 				else
 				{
-					slots[i].SetArtifact(null);
-					// slots[i].gameObject.SetActive(false);
+					Slots[i].SetArtifact(null);
+
+					if (dontShowEmptySlot)
+						Slots[i].gameObject.SetActive(false);
 				}
 			}
 		}

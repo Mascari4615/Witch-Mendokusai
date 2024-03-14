@@ -58,7 +58,7 @@ namespace Mascari4615
 			void InitDungeonAndPlayer()
 			{
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
-				GameManager.Instance.SetPlayerState(PlayerState.Combat);
+				GameManager.Instance.SetPlayerState(PlayerState.Dungeon);
 
 				monsterSpawner.InitWaves(dungeon);
 

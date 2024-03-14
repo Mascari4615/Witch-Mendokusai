@@ -7,20 +7,24 @@ namespace Mascari4615
 {
 	public class ToolTipTrigger : MonoBehaviour, IPointerExitHandler, IPointerEnterHandler
 	{
-		public ToolTip targetToolTip;
-		[SerializeField] private bool isSpecialThings = true;
+		[field: SerializeField] public ToolTip ClickToolTip { get; private set; }
+		[SerializeField] private bool isArtifact = true;
+		[SerializeField] private bool usePopupToolTip = true;
+
 		private Artifact _artifact;
 
 		private Sprite sprite;
 		private string header;
 		private string description;
 
-		private bool isShowingThis = false;
+		private bool isPopupTooltipShowingThis = false;
 
-		public void SetToolTip(Artifact artifact) =>
+		public void SetClickToolTip(ToolTip toolTip) => ClickToolTip = toolTip;
+
+		public void SetToolTipContent(Artifact artifact) =>
 			_artifact = artifact;
 
-		public void SetToolTip(Sprite _sprite, string _name, string _description)
+		public void SetToolTipContent(Sprite _sprite, string _name, string _description)
 		{
 			sprite = _sprite;
 			header = _name;
@@ -29,50 +33,56 @@ namespace Mascari4615
 
 		public void OnPointerEnter(PointerEventData eventData)
 		{
-			if (isSpecialThings && _artifact == null)
+			if (usePopupToolTip == false)
 				return;
 
-			if (isSpecialThings)
-				ToolTipModule.Instance.Show(_artifact);
-			else
-				ToolTipModule.Instance.Show(sprite, header, description);
+			if (isArtifact && _artifact == null)
+				return;
 
-			isShowingThis = true;
+			if (isArtifact)
+				ToolTipPopupManager.Instance.Show(_artifact);
+			else
+				ToolTipPopupManager.Instance.Show(sprite, header, description);
+
+			isPopupTooltipShowingThis = true;
 		}
 
 		public void OnPointerExit(PointerEventData eventData)
 		{
-			ToolTipModule.Instance.Hide();
-			isShowingThis = false;
+			if (usePopupToolTip == false)
+				return;
+
+			ToolTipPopupManager.Instance.Hide();
+			isPopupTooltipShowingThis = false;
 		}
 
 		private void OnDisable()
 		{
-			if (isShowingThis)
+			if (isPopupTooltipShowingThis)
 			{
-				if (targetToolTip != null)
-					targetToolTip.gameObject.SetActive(false);
-				ToolTipModule.Instance.Hide();
+				if (ClickToolTip != null)
+					ClickToolTip.gameObject.SetActive(false);
+				ToolTipPopupManager.Instance.Hide();
 			}
 		}
 
 		public void Click()
 		{
-			if (targetToolTip == null)
+			if (ClickToolTip == null)
 				return;
 
-			if (_artifact == null)
+			if (isArtifact && _artifact == null)
 				return;
 
 			if (sprite == null && header == string.Empty && description == string.Empty)
 				return;
 
-			if (isSpecialThings)
-				targetToolTip.SetToolTip(_artifact);
+			if (isArtifact)
+				ClickToolTip.SetToolTipContent(_artifact);
 			else
-				targetToolTip.SetToolTip(sprite, header, description);
+				ClickToolTip.SetToolTipContent(sprite, header, description);
 
-			targetToolTip.gameObject.SetActive(true);
+			ClickToolTip.gameObject.SetActive(true);
 		}
 	}
 }

@@ -19,6 +19,8 @@ namespace Mascari4615
 		public void SetActive(bool active)
 		{
 			canvasGroup.alpha = active ? 1 : 0;
+			canvasGroup.blocksRaycasts = active;
+			canvasGroup.interactable = active;
 		}
 
 		public void UpdateUI()

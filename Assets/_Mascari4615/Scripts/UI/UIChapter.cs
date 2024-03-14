@@ -25,7 +25,7 @@ namespace Mascari4615
 		public void SetToolTip(ToolTip toolTip)
 		{
 			foreach (var slot in questSlots)
-				slot.toolTipTrigger.targetToolTip = toolTip;
+				slot.ToolTipTrigger.SetClickToolTip(toolTip);
 		}
 	}
 }
