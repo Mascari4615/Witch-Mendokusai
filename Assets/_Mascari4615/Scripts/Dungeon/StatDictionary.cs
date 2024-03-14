@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(StatDictionary), menuName = "StatDictionary")]
-	public class StatDictionary : ScriptableObject
+	public class StatDictionary : ScriptableObject, ISerializationCallbackReceiver
 	{
 		[NonSerialized] private Dictionary<string, int> _dic = new();
 		[SerializeField] private GameEvent gameEvent;

@@ -1,15 +1,15 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using PlayFab.EconomyModels;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public abstract class DataBuffer<T> : ScriptableObject
+	public abstract class DataBuffer<T> : ScriptableObject, ISerializationCallbackReceiver
 	{
 		public List<T> InitItems;
-		[field: System.NonSerialized] public List<T> RuntimeItems { get; private set; } = new();
+		[field: NonSerialized] public List<T> RuntimeItems { get; private set; } = new();
 
 		public virtual void AddItem(T t)
 		{
@@ -36,6 +36,13 @@ namespace Mascari4615
 				RemoveItem(RuntimeItems[i]);
 		}
 
-		public void OnAfterDeserialize() { RuntimeItems = InitItems.ToList(); }
+		public void OnAfterDeserialize()
+		{
+			if (InitItems != null && InitItems.Count > 0)
+				RuntimeItems = InitItems.ToList();
+			else
+				RuntimeItems = new();
+		}
+		public void OnBeforeSerialize() { }
 	}
 }
