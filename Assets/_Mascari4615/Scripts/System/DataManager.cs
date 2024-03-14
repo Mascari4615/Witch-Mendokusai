@@ -92,7 +92,7 @@ namespace Mascari4615
 			Debug.Log(nameof(CreateNewGameData));
 			CurGameData = new GameData();
 
-			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
+			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
 
 			for (int i = 0; i < 3; i++)
 			{
@@ -118,7 +118,7 @@ namespace Mascari4615
 		public void LoadData(GameData saveData)
 		{
 			CurGameData = saveData;
-			soManager.ItemInventory.InitItems(CurGameData.itemInventoryItems);
+			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
 			// OnCurGameDataLoad.Invoke();
 		}
 

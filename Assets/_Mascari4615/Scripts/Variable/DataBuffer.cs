@@ -8,8 +8,8 @@ namespace Mascari4615
 {
 	public abstract class DataBuffer<T> : ScriptableObject, ISerializationCallbackReceiver
 	{
-		public List<T> InitItems;
-		[field: NonSerialized] public List<T> RuntimeItems { get; private set; } = new();
+		[field: SerializeField] public List<T> InitItems { get; private set; }
+		[field: NonSerialized] public List<T> RuntimeItems { get; protected set; } = new();
 
 		public virtual void AddItem(T t)
 		{
@@ -36,13 +36,13 @@ namespace Mascari4615
 				RemoveItem(RuntimeItems[i]);
 		}
 
-		public void OnAfterDeserialize()
+		public virtual void OnAfterDeserialize()
 		{
 			if (InitItems != null && InitItems.Count > 0)
 				RuntimeItems = InitItems.ToList();
 			else
 				RuntimeItems = new();
 		}
-		public void OnBeforeSerialize() { }
+		public virtual void OnBeforeSerialize() { }
 	}
 }

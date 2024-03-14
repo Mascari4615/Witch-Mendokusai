@@ -26,11 +26,6 @@ namespace Mascari4615
 
 		private bool isInit = false;
 
-		private void Awake()
-		{
-			Init();
-		}
-
 		public void Init()
 		{
 			if (isInit)
@@ -48,7 +43,11 @@ namespace Mascari4615
 			isInit = true;
 		}
 
-		private void OnEnable() => UpdateUI();
+		private void OnEnable()
+		{
+			Init();
+			UpdateUI();
+		}
 
 		public void UpdateUI()
 		{
@@ -57,16 +56,12 @@ namespace Mascari4615
 				case UIItemInventoryFillter.All:
 					for (int i = 0; i < Slots.Count; i++)
 					{
-						if (i < inventory.Capacity)
-						{
-							Slots[i].SetArtifact(inventory.Items[i]?.Data, inventory.Items[i] != null ? inventory.Items[i].Amount : 1);
-							Slots[i].gameObject.SetActive(true);
-						}
+						if (i < inventory.Capacity && inventory.Items[i] != null)
+							Slots[i].SetArtifact(inventory.Items[i].Data, inventory.Items[i].Amount);
 						else
-						{
 							Slots[i].SetArtifact(null);
-							Slots[i].gameObject.SetActive(false);
-						}
+
+						Slots[i].gameObject.SetActive(i < inventory.Capacity);
 					}
 					break;
 				case UIItemInventoryFillter.Item:

@@ -7,30 +7,17 @@ using UnityEngine.Serialization;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
-	public class Inventory : ScriptableObject
+	public class Inventory : ScriptableObject, ISerializationCallbackReceiver
 	{
-		public Item[] Items { get; private set; }
-		[NonSerialized] private readonly List<UIItemInventory> _inventoryUIs = new();
+		private const int DefaultCapacity = 30;
+		public int Capacity { get; private set; } = DefaultCapacity;
+		[NonSerialized] private readonly List<UIItemInventory> inventoryUIs = new();
+		[field: NonSerialized] public Item[] Items { get; private set; }
 
 		public void RegisterInventoryUI(UIItemInventory uiItemInventory)
 		{
-			try
-			{
-				Debug.Log(_inventoryUIs[0].gameObject);
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine(e);
-				_inventoryUIs.Clear();
-				// throw;
-			}
-			finally
-			{
-				_inventoryUIs.Add(uiItemInventory);
-			}
+			inventoryUIs.Add(uiItemInventory);
 		}
-
-		public int Capacity { get; private set; }
 
 		private int FindEmptySlotIndex(int startIndex = 0)
 		{
@@ -192,13 +179,17 @@ namespace Mascari4615
 			return amount;
 		}
 
-		public void InitItems(List<InventorySlotData> savedItems)
+		public void LoadSaveItems(List<InventorySlotData> savedItems)
 		{
-			Capacity = 30;
-			var temp = new Item[Capacity];
-			foreach (var itemData in savedItems)
-				temp[itemData.slotIndex] = new Item(itemData.Guid, DataManager.Instance.ItemDic[itemData.itemID], itemData.itemAmount);
-			Items = temp;
+			Items = new Item[Capacity = DefaultCapacity];
+			
+			foreach (InventorySlotData itemData in savedItems)
+			{
+				Items[itemData.slotIndex] = new Item(
+					itemData.Guid,
+					DataManager.Instance.ItemDic[itemData.itemID],
+					itemData.itemAmount);
+			}
 		}
 
 		public List<InventorySlotData> GetInventoryData()
@@ -262,7 +253,7 @@ namespace Mascari4615
 
 			var item = Items[index];
 
-			foreach (var inventoryUI in _inventoryUIs)
+			foreach (var inventoryUI in inventoryUIs)
 			{
 				inventoryUI.UpdateSlotUI(index, item);
 
@@ -271,5 +262,11 @@ namespace Mascari4615
 				//  inventoryUI.UpdateSlotFilterState(index, item.Data);
 			}
 		}
+
+		public void OnAfterDeserialize()
+		{
+			Items = new Item[Capacity = DefaultCapacity];
+		}
+		public void OnBeforeSerialize() { }
 	}
 }

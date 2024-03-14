@@ -15,7 +15,7 @@ namespace Mascari4615
 
 		private void Awake()
 		{
-			craftTableInventory.InitItems(new List<InventorySlotData>());
+			craftTableInventory.LoadSaveItems(new List<InventorySlotData>());
 		}
 
 		public void TryCraft()
