@@ -84,8 +84,14 @@ namespace Mascari4615
 				// ChangeSlot
 			}
 
-			var slotA = this;
-			var slotB = DragSlot.instance.HoldingSlot;
+			UIItemSlot slotA = this;
+			UIItemSlot slotB = DragSlot.instance.HoldingSlot;
+
+			if (slotA == slotB)
+			{
+				Debug.Log("같은 슬롯입니다.");
+				return;
+			}
 
 			Item itemA = slotA.Inventory.GetItem(slotA.Index);
 			Item itemB = slotB.Inventory.GetItem(slotB.Index);
