@@ -7,20 +7,13 @@ using UnityEngine.AI;
 
 namespace Mascari4615
 {
-	public enum UIItemInventoryFillter
-	{
-		All,
-		Item,
-		Equipment,
-	}
-
 	public class UIItemInventory : MonoBehaviour
 	{
 		public List<UIItemSlot> Slots { get; private set; } = new();
 
 		[SerializeField] private Inventory inventory;
 		[SerializeField] private Transform slotsParent;
-		[SerializeField] private UIItemInventoryFillter fillter = UIItemInventoryFillter.All;
+		[SerializeField] private ItemType fillter = ItemType.None;
 
 		public void SetInventory(Inventory newInventory) => inventory = newInventory;
 
@@ -53,7 +46,7 @@ namespace Mascari4615
 		{
 			switch (fillter)
 			{
-				case UIItemInventoryFillter.All:
+				case ItemType.None:
 					for (int i = 0; i < Slots.Count; i++)
 					{
 						if (i < inventory.Capacity && inventory.Items[i] != null)
@@ -64,9 +57,7 @@ namespace Mascari4615
 						Slots[i].gameObject.SetActive(i < inventory.Capacity);
 					}
 					break;
-				case UIItemInventoryFillter.Item:
-					break;
-				case UIItemInventoryFillter.Equipment:
+				case ItemType.Equipment:
 					for (int i = 0; i < Slots.Count; i++)
 					{
 						if ((i < inventory.Capacity) && (inventory.Items[i]?.Data is EquipmentData))
@@ -82,13 +73,28 @@ namespace Mascari4615
 					}
 					break;
 				default:
-					throw new ArgumentOutOfRangeException();
+					for (int i = 0; i < Slots.Count; i++)
+					{
+						if (i < inventory.Capacity && inventory.Items[i] != null)
+							Slots[i].SetArtifact(inventory.Items[i].Data, inventory.Items[i].Amount);
+						else
+							Slots[i].SetArtifact(null);
+
+						Slots[i].gameObject.SetActive(i < inventory.Capacity);
+					}
+					break;
 			}
 		}
 
 		public void UpdateSlotUI(int index, Item item)
 		{
 			Slots[index].SetArtifact(item?.Data, item?.Amount ?? 1);
+			UpdateUI();
+		}
+
+		public void SetFillter(ItemType newFillter)
+		{
+			fillter = newFillter;
 			UpdateUI();
 		}
 	}

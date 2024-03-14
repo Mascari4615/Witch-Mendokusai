@@ -7,20 +7,14 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = nameof(ItemData), menuName = "Variable/ItemData")]
 	public class ItemData : Artifact
 	{
-		public Grade Grade => grade;
-		public ItemType Type => type;
-		public Recipe[] Recipes => recipes;
-		public int MaxAmount => maxAmount;
 		public bool IsCountable => MaxAmount != 1;
-		public int PurchasePrice => purchasePrice;
-		public int SalePrice => salePrice;
-
-		[SerializeField] private Grade grade;
-		[SerializeField] private ItemType type;
-		[SerializeField] private Recipe[] recipes;
-		[SerializeField] private int maxAmount = 500;
-		[SerializeField] private int purchasePrice = 1;
-		[SerializeField] private int salePrice = 1;
+		
+		[field: SerializeField] public Grade Grade { get; private set; }
+		[field: SerializeField] public ItemType Type { get; private set; }
+		[field: SerializeField] public Recipe[] Recipes { get; private set; }
+		[field: SerializeField] public int MaxAmount  { get; private set; }= 500;
+		[field: SerializeField] public int PurchasePrice { get; private set; } = 1;
+		[field: SerializeField] public int SalePrice { get; private set; } = 1;
 
 		public Item CreateItem()
 		{
@@ -30,9 +24,10 @@ namespace Mascari4615
 
 	public enum ItemType
 	{
+		None = -1,
 		Loot,
+		Equipment,
 		Potion,
-		Equipment
 	}
 
 	public enum Grade
