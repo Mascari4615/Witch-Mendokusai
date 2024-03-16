@@ -9,31 +9,20 @@ namespace Mascari4615
 		private ToolTip clickToolTip;
 		private UIItemInventory itemInventoryUI;
 
-		[SerializeField] private Transform fillterButtonsParent;
-		private UISlot[] fillerButtons;
-
 		public override void Init()
 		{
 			clickToolTip = GetComponentInChildren<ToolTip>(true);
 			itemInventoryUI = GetComponentInChildren<UIItemInventory>(true);
-			fillerButtons = fillterButtonsParent.GetComponentsInChildren<UISlot>(true);
+			Debug.Log(Equals(itemInventoryUI, null));
 
 			itemInventoryUI.Init();
 			foreach (UISlot slot in itemInventoryUI.Slots)
 				slot.ToolTipTrigger.SetClickToolTip(clickToolTip);
-
-			for (int i = 0; i < fillerButtons.Length; i++)
-			{
-				fillerButtons[i].SetSlotIndex(i);
-				fillerButtons[i].SetSelectAction((UISlot slot) =>
-				{
-					itemInventoryUI.SetFillter((ItemType)(slot.Index - 1));
-				});
-			}
 		}
 
 		public override void UpdateUI()
 		{
+			Debug.Log(Equals(itemInventoryUI, null));
 			itemInventoryUI.UpdateUI();
 		}
 	}

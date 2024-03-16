@@ -181,7 +181,7 @@ namespace Mascari4615
 		}
 
 		public int slotIndex;
-		public Guid Guid;
+		public Guid? Guid;
 		public int itemID;
 		public int itemAmount;
 	}

@@ -7,12 +7,11 @@ using UnityEngine.Serialization;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
-	public class Inventory : ScriptableObject, ISerializationCallbackReceiver
+	public class Inventory : DataBuffer<Item>, ISerializationCallbackReceiver
 	{
 		private const int DefaultCapacity = 30;
 		public int Capacity { get; private set; } = DefaultCapacity;
 		[NonSerialized] private readonly List<UIItemInventory> inventoryUIs = new();
-		[field: NonSerialized] public Item[] Items { get; private set; }
 
 		public void RegisterInventoryUI(UIItemInventory uiItemInventory)
 		{
@@ -23,7 +22,7 @@ namespace Mascari4615
 		{
 			for (var i = startIndex; i < Capacity; i++)
 			{
-				if (Items[i] == null)
+				if (RuntimeItems[i] == null)
 					return i;
 			}
 
@@ -34,7 +33,7 @@ namespace Mascari4615
 		{
 			for (var i = startIndex; i < Capacity; i++)
 			{
-				var current = Items[i];
+				var current = RuntimeItems[i];
 				if (current == null)
 					continue;
 
@@ -56,7 +55,7 @@ namespace Mascari4615
 
 			for (var i = 0; i < Capacity; i++)
 			{
-				var current = Items[i];
+				var current = RuntimeItems[i];
 				if (current == null)
 					continue;
 
@@ -101,7 +100,7 @@ namespace Mascari4615
 							// CountableItem ci = Items[index] as CountableItem;
 							// amount = ci.AddAmountAndGetExcess(amount);
 
-							amount = Items[index].AddAmountAndGetExcess(amount);
+							amount = RuntimeItems[index].AddAmountAndGetExcess(amount);
 
 							UpdateSlot(index);
 						}
@@ -127,7 +126,7 @@ namespace Mascari4615
 
 							// 슬롯에 추가
 							// Items[index] = ci;
-							Items[index] = i;
+							RuntimeItems[index] = i;
 
 							// 남은 개수 계산
 							// amount = (amount > ciData.MaxAmount) ? (amount - ciData.MaxAmount) : 0;
@@ -148,7 +147,7 @@ namespace Mascari4615
 					if (index != -1)
 					{
 						// 아이템을 생성하여 슬롯에 추가
-						Items[index] = itemData.CreateItem();
+						RuntimeItems[index] = itemData.CreateItem();
 						amount = 0;
 
 						UpdateSlot(index);
@@ -169,7 +168,7 @@ namespace Mascari4615
 					}
 
 					// 아이템을 생성하여 슬롯에 추가
-					Items[index] = itemData.CreateItem();
+					RuntimeItems[index] = itemData.CreateItem();
 
 					UpdateSlot(index);
 				}
@@ -181,11 +180,11 @@ namespace Mascari4615
 
 		public void LoadSaveItems(List<InventorySlotData> savedItems)
 		{
-			Items = new Item[Capacity = DefaultCapacity];
+			RuntimeItems = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
 			
 			foreach (InventorySlotData itemData in savedItems)
 			{
-				Items[itemData.slotIndex] = new Item(
+				RuntimeItems[itemData.slotIndex] = new Item(
 					itemData.Guid,
 					DataManager.Instance.ItemDic[itemData.itemID],
 					itemData.itemAmount);
@@ -195,12 +194,12 @@ namespace Mascari4615
 		public List<InventorySlotData> GetInventoryData()
 		{
 			List<InventorySlotData> temp = new(Capacity);
-			for (var i = 0; i < Items.Length; i++)
+			for (var i = 0; i < RuntimeItems.Count; i++)
 			{
-				if (Items[i] == null)
+				if (RuntimeItems[i] == null)
 					continue;
 
-				temp.Add(new InventorySlotData(i, Items[i]));
+				temp.Add(new InventorySlotData(i, RuntimeItems[i]));
 			}
 
 			return temp;
@@ -214,13 +213,13 @@ namespace Mascari4615
 		public ItemData GetItemData(int index)
 		{
 			if (!IsValidIndex(index)) return null;
-			return Items[index] == null ? null : Items[index].Data;
+			return RuntimeItems[index] == null ? null : RuntimeItems[index].Data;
 		}
 
 		public Item GetItem(int index)
 		{
 			if (!IsValidIndex(index)) return null;
-			return Items[index] ?? null;
+			return RuntimeItems[index] ?? null;
 		}
 
 		public void SetItem(int index, Item item)
@@ -228,7 +227,7 @@ namespace Mascari4615
 			if (!IsValidIndex(index))
 				return;
 
-			Items[index] = item;
+			RuntimeItems[index] = item;
 			UpdateSlot(index);
 		}
 
@@ -246,12 +245,12 @@ namespace Mascari4615
 		{
 			if (!IsValidIndex(index)) return;
 
-			if (Items[index] != null)
-				if (Items[index].Data.IsCountable)
-					if (Items[index].IsEmpty)
-						Items[index] = null;
+			if (RuntimeItems[index] != null)
+				if (RuntimeItems[index].Data.IsCountable)
+					if (RuntimeItems[index].IsEmpty)
+						RuntimeItems[index] = null;
 
-			var item = Items[index];
+			var item = RuntimeItems[index];
 
 			foreach (var inventoryUI in inventoryUIs)
 			{
@@ -263,10 +262,10 @@ namespace Mascari4615
 			}
 		}
 
-		public void OnAfterDeserialize()
+		public override void OnAfterDeserialize()
 		{
-			Items = new Item[Capacity = DefaultCapacity];
+			RuntimeItems = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
 		}
-		public void OnBeforeSerialize() { }
+		public override void OnBeforeSerialize() { }
 	}
 }

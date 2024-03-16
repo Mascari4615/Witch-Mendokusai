@@ -7,16 +7,18 @@ namespace Mascari4615
 {
 	public class Item
 	{
-		public Guid Guid { get; private set; }
-		public ItemData Data { get; private set; }
+		public Guid? Guid { get; private set; } = null;
+		public ItemData Data { get; private set; } = null;
 		public int MaxAmount => Data.MaxAmount;
-		public int Amount { get; protected set; }
-		public Item(Guid guid, ItemData data, int amount = 1)
+		public int Amount { get; protected set; } = 0;
+
+		public Item(Guid? guid, ItemData data, int amount = 1)
 		{
 			Guid = guid;
 			Data = data;
 			SetAmount(amount);
 		}
+
 		public void SetAmount(int amount)
 		{
 			Amount = Mathf.Clamp(amount, 0, MaxAmount);

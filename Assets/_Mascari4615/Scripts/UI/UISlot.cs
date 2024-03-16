@@ -11,60 +11,84 @@ namespace Mascari4615
 		public int Index { get; private set; }
 		public ToolTipTrigger ToolTipTrigger { get; private set; }
 		public Artifact Artifact { get; private set; }
+		private int amount = 1;
 
-		public Sprite Sprite => image.sprite;
-		public bool HasItem => image.sprite != null;
+		public Sprite Sprite => iconImage.sprite;
+		public bool HasItem => iconImage.sprite != null;
 
 		[SerializeField] protected Artifact defaultArtifact;
-		[SerializeField] protected Image image;
-		[SerializeField] protected TextMeshProUGUI nameText;
-		[SerializeField] protected TextMeshProUGUI countTextField;
-		[SerializeField] protected TextMeshProUGUI descriptionText;
-		[SerializeField] private Image disableImage;
+
+		protected Button button;
+		protected Image iconImage;
+		protected TextMeshProUGUI nameText;
+		protected TextMeshProUGUI countText;
+		protected TextMeshProUGUI descriptionText;
+		protected Image disableImage;
+
 		private Action<UISlot> selectAction;
 
 		private bool isInit = false;
-
-		private void Awake()
-		{
-			Init();
-		}
 
 		public void Init()
 		{
 			if (isInit)
 				return;
+			isInit = true;
 
-			if (defaultArtifact != null)
-				SetArtifact(defaultArtifact);
+			button = GetComponent<Button>();
+
+			iconImage = transform.Find("[Image] IconBackground").Find("[Image] Icon").GetComponent<Image>();
+			disableImage = transform.Find("[Image] Disable").GetComponent<Image>();
+			
+			nameText = transform.Find("[Text] Name").GetComponent<TextMeshProUGUI>();
+			countText = transform.Find("[Text] Count").GetComponent<TextMeshProUGUI>();
+			descriptionText = transform.Find("[Text] Description").GetComponent<TextMeshProUGUI>();
 
 			ToolTipTrigger = GetComponent<ToolTipTrigger>();
 
-			isInit = true;
+			if (defaultArtifact != null)
+				SetArtifact(defaultArtifact);
 		}
 
 		public void SetSlotIndex(int index) => Index = index;
 		public virtual void SetArtifact(Artifact artifact, int amount = 1)
 		{
-			// Debug.Log(nameof(Init));
+			Init();
+
 			Artifact = artifact;
-			ToolTipTrigger?.SetToolTipContent(Artifact);
+			this.amount = amount;
 
-			image.sprite = Artifact?.Thumbnail;
-			image.color = Artifact != null ? Color.white : Color.white * 0;
+			UpdateUI();
+			if (ToolTipTrigger)
+				ToolTipTrigger.SetToolTipContent(Artifact);
+		}
 
-			if (nameText != null)
-				nameText.text = Artifact?.Name;
+		public void UpdateUI()
+		{
+			if (Artifact)
+			{
+				iconImage.sprite = Artifact.Thumbnail;
+				iconImage.color = Color.white;
 
-			if (countTextField != null)
-				countTextField.text = HasItem ? amount.ToString() : string.Empty;
+				nameText.text = Artifact.Name;
+				countText.text = amount.ToString();
+				descriptionText.text = Artifact.Description;
+			}
+			else
+			{
+				iconImage.sprite = null;
+				iconImage.color = Color.white * 0;
 
-			if (descriptionText != null)
-				descriptionText.text = Artifact?.Description;
+				nameText.text = string.Empty;
+				countText.text = string.Empty;
+				descriptionText.text = string.Empty;
+			}
 		}
 
 		public void SetDisable(bool isDisable)
 		{
+			if (button)
+				button.interactable = !isDisable;
 			disableImage.gameObject.SetActive(isDisable);
 		}
 

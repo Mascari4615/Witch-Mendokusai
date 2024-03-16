@@ -15,7 +15,7 @@ namespace Mascari4615
 			chapters = GetComponentsInChildren<UIChapter>(true);
 			toolTip = GetComponentInChildren<ToolTip>(true);
 
-			foreach (var chapter in chapters)
+			foreach (UIChapter chapter in chapters)
 			{
 				chapter.Init();
 				chapter.SetToolTip(toolTip);
@@ -24,7 +24,7 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			foreach (var chapter in chapters)
+			foreach (UIChapter chapter in chapters)
 				chapter.UpdateUI();
 
 			SelectChapter(curChapterIndex);

@@ -12,9 +12,9 @@ namespace Mascari4615
 		[field: SerializeField] public Grade Grade { get; private set; }
 		[field: SerializeField] public ItemType Type { get; private set; }
 		[field: SerializeField] public Recipe[] Recipes { get; private set; }
-		[field: SerializeField] public int MaxAmount  { get; private set; }= 500;
-		[field: SerializeField] public int PurchasePrice { get; private set; } = 1;
-		[field: SerializeField] public int SalePrice { get; private set; } = 1;
+		[field: SerializeField] public int MaxAmount { get; private set; } = 500;
+		[field: SerializeField] public int PurchasePrice { get; private set; }
+		[field: SerializeField] public int SalePrice { get; private set; }
 
 		public Item CreateItem()
 		{

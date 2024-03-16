@@ -5,11 +5,12 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public abstract class UIDataBuffer<T> : MonoBehaviour where T : Artifact
+	public abstract class UIDataBuffer<T> : MonoBehaviour
 	{
-		public List<UISlot> Slots { get; private set; } = new();
-		[SerializeField] private DataBuffer<T> dataBuffer;
-		[SerializeField] private bool dontShowEmptySlot = false;
+		public List<UISlot> Slots { get; protected set; } = new();
+		[SerializeField] protected Transform slotsParent;
+		[SerializeField] protected DataBuffer<T> dataBuffer;
+		[SerializeField] protected bool dontShowEmptySlot = false;
 		private bool isInit = false;
 
 		private void Awake()
@@ -17,12 +18,23 @@ namespace Mascari4615
 			Init();
 		}
 
-		public void Init()
+		private void OnEnable()
+		{
+			UpdateUI();
+		}
+
+		/// <summary>
+		/// UI 초기화, 한 번만 실행됨
+		/// </summary>
+		/// <returns></returns>
+		public virtual bool Init()
 		{
 			if (isInit)
-				return;
-			
-			Slots = GetComponentsInChildren<UISlot>(true).ToList();
+				return false;
+
+			if (slotsParent == null)
+				slotsParent = transform;
+			Slots = slotsParent.GetComponentsInChildren<UISlot>(true).ToList();
 
 			for (int i = 0; i < Slots.Count; i++)
 			{
@@ -30,18 +42,19 @@ namespace Mascari4615
 				Slots[i].Init();
 			}
 
-			isInit = true;
+			return isInit = true;
 		}
 
-		private void OnEnable() => UpdateUI();
-
-		public void UpdateUI()
+		/// <summary>
+		/// UI 갱신
+		/// </summary>
+		public virtual void UpdateUI()
 		{
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				if (i < dataBuffer.RuntimeItems.Count)
 				{
-					Slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as T);
+					Slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as Artifact);
 					Slots[i].gameObject.SetActive(true);
 				}
 				else

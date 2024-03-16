@@ -21,18 +21,33 @@ namespace Mascari4615
 		public static readonly TimeSpan TimeUpdateInterval = new(0, 0, 0, 0, 100);
 		private static readonly TimeSpan InitialDungeonTime = new(0, 0, 15, 0, 0);
 
-		[field: Header("_" + nameof(DungeonManager))]
-		[SerializeField] private MasteryManager masteryManager;
-		[SerializeField] private MonsterSpawner monsterSpawner;
-
-		[SerializeField] private UIDungeonEntrance uiDungeonEntrance;
-		[SerializeField] private UIDungeon uiCombatCanvas;
-		[SerializeField] private UIDungeonResult uiStageResult;
-
-		[SerializeField] private ExpManager expChecker;
-
 		public TimeSpan DungeonCurTime { get; private set; }
 		public Difficulty CurDifficulty { get; private set; }
+
+		private MasteryManager masteryManager;
+		private MonsterSpawner monsterSpawner;
+		private ExpManager expChecker;
+
+		private UIDungeonEntrance uiDungeonEntrance;
+		private UIDungeon uiDungeon;
+		private UIDungeonResult uiStageResult;
+
+		protected override void Awake()
+		{
+			base.Awake();
+
+			masteryManager = FindObjectOfType<MasteryManager>(true);
+			monsterSpawner = FindObjectOfType<MonsterSpawner>(true);
+
+			expChecker = FindObjectOfType<ExpManager>(true);
+
+			uiDungeonEntrance = FindObjectOfType<UIDungeonEntrance>(true);
+			
+			uiDungeon = FindObjectOfType<UIDungeon>(true);
+			uiDungeon.Init();
+		
+			uiStageResult = FindObjectOfType<UIDungeonResult>(true);
+		}
 
 		private void Start()
 		{
@@ -62,7 +77,7 @@ namespace Mascari4615
 
 				monsterSpawner.InitWaves(dungeon);
 
-				uiCombatCanvas.SetActive(true);
+				uiDungeon.SetActive(true);
 				uiStageResult.SetActive(false);
 
 				expChecker.Init();
@@ -93,7 +108,7 @@ namespace Mascari4615
 				UpdateDifficulty();
 
 				monsterSpawner.UpdateWaves();
-				uiCombatCanvas.UpdateUI();
+				uiDungeon.UpdateUI();
 
 				yield return ws01;
 			}
@@ -109,7 +124,7 @@ namespace Mascari4615
 
 			uiStageResult.Init();
 			uiStageResult.SetActive(true);
-			uiCombatCanvas.SetActive(false);
+			uiDungeon.SetActive(false);
 		}
 
 		public void Continue()

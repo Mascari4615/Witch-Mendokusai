@@ -5,19 +5,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 namespace Mascari4615
 {
 	public class UIItemSlot : UISlot, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 	{
-		public Inventory Inventory => _inventory;
-		private Inventory _inventory;
+		[SerializeField] protected TextMeshProUGUI priceText;
+	
+		public Inventory Inventory { get; private set; }
 
 		public bool onlyOneItem = false;
 		public bool canPlayerSetItem = true;
 		public bool canDrag = true;
 
-		public void SetInventory(Inventory inventory) => _inventory = inventory;
+		public void SetInventory(Inventory inventory) => Inventory = inventory;
+
+		public override void SetArtifact(Artifact artifact, int amount = 1)
+		{
+			base.SetArtifact(artifact, amount);
+			if (priceText != null)
+				priceText.text = (artifact as ItemData)?.SalePrice.ToString();
+		}
 
 		public void OnBeginDrag(PointerEventData eventData)
 		{

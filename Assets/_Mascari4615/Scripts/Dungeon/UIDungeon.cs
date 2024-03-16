@@ -10,11 +10,17 @@ namespace Mascari4615
 	public class UIDungeon : MonoBehaviour
 	{
 		[field: Header("_" + nameof(UIDungeon))]
-		[SerializeField] private CanvasGroup canvasGroup;
 		[SerializeField] private TextMeshProUGUI timeText;
 		[SerializeField] private TextMeshProUGUI difficultyText;
 		[SerializeField] private Image difficultyCircle;
-		[SerializeField] private UISkillSlot[] curSkillSlots;
+		private CanvasGroup canvasGroup;
+		private UISkillSlot[] curSkillSlots;
+
+		public void Init()
+		{
+			canvasGroup = GetComponent<CanvasGroup>();
+			curSkillSlots = GetComponentsInChildren<UISkillSlot>(true);
+		}
 
 		public void SetActive(bool active)
 		{

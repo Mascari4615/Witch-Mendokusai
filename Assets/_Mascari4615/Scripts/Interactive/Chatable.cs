@@ -9,7 +9,7 @@ namespace Mascari4615
 	public class Chatable : InteractiveObject
 	{
 		[SerializeField] private TextAsset chatScripts;
-		private Dictionary<string, List<LineData>> chatDataDic = new Dictionary<string, List<LineData>>();
+		private readonly Dictionary<string, List<LineData>> chatDataDic = new();
 
 		public override void Interact()
 		{
@@ -36,7 +36,7 @@ namespace Mascari4615
 
 			Debug.Log(myString);
 
-			var csvText = myString.Substring(0, chatScripts.text.Length - 1);
+			var csvText = myString[..(chatScripts.text.Length - 1)];
 			var rows = csvText.Split(new[] { '\n' });
 
 			var eventName = string.Empty;

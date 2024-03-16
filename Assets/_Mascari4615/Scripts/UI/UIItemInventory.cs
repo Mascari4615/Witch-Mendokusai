@@ -3,98 +3,81 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Mascari4615
 {
-	public class UIItemInventory : MonoBehaviour
+	public class UIItemInventory : UIDataBuffer<Item>
 	{
-		public List<UIItemSlot> Slots { get; private set; } = new();
+		[SerializeField] private Transform filtersParent;
+		[SerializeField] private ItemType filter = ItemType.None;
 
-		[SerializeField] private Inventory inventory;
-		[SerializeField] private Transform slotsParent;
-		[SerializeField] private ItemType fillter = ItemType.None;
-
-		public void SetInventory(Inventory newInventory) => inventory = newInventory;
-
-		private bool isInit = false;
-
-		public void Init()
+		public override bool Init()
 		{
-			if (isInit)
-				return;
+			if (base.Init() == false)
+				return false;
 
-			Slots = slotsParent.GetComponentsInChildren<UIItemSlot>(true).ToList();
-			for (int i = 0; i < Slots.Count; i++)
-			{
-				Slots[i].SetSlotIndex(i);
-				Slots[i].SetInventory(inventory);
-			}
-
+			Inventory inventory = dataBuffer as Inventory;
 			inventory.RegisterInventoryUI(this);
 
-			isInit = true;
-		}
+			foreach (UIItemSlot slot in Slots.Cast<UIItemSlot>())
+				slot.SetInventory(inventory);
 
-		private void OnEnable()
-		{
-			Init();
-			UpdateUI();
-		}
-
-		public void UpdateUI()
-		{
-			switch (fillter)
+			if (filtersParent != null)
 			{
-				case ItemType.None:
-					for (int i = 0; i < Slots.Count; i++)
+				UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
+				for (int i = 0; i < fillerButtons.Length; i++)
+				{
+					fillerButtons[i].SetSlotIndex(i);
+					fillerButtons[i].SetSelectAction((UISlot slot) =>
 					{
-						if (i < inventory.Capacity && inventory.Items[i] != null)
-							Slots[i].SetArtifact(inventory.Items[i].Data, inventory.Items[i].Amount);
-						else
-							Slots[i].SetArtifact(null);
+						SetFilter((ItemType)(slot.Index - 1));
+					});
+				}
+			}
 
-						Slots[i].gameObject.SetActive(i < inventory.Capacity);
-					}
-					break;
-				case ItemType.Equipment:
-					for (int i = 0; i < Slots.Count; i++)
-					{
-						if ((i < inventory.Capacity) && (inventory.Items[i]?.Data is EquipmentData))
-						{
-							Slots[i].SetArtifact(inventory.Items[i]?.Data, 1);
-							Slots[i].gameObject.SetActive(true);
-						}
-						else
-						{
-							Slots[i].SetArtifact(null);
-							Slots[i].gameObject.SetActive(false);
-						}
-					}
-					break;
-				default:
-					for (int i = 0; i < Slots.Count; i++)
-					{
-						if (i < inventory.Capacity && inventory.Items[i] != null)
-							Slots[i].SetArtifact(inventory.Items[i].Data, inventory.Items[i].Amount);
-						else
-							Slots[i].SetArtifact(null);
+			return true;
+		}
 
-						Slots[i].gameObject.SetActive(i < inventory.Capacity);
-					}
-					break;
+		public override void UpdateUI()
+		{
+			Inventory inventory = dataBuffer as Inventory;
+
+			for (int i = 0; i < Slots.Count; i++)
+			{
+				UIItemSlot slot = Slots[i] as UIItemSlot;
+				Item item = inventory.RuntimeItems.ElementAtOrDefault(i);
+
+				if (item == null)
+				{
+					slot.SetArtifact(null);
+					slot.gameObject.SetActive(dontShowEmptySlot == false);
+				}
+				else
+				{
+					ItemData itemData = item.Data;
+					bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
+
+					slot.SetArtifact(itemData, item.Amount);
+					slot.gameObject.SetActive(slotActive);
+				}
 			}
 		}
 
 		public void UpdateSlotUI(int index, Item item)
 		{
-			Slots[index].SetArtifact(item?.Data, item?.Amount ?? 1);
-			UpdateUI();
+			if (item != null)
+			{
+				Slots[index].SetArtifact(item.Data, item.Amount);
+			}
+			else
+			{
+				Slots[index].SetArtifact(null, 1);
+			}
 		}
 
-		public void SetFillter(ItemType newFillter)
+		public void SetFilter(ItemType newFilter)
 		{
-			fillter = newFillter;
+			filter = newFilter;
 			UpdateUI();
 		}
 	}
