@@ -49,6 +49,7 @@ namespace Mascari4615
 
 			void InitDungeonAndPlayer()
 			{
+				UIManager.Instance.SetOverlayUI(OverlayUI.None);
 				GameManager.Instance.SetContent(GameContent.Dungeon);
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
@@ -103,6 +104,7 @@ namespace Mascari4615
 
 			void ResetDungeonAndPlayer()
 			{
+				UIManager.Instance.SetOverlayUI(OverlayUI.None);
 				GameManager.Instance.SetContent(GameContent.None);
 				GameManager.Instance.ClearDungeonObjects();
 

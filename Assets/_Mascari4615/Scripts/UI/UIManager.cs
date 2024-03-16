@@ -169,6 +169,7 @@ namespace Mascari4615
 			if (curContentUI != null)
 				curContentUI.SetActive(false);
 
+			curOverlayUI = null;
 			if (contentUIs.TryGetValue(gameContent, out var uiPanel))
 			{
 				curContentUI = uiPanel;

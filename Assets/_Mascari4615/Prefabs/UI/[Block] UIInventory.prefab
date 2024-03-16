@@ -58,8 +58,8 @@ MonoBehaviour:
   slotsParent: {fileID: 8454056749523476796}
   dataBuffer: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
   dontShowEmptySlot: 0
-  filltersParent: {fileID: 5480976566432496584}
-  fillter: -1
+  filtersParent: {fileID: 5480976566432496584}
+  filter: -1
 --- !u!114 &614164246701854040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -573,7 +573,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 923381918674333279}
   m_HandleRect: {fileID: 7547228073726967102}
   m_Direction: 2
-  m_Value: 0.99999976
+  m_Value: 0.9999999
   m_Size: 0.25588763
   m_NumberOfSteps: 0
   m_OnValueChanged:
