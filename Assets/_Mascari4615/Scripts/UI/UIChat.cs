@@ -24,11 +24,8 @@ namespace Mascari4615
 
 		public bool IsPrinting { get; private set; } = false;
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
-			if (someData == null)
-				return;
-
 			if (TryGetChatData("테스트", out curChatDatas) == false)
 				return;
 

@@ -19,7 +19,7 @@ namespace Mascari4615
 				slot.ToolTipTrigger.SetClickToolTip(clickToolTip);
 		}
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
 			questDataBufferUI.UpdateUI();
 		}

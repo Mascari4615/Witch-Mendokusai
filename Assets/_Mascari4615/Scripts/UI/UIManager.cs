@@ -18,6 +18,7 @@ namespace Mascari4615
 		Chat,
 		DungeonEntrance,
 		DungeonResult,
+		Pot,
 	}
 
 	public class UIManager : Singleton<UIManager>
@@ -40,6 +41,7 @@ namespace Mascari4615
 		private UIDungeonEntrance dungeonEntrance;
 		private UIDungeon dungeon;
 		private UIDungeonResult dungeonResult;
+		private UIPot pot;
 
 		protected override void Awake()
 		{
@@ -55,6 +57,7 @@ namespace Mascari4615
 			dungeonEntrance = FindObjectOfType<UIDungeonEntrance>(true);
 			dungeon = FindObjectOfType<UIDungeon>(true);
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
+			pot = FindObjectOfType<UIPot>(true);
 
 			contentUIs[GameContent.Dungeon] = FindObjectOfType<UIDungeon>(true);
 
@@ -64,6 +67,7 @@ namespace Mascari4615
 			overlayUIs[OverlayUI.Chat] = chat;
 			overlayUIs[OverlayUI.DungeonEntrance] = dungeonEntrance;
 			overlayUIs[OverlayUI.DungeonResult] = dungeonResult;
+			overlayUIs[OverlayUI.Pot] = pot;
 		}
 
 		private void Start()
@@ -159,7 +163,7 @@ namespace Mascari4615
 			}
 		}
 
-		public void SetOverlayUI(OverlayUI overlayUI, int[] someData = null)
+		public void SetOverlayUI(OverlayUI overlayUI)
 		{
 			if (curOverlayUI == overlayUI)
 				return;
@@ -171,11 +175,11 @@ namespace Mascari4615
 			if (overlayUIs.TryGetValue(overlayUI, out var uiPanel))
 			{
 				uiPanel.SetActive(true);
-				uiPanel.UpdateUI(someData);
+				uiPanel.UpdateUI();
 			}
 		}
 
-		public void SetContentUI(GameContent gameContent, int[] someData = null)
+		public void SetContentUI(GameContent gameContent)
 		{
 			if (curContentUI == gameContent)
 				return;
@@ -187,7 +191,7 @@ namespace Mascari4615
 			if (contentUIs.TryGetValue(gameContent, out var uiPanel))
 			{
 				uiPanel.SetActive(true);
-				uiPanel.UpdateUI(someData);
+				uiPanel.UpdateUI();
 			}
 		}
 	}

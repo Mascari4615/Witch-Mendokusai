@@ -55,7 +55,7 @@ namespace Mascari4615
 			Application.targetFrameRate = framerateToggle.isOn ? 60 : 30;
 		}
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
 			dungeonExitButton.gameObject.SetActive(GameManager.Instance.CurContent == GameContent.Dungeon);
 		}

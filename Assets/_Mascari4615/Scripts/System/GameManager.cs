@@ -32,12 +32,12 @@ namespace Mascari4615
 			SetContent(GameContent.None);
 		}
 
-		public void SetContent(GameContent newContent, int[] someData = null)
+		public void SetContent(GameContent newContent)
 		{
 			CurContent = newContent;
 			Debug.Log($"SetContent: {LastContent} -> {CurContent}");
 			CameraManager.Instance.SetCamera(CurContent);
-			UIManager.Instance.SetContentUI(CurContent, someData);
+			UIManager.Instance.SetContentUI(CurContent);
 		}
 
 		public void ClearDungeonObjects()

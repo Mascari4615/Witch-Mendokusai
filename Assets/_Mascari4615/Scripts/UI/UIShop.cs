@@ -37,13 +37,8 @@ namespace Mascari4615
 			}
 		}
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
-			if (someData != null)
-			{
-				SOManager.Instance.ShopInventory.ClearBuffer();
-			}
-
 			shopInventoryUI.UpdateUI();
 			itemInventoryUI.UpdateUI();
 		}

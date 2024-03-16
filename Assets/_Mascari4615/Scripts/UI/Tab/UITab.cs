@@ -36,7 +36,7 @@ namespace Mascari4615
 			OpenTabMenu(curPanelIndex);
 		}
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
 		}
 	}

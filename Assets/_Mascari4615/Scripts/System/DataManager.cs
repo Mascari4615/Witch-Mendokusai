@@ -42,7 +42,7 @@ namespace Mascari4615
 
 			soManager = SOManager.Instance;
 
-			foreach (var item in soManager.ItemDataBuffer.InitItems)
+			foreach (ItemData item in soManager.ItemDataBuffer.InitItems)
 			{
 				ItemDic.Add(item.ID, item);
 				switch (item.Grade)
@@ -64,29 +64,29 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (var item in soManager.ItemDataBuffer.InitItems)
+			foreach (ItemData item in soManager.ItemDataBuffer.InitItems)
 			{
-				foreach (var recipe in item.Recipes)
+				foreach (Recipe recipe in item.Recipes)
 				{
-					var recipeToList = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
+					List<int> recipeToList = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
 					recipeToList.Sort();
 					CraftDic.Add(string.Join(',', recipeToList), item.ID);
 				}
 			}
 
-			foreach (var stage in soManager.StageDataBuffer.InitItems)
+			foreach (Stage stage in soManager.StageDataBuffer.InitItems)
 				StageDic.Add(stage.ID, stage);
 
-			foreach (var unit in soManager.Units)
+			foreach (Unit unit in soManager.Units)
 				UnitDic.Add(unit.ID, unit);
-			foreach (var doll in soManager.Dolls)
+			foreach (Doll doll in soManager.Dolls)
 				DollDic.Add(doll.ID, doll);
 			foreach (Dungeon dungeon in soManager.Dungeons)
 				DungeonDic.Add(dungeon.ID, dungeon);
-			foreach (var quest in soManager.QuestDataBuffer.InitItems)
+			foreach (Quest quest in soManager.QuestDataBuffer.InitItems)
 				QuestDic.Add(quest.ID, quest);
 
-			foreach (var mastery in soManager.MasteryDataBuffer.InitItems)
+			foreach (Mastery mastery in soManager.MasteryDataBuffer.InitItems)
 				MasteryDic.Add(mastery.ID, mastery);
 		}
 

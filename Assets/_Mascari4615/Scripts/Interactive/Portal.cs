@@ -7,12 +7,12 @@ namespace Mascari4615
 {
 	public class Portal : InteractiveObject
 	{
-		public Transform TpPos => tpPos;
+		[field: SerializeField] public Transform TpPos { get; private set; }
 
 		[SerializeField] private Stage targetStage;
 		[SerializeField] private int targetPortalIndex;
 		[SerializeField] private Transform tpPos;
-
+	
 		public override void Interact()
 		{
 			StageManager.Instance.LoadStage(targetStage, targetPortalIndex);

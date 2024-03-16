@@ -14,15 +14,15 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI dungeonNameText;
 		[SerializeField] private TextMeshProUGUI dungeonDescriptionText;
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
-			if (someData == null)
-				return;
+			// if (someData == null)
+			//	return;
 
 			_dungeonDatas = new();
-			for (int i = 0; i < someData.Length; i++)
+			// for (int i = 0; i < someData.Length; i++)
 			{
-				if (DataManager.Instance.DungeonDic.TryGetValue(someData[i], out Dungeon dungeon))
+				if (DataManager.Instance.DungeonDic.TryGetValue(0, out Dungeon dungeon))
 					_dungeonDatas.Add(dungeon);
 			}
 

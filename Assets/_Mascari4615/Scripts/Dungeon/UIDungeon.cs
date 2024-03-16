@@ -70,7 +70,7 @@ namespace Mascari4615
 			curSkillSlots = GetComponentsInChildren<UISkillSlot>(true);
 		}
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
 			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
 			UpdateTime(DungeonManager.Instance.DungeonCurTime);

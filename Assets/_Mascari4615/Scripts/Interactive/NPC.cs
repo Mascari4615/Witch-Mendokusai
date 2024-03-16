@@ -9,11 +9,10 @@ namespace Mascari4615
 	public class NPC : InteractiveObject
 	{
 		[SerializeField] private OverlayUI overlayUI;
-		[SerializeField] private int[] someData;
 
 		public override void Interact()
 		{
-			UIManager.Instance.SetOverlayUI(overlayUI, someData);
+			UIManager.Instance.SetOverlayUI(overlayUI);
 		}
 	}
 }
