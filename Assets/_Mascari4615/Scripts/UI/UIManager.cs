@@ -9,34 +9,69 @@ using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
+	public enum OverlayUI
+	{
+		None,
+		Tab,
+		Setting,
+		Shop,
+		Chat,
+		DungeonEntrance,
+		DungeonResult,
+	}
+
 	public class UIManager : Singleton<UIManager>
 	{
-		[SerializeField] private Slider masterVolumeSlider;
-		[SerializeField] private Slider bgmVolumeSlider;
-		[SerializeField] private Slider sfxVolumeSlider;
-
-		[SerializeField] private GameObject settingPanel;
-
-		[SerializeField] private UIFloatingText uiDamage;
-
 		[SerializeField] private Animator transitionAnimator;
-		[SerializeField] private UIPopup popup;
+		private UIPanel curContentUI;
+		private readonly Dictionary<GameContent, UIPanel> contentUIs = new();
 
-		[SerializeField] private Toggle framerateToggle;
+		private UIPanel curOverlayUI;
+		private readonly Dictionary<OverlayUI, UIPanel> overlayUIs = new();
 
 		public UITab Tab { get; private set; }
 		public CutSceneModule CutSceneModule { get; private set; }
+		public UISetting Setting { get; private set; }
+		private UIFloatingText damage;
+		private UIPopup popup;
+		private UIShop shop;
+		private UIChat chat;
+		private UIDungeonEntrance dungeonEntrance;
+		private UIDungeon dungeon;
+		private UIDungeonResult dungeonResult;
 
 		protected override void Awake()
 		{
 			base.Awake();
+
 			Tab = FindObjectOfType<UITab>(true);
 			CutSceneModule = FindObjectOfType<CutSceneModule>(true);
+			damage = FindObjectOfType<UIFloatingText>(true);
+			popup = FindObjectOfType<UIPopup>(true);
+			Setting = FindObjectOfType<UISetting>(true);
+			shop = FindObjectOfType<UIShop>(true);
+			chat = FindObjectOfType<UIChat>(true);
+			dungeonEntrance = FindObjectOfType<UIDungeonEntrance>(true);
+			dungeon = FindObjectOfType<UIDungeon>(true);
+			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
+
+			contentUIs[GameContent.Dungeon] = FindObjectOfType<UIDungeon>(true);
+
+			overlayUIs[OverlayUI.Tab] = Tab;
+			overlayUIs[OverlayUI.Setting] = Setting;
+			overlayUIs[OverlayUI.Shop] = shop;
+			overlayUIs[OverlayUI.Chat] = chat;
+			overlayUIs[OverlayUI.DungeonEntrance] = dungeonEntrance;
+			overlayUIs[OverlayUI.DungeonResult] = dungeonResult;
 		}
 
 		private void Start()
 		{
-			InitVolumeSliderValue();
+			foreach (UIPanel uiPanel in contentUIs.Values)
+				uiPanel.Init();
+
+			foreach (UIPanel uiPanel in overlayUIs.Values)
+				uiPanel.Init();
 		}
 
 		private void Update()
@@ -44,62 +79,12 @@ namespace Mascari4615
 			SOManager.Instance.IsMouseOnUI.RuntimeValue = EventSystem.current.IsPointerOverGameObject();
 		}
 
-		private void InitVolumeSliderValue()
-		{
-			masterVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.Master);
-			bgmVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.BGM);
-			sfxVolumeSlider.value = AudioManager.Instance.GetVolume(AudioManager.BusType.SFX);
-		}
-
-		public void UpdateVolume(int busType) => UpdateVolume((AudioManager.BusType)busType);
-		public void UpdateVolume(AudioManager.BusType busType)
-		{
-			switch (busType)
-			{
-				case AudioManager.BusType.Master:
-					AudioManager.Instance.SetVolume(AudioManager.BusType.Master, masterVolumeSlider.value);
-					break;
-				case AudioManager.BusType.BGM:
-					AudioManager.Instance.SetVolume(AudioManager.BusType.BGM, bgmVolumeSlider.value);
-					break;
-				case AudioManager.BusType.SFX:
-					AudioManager.Instance.SetVolume(AudioManager.BusType.SFX, sfxVolumeSlider.value);
-					break;
-				default:
-					throw new ArgumentOutOfRangeException(nameof(busType), busType, null);
-			}
-		}
-
-		public void ToggleFramerate()
-		{
-			Application.targetFrameRate = framerateToggle.isOn ? 60 : 30;
-		}
-
-		public void ToggleSetting()
-		{
-			if (settingPanel.activeSelf)
-			{
-				settingPanel.SetActive(false);
-				TimeManager.Instance.Resume();
-			}
-			else
-			{
-				if (TimeManager.Instance.Paused)
-					return;
-
-				settingPanel.SetActive(true);
-				TimeManager.Instance.Pause();
-			}
-
-			// settingPanel.SetActive(!settingPanel.activeSelf);
-		}
-
 		public void PopDamage(Vector3 pos, int damge)
 		{
-			StartCoroutine(uiDamage.AniTextUI(pos, TextType.Damage, damge.ToString()));
+			StartCoroutine(damage.AniTextUI(pos, TextType.Damage, damge.ToString()));
 		}
 
-		// 가상함수를 전달받아 처리
+		// 함수를 전달받아 처리
 		public void Transition(Action actionDuringTransition)
 		{
 			// Debug.Log(nameof(Transition) + " " + actionDuringTransition);
@@ -138,6 +123,58 @@ namespace Mascari4615
 		public void Popup(Artifact artifact)
 		{
 			popup.Popup(artifact);
+		}
+
+		public void ToggleOverlayUI_Tab()
+		{
+			if (curOverlayUI != null)
+			{
+				if (curContentUI != Setting)
+					SetOverlayUI(OverlayUI.None);
+			}
+			else
+			{
+				SetOverlayUI(OverlayUI.Tab);
+			}
+		}
+
+		public void ToggleOverlayUI_Setting()
+		{
+			if (curOverlayUI != null)
+			{
+				SetOverlayUI(OverlayUI.None);
+			}
+			else
+			{
+				SetOverlayUI(OverlayUI.Setting);
+			}
+		}
+
+		public void SetOverlayUI(OverlayUI overlayUI, int[] someData = null)
+		{
+			if (curOverlayUI != null)
+				curOverlayUI.SetActive(false);
+
+			curOverlayUI = null;
+			if (overlayUIs.TryGetValue(overlayUI, out var uiPanel))
+			{
+				curOverlayUI = uiPanel;
+				uiPanel.SetActive(true);
+				uiPanel.UpdateUI(someData);
+			}
+		}
+
+		public void SetContentUI(GameContent gameContent, int[] someData = null)
+		{
+			if (curContentUI != null)
+				curContentUI.SetActive(false);
+
+			if (contentUIs.TryGetValue(gameContent, out var uiPanel))
+			{
+				curContentUI = uiPanel;
+				uiPanel.SetActive(true);
+				uiPanel.UpdateUI(someData);
+			}
 		}
 	}
 }

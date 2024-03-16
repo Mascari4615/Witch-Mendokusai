@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -28,10 +27,6 @@ namespace Mascari4615
 		private MonsterSpawner monsterSpawner;
 		private ExpManager expChecker;
 
-		private UIDungeonEntrance uiDungeonEntrance;
-		private UIDungeon uiDungeon;
-		private UIDungeonResult uiStageResult;
-
 		protected override void Awake()
 		{
 			base.Awake();
@@ -40,24 +35,6 @@ namespace Mascari4615
 			monsterSpawner = FindObjectOfType<MonsterSpawner>(true);
 
 			expChecker = FindObjectOfType<ExpManager>(true);
-
-			uiDungeonEntrance = FindObjectOfType<UIDungeonEntrance>(true);
-			
-			uiDungeon = FindObjectOfType<UIDungeon>(true);
-			uiDungeon.Init();
-		
-			uiStageResult = FindObjectOfType<UIDungeonResult>(true);
-		}
-
-		private void Start()
-		{
-			uiStageResult.SetActive(false);
-		}
-
-		public void OpenDungeonEntranceUI(List<Dungeon> dungeonDatas)
-		{
-			Debug.Log(nameof(OpenDungeonEntranceUI));
-			uiDungeonEntrance.OpenCanvas(dungeonDatas);
 		}
 
 		public void CombatIntro()
@@ -72,13 +49,9 @@ namespace Mascari4615
 
 			void InitDungeonAndPlayer()
 			{
+				GameManager.Instance.SetContent(GameContent.Dungeon);
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
-				GameManager.Instance.SetPlayerState(PlayerState.Dungeon);
-
 				monsterSpawner.InitWaves(dungeon);
-
-				uiDungeon.SetActive(true);
-				uiStageResult.SetActive(false);
 
 				expChecker.Init();
 				masteryManager.Init();
@@ -108,7 +81,6 @@ namespace Mascari4615
 				UpdateDifficulty();
 
 				monsterSpawner.UpdateWaves();
-				uiDungeon.UpdateUI();
 
 				yield return ws01;
 			}
@@ -121,10 +93,7 @@ namespace Mascari4615
 			// Stop DungeonLoop
 			StopAllCoroutines();
 			monsterSpawner.StopWave();
-
-			uiStageResult.Init();
-			uiStageResult.SetActive(true);
-			uiDungeon.SetActive(false);
+			UIManager.Instance.SetOverlayUI(OverlayUI.DungeonResult);
 		}
 
 		public void Continue()
@@ -134,10 +103,8 @@ namespace Mascari4615
 
 			void ResetDungeonAndPlayer()
 			{
-				uiStageResult.SetActive(false);
-
+				GameManager.Instance.SetContent(GameContent.None);
 				GameManager.Instance.ClearDungeonObjects();
-				GameManager.Instance.SetPlayerState(PlayerState.Peaceful);
 
 				masteryManager.ClearMasteryEffect();
 				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);

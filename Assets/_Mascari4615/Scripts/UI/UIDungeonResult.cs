@@ -4,25 +4,15 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIDungeonResult : MonoBehaviour
+	public class UIDungeonResult : UIPanel
 	{
-		[SerializeField] private CanvasGroup canvasGroup;
-
-		public void Init()
-		{
-			// 게임 결과 정보 업데이트
-		}
-
-		public void SetActive(bool active)
-		{
-			canvasGroup.alpha = active ? 1 : 0;
-			canvasGroup.blocksRaycasts = active;
-			canvasGroup.interactable = active;
-		}
-
 		public void Continue()
 		{
 			DungeonManager.Instance.Continue();
+		}
+
+		public override void UpdateUI(int[] someData = null)
+		{
 		}
 	}
 }

@@ -60,7 +60,7 @@ namespace Mascari4615
 			}
 		}
 
-		public override void UpdateUI()
+		public override void UpdateUI(int[] someData = null)
 		{
 			selectNewEquipmentPanel.SetActive(false);
 

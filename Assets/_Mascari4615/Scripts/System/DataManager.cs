@@ -18,6 +18,7 @@ namespace Mascari4615
 		public readonly Dictionary<int, Quest> QuestDic = new();
 		public readonly Dictionary<int, Unit> UnitDic = new();
 		public readonly Dictionary<int, Doll> DollDic = new();
+		public readonly Dictionary<int, Dungeon> DungeonDic = new();
 		public readonly Dictionary<int, ItemData> ItemDic = new();
 		public readonly Dictionary<int, ItemData> PotionDic = new();
 		public readonly Dictionary<int, ItemData> CommonItemDic = new();
@@ -80,6 +81,8 @@ namespace Mascari4615
 				UnitDic.Add(unit.ID, unit);
 			foreach (var doll in soManager.Dolls)
 				DollDic.Add(doll.ID, doll);
+			foreach (Dungeon dungeon in soManager.Dungeons)
+				DungeonDic.Add(dungeon.ID, dungeon);
 			foreach (var quest in soManager.QuestDataBuffer.InitItems)
 				QuestDic.Add(quest.ID, quest);
 

@@ -14,12 +14,12 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			GameManager.Instance?.SkillObjectBuffer.AddItem(gameObject);
+			SOManager.Instance.SkillObjectBuffer.AddItem(gameObject);
 		}
 
 		private void OnDisable()
 		{
-			GameManager.Instance?.SkillObjectBuffer.RemoveItem(gameObject);
+			SOManager.Instance.SkillObjectBuffer.RemoveItem(gameObject);
 		}
 
 		public void InitContext(UnitObject unitObject)

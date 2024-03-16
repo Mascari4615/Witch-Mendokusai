@@ -36,7 +36,7 @@ namespace Mascari4615
 		{
 			while (true)
 			{
-				var target = GameManager.Instance.MonsterObjectBuffer.RuntimeItems.Count > 0 ? NearestTarget() : null;
+				var target = SOManager.Instance.MonsterObjectBuffer.RuntimeItems.Count > 0 ? NearestTarget() : null;
 
 				if (target == null)
 				{
@@ -97,7 +97,7 @@ namespace Mascari4615
 
 			// TODO : 레이쏴서 벽 뒤에 있으면 Continue
 
-			foreach (var target in GameManager.Instance.MonsterObjectBuffer.RuntimeItems)
+			foreach (var target in SOManager.Instance.MonsterObjectBuffer.RuntimeItems)
 			{
 				// Debug.Log(target.gameObject.name);
 				var distance = Vector3.Distance(playerPos, target.transform.position);

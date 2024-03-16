@@ -9,6 +9,7 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
 	public class Inventory : DataBuffer<Item>, ISerializationCallbackReceiver
 	{
+		private const int NONE = -1;
 		private const int DefaultCapacity = 30;
 		public int Capacity { get; private set; } = DefaultCapacity;
 		[NonSerialized] private readonly List<UIItemInventory> inventoryUIs = new();
@@ -20,20 +21,19 @@ namespace Mascari4615
 
 		private int FindEmptySlotIndex(int startIndex = 0)
 		{
-			for (var i = startIndex; i < Capacity; i++)
+			for (int i = startIndex; i < Capacity; i++)
 			{
 				if (RuntimeItems[i] == null)
 					return i;
 			}
-
-			return -1;
+			return NONE;
 		}
 
 		public int FindItemSlotIndex(ItemData target, int startIndex = 0)
 		{
-			for (var i = startIndex; i < Capacity; i++)
+			for (int i = startIndex; i < Capacity; i++)
 			{
-				var current = RuntimeItems[i];
+				Item current = RuntimeItems[i];
 				if (current == null)
 					continue;
 
@@ -45,17 +45,17 @@ namespace Mascari4615
 					return i;
 			}
 
-			return -1;
+			return NONE;
 		}
 
 		public int FindEquipmentByGuid(Guid? guid)
 		{
 			if (guid == null)
-				return -1;
+				return NONE;
 
-			for (var i = 0; i < Capacity; i++)
+			for (int i = 0; i < Capacity; i++)
 			{
-				var current = RuntimeItems[i];
+				Item current = RuntimeItems[i];
 				if (current == null)
 					continue;
 
@@ -63,7 +63,7 @@ namespace Mascari4615
 					return i;
 			}
 
-			return -1;
+			return NONE;
 		}
 
 		/// <summary> 인벤토리에 아이템 추가
@@ -79,7 +79,7 @@ namespace Mascari4615
 			if (itemData.IsCountable)
 			{
 				var findNextCountable = true;
-				index = -1;
+				index = NONE;
 
 				while (amount > 0)
 				{
@@ -90,7 +90,7 @@ namespace Mascari4615
 						index = FindItemSlotIndex(itemData, index + 1);
 
 						// 개수 여유있는 기존재 슬롯이 더이상 없다고 판단될 경우, 빈 슬롯부터 탐색 시작
-						if (index == -1)
+						if (index == NONE)
 						{
 							findNextCountable = false;
 						}
@@ -111,7 +111,7 @@ namespace Mascari4615
 						index = FindEmptySlotIndex(index + 1);
 
 						// 빈 슬롯조차 없는 경우 종료
-						if (index == -1)
+						if (index == NONE)
 						{
 							break;
 						}
@@ -144,7 +144,7 @@ namespace Mascari4615
 				if (amount == 1)
 				{
 					index = FindEmptySlotIndex();
-					if (index != -1)
+					if (index != NONE)
 					{
 						// 아이템을 생성하여 슬롯에 추가
 						RuntimeItems[index] = itemData.CreateItem();
@@ -155,14 +155,14 @@ namespace Mascari4615
 				}
 
 				// 2-2. 2개 이상의 수량 없는 아이템을 동시에 추가하는 경우
-				index = -1;
+				index = NONE;
 				for (; amount > 0; amount--)
 				{
 					// 아이템 넣은 인덱스의 다음 인덱스부터 슬롯 탐색
 					index = FindEmptySlotIndex(index + 1);
 
 					// 다 넣지 못한 경우 루프 종료
-					if (index == -1)
+					if (index == NONE)
 					{
 						break;
 					}
@@ -193,16 +193,14 @@ namespace Mascari4615
 
 		public List<InventorySlotData> GetInventoryData()
 		{
-			List<InventorySlotData> temp = new(Capacity);
-			for (var i = 0; i < RuntimeItems.Count; i++)
+			List<InventorySlotData> InventoryData = new(Capacity);
+			for (int i = 0; i < RuntimeItems.Count; i++)
 			{
 				if (RuntimeItems[i] == null)
 					continue;
-
-				temp.Add(new InventorySlotData(i, RuntimeItems[i]));
+				InventoryData.Add(new InventorySlotData(i, RuntimeItems[i]));
 			}
-
-			return temp;
+			return InventoryData;
 		}
 
 		private bool IsValidIndex(int index)
@@ -213,7 +211,7 @@ namespace Mascari4615
 		public ItemData GetItemData(int index)
 		{
 			if (!IsValidIndex(index)) return null;
-			return RuntimeItems[index] == null ? null : RuntimeItems[index].Data;
+			return RuntimeItems[index]?.Data;
 		}
 
 		public Item GetItem(int index)
@@ -231,14 +229,10 @@ namespace Mascari4615
 			UpdateSlot(index);
 		}
 
-		// OnItemRemove.Raise();
-
 		private void UpdateSlot(params int[] indices)
 		{
-			foreach (var i in indices)
-			{
+			foreach (int i in indices)
 				UpdateSlot(i);
-			}
 		}
 
 		public void UpdateSlot(int index)
@@ -250,9 +244,9 @@ namespace Mascari4615
 					if (RuntimeItems[index].IsEmpty)
 						RuntimeItems[index] = null;
 
-			var item = RuntimeItems[index];
+			Item item = RuntimeItems[index];
 
-			foreach (var inventoryUI in inventoryUIs)
+			foreach (UIItemInventory inventoryUI in inventoryUIs)
 			{
 				inventoryUI.UpdateSlotUI(index, item);
 

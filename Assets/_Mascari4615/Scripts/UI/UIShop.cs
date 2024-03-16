@@ -20,7 +20,7 @@ namespace Mascari4615
 			itemInventoryUI.Init();
 		}
 
-		public override void UpdateUI()
+		public override void UpdateUI(int[] someData = null)
 		{
 			shopInventoryUI.UpdateUI();
 			itemInventoryUI.UpdateUI();

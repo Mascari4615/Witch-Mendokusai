@@ -7,33 +7,12 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class UIDungeon : MonoBehaviour
+	public class UIDungeon : UIPanel
 	{
-		[field: Header("_" + nameof(UIDungeon))]
 		[SerializeField] private TextMeshProUGUI timeText;
 		[SerializeField] private TextMeshProUGUI difficultyText;
 		[SerializeField] private Image difficultyCircle;
-		private CanvasGroup canvasGroup;
 		private UISkillSlot[] curSkillSlots;
-
-		public void Init()
-		{
-			canvasGroup = GetComponent<CanvasGroup>();
-			curSkillSlots = GetComponentsInChildren<UISkillSlot>(true);
-		}
-
-		public void SetActive(bool active)
-		{
-			canvasGroup.alpha = active ? 1 : 0;
-			canvasGroup.blocksRaycasts = active;
-			canvasGroup.interactable = active;
-		}
-
-		public void UpdateUI()
-		{
-			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
-			UpdateTime(DungeonManager.Instance.DungeonCurTime);
-		}
 
 		private void UpdateTime(TimeSpan timeSpan)
 		{
@@ -83,6 +62,17 @@ namespace Mascari4615
 
 			for (int i = 0; i < curSkillSlots.Length; i++)
 				curSkillSlots[i].gameObject.SetActive(i < skillCount);
+		}
+
+		public override void Init()
+		{
+			curSkillSlots = GetComponentsInChildren<UISkillSlot>(true);
+		}
+
+		public override void UpdateUI(int[] someData = null)
+		{
+			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
+			UpdateTime(DungeonManager.Instance.DungeonCurTime);
 		}
 	}
 }

@@ -13,16 +13,14 @@ namespace Mascari4615
 		{
 			clickToolTip = GetComponentInChildren<ToolTip>(true);
 			itemInventoryUI = GetComponentInChildren<UIItemInventory>(true);
-			Debug.Log(Equals(itemInventoryUI, null));
 
 			itemInventoryUI.Init();
 			foreach (UISlot slot in itemInventoryUI.Slots)
 				slot.ToolTipTrigger.SetClickToolTip(clickToolTip);
 		}
 
-		public override void UpdateUI()
+		public override void UpdateUI(int[] someData = null)
 		{
-			Debug.Log(Equals(itemInventoryUI, null));
 			itemInventoryUI.UpdateUI();
 		}
 	}

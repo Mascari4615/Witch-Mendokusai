@@ -17,19 +17,18 @@ namespace Mascari4615
 			cinemachineBrain.m_UpdateMethod = CinemachineBrain.UpdateMethod.FixedUpdate;
 		}
 
-		public void SetCamera(int index)
+		public void SetCamera(GameContent content)
 		{
-			cinemachineBrain.m_DefaultBlend.m_Style = index == (int)PlayerState.Dungeon ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
+			cinemachineBrain.m_DefaultBlend.m_Style = (int)content == (int)GameContent.Dungeon ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
 
 			for (int i = 0; i < virtualCameras.Length; i++)
 			{
-				virtualCameras[i].Priority = i == index ? 10 : 0;
+				virtualCameras[i].Priority = i == (int)content ? 10 : 0;
 			}
 		}
 
 		private void LateUpdate()
 		{
-			// Player´Â ½Ì±ÛÅæÀÌ±â¿¡ Àü¿ªÀûÀ¸·Î Á¢±ÙÇÒ ¼ö ÀÖ½À´Ï´Ù.
 			Vector3 direction = (PlayerController.Instance.transform.position - cinemachineBrain.transform.position).normalized;
 			// RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Mathf.Infinity, 1 << LayerMask.NameToLayer("EnvironmentObject"));
 			RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Mathf.Infinity);
@@ -45,7 +44,7 @@ namespace Mascari4615
 			}
 		}
 		
-		public void »Ç»ß»Ç»ß»Ç()
+		public void ë½€ì‚ë½€ì‚ë½€()
 		{
 			impulseSource.GenerateImpulse();
 		}

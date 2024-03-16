@@ -3,65 +3,49 @@ using UnityEngine.SceneManagement;
 
 namespace Mascari4615
 {
-	public enum PlayerState
+	public enum GameContent
 	{
-		Peaceful,
-		Interact,
-		Dungeon
+		None,
+		Dungeon,
 	}
 
 	public class GameManager : Singleton<GameManager>
 	{
-		[SerializeField] private UIManager uiManager;
-		public PlayerState CurPlayerState { get; private set; } = PlayerState.Peaceful;
-
-
-		[SerializeField] private GameObjectBuffer spawnCircleObjectBuffer;
-		public GameObjectBuffer SpawnCircleObjectBuffer => spawnCircleObjectBuffer;
-		[SerializeField] private GameObjectBuffer monsterObjectBuffer;
-		public GameObjectBuffer MonsterObjectBuffer => monsterObjectBuffer;
-		[SerializeField] private GameObjectBuffer skillObjectBuffer;
-		public GameObjectBuffer SkillObjectBuffer => skillObjectBuffer;
+		public GameContent LastContent { get; private set; } = GameContent.None;
+		public GameContent CurContent { get; private set; } = GameContent.None;
 
 		protected override void Awake()
 		{
 			base.Awake();
+
 			SceneManager.sceneLoaded += OnSceneLoaded;
 			ClearDungeonObjects();
 		}
+
 		private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
 		{
-			spawnCircleObjectBuffer.ClearBuffer();
-			monsterObjectBuffer.ClearBuffer();
-			SOManager.Instance.DropsBuffer.ClearBuffer();
-			skillObjectBuffer.ClearBuffer();
+			ClearDungeonObjects();
 		}
 
 		private void Start()
 		{
-			SetPlayerState(PlayerState.Peaceful);
-
-			// if (Application.isMobilePlatform)
-			// Application.targetFrameRate = 30;
+			SetContent(GameContent.None);
 		}
 
-		public void SetPlayerState(int newPlayerState)
+		public void SetContent(GameContent newContent, int[] someData = null)
 		{
-			SetPlayerState((PlayerState)newPlayerState);
-		}
-
-		public void SetPlayerState(PlayerState newPlayerState)
-		{
-			CurPlayerState = newPlayerState;
-			CameraManager.Instance.SetCamera((int)CurPlayerState);
+			CurContent = newContent;
+			Debug.Log($"SetContent: {LastContent} -> {CurContent}");
+			CameraManager.Instance.SetCamera(CurContent);
+			UIManager.Instance.SetContentUI(CurContent, someData);
 		}
 
 		public void ClearDungeonObjects()
 		{
-			spawnCircleObjectBuffer.ClearObjects();
-			monsterObjectBuffer.ClearObjects();
+			SOManager.Instance.SpawnCircleBuffer.ClearObjects();
+			SOManager.Instance.MonsterObjectBuffer.ClearObjects();
 			SOManager.Instance.DropsBuffer.ClearObjects();
-			skillObjectBuffer.ClearObjects();
+			SOManager.Instance.SkillObjectBuffer.ClearObjects();
 		}
 	}
 }

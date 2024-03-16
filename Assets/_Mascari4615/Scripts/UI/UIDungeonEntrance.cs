@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIDungeonEntrance : MonoBehaviour
+	public class UIDungeonEntrance : UIPanel
 	{
 		[SerializeField] private GameObject[] dungeonSelectButtons;
 		private int _curDungeonIndex = 0;
@@ -14,14 +14,21 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI dungeonNameText;
 		[SerializeField] private TextMeshProUGUI dungeonDescriptionText;
 
-		public void OpenCanvas(List<Dungeon> dungeonDatas)
+		public override void UpdateUI(int[] someData = null)
 		{
-			Debug.Log(nameof(OpenCanvas));
-			gameObject.SetActive(true);
-			for (int i = 0; i < dungeonSelectButtons.Length; i++)
-				dungeonSelectButtons[i].gameObject.SetActive(dungeonDatas.Count > i);
+			if (someData == null)
+				return;
 
-			this._dungeonDatas = dungeonDatas;
+			_dungeonDatas = new();
+			for (int i = 0; i < someData.Length; i++)
+			{
+				if (DataManager.Instance.DungeonDic.TryGetValue(someData[i], out Dungeon dungeon))
+					_dungeonDatas.Add(dungeon);
+			}
+
+			for (int i = 0; i < dungeonSelectButtons.Length; i++)
+				dungeonSelectButtons[i].SetActive(_dungeonDatas.Count > i);
+
 			SelectDungeon(0);
 		}
 
@@ -39,10 +46,9 @@ namespace Mascari4615
 			dungeonDescriptionText.text = curDungeon.Description;
 		}
 
-		public void StartCombat()
+		public void EnterTheDungeon()
 		{
 			DungeonManager.Instance.StartDungeon(_dungeonDatas[_curDungeonIndex]);
-			gameObject.SetActive(false);
 		}
 	}
 }

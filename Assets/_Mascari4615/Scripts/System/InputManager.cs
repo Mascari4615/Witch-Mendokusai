@@ -16,9 +16,9 @@ namespace Mascari4615
 		{
 			// UIManager
 			if (Input.GetKeyDown(KeyCode.Tab))
-				UIManager.Instance.Tab.ToggleTabMenu();
+				UIManager.Instance.ToggleOverlayUI_Tab();
 			if (Input.GetKeyDown(KeyCode.Escape))
-				UIManager.Instance.ToggleSetting();
+				UIManager.Instance.ToggleOverlayUI_Setting();
 
 			// Player
 			if (Input.GetKeyDown(KeyCode.F))

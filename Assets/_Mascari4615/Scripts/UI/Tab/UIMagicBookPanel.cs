@@ -22,7 +22,7 @@ namespace Mascari4615
 			}
 		}
 
-		public override void UpdateUI()
+		public override void UpdateUI(int[] someData = null)
 		{
 			foreach (UIChapter chapter in chapters)
 				chapter.UpdateUI();
