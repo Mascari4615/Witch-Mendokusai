@@ -23,10 +23,11 @@ namespace Mascari4615
 	public class UIManager : Singleton<UIManager>
 	{
 		[SerializeField] private Animator transitionAnimator;
-		private UIPanel curContentUI;
+
+		private GameContent curContentUI;
 		private readonly Dictionary<GameContent, UIPanel> contentUIs = new();
 
-		private UIPanel curOverlayUI;
+		private OverlayUI curOverlayUI;
 		private readonly Dictionary<OverlayUI, UIPanel> overlayUIs = new();
 
 		public UITab Tab { get; private set; }
@@ -68,10 +69,18 @@ namespace Mascari4615
 		private void Start()
 		{
 			foreach (UIPanel uiPanel in contentUIs.Values)
+			{
 				uiPanel.Init();
+				uiPanel.SetActive(false);
+			}
 
 			foreach (UIPanel uiPanel in overlayUIs.Values)
+			{
 				uiPanel.Init();
+				uiPanel.SetActive(false);
+			}
+
+			SetOverlayUI(OverlayUI.None);
 		}
 
 		private void Update()
@@ -127,9 +136,9 @@ namespace Mascari4615
 
 		public void ToggleOverlayUI_Tab()
 		{
-			if (curOverlayUI != null)
+			if (curOverlayUI != OverlayUI.None)
 			{
-				if (curContentUI != Setting)
+				if (curOverlayUI != OverlayUI.Setting)
 					SetOverlayUI(OverlayUI.None);
 			}
 			else
@@ -140,7 +149,7 @@ namespace Mascari4615
 
 		public void ToggleOverlayUI_Setting()
 		{
-			if (curOverlayUI != null)
+			if (curOverlayUI != OverlayUI.None)
 			{
 				SetOverlayUI(OverlayUI.None);
 			}
@@ -152,13 +161,15 @@ namespace Mascari4615
 
 		public void SetOverlayUI(OverlayUI overlayUI, int[] someData = null)
 		{
-			if (curOverlayUI != null)
-				curOverlayUI.SetActive(false);
+			if (curOverlayUI == overlayUI)
+				return;
 
-			curOverlayUI = null;
+			if (curOverlayUI != OverlayUI.None)
+				overlayUIs[curOverlayUI].SetActive(false);
+
+			curOverlayUI = overlayUI;
 			if (overlayUIs.TryGetValue(overlayUI, out var uiPanel))
 			{
-				curOverlayUI = uiPanel;
 				uiPanel.SetActive(true);
 				uiPanel.UpdateUI(someData);
 			}
@@ -166,13 +177,15 @@ namespace Mascari4615
 
 		public void SetContentUI(GameContent gameContent, int[] someData = null)
 		{
-			if (curContentUI != null)
-				curContentUI.SetActive(false);
+			if (curContentUI == gameContent)
+				return;
 
-			curOverlayUI = null;
+			if (curContentUI != GameContent.None)
+				contentUIs[curContentUI].SetActive(false);
+
+			curContentUI = gameContent;
 			if (contentUIs.TryGetValue(gameContent, out var uiPanel))
 			{
-				curContentUI = uiPanel;
 				uiPanel.SetActive(true);
 				uiPanel.UpdateUI(someData);
 			}

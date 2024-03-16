@@ -178,6 +178,29 @@ namespace Mascari4615
 			return amount;
 		}
 
+		public void Remove(int index, int amount = 1)
+		{
+			if (index < 0 || index >= Capacity)
+				return;
+
+			Item item = RuntimeItems[index];
+			if (item == null)
+				return;
+
+			if (item.Data.IsCountable)
+			{
+				item.SetAmount(item.Amount - amount);
+				if (item.IsEmpty)
+					RuntimeItems[index] = null;
+			}
+			else
+			{
+				RuntimeItems[index] = null;
+			}
+
+			UpdateSlot(index);
+		}
+
 		public void LoadSaveItems(List<InventorySlotData> savedItems)
 		{
 			RuntimeItems = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();

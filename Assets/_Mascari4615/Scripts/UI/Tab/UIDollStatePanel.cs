@@ -68,9 +68,13 @@ namespace Mascari4615
 				return;
 
 			curDollSlot.SetArtifact(DataManager.Instance.DollDic[DataManager.Instance.CurGameData.lastDollIndex]);
-			
+			curDollSlot.UpdateUI();
+
 			for (int i = 0; i < curStuffsSlot.Length; i++)
+			{
 				curStuffsSlot[i].SetArtifact(DataManager.Instance.GetEquipment(i));
+				curStuffsSlot[i].UpdateUI();
+			}
 		}
 
 		private void OpenChangeEuqipmentPanel(int equipmentIndex)

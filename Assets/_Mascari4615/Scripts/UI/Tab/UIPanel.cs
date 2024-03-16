@@ -17,7 +17,7 @@ namespace Mascari4615
 
 		public void SetActive(bool newActive)
 		{
-			Debug.Log($"{name} SetActive {newActive}");
+			// Debug.Log($"{name} SetActive {newActive}");
 			active = newActive;
 
 			//if (canvasGroup == null && TryGetComponent(out canvasGroup) == false)

@@ -29,10 +29,10 @@ namespace Mascari4615
 
 		private bool isInit = false;
 
-		public void Init()
+		public virtual bool Init()
 		{
 			if (isInit)
-				return;
+				return false;
 			isInit = true;
 
 			button = GetComponent<Button>();
@@ -48,6 +48,8 @@ namespace Mascari4615
 
 			if (defaultArtifact != null)
 				SetArtifact(defaultArtifact);
+
+			return true;
 		}
 
 		public void SetSlotIndex(int index) => Index = index;
@@ -58,12 +60,11 @@ namespace Mascari4615
 			Artifact = artifact;
 			this.amount = amount;
 
-			UpdateUI();
 			if (ToolTipTrigger)
 				ToolTipTrigger.SetToolTipContent(Artifact);
 		}
 
-		public void UpdateUI()
+		public virtual void UpdateUI()
 		{
 			if (Artifact)
 			{

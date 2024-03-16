@@ -29,14 +29,27 @@ namespace Mascari4615
 			if (someData == null)
 				return;
 
-			if (TryGetChatData("테스트", out List<LineData> chatDatas) == false)
+			if (TryGetChatData("테스트", out curChatDatas) == false)
 				return;
 
 			SOManager.Instance.IsChatting.RuntimeValue = true;
-			curChatDatas = chatDatas;
 			// chatTargetGroup.m_Targets[1].target = unitTransform;
 
 			NextChat();
+			StartCoroutine(CheckInput());
+		}
+
+		public IEnumerator CheckInput()
+		{
+			while (true)
+			{
+				if (Input.GetKeyDown(KeyCode.Space))
+				{
+					NextChat();
+				}
+
+				yield return null;
+			}
 		}
 
 		public void NextChat()
@@ -65,6 +78,8 @@ namespace Mascari4615
 		{
 			SOManager.Instance.IsChatting.RuntimeValue = false;
 			curChatDatas = null;
+
+			StopAllCoroutines();
 
 			// 바로 null로 만드니 블렌드 전에 뚝 끊김
 			// 어차피 새로 Chat 시작하면 target을 그 때 설정하니까

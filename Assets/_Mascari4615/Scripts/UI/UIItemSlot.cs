@@ -9,23 +9,53 @@ using TMPro;
 
 namespace Mascari4615
 {
+	public enum PriceType
+	{
+		Buy,
+		Sell
+	}
+	
 	public class UIItemSlot : UISlot, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 	{
-		[SerializeField] protected TextMeshProUGUI priceText;
+		protected TextMeshProUGUI priceText;
 	
 		public Inventory Inventory { get; private set; }
 
 		public bool onlyOneItem = false;
 		public bool canPlayerSetItem = true;
 		public bool canDrag = true;
+		private PriceType priceType = PriceType.Buy;
 
 		public void SetInventory(Inventory inventory) => Inventory = inventory;
-
-		public override void SetArtifact(Artifact artifact, int amount = 1)
+		public void SetPriceType(PriceType priceType)
 		{
-			base.SetArtifact(artifact, amount);
-			if (priceText != null)
-				priceText.text = (artifact as ItemData)?.SalePrice.ToString();
+			this.priceType = priceType;
+			UpdateUI();
+		}
+
+		public override bool Init()
+		{
+			if (base.Init() == false)
+				return false;
+
+			priceText = transform.Find("[Text] Price").GetComponent<TextMeshProUGUI>();
+
+			return true;
+		}
+
+		public override void UpdateUI()
+		{
+			base.UpdateUI();
+			
+			if (Artifact)
+			{
+				ItemData itemData = Artifact as ItemData;
+				priceText.text = (priceType == PriceType.Buy) ? itemData.PurchasePrice.ToString() : itemData.SalePrice.ToString();
+			}
+			else
+			{
+				priceText.text = string.Empty;
+			}
 		}
 
 		public void OnBeginDrag(PointerEventData eventData)

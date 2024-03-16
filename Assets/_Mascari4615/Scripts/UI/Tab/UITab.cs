@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mascari4615
@@ -15,17 +16,18 @@ namespace Mascari4615
 			curPanelIndex = newPanelIndex;
 
 			for (int i = 0; i < tabPanels.Length; i++)
+			{
 				tabPanels[i].gameObject.SetActive(i == curPanelIndex);
+			}
 			tabPanels[curPanelIndex].UpdateUI();
 		}
 
 		public override void Init()
 		{
-			tabPanels = GetComponentsInChildren<UIPanel>(true);
+			tabPanels = GetComponentsInChildren<UIPanel>(true).Where(panel => panel != this).ToArray();
 			foreach (UIPanel tabPanel in tabPanels)
 			{
-				if (tabPanel != this)
-					tabPanel.Init();
+				tabPanel.Init();
 			}
 		}
 
