@@ -57,7 +57,7 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			dungeonExitButton.gameObject.SetActive(GameManager.Instance.CurContent == GameContent.Dungeon);
+			dungeonExitButton.gameObject.SetActive(UIManager.Instance.CurCanvas == MCanvasType.Dungeon);
 		}
 
 		public override void OnOpen()

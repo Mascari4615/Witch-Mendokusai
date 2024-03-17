@@ -8,11 +8,14 @@ namespace Mascari4615
 {
 	public class NPC : InteractiveObject
 	{
-		[SerializeField] private OverlayUI overlayUI;
+		[SerializeField] private MPanelType overlayUI;
 
 		public override void Interact()
 		{
-			UIManager.Instance.SetOverlayUI(overlayUI);
+			if (overlayUI == MPanelType.Chat)
+				UIManager.Instance.Chat.SetNPC(transform);
+
+			UIManager.Instance.SetOverlay(overlayUI);
 		}
 	}
 }

@@ -5,6 +5,13 @@ using UnityEngine;
 
 namespace Mascari4615
 {
+	public enum CameraType
+	{
+		Normal,
+		Dungeon,
+		Dialogue,
+	}
+
 	public class CameraManager : Singleton<CameraManager>
 	{
 		[SerializeField] private CinemachineBrain cinemachineBrain;
@@ -17,13 +24,13 @@ namespace Mascari4615
 			cinemachineBrain.m_UpdateMethod = CinemachineBrain.UpdateMethod.FixedUpdate;
 		}
 
-		public void SetCamera(GameContent content)
+		public void SetCamera(CameraType cameraType)
 		{
-			cinemachineBrain.m_DefaultBlend.m_Style = (int)content == (int)GameContent.Dungeon ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
+			cinemachineBrain.m_DefaultBlend.m_Style = (int)cameraType == (int)MCanvasType.Dungeon ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
 
 			for (int i = 0; i < virtualCameras.Length; i++)
 			{
-				virtualCameras[i].Priority = i == (int)content ? 10 : 0;
+				virtualCameras[i].Priority = i == (int)cameraType ? 10 : 0;
 			}
 		}
 

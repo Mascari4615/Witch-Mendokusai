@@ -18,11 +18,21 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI unitName;
 		[SerializeField] private TextMeshProUGUI lineText;
 
-		private LineData _lineData;
+		private LineData lineData;
 		private Coroutine lineLoop;
-		private readonly WaitForSecondsRealtime ws01 = new(.1f);
-
 		public bool IsPrinting { get; private set; } = false;
+
+		public override void OnOpen()
+		{
+			CameraManager.Instance.SetCamera(CameraType.Dialogue);
+			StartCoroutine(BubblePosLoop());
+		}
+
+		public override void OnClose()
+		{
+			CameraManager.Instance.SetCamera(CameraType.Normal);
+			StopAllCoroutines();
+		}
 
 		public override void UpdateUI()
 		{
@@ -30,9 +40,30 @@ namespace Mascari4615
 				return;
 
 			SOManager.Instance.IsChatting.RuntimeValue = true;
-			// chatTargetGroup.m_Targets[1].target = unitTransform;
 
 			NextChat();
+		}
+
+		public void SetNPC(Transform unitTransform)
+		{
+			chatTargetGroup.m_Targets[1].target = unitTransform;
+		}
+
+		[SerializeField] private RectTransform bubble;
+
+		public IEnumerator BubblePosLoop()
+		{
+			while (true)
+			{
+				Vector3 targetPos;
+				if (lineData.unitID == 0)
+					targetPos = chatTargetGroup.m_Targets[0].target.position;
+				else
+					targetPos = chatTargetGroup.m_Targets[1].target.position;
+				Vector3 newPos = targetPos + Vector3.up;
+				bubble.position = Camera.main.WorldToScreenPoint(newPos);
+				yield return null;
+			}
 		}
 
 		public void NextChat()
@@ -69,7 +100,7 @@ namespace Mascari4615
 			// chatTargetGroup.m_Targets[1].target = null;
 
 			curChatIndex = 0;
-			UIManager.Instance.SetOverlayUI(OverlayUI.None);
+			UIManager.Instance.SetOverlay(MPanelType.None);
 		}
 
 		public void StartLine(LineData lineData)
@@ -82,24 +113,28 @@ namespace Mascari4615
 			// TODO : 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
 
 			unitImage.sprite = unit.Thumbnail;
-			unitName.text = unit.Name;
+			if (string.IsNullOrEmpty(unit.Name))
+				unitName.text = "_";
+			else
+				unitName.text = unit.Name;
 			lineText.text = string.Empty;
 
-			this._lineData = lineData;
+			this.lineData = lineData;
 
 			lineLoop = StartCoroutine(LineLoop());
 		}
 
 		public IEnumerator LineLoop()
 		{
+			WaitForSecondsRealtime wait = new(.05f);
 			IsPrinting = true;
 
-			foreach (var c in _lineData.line)
+			foreach (char c in lineData.line)
 			{
 				lineText.text += c;
 				if (c != ' ')
 					RuntimeManager.PlayOneShot("event:/SFX/Equip");
-				yield return ws01;
+				yield return wait;
 			}
 
 			EndLine();
@@ -113,7 +148,7 @@ namespace Mascari4615
 			if (lineLoop != null)
 				StopCoroutine(lineLoop);
 
-			lineText.text = _lineData.line;
+			lineText.text = lineData.line;
 
 			EndLine();
 		}
@@ -121,7 +156,7 @@ namespace Mascari4615
 		private void EndLine()
 		{
 			IsPrinting = false;
-			if (_lineData.additionalData.Equals("0"))
+			if (lineData.additionalData.Equals("0"))
 			{
 				// Debug.Log("Hawawaaaaaaaaaaaaaaaaaaaaaaaaa");
 				// UIManager.Instance.OpenPanel(UIManager.MenuPanelType.Inventory);

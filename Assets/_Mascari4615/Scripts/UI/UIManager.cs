@@ -9,7 +9,13 @@ using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
-	public enum OverlayUI
+	public enum MCanvasType
+	{
+		None,
+		Dungeon,
+	}
+
+	public enum MPanelType
 	{
 		None,
 		Tab,
@@ -25,11 +31,11 @@ namespace Mascari4615
 	{
 		[SerializeField] private Animator transitionAnimator;
 
-		private GameContent curContentUI;
-		private readonly Dictionary<GameContent, UIPanel> contentUIs = new();
+		public MCanvasType CurCanvas { get; private set; }
+		private readonly Dictionary<MCanvasType, UIPanel> canvasUIs = new();
 
-		private OverlayUI curOverlayUI;
-		private readonly Dictionary<OverlayUI, UIPanel> overlayUIs = new();
+		public MPanelType CurOverlay{ get; private set; }
+		private readonly Dictionary<MPanelType, UIPanel> overlayUIs = new();
 
 		public UITab Tab { get; private set; }
 		public CutSceneModule CutSceneModule { get; private set; }
@@ -59,20 +65,20 @@ namespace Mascari4615
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
 			pot = FindObjectOfType<UIPot>(true);
 
-			contentUIs[GameContent.Dungeon] = FindObjectOfType<UIDungeon>(true);
+			canvasUIs[MCanvasType.Dungeon] = FindObjectOfType<UIDungeon>(true);
 
-			overlayUIs[OverlayUI.Tab] = Tab;
-			overlayUIs[OverlayUI.Setting] = Setting;
-			overlayUIs[OverlayUI.Shop] = shop;
-			overlayUIs[OverlayUI.Chat] = Chat;
-			overlayUIs[OverlayUI.DungeonEntrance] = dungeonEntrance;
-			overlayUIs[OverlayUI.DungeonResult] = dungeonResult;
-			overlayUIs[OverlayUI.Pot] = pot;
+			overlayUIs[MPanelType.Tab] = Tab;
+			overlayUIs[MPanelType.Setting] = Setting;
+			overlayUIs[MPanelType.Shop] = shop;
+			overlayUIs[MPanelType.Chat] = Chat;
+			overlayUIs[MPanelType.DungeonEntrance] = dungeonEntrance;
+			overlayUIs[MPanelType.DungeonResult] = dungeonResult;
+			overlayUIs[MPanelType.Pot] = pot;
 		}
 
 		private void Start()
 		{
-			foreach (UIPanel uiPanel in contentUIs.Values)
+			foreach (UIPanel uiPanel in canvasUIs.Values)
 			{
 				uiPanel.Init();
 				uiPanel.SetActive(false);
@@ -84,7 +90,8 @@ namespace Mascari4615
 				uiPanel.SetActive(false);
 			}
 
-			SetOverlayUI(OverlayUI.None);
+			SetCanvas(MCanvasType.None);
+			SetOverlay(MPanelType.None);
 		}
 
 		private void Update()
@@ -140,38 +147,38 @@ namespace Mascari4615
 
 		public void ToggleOverlayUI_Tab()
 		{
-			if (curOverlayUI != OverlayUI.None)
+			if (CurOverlay != MPanelType.None)
 			{
-				if (curOverlayUI != OverlayUI.Setting)
-					SetOverlayUI(OverlayUI.None);
+				if (CurOverlay != MPanelType.Setting)
+					SetOverlay(MPanelType.None);
 			}
 			else
 			{
-				SetOverlayUI(OverlayUI.Tab);
+				SetOverlay(MPanelType.Tab);
 			}
 		}
 
 		public void ToggleOverlayUI_Setting()
 		{
-			if (curOverlayUI != OverlayUI.None)
+			if (CurOverlay != MPanelType.None)
 			{
-				SetOverlayUI(OverlayUI.None);
+				SetOverlay(MPanelType.None);
 			}
 			else
 			{
-				SetOverlayUI(OverlayUI.Setting);
+				SetOverlay(MPanelType.Setting);
 			}
 		}
 
-		public void SetOverlayUI(OverlayUI overlayUI)
+		public void SetOverlay(MPanelType overlayUI)
 		{
-			if (curOverlayUI == overlayUI)
+			if (CurOverlay == overlayUI)
 				return;
 
-			if (curOverlayUI != OverlayUI.None)
-				overlayUIs[curOverlayUI].SetActive(false);
+			if (CurOverlay != MPanelType.None)
+				overlayUIs[CurOverlay].SetActive(false);
 
-			curOverlayUI = overlayUI;
+			CurOverlay = overlayUI;
 			if (overlayUIs.TryGetValue(overlayUI, out var uiPanel))
 			{
 				uiPanel.SetActive(true);
@@ -179,19 +186,23 @@ namespace Mascari4615
 			}
 		}
 
-		public void SetContentUI(GameContent gameContent)
-		{
-			if (curContentUI == gameContent)
+		public void SetCanvas(MCanvasType newCanvas)
+		{			
+			if (CurCanvas == newCanvas)
 				return;
 
-			if (curContentUI != GameContent.None)
-				contentUIs[curContentUI].SetActive(false);
+			if (CurCanvas != MCanvasType.None)
+				canvasUIs[CurCanvas].SetActive(false);
 
-			curContentUI = gameContent;
-			if (contentUIs.TryGetValue(gameContent, out var uiPanel))
+			CurCanvas = newCanvas;
+			if (CurCanvas == MCanvasType.None)
 			{
-				uiPanel.SetActive(true);
-				uiPanel.UpdateUI();
+				CameraManager.Instance.SetCamera(CameraType.Normal);
+			}
+			else
+			{
+				canvasUIs[CurCanvas].SetActive(true);
+				canvasUIs[CurCanvas].UpdateUI();
 			}
 		}
 	}

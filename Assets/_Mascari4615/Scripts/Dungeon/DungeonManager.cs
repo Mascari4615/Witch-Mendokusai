@@ -49,8 +49,8 @@ namespace Mascari4615
 
 			void InitDungeonAndPlayer()
 			{
-				UIManager.Instance.SetOverlayUI(OverlayUI.None);
-				GameManager.Instance.SetContent(GameContent.Dungeon);
+				UIManager.Instance.SetOverlay(MPanelType.None);
+				UIManager.Instance.SetCanvas(MCanvasType.Dungeon);
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
 
@@ -94,7 +94,7 @@ namespace Mascari4615
 			// Stop DungeonLoop
 			StopAllCoroutines();
 			monsterSpawner.StopWave();
-			UIManager.Instance.SetOverlayUI(OverlayUI.DungeonResult);
+			UIManager.Instance.SetOverlay(MPanelType.DungeonResult);
 		}
 
 		public void Continue()
@@ -104,8 +104,8 @@ namespace Mascari4615
 
 			void ResetDungeonAndPlayer()
 			{
-				UIManager.Instance.SetOverlayUI(OverlayUI.None);
-				GameManager.Instance.SetContent(GameContent.None);
+				UIManager.Instance.SetOverlay(MPanelType.None);
+				UIManager.Instance.SetCanvas(MCanvasType.None);
 				GameManager.Instance.ClearDungeonObjects();
 
 				expChecker.Init();

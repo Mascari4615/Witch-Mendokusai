@@ -32,6 +32,7 @@ namespace Mascari4615
 			if (loop != null)
 				StopCoroutine(loop);
 			loop = StartCoroutine(Loop());
+			CameraManager.Instance.SetCamera(CameraType.Dungeon);
 		}
 
 		public override void OnClose()
