@@ -26,7 +26,7 @@ namespace Mascari4615
 		public readonly Dictionary<int, ItemData> RareItemDic = new();
 		public readonly Dictionary<int, ItemData> LegendItemDic = new();
 		public readonly Dictionary<int, Stage> StageDic = new();
-		public readonly Dictionary<int, Mastery> MasteryDic = new();
+		public readonly Dictionary<int, Card> CardDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
 
 		public Action OnCurGameDataLoad;
@@ -86,8 +86,8 @@ namespace Mascari4615
 			foreach (Quest quest in soManager.QuestDataBuffer.InitItems)
 				QuestDic.Add(quest.ID, quest);
 
-			foreach (Mastery mastery in soManager.MasteryDataBuffer.InitItems)
-				MasteryDic.Add(mastery.ID, mastery);
+			foreach (Card card in soManager.CardDataBuffer.InitItems)
+				CardDic.Add(card.ID, card);
 		}
 
 		public void CreateNewGameData()

@@ -8,7 +8,7 @@ namespace Mascari4615
 	{
 		public void UpdateEquipment()
 		{
-			PlayerController.Instance.playerExpCollider.transform.localScale =
+			PlayerController.Instance.ExpCollider.transform.localScale =
 				Vector3.one * (1 + (SOManager.Instance.StatDictionary.GetStat("PLAYER_EXP_COLLIDER_SCALE") * .5f));
 		}
 	}

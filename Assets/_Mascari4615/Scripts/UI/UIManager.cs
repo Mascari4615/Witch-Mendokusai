@@ -37,7 +37,7 @@ namespace Mascari4615
 		private UIFloatingText damage;
 		private UIPopup popup;
 		private UIShop shop;
-		private UIChat chat;
+		public UIChat Chat { get; private set; }
 		private UIDungeonEntrance dungeonEntrance;
 		private UIDungeon dungeon;
 		private UIDungeonResult dungeonResult;
@@ -53,7 +53,7 @@ namespace Mascari4615
 			popup = FindObjectOfType<UIPopup>(true);
 			Setting = FindObjectOfType<UISetting>(true);
 			shop = FindObjectOfType<UIShop>(true);
-			chat = FindObjectOfType<UIChat>(true);
+			Chat = FindObjectOfType<UIChat>(true);
 			dungeonEntrance = FindObjectOfType<UIDungeonEntrance>(true);
 			dungeon = FindObjectOfType<UIDungeon>(true);
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
@@ -64,7 +64,7 @@ namespace Mascari4615
 			overlayUIs[OverlayUI.Tab] = Tab;
 			overlayUIs[OverlayUI.Setting] = Setting;
 			overlayUIs[OverlayUI.Shop] = shop;
-			overlayUIs[OverlayUI.Chat] = chat;
+			overlayUIs[OverlayUI.Chat] = Chat;
 			overlayUIs[OverlayUI.DungeonEntrance] = dungeonEntrance;
 			overlayUIs[OverlayUI.DungeonResult] = dungeonResult;
 			overlayUIs[OverlayUI.Pot] = pot;

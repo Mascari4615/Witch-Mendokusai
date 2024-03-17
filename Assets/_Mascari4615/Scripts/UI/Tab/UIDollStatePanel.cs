@@ -60,7 +60,7 @@ namespace Mascari4615
 			}
 		}
 
-		public override void UpdateUI(int[] someData = null)
+		public override void UpdateUI()
 		{
 			selectNewEquipmentPanel.SetActive(false);
 
@@ -112,18 +112,21 @@ namespace Mascari4615
 							if (targetDollIndex == curDollIndex)
 							{
 								// Debug.Log("이미 이 인형이 끼고 있어요");
-								return;
+								myDollDatas[curDollIndex].equipmentGuids[ei] = myDollDatas[curDollIndex].equipmentGuids[targetEquipmentIndex];
+								goto BREAK;
 							}
 							else
 							{
 								// Debug.Log("다른 인형이 끼고 있어요");
 								myDollDatas[targetDollIndex].equipmentGuids[ei] = myDollDatas[curDollIndex].equipmentGuids[targetEquipmentIndex];
-								break;
+								goto BREAK;
 							}
 						}
 					}
 				}
 			}
+
+			BREAK:
 			myDollDatas[curDollIndex].equipmentGuids[targetEquipmentIndex] = newEquipmentGUID;
 			UpdateUI();
 		}

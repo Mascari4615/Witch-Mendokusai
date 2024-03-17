@@ -24,16 +24,16 @@ namespace Mascari4615
 			}
 		}
 
-		public void UpdateUI(List<Mastery> masteries)
+		public void UpdateUI(List<Card> cards)
 		{
 			// HashSet : 고유한 값만 저장하는 자료구조
 			// Convert masteries to a HashSet for faster lookup
-			HashSet<int> masteryIds = new(masteries.Select(m => m.ID));
+			HashSet<int> cardIds = new(cards.Select(m => m.ID));
 
-			foreach (UICardSlot masterySlot in cardSlots)
+			foreach (UICardSlot cardSlot in cardSlots)
 			{
-				bool isTargetMastery = masteryIds.Contains(masterySlot.Artifact.ID);
-				masterySlot.SetDisable(!isTargetMastery);
+				bool isTargetCard = cardIds.Contains(cardSlot.Artifact.ID);
+				cardSlot.SetDisable(!isTargetCard);
 			}
 		}
 	}

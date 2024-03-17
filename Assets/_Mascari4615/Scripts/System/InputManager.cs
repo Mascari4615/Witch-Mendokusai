@@ -19,17 +19,26 @@ namespace Mascari4615
 				UIManager.Instance.ToggleOverlayUI_Tab();
 			if (Input.GetKeyDown(KeyCode.Escape))
 				UIManager.Instance.ToggleOverlayUI_Setting();
+			
+			if (Input.anyKeyDown)
+			{
+				if (SOManager.Instance.IsChatting.RuntimeValue)
+					UIManager.Instance.Chat.NextChat();
+			}
 
 			// Player
 			if (Input.GetKeyDown(KeyCode.F))
 				PlayerController.Instance.TryInteract();
 
+			if (Input.GetKeyDown(KeyCode.Space))
+				PlayerController.Instance.TryUseSkill(0);
+
 			if (SOManager.Instance.IsMouseOnUI.RuntimeValue || SOManager.Instance.IsPaused.RuntimeValue)
 				return;
 			if (Input.GetMouseButton(0))
-				PlayerController.Instance.TryUseSkill(0);
-			if (Input.GetMouseButton(1))
 				PlayerController.Instance.TryUseSkill(1);
+			if (Input.GetMouseButton(1))
+				PlayerController.Instance.TryUseSkill(2);
 		}
 	}
 }

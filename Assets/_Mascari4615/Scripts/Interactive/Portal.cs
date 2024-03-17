@@ -11,7 +11,6 @@ namespace Mascari4615
 
 		[SerializeField] private Stage targetStage;
 		[SerializeField] private int targetPortalIndex;
-		[SerializeField] private Transform tpPos;
 	
 		public override void Interact()
 		{

@@ -9,7 +9,7 @@ namespace Mascari4615
 	{
 		[SerializeField] private PlayerInteraction playerInteraction;
 		[field: SerializeField]	public PlayerObject PlayerObject { get; private set; }
-		public GameObject playerExpCollider;
+		[field: SerializeField]	public GameObject ExpCollider { get; private set; }
 
 		public void TeleportTo(Vector3 targetPos)
 		{

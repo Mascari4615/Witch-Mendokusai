@@ -16,7 +16,6 @@ namespace Mascari4615
 			idle = new(unitObject);
 			attack = new(unitObject);
 
-
 			SetStateEvent(TempState.Idle, StateEvent.Update, () =>
 			{
 				CanSeePlayer();

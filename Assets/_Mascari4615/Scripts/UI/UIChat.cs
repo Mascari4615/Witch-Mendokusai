@@ -33,20 +33,6 @@ namespace Mascari4615
 			// chatTargetGroup.m_Targets[1].target = unitTransform;
 
 			NextChat();
-			StartCoroutine(CheckInput());
-		}
-
-		public IEnumerator CheckInput()
-		{
-			while (true)
-			{
-				if (Input.GetKeyDown(KeyCode.Space))
-				{
-					NextChat();
-				}
-
-				yield return null;
-			}
 		}
 
 		public void NextChat()

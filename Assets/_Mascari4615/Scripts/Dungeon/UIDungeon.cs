@@ -13,6 +13,43 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI difficultyText;
 		[SerializeField] private Image difficultyCircle;
 		private UISkillSlot[] curSkillSlots;
+		private Coroutine loop;
+		
+		public override void Init()
+		{
+			curSkillSlots = GetComponentsInChildren<UISkillSlot>(true);
+		}
+
+		public override void UpdateUI()
+		{
+			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
+			UpdateTime(DungeonManager.Instance.DungeonCurTime);
+			UpdateCurCardUI();
+		}
+
+		public override void OnOpen()
+		{
+			if (loop != null)
+				StopCoroutine(loop);
+			loop = StartCoroutine(Loop());
+		}
+
+		public override void OnClose()
+		{
+			if (loop != null)
+				StopCoroutine(loop);
+		}
+
+		private IEnumerator Loop()
+		{
+			WaitForSeconds wait = new(.05f);
+
+			while (true)
+			{
+				UpdateUI();
+				yield return wait;
+			}
+		}
 
 		private void UpdateTime(TimeSpan timeSpan)
 		{
@@ -46,12 +83,7 @@ namespace Mascari4615
 			}
 		}
 
-		private void Update()
-		{
-			UpdateCurMasteryUI();
-		}
-
-		private void UpdateCurMasteryUI()
+		private void UpdateCurCardUI()
 		{
 			int skillCount = 0;
 			foreach ((Skill skill, SkillCoolTime skillCoolTime) in PlayerController.Instance.PlayerObject.UnitSkillHandler.SkillDic.Values)
@@ -63,17 +95,6 @@ namespace Mascari4615
 
 			for (int i = 0; i < curSkillSlots.Length; i++)
 				curSkillSlots[i].gameObject.SetActive(i < skillCount);
-		}
-
-		public override void Init()
-		{
-			curSkillSlots = GetComponentsInChildren<UISkillSlot>(true);
-		}
-
-		public override void UpdateUI()
-		{
-			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
-			UpdateTime(DungeonManager.Instance.DungeonCurTime);
 		}
 	}
 }

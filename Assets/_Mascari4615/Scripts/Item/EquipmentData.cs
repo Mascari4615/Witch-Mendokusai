@@ -7,9 +7,9 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = nameof(EquipmentData), menuName = "Variable/EquipmentData")]
 	public class EquipmentData : ItemData
 	{
-		public Mastery[] Masteries => masteries;
+		public Card[] Masteries => masteries;
 		public Effect[] Effects => effects;
-		[SerializeField] private Mastery[] masteries;
+		[SerializeField] private Card[] masteries;
 		[SerializeField] private Effect[] effects;
 	}
 }

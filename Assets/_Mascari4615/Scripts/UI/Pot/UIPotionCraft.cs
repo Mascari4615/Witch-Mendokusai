@@ -17,9 +17,6 @@ namespace Mascari4615
 
 		public void TryCraft()
 		{
-			if (resultSlot.HasItem)
-				return;
-
 			// Make Recipe
 			List<int> recipeToList = new(slots.Length);
 			foreach (UIItemSlot slot in slots)
@@ -33,12 +30,23 @@ namespace Mascari4615
 			string key = string.Join(',', recipeToList);
 			if (DataManager.Instance.CraftDic.ContainsKey(key) == false)
 				return;
+			ItemData resultItemData = DataManager.Instance.ItemDic[DataManager.Instance.CraftDic[key]];
 
 			// Make Potion
-			Item newItem = new(Guid.NewGuid(), DataManager.Instance.ItemDic[DataManager.Instance.CraftDic[key]]);
-			craftTableInventory.SetItem(resultSlot.Index, newItem);
+			if (resultSlot.HasItem)
+			{
+				if (resultSlot.Artifact.ID != resultItemData.ID)
+					return;
+				else
+					craftTableInventory.SetItemAmount(resultSlot.Index, craftTableInventory.GetItem(resultSlot.Index).Amount + 1);
+			}
+			else
+			{
+				Item newItem = new(Guid.NewGuid(), resultItemData);
+				craftTableInventory.SetItem(resultSlot.Index, newItem);
+			}
 
-			// Actual remove
+			// Actual Remove
 			foreach (UIItemSlot slot in slots)
 			{
 				if (slot.HasItem)

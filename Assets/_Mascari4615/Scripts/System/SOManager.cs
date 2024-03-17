@@ -33,6 +33,8 @@ namespace Mascari4615
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }
 		[field: SerializeField] public FloatVariable MovementSpeed { get; private set; }
 		[field: SerializeField] public FloatVariable DashDuration { get; private set; }
+		[field: SerializeField] public FloatVariable CurDashCoolTime { get; private set; }
+		[field: SerializeField] public FloatVariable DashCoolTime { get; private set; }
 		[field: SerializeField] public FloatVariable DashSpeed { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerMoveDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerLookDirection { get; private set; }
@@ -69,8 +71,8 @@ namespace Mascari4615
 		[field: SerializeField] public Inventory ShopInventory { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ShopKeeperItemBuffer { get; private set; }
 		[field: SerializeField] public StageDataBuffer StageDataBuffer { get; private set; }
-		[field: SerializeField] public MasteryDataBuffer MasteryDataBuffer { get; private set; }
-		[field: SerializeField] public MasteryDataBuffer SelectMasteryDataBuffer { get; private set; }
+		[field: SerializeField] public CardBuffer CardDataBuffer { get; private set; }
+		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
 
 		[field: Space(10), Header("GameEvent")]
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }

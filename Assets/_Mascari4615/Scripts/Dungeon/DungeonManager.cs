@@ -23,7 +23,7 @@ namespace Mascari4615
 		public TimeSpan DungeonCurTime { get; private set; }
 		public Difficulty CurDifficulty { get; private set; }
 
-		private MasteryManager masteryManager;
+		private CardManager cardManager;
 		private MonsterSpawner monsterSpawner;
 		private ExpManager expChecker;
 
@@ -31,7 +31,7 @@ namespace Mascari4615
 		{
 			base.Awake();
 
-			masteryManager = FindObjectOfType<MasteryManager>(true);
+			cardManager = FindObjectOfType<CardManager>(true);
 			monsterSpawner = FindObjectOfType<MonsterSpawner>(true);
 
 			expChecker = FindObjectOfType<ExpManager>(true);
@@ -55,7 +55,7 @@ namespace Mascari4615
 				monsterSpawner.InitWaves(dungeon);
 
 				expChecker.Init();
-				masteryManager.Init();
+				cardManager.Init();
 				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
 
 				foreach (var effect in DataManager.Instance.GetEquipment(0)!.Effects)
@@ -108,7 +108,8 @@ namespace Mascari4615
 				GameManager.Instance.SetContent(GameContent.None);
 				GameManager.Instance.ClearDungeonObjects();
 
-				masteryManager.ClearMasteryEffect();
+				expChecker.Init();
+				cardManager.ClearCardEffect();
 				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
 
 				for (int i = 0; i < 3; i++)
@@ -126,12 +127,7 @@ namespace Mascari4615
 
 		private void UpdateDifficulty()
 		{
-			if (CurDifficulty == Difficulty.Hard)
-			{
-
-			}
-			else if ((int)CurDifficulty != DungeonCurTime.Minutes / 3)
-				CurDifficulty = (Difficulty)(DungeonCurTime.Minutes / 3);
+			CurDifficulty = (Difficulty)((InitialDungeonTime - DungeonCurTime).TotalMinutes / 3);
 		}
 	}
 }

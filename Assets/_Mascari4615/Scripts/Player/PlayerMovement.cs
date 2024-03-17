@@ -13,9 +13,6 @@ namespace Mascari4615
 		private Rigidbody playerRigidBody;
 		private PlayerObject playerObject;
 
-		private Vector3 lastMoveDirection;
-		private Vector3 moveDirection;
-
 		private const float ROTATE_SPEED = 150;
 		private const float CAMERA_ROTATE_SPEED = 15;
 		private float yRotation = 0;
@@ -37,14 +34,7 @@ namespace Mascari4615
 				return;
 
 			Rotate();
-
-			// bool d = Input.GetMouseButtonDown(1);
-			bool d = Input.GetKeyDown(KeyCode.Space);
-
-			if (d)
-				StartCoroutine(DashLoop());
-			else
-				TryMove();
+			TryMove();
 		}
 
 		private void Rotate()
@@ -74,12 +64,13 @@ namespace Mascari4615
 				return;
 			}
 
+			Vector3 moveDirection = SOManager.Instance.PlayerMoveDirection.RuntimeValue;
 			Vector3 finalVelocity;
 
 			if (SOManager.Instance.IsDied.RuntimeValue)
 				finalVelocity = Vector3.zero;
 			else if (SOManager.Instance.IsDashing.RuntimeValue)
-				finalVelocity = lastMoveDirection * SOManager.Instance.DashSpeed.RuntimeValue;
+				finalVelocity = moveDirection * SOManager.Instance.DashSpeed.RuntimeValue;
 			else
 				finalVelocity = moveDirection * playerObject.UnitData.MoveSpeed * SOManager.Instance.MovementSpeed.RuntimeValue;
 
@@ -104,9 +95,8 @@ namespace Mascari4615
 
 			// moveDirection.x = h;
 			// moveDirection.z = v;
-			moveDirection = (h * transform.right) + (v * transform.forward);
+			Vector3 moveDirection = (h * transform.right) + (v * transform.forward);
 			moveDirection = moveDirection.normalized;
-
 			SOManager.Instance.PlayerMoveDirection.RuntimeValue = moveDirection;
 
 			if (h != 0 || v != 0)
@@ -120,21 +110,6 @@ namespace Mascari4615
 
 			SOManager.Instance.PlayerLookDirection.RuntimeValue = newDirection;
 			playerSprite.flipX = h == 0 ? playerSprite.flipX : h < 0;
-		}
-
-		private IEnumerator DashLoop()
-		{
-			SOManager.Instance.IsDashing.RuntimeValue = true;
-			lastMoveDirection = SOManager.Instance.PlayerMoveDirection.RuntimeValue;
-
-			float t = 0;
-			while (t <= SOManager.Instance.DashDuration.RuntimeValue)
-			{
-				yield return null;
-				t += Time.deltaTime;
-			}
-
-			SOManager.Instance.IsDashing.RuntimeValue = false;
 		}
 	}
 }
