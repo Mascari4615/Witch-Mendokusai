@@ -1,13 +1,13 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <ui:Template name="KarmoToolBar" src="project://database/Assets/Editor/KarmoWindow/KarmoToolBar.uxml?fileID=9197481963319205126&amp;guid=a7974ba152f1f584fbd76f0bbcfbcf92&amp;type=3#KarmoToolBar" />
-    <Style src="project://database/Assets/Editor/KarmoWindow/KarmoWindow.uss?fileID=7433441132597879392&amp;guid=64264a0eb7a52bd4c8efefbc975445c5&amp;type=3#KarmoWindow" />
+    <ui:Template name="KarmoToolBar" src="project://database/Assets/Editor/MWindow/MToolBar.uxml?fileID=9197481963319205126&amp;guid=a7974ba152f1f584fbd76f0bbcfbcf92&amp;type=3#MToolBar" />
+    <Style src="project://database/Assets/Editor/MWindow/MWindow.uss?fileID=7433441132597879392&amp;guid=64264a0eb7a52bd4c8efefbc975445c5&amp;type=3#MWindow" />
     <ui:VisualElement name="my-world" style="background-color: rgba(0, 0, 0, 0); flex-direction: row; flex-grow: 1;">
         <ui:VisualElement name="table" class="karmo-panel" style="flex-grow: 1; width: 25%;">
-            <ui:Instance template="KarmoToolBar" name="KarmoToolBar" />
+            <ui:Instance template="KarmoToolBar" name="MToolBar" />
             <ui:ListView focusable="true" name="TableList" />
         </ui:VisualElement>
         <ui:VisualElement name="entry" class="karmo-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 25%;">
-            <ui:Instance template="KarmoToolBar" name="KarmoToolBar" />
+            <ui:Instance template="KarmoToolBar" name="MToolBar" />
             <ui:ScrollView name="entryList">
                 <ui:Foldout text="Facts" name="Facts" class="entry-foldout">
                     <ui:ListView focusable="true" name="FactList" />
