@@ -243,13 +243,11 @@ namespace Mascari4615
 			return RuntimeItems[index] ?? null;
 		}
 
-		public void SetItem(int index, Item item, int amount = 1)
+		public void SetItem(int index, Item item)
 		{
 			if (!IsValidIndex(index))
 				return;
 			RuntimeItems[index] = item;
-			if (RuntimeItems[index] != null)
-				RuntimeItems[index].SetAmount(amount);
 			UpdateSlot(index);
 		}
 
