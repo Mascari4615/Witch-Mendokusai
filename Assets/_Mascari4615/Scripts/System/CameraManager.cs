@@ -17,11 +17,16 @@ namespace Mascari4615
 		[SerializeField] private CinemachineBrain cinemachineBrain;
 		[SerializeField] private CinemachineVirtualCamera[] virtualCameras;
 		[SerializeField] private CinemachineImpulseSource impulseSource;
+		[SerializeField] private float xDiff = .3f;
+
+		private Coroutine chatXCoroutine;
+		private CinemachineFramingTransposer chatFramingTransposer; 
 
 		protected override void Awake()
 		{
 			base.Awake();
 			cinemachineBrain.m_UpdateMethod = CinemachineBrain.UpdateMethod.FixedUpdate;
+			chatFramingTransposer = virtualCameras[2].GetCinemachineComponent<CinemachineFramingTransposer>();
 		}
 
 		public void SetCamera(CameraType cameraType)
@@ -31,6 +36,32 @@ namespace Mascari4615
 			for (int i = 0; i < virtualCameras.Length; i++)
 			{
 				virtualCameras[i].Priority = i == (int)cameraType ? 10 : 0;
+			}
+			
+			if (chatXCoroutine != null)
+				StopCoroutine(chatXCoroutine);
+			chatXCoroutine = StartCoroutine(ChatXCoroutine(0));
+		}
+
+		// public void SetChatCamera(bool isLeft)
+		public void SetChatCamera()
+		{
+			if (chatXCoroutine != null)
+				StopCoroutine(chatXCoroutine);
+			// chatXCoroutine = StartCoroutine(ChatXCoroutine(0.5f + xDiff * (isLeft ? 1f : -1f)));
+			chatXCoroutine = StartCoroutine(ChatXCoroutine(-xDiff));
+		}
+
+		private IEnumerator ChatXCoroutine(float diff)
+		{
+			const float lerpSpeed = 0.03f;
+			const float defaultX = 0.5f;
+			while (true)
+			{
+				chatFramingTransposer.m_ScreenX = Mathf.Lerp(chatFramingTransposer.m_ScreenX, defaultX + diff, lerpSpeed);
+				if (Mathf.Abs(chatFramingTransposer.m_ScreenX - (defaultX + diff)) < 0.01f)
+					break;
+				yield return null;
 			}
 		}
 

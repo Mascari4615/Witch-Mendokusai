@@ -16,7 +16,7 @@ namespace Mascari4615
 		[SerializeField] private Image unitImage;
 		[SerializeField] private TextMeshProUGUI unitName;
 		[SerializeField] private TextMeshProUGUI lineText;
-		[SerializeField] private CanvasGroup bubble;
+		[SerializeField] private CanvasGroup bubbleCanvasGroup;
 
 		private int unitID;
 		private Action endAction;
@@ -30,7 +30,6 @@ namespace Mascari4615
 			endAction = action;
 
 			SOManager.Instance.IsChatting.RuntimeValue = true;
-			CameraManager.Instance.SetCamera(CameraType.Dialogue);
 
 			StartCoroutine(ChatLoop(curChatDatas));
 		}
@@ -38,7 +37,7 @@ namespace Mascari4615
 		private IEnumerator ChatLoop(List<LineData> curChatDatas)
 		{
 			StartCoroutine(BubbleLoop());
-			bubble.alpha = 1;
+			bubbleCanvasGroup.alpha = 1;
 			
 			yield return null;
 		
@@ -63,11 +62,10 @@ namespace Mascari4615
 			}
 
 			SOManager.Instance.IsChatting.RuntimeValue = false;
-			bubble.alpha = 0;
+			bubbleCanvasGroup.alpha = 0;
 			StopAllCoroutines();
 
 			endAction?.Invoke();
-			CameraManager.Instance.SetCamera(CameraType.Normal);
 		}
 
 		// 바로 null로 만드니 블렌드 전에 뚝 끊김
@@ -96,6 +94,10 @@ namespace Mascari4615
 
 		public IEnumerator BubbleLoop()
 		{
+			const float BubblePadding = 30f;
+			RectTransform bubbleRectTransform = bubbleCanvasGroup.GetComponent<RectTransform>();
+			float bubbleWidth = bubbleRectTransform.sizeDelta.x;
+
 			while (true)
 			{
 				// Update Bubble Pos
@@ -104,10 +106,19 @@ namespace Mascari4615
 					targetPos = chatTargetGroup.m_Targets[0].target.position;
 				else
 					targetPos = chatTargetGroup.m_Targets[1].target.position;
-				Vector3 newPos = targetPos + Vector3.up;
-				bubble.transform.position = Camera.main.WorldToScreenPoint(newPos);
+				bubbleCanvasGroup.transform.position = GetVec(targetPos + Vector3.up);
 
 				yield return null;
+			}
+
+			Vector3 GetVec(Vector3 worldPos)
+			{
+				float toolTipHeight = bubbleRectTransform.sizeDelta.y;
+				Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+				
+				return new Vector3(
+					Mathf.Clamp(screenPos.x, bubbleWidth / 2 + BubblePadding, Screen.width - bubbleWidth / 2 - BubblePadding),
+					Mathf.Clamp(screenPos.y + 40, BubblePadding, Screen.height - toolTipHeight - BubblePadding), 0);
 			}
 		}
 

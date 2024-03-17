@@ -20,10 +20,7 @@ namespace Mascari4615
 		None,
 		Tab,
 		Setting,
-		Shop,
-		DungeonEntrance,
 		DungeonResult,
-		Pot,
 		NPC,
 	}
 
@@ -42,12 +39,9 @@ namespace Mascari4615
 		public UISetting Setting { get; private set; }
 		private UIFloatingText damage;
 		private UIPopup popup;
-		private UIShop shop;
 		public UIChat Chat { get; private set; }
-		private UIDungeonEntrance dungeonEntrance;
 		private UIDungeon dungeon;
 		private UIDungeonResult dungeonResult;
-		private UIPot pot;
 		public UINPC Npc { get; private set; }
 
 		protected override void Awake()
@@ -59,22 +53,16 @@ namespace Mascari4615
 			damage = FindObjectOfType<UIFloatingText>(true);
 			popup = FindObjectOfType<UIPopup>(true);
 			Setting = FindObjectOfType<UISetting>(true);
-			shop = FindObjectOfType<UIShop>(true);
 			Chat = FindObjectOfType<UIChat>(true);
-			dungeonEntrance = FindObjectOfType<UIDungeonEntrance>(true);
 			dungeon = FindObjectOfType<UIDungeon>(true);
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
-			pot = FindObjectOfType<UIPot>(true);
 			Npc = FindObjectOfType<UINPC>(true);
 
 			canvasUIs[MCanvasType.Dungeon] = FindObjectOfType<UIDungeon>(true);
 
 			overlayUIs[MPanelType.Tab] = Tab;
 			overlayUIs[MPanelType.Setting] = Setting;
-			overlayUIs[MPanelType.Shop] = shop;
-			overlayUIs[MPanelType.DungeonEntrance] = dungeonEntrance;
 			overlayUIs[MPanelType.DungeonResult] = dungeonResult;
-			overlayUIs[MPanelType.Pot] = pot;
 			overlayUIs[MPanelType.NPC] = Npc;
 		}
 

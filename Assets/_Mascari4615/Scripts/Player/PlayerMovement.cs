@@ -55,7 +55,7 @@ namespace Mascari4615
 
 		private void FixedUpdate()
 		{
-			if (SOManager.Instance.IsChatting.RuntimeValue)
+			if (SOManager.Instance.IsChatting.RuntimeValue || UIManager.Instance.CurOverlay != MPanelType.None)
 				return;
 
 			if (SOManager.Instance.IsCooling.RuntimeValue)

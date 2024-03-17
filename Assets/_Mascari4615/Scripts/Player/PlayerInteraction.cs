@@ -8,15 +8,15 @@ namespace Mascari4615
 {
 	public class PlayerInteraction : MonoBehaviour
 	{
-		private InteractiveObject GetNearestInteractiveObject()
+		private GameObject GetNearestInteractiveObject()
 		{
+			const float maxDistance = 1.5f;
 			if (SOManager.Instance.InteractiveObjectBuffer.RuntimeItems.Count == 0)
 				return null;
-
-			GameObject nearest = SOManager.Instance.InteractiveObjectBuffer.RuntimeItems.OrderBy(
-					x => Vector3.Distance(transform.position, x.transform.position))
-				.First();
-			return nearest.GetComponent<InteractiveObject>();
+			GameObject nearest = SOManager.Instance.InteractiveObjectBuffer.RuntimeItems
+				.OrderBy(item => Vector3.Distance(transform.position, item.transform.position))
+				.FirstOrDefault(item => Vector3.Distance(transform.position, item.transform.position) < maxDistance);
+			return nearest;
 		}
 
 		private void Start()
@@ -26,7 +26,10 @@ namespace Mascari4615
 
 		public void Interaction()
 		{
-			GetNearestInteractiveObject()?.Interact();
+			GameObject nearest = GetNearestInteractiveObject();
+			if (nearest == null)
+				return;
+			nearest.GetComponent<InteractiveObject>().Interact();
 		}
 
 		private void UpdateCanInteractVariable()

@@ -33,8 +33,6 @@ namespace Mascari4615
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }
 		[field: SerializeField] public FloatVariable MovementSpeed { get; private set; }
 		[field: SerializeField] public FloatVariable DashDuration { get; private set; }
-		[field: SerializeField] public FloatVariable CurDashCoolTime { get; private set; }
-		[field: SerializeField] public FloatVariable DashCoolTime { get; private set; }
 		[field: SerializeField] public FloatVariable DashSpeed { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerMoveDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerLookDirection { get; private set; }

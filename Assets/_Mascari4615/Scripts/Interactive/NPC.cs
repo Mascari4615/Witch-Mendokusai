@@ -8,6 +8,8 @@ namespace Mascari4615
 {
 	public class NPC : InteractiveObject
 	{
+		[field: SerializeField] public MNPCPanelType PanelType { get; private set; }
+
 		public override void Interact()
 		{
 			UIManager.Instance.Npc.SetNPC(this);
