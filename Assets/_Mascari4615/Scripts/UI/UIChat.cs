@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Cinemachine;
 using FMODUnity;
 using TMPro;
@@ -8,158 +10,104 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class UIChat : UIPanel
+	public class UIChat : MonoBehaviour
 	{
-		private List<LineData> curChatDatas;
-		private int curChatIndex = 0;
-
 		[SerializeField] private CinemachineTargetGroup chatTargetGroup;
 		[SerializeField] private Image unitImage;
 		[SerializeField] private TextMeshProUGUI unitName;
 		[SerializeField] private TextMeshProUGUI lineText;
+		[SerializeField] private CanvasGroup bubble;
 
-		private LineData lineData;
-		private Coroutine lineLoop;
-		public bool IsPrinting { get; private set; } = false;
+		private int unitID;
+		private Action endAction;
 
-		public override void OnOpen()
+		public void StartChat(NPC npc, Action action)
 		{
-			CameraManager.Instance.SetCamera(CameraType.Dialogue);
-			StartCoroutine(BubblePosLoop());
-		}
-
-		public override void OnClose()
-		{
-			CameraManager.Instance.SetCamera(CameraType.Normal);
-			StopAllCoroutines();
-		}
-
-		public override void UpdateUI()
-		{
-			if (TryGetChatData("테스트", out curChatDatas) == false)
+			if (TryGetChatData("테스트", out List<LineData> curChatDatas) == false)
 				return;
+
+			chatTargetGroup.m_Targets[1].target = npc.transform;
+			endAction = action;
 
 			SOManager.Instance.IsChatting.RuntimeValue = true;
+			CameraManager.Instance.SetCamera(CameraType.Dialogue);
 
-			NextChat();
+			StartCoroutine(ChatLoop(curChatDatas));
 		}
 
-		public void SetNPC(Transform unitTransform)
+		private IEnumerator ChatLoop(List<LineData> curChatDatas)
 		{
-			chatTargetGroup.m_Targets[1].target = unitTransform;
-		}
-
-		[SerializeField] private RectTransform bubble;
-
-		public IEnumerator BubblePosLoop()
-		{
-			while (true)
+			StartCoroutine(BubbleLoop());
+			bubble.alpha = 1;
+			
+			yield return null;
+		
+			foreach (LineData lineData in curChatDatas)
 			{
-				Vector3 targetPos;
-				if (lineData.unitID == 0)
-					targetPos = chatTargetGroup.m_Targets[0].target.position;
-				else
-					targetPos = chatTargetGroup.m_Targets[1].target.position;
-				Vector3 newPos = targetPos + Vector3.up;
-				bubble.position = Camera.main.WorldToScreenPoint(newPos);
-				yield return null;
-			}
-		}
+				// TODO : 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
+				Unit unit = DataManager.Instance.UnitDic[lineData.unitID];
+				unitID = lineData.unitID;
+				unitImage.sprite = unit.Thumbnail;
+				unitName.text = unit.Name;
 
-		public void NextChat()
-		{
-			if (IsPrinting)
-			{
-				SkipLine();
-				return;
+				Coroutine coroutine = StartCoroutine(PrintLine(lineData));
+
+				do yield return null;
+				while (lineText.text != lineData.line && Input.anyKeyDown == false);
+
+				StopCoroutine(coroutine);
+				lineText.text = lineData.line;
+
+				do yield return null;
+				while (Input.anyKeyDown == false);
 			}
 
-			if (curChatIndex == curChatDatas.Count - 1)
-			{
-				if (curChatDatas[^1].additionalData.Equals("0"))
-				{
-					Debug.Log("Hawawaaaaaaaaaaaaaaaaaaaaaaaaa");
-					// UIManager.Instance.OpenShopPanel();
-				}
-				EndChat();
-				return;
-			}
-
-			StartLine(curChatDatas[curChatIndex++]);
-		}
-
-		public void EndChat()
-		{
 			SOManager.Instance.IsChatting.RuntimeValue = false;
-			curChatDatas = null;
-
+			bubble.alpha = 0;
 			StopAllCoroutines();
 
-			// 바로 null로 만드니 블렌드 전에 뚝 끊김
-			// 어차피 새로 Chat 시작하면 target을 그 때 설정하니까
-			// chatTargetGroup.m_Targets[1].target = null;
-
-			curChatIndex = 0;
-			UIManager.Instance.SetOverlay(MPanelType.None);
+			endAction?.Invoke();
+			CameraManager.Instance.SetCamera(CameraType.Normal);
 		}
 
-		public void StartLine(LineData lineData)
+		// 바로 null로 만드니 블렌드 전에 뚝 끊김
+		// 어차피 새로 Chat 시작하면 target을 그 때 설정하니까
+		// chatTargetGroup.m_Targets[1].target = null;
+	
+		private IEnumerator PrintLine(LineData lineData)
 		{
-			if (lineLoop != null)
-				StopCoroutine(lineLoop);
+			const float waitTime = 0.05f;
+			WaitForSecondsRealtime wait = new(waitTime);
+			StringBuilder s = new();
 
-			var unit = DataManager.Instance.UnitDic[lineData.unitID];
-
-			// TODO : 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
-
-			unitImage.sprite = unit.Thumbnail;
-			if (string.IsNullOrEmpty(unit.Name))
-				unitName.text = "_";
-			else
-				unitName.text = unit.Name;
-			lineText.text = string.Empty;
-
-			this.lineData = lineData;
-
-			lineLoop = StartCoroutine(LineLoop());
-		}
-
-		public IEnumerator LineLoop()
-		{
-			WaitForSecondsRealtime wait = new(.05f);
-			IsPrinting = true;
-
+			s.Clear();
 			foreach (char c in lineData.line)
 			{
-				lineText.text += c;
+				s.Append(c);
+				lineText.text = s.ToString();
 				if (c != ' ')
 					RuntimeManager.PlayOneShot("event:/SFX/Equip");
 				yield return wait;
 			}
 
-			EndLine();
+			// EndLine
+			// if (lineData.additionalData.Equals("0"))
 		}
 
-		public void SkipLine()
+		public IEnumerator BubbleLoop()
 		{
-			if (IsPrinting == false)
-				return;
-
-			if (lineLoop != null)
-				StopCoroutine(lineLoop);
-
-			lineText.text = lineData.line;
-
-			EndLine();
-		}
-
-		private void EndLine()
-		{
-			IsPrinting = false;
-			if (lineData.additionalData.Equals("0"))
+			while (true)
 			{
-				// Debug.Log("Hawawaaaaaaaaaaaaaaaaaaaaaaaaa");
-				// UIManager.Instance.OpenPanel(UIManager.MenuPanelType.Inventory);
+				// Update Bubble Pos
+				Vector3 targetPos;
+				if (unitID == 0)
+					targetPos = chatTargetGroup.m_Targets[0].target.position;
+				else
+					targetPos = chatTargetGroup.m_Targets[1].target.position;
+				Vector3 newPos = targetPos + Vector3.up;
+				bubble.transform.position = Camera.main.WorldToScreenPoint(newPos);
+
+				yield return null;
 			}
 		}
 
@@ -198,13 +146,7 @@ namespace Mascari4615
 				var columns = rows[i].Split(',');
 
 				if (columns[0] == "end")
-				{
-					var _chatData = new LineData(ref columns);
-					lineDatas.Add(_chatData);
-
-					chatDataDic.Add(eventName, lineDatas);
 					continue;
-				}
 
 				if (columns[0] != string.Empty)
 				{
@@ -215,6 +157,7 @@ namespace Mascari4615
 				var chatData = new LineData(ref columns);
 				lineDatas.Add(chatData);
 			}
+			chatDataDic.Add(eventName, lineDatas);
 		}
 	}
 
@@ -224,24 +167,11 @@ namespace Mascari4615
 		public string line;
 		public string additionalData;
 
-		public LineData(string unitID, string line, string additionalData)
-		{
-			this.unitID = int.Parse(unitID);
-			this.line = line;
-			this.additionalData = additionalData;
-		}
-
 		public LineData(ref string[] columns)
 		{
-			this.unitID = (columns[1] == string.Empty)
-				? -1
-				: int.Parse(columns[1]);
-
-			this.line = columns[2];
-
-			this.additionalData = (columns[3] == string.Empty)
-				? string.Empty
-				: columns[3].TrimEnd('\r', '\n', ' ');
+			unitID = int.Parse(columns[1]);
+			line = columns[2];
+			additionalData = columns[3].TrimEnd('\r', '\n', ' ');
 		}
 	}
 }

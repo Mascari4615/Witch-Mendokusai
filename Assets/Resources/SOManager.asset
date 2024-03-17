@@ -22,6 +22,8 @@ MonoBehaviour:
   <JoystickY>k__BackingField: {fileID: 11400000, guid: f3d01bea6a0a79043b38712d843e2c8a, type: 2}
   <MovementSpeed>k__BackingField: {fileID: 11400000, guid: 1501251129034f342b24c210923186a0, type: 2}
   <DashDuration>k__BackingField: {fileID: 11400000, guid: 97b54e68988d58f4ca1991b411678dbc, type: 2}
+  <CurDashCoolTime>k__BackingField: {fileID: 0}
+  <DashCoolTime>k__BackingField: {fileID: 0}
   <DashSpeed>k__BackingField: {fileID: 11400000, guid: c44df19b8e3cfdd41a320b9d89a3c3af, type: 2}
   <PlayerMoveDirection>k__BackingField: {fileID: 11400000, guid: 3d85bdf8d67ec4e4cadfd19e12ec8a22, type: 2}
   <PlayerLookDirection>k__BackingField: {fileID: 11400000, guid: a4bca88b221e11f43a05fb4d6ffd2fda, type: 2}
@@ -50,7 +52,7 @@ MonoBehaviour:
   <QuestDataBuffer>k__BackingField: {fileID: 11400000, guid: 5d1d254e533cbf54a8674e35c61f9580, type: 2}
   <Units>k__BackingField:
   - {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
-  - {fileID: 11400000, guid: d4d4ec0a34a710440a7592442f5a7d35, type: 2}
+  - {fileID: 11400000, guid: dd84603773e6f27479a2c830f5186349, type: 2}
   <Dolls>k__BackingField:
   - {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
   - {fileID: 11400000, guid: dd84603773e6f27479a2c830f5186349, type: 2}

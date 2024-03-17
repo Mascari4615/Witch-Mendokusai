@@ -15,14 +15,6 @@ namespace Mascari4615
 		private void Update()
 		{
 			// UIManager
-			if (Input.anyKeyDown)
-			{
-				if (SOManager.Instance.IsChatting.RuntimeValue)
-				{
-					UIManager.Instance.Chat.NextChat();
-					return;
-				}
-			}
 			if (Input.GetKeyDown(KeyCode.Tab))
 				UIManager.Instance.ToggleOverlayUI_Tab();
 			if (Input.GetKeyDown(KeyCode.Escape))

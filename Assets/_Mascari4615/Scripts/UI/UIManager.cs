@@ -21,10 +21,10 @@ namespace Mascari4615
 		Tab,
 		Setting,
 		Shop,
-		Chat,
 		DungeonEntrance,
 		DungeonResult,
 		Pot,
+		NPC,
 	}
 
 	public class UIManager : Singleton<UIManager>
@@ -48,6 +48,7 @@ namespace Mascari4615
 		private UIDungeon dungeon;
 		private UIDungeonResult dungeonResult;
 		private UIPot pot;
+		public UINPC Npc { get; private set; }
 
 		protected override void Awake()
 		{
@@ -64,16 +65,17 @@ namespace Mascari4615
 			dungeon = FindObjectOfType<UIDungeon>(true);
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
 			pot = FindObjectOfType<UIPot>(true);
+			Npc = FindObjectOfType<UINPC>(true);
 
 			canvasUIs[MCanvasType.Dungeon] = FindObjectOfType<UIDungeon>(true);
 
 			overlayUIs[MPanelType.Tab] = Tab;
 			overlayUIs[MPanelType.Setting] = Setting;
 			overlayUIs[MPanelType.Shop] = shop;
-			overlayUIs[MPanelType.Chat] = Chat;
 			overlayUIs[MPanelType.DungeonEntrance] = dungeonEntrance;
 			overlayUIs[MPanelType.DungeonResult] = dungeonResult;
 			overlayUIs[MPanelType.Pot] = pot;
+			overlayUIs[MPanelType.NPC] = Npc;
 		}
 
 		private void Start()
