@@ -9,8 +9,6 @@ using UnityEngine.UIElements;
 
 public class MyWorldWindow : EditorWindow
 {
-	private const string ENTRY_DIRECTORY_PATH = "Assets/_Mascari4615/Entry/";
-
 	private List<FactEntry> factEntries = new();
 	private List<RuleEntry> ruleEntries = new();
 	private List<EventEntry> eventEntries = new();
@@ -18,19 +16,19 @@ public class MyWorldWindow : EditorWindow
 	[MenuItem("Mascari4615/MyWorld")]
 	static void CreateMenu()
 	{
-		var window = GetWindow<MyWorldWindow>();
+		MyWorldWindow window = GetWindow<MyWorldWindow>();
 		window.titleContent = new GUIContent("MyWorld");
 	}
 
 	private void OnEnable()
 	{
-		// Debug.Log(nameof(OnEnable));
-
 		InitAllEntryList();
 	}
 
 	private void InitAllEntryList()
 	{
+		const string ENTRY_DIRECTORY_PATH = "Assets/_Mascari4615/Entry/";
+		
 		InitEntryList(ref factEntries, ENTRY_DIRECTORY_PATH + nameof(FactEntry));
 		InitEntryList(ref ruleEntries, ENTRY_DIRECTORY_PATH + nameof(RuleEntry));
 		InitEntryList(ref eventEntries, ENTRY_DIRECTORY_PATH + nameof(EventEntry));
@@ -39,15 +37,14 @@ public class MyWorldWindow : EditorWindow
 		{
 			const string extension = ".asset";
 
-			var di = new System.IO.DirectoryInfo(dirPath);
+			DirectoryInfo dir = new(dirPath);
 
 			// list.Clear();
 
 			// Capacity Reserve
 			// 리스트를 새로 만들어 할당하기 때문에 list를 ref으로 받아옴
-			list = new List<T>(di.GetFiles().Length);
-
-			foreach (var file in di.GetFiles())
+			list = new List<T>(dir.GetFiles().Length);
+			foreach (FileInfo file in dir.GetFiles())
 			{
 				if (string.Compare(file.Extension, extension, StringComparison.Ordinal) != 0)
 					continue;
@@ -60,11 +57,8 @@ public class MyWorldWindow : EditorWindow
 
 	public void CreateGUI()
 	{
-		// Debug.Log(nameof(CreateGUI));
-
-		var root = rootVisualElement;
-
-		var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MWindow/MWindow.uxml");
+		VisualElement root = rootVisualElement;
+		VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MWindow/MWindow.uxml");
 		VisualElement labelFromUXML = visualTree.Instantiate();
 		root.Add(labelFromUXML);
 
@@ -79,7 +73,7 @@ public class MyWorldWindow : EditorWindow
 
 		void BindEntryList<T>(string listViewName, List<T> list) where T : BaseEntry
 		{
-			var listView = rootVisualElement.Q<ListView>(name: listViewName);
+			ListView listView = rootVisualElement.Q<ListView>(name: listViewName);
 
 			// Set ListView.itemsSource to populate the data in the list.
 			listView.itemsSource = list;
@@ -94,6 +88,6 @@ public class MyWorldWindow : EditorWindow
 	}
 	private void OnValidate()
 	{
-		Debug.Log("OnValidate is executed.");
+		// Debug.Log("OnValidate is executed.");
 	}
 }

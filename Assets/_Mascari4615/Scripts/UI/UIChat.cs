@@ -142,19 +142,19 @@ namespace Mascari4615
 
 			// var bytes = Encoding.GetEncoding(1252).GetBytes(chatScripts.text);
 			// var myString = Encoding.UTF8.GetString(chatScripts.bytes);
-			var myString = chatScripts.text;
+			string myString = chatScripts.text;
 
-			Debug.Log(myString);
+			// Debug.Log(myString);
 
-			var csvText = myString[..(chatScripts.text.Length - 1)];
-			var rows = csvText.Split(new[] { '\n' });
+			string csvText = myString[..(chatScripts.text.Length - 1)];
+			string[] rows = csvText.Split(new[] { '\n' });
 
-			var eventName = string.Empty;
-			var lineDatas = new List<LineData>();
+			string eventName = string.Empty;
+			List<LineData> lineDatas = new();
 
 			for (int i = 1; i < rows.Length; i++)
 			{
-				var columns = rows[i].Split(',');
+				string[] columns = rows[i].Split(',');
 
 				if (columns[0] == "end")
 					continue;
@@ -165,7 +165,7 @@ namespace Mascari4615
 					lineDatas = new List<LineData>();
 				}
 
-				var chatData = new LineData(ref columns);
+				LineData chatData = new(ref columns);
 				lineDatas.Add(chatData);
 			}
 			chatDataDic.Add(eventName, lineDatas);

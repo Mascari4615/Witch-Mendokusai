@@ -15,6 +15,7 @@ namespace Mascari4615
 
 		private void Awake()
 		{
+			text.text = "0냥";
 			SOManager.Instance.Nyang.GameEvent.AddCallback(UpdateGold);
 		}
 

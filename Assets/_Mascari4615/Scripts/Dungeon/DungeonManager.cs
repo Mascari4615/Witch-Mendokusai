@@ -58,11 +58,11 @@ namespace Mascari4615
 				cardManager.Init();
 				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
 
-				foreach (var effect in DataManager.Instance.GetEquipment(0)!.Effects)
+				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurGameData.curDollIndex, 0)!.Effects)
 					effect.OnEquip();
-				foreach (var effect in DataManager.Instance.GetEquipment(1)!.Effects)
+				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurGameData.curDollIndex, 1)!.Effects)
 					effect.OnEquip();
-				foreach (var effect in DataManager.Instance.GetEquipment(2)!.Effects)
+				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurGameData.curDollIndex, 2)!.Effects)
 					effect.OnEquip();
 
 				SOManager.Instance.OnDungeonStart.Raise();
@@ -114,7 +114,7 @@ namespace Mascari4615
 
 				for (int i = 0; i < 3; i++)
 				{
-					foreach (var effect in DataManager.Instance.GetEquipment(i)!.Effects)
+					foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurGameData.curDollIndex, i)!.Effects)
 						effect.OnEquip();
 				}
 			}

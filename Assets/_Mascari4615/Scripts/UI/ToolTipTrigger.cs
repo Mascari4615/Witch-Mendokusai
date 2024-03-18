@@ -59,11 +59,7 @@ namespace Mascari4615
 		private void OnDisable()
 		{
 			if (isPopupTooltipShowingThis)
-			{
-				if (ClickToolTip != null)
-					ClickToolTip.gameObject.SetActive(false);
 				ToolTipPopupManager.Instance.Hide();
-			}
 		}
 
 		public void Click()

@@ -4,22 +4,17 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(Quest), menuName = "Variable/Quest")]
+	[CreateAssetMenu(fileName = nameof(Quest), menuName = "Variable/" + nameof(Quest))]
 	public class Quest : Artifact
 	{
-		public bool Unlock => unlock;
-		public bool Complete => complete;
-		public GameEvent[] GameEvents => gameEvents;
-		public Criteria[] Criterias => criterias;
-
-		[System.NonSerialized] private bool unlock;
-		[System.NonSerialized] private bool complete;
-		[SerializeField] private GameEvent[] gameEvents;
-		[SerializeField] private Criteria[] criterias;
+		[field: SerializeField] public GameEvent[] GameEvents { get; private set; }
+		[field: SerializeField] public Criteria[] Criterias{ get; private set; }
+		[System.NonSerialized] public bool Unlock;
+		[System.NonSerialized] public bool Complete;
 
 		public void SetComplete()
 		{
-			complete = true;
+			Complete = true;
 		}
 	}
 }

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -79,7 +78,7 @@ namespace Mascari4615
 
 			foreach (Unit unit in soManager.Units)
 				UnitDic.Add(unit.ID, unit);
-			foreach (Doll doll in soManager.Dolls)
+			foreach (Doll doll in soManager.Dolls.InitItems)
 				DollDic.Add(doll.ID, doll);
 			foreach (Dungeon dungeon in soManager.Dungeons)
 				DungeonDic.Add(dungeon.ID, dungeon);
@@ -102,7 +101,7 @@ namespace Mascari4615
 				EquipmentData equipmentData = DollDic[0].EquipmentDatas[i];
 				soManager.ItemInventory.Add(equipmentData);
 
-				CurGameData.myDollDatas[0].equipmentGuids[i] = soManager.ItemInventory.GetItem(soManager.ItemInventory.FindItemSlotIndex(equipmentData)).Guid;
+				CurGameData.dollDatas[0].equipmentGuids[i] = soManager.ItemInventory.GetItem(soManager.ItemInventory.FindItemSlotIndex(equipmentData)).Guid;
 			}
 		}
 
@@ -122,6 +121,9 @@ namespace Mascari4615
 		{
 			CurGameData = saveData;
 			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
+
+			for (int i = 0; i < CurGameData.dummyDollCount - 1; i++)
+				soManager.Dolls.AddItem(DollDic[4444]);
 			// OnCurGameDataLoad.Invoke();
 		}
 
@@ -148,11 +150,10 @@ namespace Mascari4615
 
 		private void OnApplicationQuit() => SaveData();
 
-		[CanBeNull]
-		public EquipmentData GetEquipment(int index)
+		public EquipmentData GetEquipment(int dollIndex, int equipmentIndex)
 		{
 			return soManager.ItemInventory
-			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(CurGameData.myDollDatas[CurGameData.lastDollIndex].equipmentGuids[index]))?
+			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(CurGameData.dollDatas[dollIndex].equipmentGuids[equipmentIndex]))?
 			.Data as EquipmentData;
 		}
 	}
@@ -161,14 +162,15 @@ namespace Mascari4615
 	public class GameData
 	{
 		public List<InventorySlotData> itemInventoryItems = new();
-		public int lastDollIndex;
-		public MyDollData[] myDollDatas = new MyDollData[10];
+		public int curDollIndex;
+		public DollData[] dollDatas = new DollData[10];
+		public int dummyDollCount = 1;
 		public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
 
 		public GameData()
 		{
 			for (int i = 0; i < 10; i++)
-				myDollDatas[i] = new MyDollData(1, 0, new Guid?[3] { null, null, null });
+				dollDatas[i] = new DollData(1, 0, new Guid?[3] { null, null, null });
 		}
 	}
 
@@ -190,9 +192,9 @@ namespace Mascari4615
 	}
 
 	[Serializable]
-	public struct MyDollData
+	public struct DollData
 	{
-		public MyDollData(int dollLevel, int dollExp, Guid?[] equipmentGuids)
+		public DollData(int dollLevel, int dollExp, Guid?[] equipmentGuids)
 		{
 			this.dollLevel = dollLevel;
 			this.dollExp = dollExp;
