@@ -55,13 +55,11 @@ namespace Mascari4615
 				if (i < dataBuffer.RuntimeItems.Count)
 				{
 					Slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as Artifact);
-					Slots[i].UpdateUI();
 					Slots[i].gameObject.SetActive(true);
 				}
 				else
 				{
 					Slots[i].SetArtifact(null);
-					Slots[i].UpdateUI();
 
 					if (dontShowEmptySlot)
 						Slots[i].gameObject.SetActive(false);

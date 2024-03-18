@@ -9,12 +9,17 @@ namespace Mascari4615
 	{
 		[field: SerializeField] public GameEvent[] GameEvents { get; private set; }
 		[field: SerializeField] public Criteria[] Criterias{ get; private set; }
-		[System.NonSerialized] public bool Unlock;
-		[System.NonSerialized] public bool Complete;
+		[System.NonSerialized] public bool IsUnlocked;
+		[System.NonSerialized] public bool IsCompleted;
+
+		public void Unlock()
+		{
+			IsUnlocked = true;
+		}
 
 		public void SetComplete()
 		{
-			Complete = true;
+			IsCompleted = true;
 		}
 	}
 }

@@ -27,7 +27,6 @@ namespace Mascari4615
 				Artifact targetArtifact = artifacts.Dequeue();
 
 				slot.SetArtifact(targetArtifact);
-				slot.UpdateUI();
 				animator.SetTrigger("POP");
 				yield return new WaitForSecondsRealtime(animator.GetCurrentAnimatorStateInfo(0).length);
 			}

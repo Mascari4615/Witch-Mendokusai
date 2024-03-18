@@ -53,7 +53,7 @@ namespace Mascari4615
 		}
 
 		public void SetSlotIndex(int index) => Index = index;
-		public virtual void SetArtifact(Artifact artifact, int amount = 1)
+		public void SetArtifact(Artifact artifact, int amount = 1)
 		{
 			Init();
 
@@ -62,6 +62,8 @@ namespace Mascari4615
 
 			if (ToolTipTrigger)
 				ToolTipTrigger.SetToolTipContent(Artifact);
+
+			UpdateUI();
 		}
 
 		public virtual void UpdateUI()

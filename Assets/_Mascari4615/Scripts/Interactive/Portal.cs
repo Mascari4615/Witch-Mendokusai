@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class Portal : InteractiveObject
+	public class Portal : MonoBehaviour, IInteractable
 	{
 		[field: SerializeField] public Transform TpPos { get; private set; }
 
 		[SerializeField] private Stage targetStage;
 		[SerializeField] private int targetPortalIndex;
 	
-		public override void Interact()
+		public void OnInteract()
 		{
 			StageManager.Instance.LoadStage(targetStage, targetPortalIndex);
 		}

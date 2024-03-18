@@ -4,8 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(Unit), menuName = "Variable/Unit")]
-	public class Unit : Artifact
+	public abstract class Unit : Artifact
 	{
 		[field: Header("_" + nameof(Unit))]
 		[field: SerializeField] public GameObject Prefab { get; set; }

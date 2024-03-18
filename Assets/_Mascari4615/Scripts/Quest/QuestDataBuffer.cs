@@ -4,6 +4,6 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(QuestDataBuffer), menuName = "GameSystem/DataBuffer/Quest")]
+	[CreateAssetMenu(fileName = nameof(QuestDataBuffer), menuName = "GameSystem/DataBuffer/" + nameof(Quest))]
 	public class QuestDataBuffer : DataBuffer<Quest> { }
 }

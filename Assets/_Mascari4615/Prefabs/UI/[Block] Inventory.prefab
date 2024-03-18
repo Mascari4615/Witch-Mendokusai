@@ -229,8 +229,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 5966baec81018ce4b8f69e9254405eac, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -238,7 +238,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 1.5
 --- !u!222 &7864684922942247771
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -630,7 +630,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 634781642427003200, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_Name
-      value: '[Block] ButtonWithSlot'
+      value: '[Button] [0] FilterButton'
       objectReference: {fileID: 0}
     - target: {fileID: 5896711234911727571, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_IsActive
@@ -736,7 +736,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 634781642427003200, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_Name
-      value: '[Block] ButtonWithSlot (2)'
+      value: '[Button] [2] FilterButton'
       objectReference: {fileID: 0}
     - target: {fileID: 5896711234911727571, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_IsActive
@@ -842,7 +842,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 634781642427003200, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_Name
-      value: '[Block] ButtonWithSlot (1)'
+      value: '[Button] [1] FilterButton'
       objectReference: {fileID: 0}
     - target: {fileID: 5896711234911727571, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_IsActive
@@ -948,7 +948,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 634781642427003200, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_Name
-      value: '[Block] ButtonWithSlot (3)'
+      value: '[Button] [3] FilterButton'
       objectReference: {fileID: 0}
     - target: {fileID: 5896711234911727571, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_IsActive

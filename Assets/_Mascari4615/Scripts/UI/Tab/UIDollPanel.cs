@@ -95,7 +95,6 @@ namespace Mascari4615
 				for (int i = 0; i < curStuffsSlot.Length; i++)
 				{
 					curStuffsSlot[i].SetArtifact(DataManager.Instance.GetEquipment(curDollIndex, i));
-					curStuffsSlot[i].UpdateUI();
 				}
 			}
 		}

@@ -21,7 +21,7 @@ namespace Mascari4615
 		private int unitID;
 		private Action endAction;
 
-		public void StartChat(NPC npc, Action action)
+		public void StartChat(NPCObject npc, Action action)
 		{
 			if (TryGetChatData("테스트", out List<LineData> curChatDatas) == false)
 				return;

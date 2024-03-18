@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace Mascari4615
 {
-	public class UnitObject : MonoBehaviour
+	public abstract class UnitObject : MonoBehaviour
 	{
 		[field: SerializeField] public Unit UnitData { get; private set; }
 		public UnitSkillHandler UnitSkillHandler { get; protected set; }

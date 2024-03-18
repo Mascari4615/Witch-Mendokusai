@@ -50,7 +50,6 @@ namespace Mascari4615
 				if (item == null)
 				{
 					slot.SetArtifact(null);
-					slot.UpdateUI();
 					slot.gameObject.SetActive(dontShowEmptySlot == false);
 				}
 				else
@@ -59,7 +58,6 @@ namespace Mascari4615
 					bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
 
 					slot.SetArtifact(itemData, item.Amount);
-					slot.UpdateUI();
 					slot.gameObject.SetActive(slotActive);
 				}
 			}
@@ -75,8 +73,6 @@ namespace Mascari4615
 			{
 				Slots[index].SetArtifact(null, 1);
 			}
-
-			Slots[index].UpdateUI();
 		}
 
 		public void SetFilter(ItemType newFilter)

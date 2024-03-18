@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1930597945545288848}
   - component: {fileID: 3002923229583690020}
+  - component: {fileID: 5992626668637170693}
   - component: {fileID: 1665863225541985621}
   m_Layer: 0
   m_Name: Portal
@@ -81,6 +82,18 @@ MonoBehaviour:
   <TpPos>k__BackingField: {fileID: 6279377062769318453}
   targetStage: {fileID: 11400000, guid: 6c6233d5f5737af4db2e17ee59f2a4cc, type: 2}
   targetPortalIndex: 0
+--- !u!114 &5992626668637170693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1496883160333710208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed192138a06dd474484573115553a37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!65 &1665863225541985621
 BoxCollider:
   m_ObjectHideFlags: 0

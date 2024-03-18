@@ -69,7 +69,6 @@ namespace Mascari4615
 
 				deckSelectButtons[i].SetSlotIndex(i);
 				deckSelectButtons[i].SetArtifact(equipment);
-				deckSelectButtons[i].UpdateUI();
 				deckSelectButtons[i].SetSelectAction(
 					(UISlot slot) =>
 					{
@@ -117,7 +116,6 @@ namespace Mascari4615
 					continue;
 
 				cardSelectButtons[randomMasteries.Count].SetArtifact(randomCard);
-				cardSelectButtons[randomMasteries.Count].UpdateUI();
 				randomMasteries.Add(randomCard);
 			}
 

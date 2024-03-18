@@ -21,18 +21,18 @@ namespace Mascari4615
 	{
 		private CanvasGroup canvasGroup;
 		[SerializeField] private GameObject buttonsParent;
-		[SerializeField] private GameObject[] buttons;
+		[SerializeField] private UISlot exitOption;
+		[SerializeField] private UISlot talkOption;
+		[SerializeField] private UISlot[] options;
+		[SerializeField] private UISlot[] questOptions;
 
 		// [SerializeField] private RectTransform panelParent;
 		// [SerializeField] private float panelMove = 300;
 
-		public MNPCPanelType CurPanel{ get; private set; }
+		public MNPCPanelType CurPanel { get; private set; }
 		private readonly Dictionary<MNPCPanelType, UIPanel> panelUIs = new();
-
-		public void SetPanel(int newPanelIndex)
-		{
-			SetPanel((MNPCPanelType)(1 << newPanelIndex));
-		}
+		private NPCObject curNPC;
+		private NPC curNPCData;
 
 		private void SetPanel(MNPCPanelType newPanel)
 		{
@@ -62,11 +62,39 @@ namespace Mascari4615
 			}
 		}
 
-		private NPC curNPC;
-
 		public override void Init()
 		{
 			canvasGroup = GetComponent<CanvasGroup>();
+
+			talkOption.SetSelectAction((UISlot slot) =>
+			{
+				Talk();
+			});
+
+			exitOption.SetSelectAction((UISlot slot) =>
+			{
+				Exit();
+			});
+
+			for (int i = 0; i < questOptions.Length; i++)
+			{
+				questOptions[i].SetSlotIndex(i);
+				questOptions[i].Init();
+				questOptions[i].SetSelectAction((UISlot slot) =>
+				{
+					SelectQuest(slot.Index);
+				});
+			}
+
+			for (int i = 0; i < options.Length; i++)
+			{
+				options[i].SetSlotIndex(i);
+				options[i].Init();
+				options[i].SetSelectAction((UISlot slot) =>
+				{
+					SetPanel((MNPCPanelType)(1 << slot.Index));
+				});
+			}
 
 			panelUIs[MNPCPanelType.Shop] = FindObjectOfType<UIShop>(true);
 			panelUIs[MNPCPanelType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
@@ -86,11 +114,26 @@ namespace Mascari4615
 			canvasGroup.alpha = 0;
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
-			
-			buttons[0].SetActive(curNPC.PanelType.HasFlag(MNPCPanelType.Shop));
-			buttons[1].SetActive(curNPC.PanelType.HasFlag(MNPCPanelType.DungeonEntrance));
-			buttons[2].SetActive(curNPC.PanelType.HasFlag(MNPCPanelType.Pot));
-			
+
+			List<Quest> quests = curNPCData.Quests;
+			for (int i = 0; i < questOptions.Length; i++)
+			{
+				if (i < quests.Count)
+				{
+					questOptions[i].SetArtifact(quests[i]);
+					questOptions[i].gameObject.SetActive(true);
+				}
+				else
+				{
+					questOptions[i].gameObject.SetActive(false);
+				}
+			}
+
+			MNPCPanelType npcPanelType = curNPCData.PanelType;
+			options[0].gameObject.SetActive(npcPanelType.HasFlag(MNPCPanelType.Shop));
+			options[1].gameObject.SetActive(npcPanelType.HasFlag(MNPCPanelType.DungeonEntrance));
+			options[2].gameObject.SetActive(npcPanelType.HasFlag(MNPCPanelType.Pot));
+
 			Talk();
 		}
 
@@ -103,11 +146,12 @@ namespace Mascari4615
 		{
 		}
 
-		public void SetNPC(NPC npc)
+		public void SetNPC(NPCObject npc)
 		{
 			curNPC = npc;
+			curNPCData = curNPC.UnitData as NPC;
 		}
-		
+
 		public void Talk()
 		{
 			buttonsParent.SetActive(false);
@@ -120,7 +164,7 @@ namespace Mascari4615
 				// Vector3 tmp = panelParent.anchoredPosition;
 				// tmp.x = panelMove * (isNPCLeft ? -1 : 1);
 				// panelParent.anchoredPosition = tmp;
-				
+
 				canvasGroup.alpha = 1;
 				canvasGroup.interactable = true;
 				canvasGroup.blocksRaycasts = true;
@@ -132,6 +176,28 @@ namespace Mascari4615
 
 		public void Exit()
 		{
+			UIManager.Instance.SetOverlay(MPanelType.None);
+		}
+
+		private void SelectQuest(int index)
+		{
+			Quest quest = curNPCData.Quests[index];
+			if (quest.IsUnlocked == false)
+			{
+				quest.Unlock();
+			}
+			else
+			{
+				if (quest.IsCompleted)
+				{
+					// 보상
+				}
+				else
+				{
+					// TODO : 대화
+				}
+			}
+
 			UIManager.Instance.SetOverlay(MPanelType.None);
 		}
 	}
