@@ -113,12 +113,12 @@ namespace Mascari4615
 
 			Vector3 GetVec(Vector3 worldPos)
 			{
-				float toolTipHeight = bubbleRectTransform.sizeDelta.y;
+				float bubbleHeight = bubbleRectTransform.sizeDelta.y;
 				Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
 				
 				return new Vector3(
 					Mathf.Clamp(screenPos.x, bubbleWidth / 2 + BubblePadding, Screen.width - bubbleWidth / 2 - BubblePadding),
-					Mathf.Clamp(screenPos.y + 40, BubblePadding, Screen.height - toolTipHeight - BubblePadding), 0);
+					Mathf.Clamp(screenPos.y + 40, BubblePadding, Screen.height - bubbleHeight - BubblePadding), 0);
 			}
 		}
 

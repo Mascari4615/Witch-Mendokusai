@@ -223,6 +223,7 @@ namespace Mascari4615
 					continue;
 				InventoryData.Add(new InventorySlotData(i, RuntimeItems[i]));
 			}
+			Debug.Log($"InventoryData.Count: {InventoryData.Count}");
 			return InventoryData;
 		}
 

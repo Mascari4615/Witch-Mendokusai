@@ -6,17 +6,12 @@ namespace Mascari4615
 {
 	public class UIRequestPanel : UIPanel
 	{
-		private ToolTip clickToolTip;
 		private UIQuestBuffer questDataBufferUI;
 
 		public override void Init()
 		{
-			clickToolTip = GetComponentInChildren<ToolTip>(true);
 			questDataBufferUI = GetComponentInChildren<UIQuestBuffer>(true);
-
 			questDataBufferUI.Init();
-			foreach (UISlot slot in questDataBufferUI.Slots)
-				slot.ToolTipTrigger.SetClickToolTip(clickToolTip);
 		}
 
 		public override void UpdateUI()

@@ -13,9 +13,6 @@ namespace Mascari4615
 		public Artifact Artifact { get; private set; }
 		private int amount = 1;
 
-		public Sprite Sprite => iconImage.sprite;
-		public bool HasItem => iconImage.sprite != null;
-
 		[SerializeField] protected Artifact defaultArtifact;
 
 		protected Button button;
@@ -24,6 +21,7 @@ namespace Mascari4615
 		protected TextMeshProUGUI countText;
 		protected TextMeshProUGUI descriptionText;
 		protected Image disableImage;
+		protected GameObject selectedBlock;
 
 		private Action<UISlot> selectAction;
 
@@ -39,10 +37,11 @@ namespace Mascari4615
 
 			iconImage = transform.Find("[Image] IconBackground").Find("[Image] Icon").GetComponent<Image>();
 			disableImage = transform.Find("[Image] Disable").GetComponent<Image>();
-			
+
 			nameText = transform.Find("[Text] Name").GetComponent<TextMeshProUGUI>();
 			countText = transform.Find("[Text] Count").GetComponent<TextMeshProUGUI>();
 			descriptionText = transform.Find("[Text] Description").GetComponent<TextMeshProUGUI>();
+			selectedBlock = transform.Find("[Block] Selected").gameObject;
 
 			ToolTipTrigger = GetComponent<ToolTipTrigger>();
 
@@ -104,6 +103,12 @@ namespace Mascari4615
 		{
 			// Debug.Log("Select");
 			selectAction?.Invoke(this);
+		}
+
+		public void SetSelected(bool isSelect)
+		{
+			if (selectedBlock)
+				selectedBlock.SetActive(isSelect);
 		}
 	}
 }

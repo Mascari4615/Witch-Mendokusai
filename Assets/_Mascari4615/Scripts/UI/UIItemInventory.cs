@@ -28,10 +28,7 @@ namespace Mascari4615
 				for (int i = 0; i < fillerButtons.Length; i++)
 				{
 					fillerButtons[i].SetSlotIndex(i);
-					fillerButtons[i].SetSelectAction((UISlot slot) =>
-					{
-						SetFilter((ItemType)(slot.Index - 1));
-					});
+					fillerButtons[i].SetSelectAction((slot) => {SetFilter((ItemType)(slot.Index - 1));});
 				}
 			}
 

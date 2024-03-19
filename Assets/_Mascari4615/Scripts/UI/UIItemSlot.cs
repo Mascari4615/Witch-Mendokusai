@@ -63,7 +63,7 @@ namespace Mascari4615
 			if (!canDrag)
 				return;
 
-			if (!HasItem)
+			if (!Artifact)
 				return;
 
 			DragSlot.instance.SetSlot(this);
@@ -74,7 +74,7 @@ namespace Mascari4615
 			if (!canDrag)
 				return;
 
-			if (!HasItem)
+			if (!Artifact)
 				return;
 
 			DragSlot.instance.transform.position = eventData.position;
@@ -108,7 +108,7 @@ namespace Mascari4615
 		{
 			if (onlyOneItem)
 			{
-				if (!HasItem)
+				if (!Artifact)
 				{
 					// DragSlot.HoldingSlot의 Item에서 하나만 가져오기 (빼오기)
 				}

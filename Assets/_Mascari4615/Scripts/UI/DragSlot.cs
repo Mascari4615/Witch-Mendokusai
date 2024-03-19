@@ -29,7 +29,7 @@ namespace Mascari4615
 			if (slot == null)
 				return;
 
-			specialThingImage.sprite = slot.Sprite;
+			specialThingImage.sprite = slot.Artifact.Thumbnail;
 			SetColor(1);
 		}
 

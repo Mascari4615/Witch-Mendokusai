@@ -66,34 +66,21 @@ namespace Mascari4615
 		{
 			canvasGroup = GetComponent<CanvasGroup>();
 
-			talkOption.SetSelectAction((UISlot slot) =>
-			{
-				Talk();
-			});
-
-			exitOption.SetSelectAction((UISlot slot) =>
-			{
-				Exit();
-			});
+			talkOption.SetSelectAction((slot) =>{Talk();});
+			exitOption.SetSelectAction((slot) =>{Exit();});
 
 			for (int i = 0; i < questOptions.Length; i++)
 			{
 				questOptions[i].SetSlotIndex(i);
 				questOptions[i].Init();
-				questOptions[i].SetSelectAction((UISlot slot) =>
-				{
-					SelectQuest(slot.Index);
-				});
+				questOptions[i].SetSelectAction((slot) =>{SelectQuest(slot.Index);});
 			}
 
 			for (int i = 0; i < options.Length; i++)
 			{
 				options[i].SetSlotIndex(i);
 				options[i].Init();
-				options[i].SetSelectAction((UISlot slot) =>
-				{
-					SetPanel((MNPCPanelType)(1 << slot.Index));
-				});
+				options[i].SetSelectAction((slot) =>{SetPanel((MNPCPanelType)(1 << slot.Index));});
 			}
 
 			panelUIs[MNPCPanelType.Shop] = FindObjectOfType<UIShop>(true);

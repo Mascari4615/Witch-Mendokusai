@@ -8,9 +8,11 @@ namespace Mascari4615
 	public abstract class UIDataBuffer<T> : MonoBehaviour
 	{
 		public List<UISlot> Slots { get; protected set; } = new();
+		public int CurSlotIndex { get; protected set; } = 0;
 		[SerializeField] protected Transform slotsParent;
 		[SerializeField] protected DataBuffer<T> dataBuffer;
 		[SerializeField] protected bool dontShowEmptySlot = false;
+		[SerializeField] protected ToolTip clickToolTip;
 		private bool isInit = false;
 
 		private void Awake()
@@ -39,8 +41,14 @@ namespace Mascari4615
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				Slots[i].SetSlotIndex(i);
+				Slots[i].SetSelectAction((slot) => { SelectSlot(slot.Index);});
 				Slots[i].Init();
+
+				if (clickToolTip != null)
+					Slots[i].ToolTipTrigger.SetClickToolTip(clickToolTip);
 			}
+
+			SelectSlot(0);
 
 			return isInit = true;
 		}
@@ -70,6 +78,13 @@ namespace Mascari4615
 		public void SetDataBuffer(DataBuffer<T> newDataBuffer)
 		{
 			dataBuffer = newDataBuffer;
+		}
+
+		public void SelectSlot(int index)
+		{
+			CurSlotIndex = index;
+			for (int i = 0; i < Slots.Count; i++)
+				Slots[i].SetSelected(i == index);
 		}
 	}
 }

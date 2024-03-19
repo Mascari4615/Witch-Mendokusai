@@ -93,18 +93,21 @@ namespace Mascari4615
 
 		public void CreateNewGameData()
 		{
-			Debug.Log(nameof(CreateNewGameData));
 			GameData newGameData = new();
+			Inventory inventory = soManager.ItemInventory;
 
-			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
+			inventory.LoadSaveItems(newGameData.itemInventoryItems);
 			for (int i = 0; i < 3; i++)
 			{
 				EquipmentData equipmentData = DollDic[0].EquipmentDatas[i];
-				soManager.ItemInventory.Add(equipmentData);
-				CurGameData.dollDatas[0].equipmentGuids[i] = soManager.ItemInventory.GetItem(soManager.ItemInventory.FindItemSlotIndex(equipmentData)).Guid;
+				inventory.Add(equipmentData);
+				newGameData.dollDatas[0].equipmentGuids[i] = inventory.GetItem(inventory.FindItemSlotIndex(equipmentData)).Guid;
 			}
 
-			LoadData(newGameData);
+			CurGameData = newGameData;
+			for (int i = 0; i < CurGameData.dummyDollCount - 1; i++)
+				soManager.Dolls.AddItem(DollDic[Doll.DUMMY_ID]);
+			WorkManager.Init(CurGameData.works);
 		}
 
 		public void SaveData()
@@ -116,14 +119,12 @@ namespace Mascari4615
 			}
 
 			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
-			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
 			_playFabManager.SavePlayerData();
 		}
 
 		public void LoadData(GameData saveData)
 		{
 			CurGameData = saveData;
-
 			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
 			for (int i = 0; i < CurGameData.dummyDollCount - 1; i++)
 				soManager.Dolls.AddItem(DollDic[Doll.DUMMY_ID]);

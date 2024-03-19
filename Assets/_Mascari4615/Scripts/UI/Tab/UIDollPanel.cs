@@ -8,15 +8,12 @@ namespace Mascari4615
 {
 	public class UIDollPanel : UIPanel
 	{
-		private ToolTip clickToolTip;
 		[SerializeField] private GameObject selectNewEquipmentPanel;
 		private UIDollInventory dollInventoryUI;
 		private UIItemInventory selectNewEquipmentInventoryUI;
 		[SerializeField] private GameObject selectDollButton;
 		[SerializeField] private UISlot[] curStuffsSlot;
 		private int targetEquipmentIndex;
-
-		private int curDollIndex;
 
 		// public void PrevDoll() => SetDoll(DataManager.Instance.CurGameData.curDollIndex - 1);
 		// public void NextDoll() => SetDoll(DataManager.Instance.CurGameData.curDollIndex + 1);
@@ -33,13 +30,12 @@ namespace Mascari4615
 
 		public void SetDoll()
 		{
-			DataManager.Instance.CurGameData.curDollIndex = curDollIndex;
+			DataManager.Instance.CurGameData.curDollIndex = dollInventoryUI.CurSlotIndex;
 			UpdateUI();
 		}
 
 		public override void Init()
 		{
-			clickToolTip = GetComponentInChildren<ToolTip>(true);
 			dollInventoryUI = GetComponentInChildren<UIDollInventory>(true);
 			selectNewEquipmentInventoryUI = selectNewEquipmentPanel.GetComponentInChildren<UIItemInventory>(true);
 			
@@ -48,10 +44,7 @@ namespace Mascari4615
 			for (int i = 0; i < curStuffsSlot.Length; i++)
 			{
 				curStuffsSlot[i].SetSlotIndex(i);
-				curStuffsSlot[i].SetSelectAction((UISlot slot) =>
-				{
-					OpenChangeEuqipmentPanel(slot.Index);
-				});
+				curStuffsSlot[i].SetSelectAction((slot) =>{OpenChangeEuqipmentPanel(slot.Index);});
 			}
 
 			dollInventoryUI.Init();
@@ -59,18 +52,18 @@ namespace Mascari4615
 
 			foreach (UISlot slot in dollInventoryUI.Slots)
 			{
-				slot.ToolTipTrigger.SetClickToolTip(clickToolTip);
-				slot.SetSelectAction((UISlot slot) =>
+				slot.SetSelectAction((slot) =>
 				{
-					curDollIndex = slot.Index;
+					dollInventoryUI.SelectSlot(slot.Index);
 					UpdateUI();
 				});
 			}
 
 			for (int i = 0; i < selectNewEquipmentInventoryUI.Slots.Count; i++)
 			{
-				selectNewEquipmentInventoryUI.Slots[i].SetSelectAction((UISlot slot) =>
+				selectNewEquipmentInventoryUI.Slots[i].SetSelectAction((slot) =>
 				{
+					selectNewEquipmentInventoryUI.SelectSlot(slot.Index);
 					ApplyNewArtifact(slot.Index);
 				});
 			}
@@ -78,6 +71,8 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
+			int curDollIndex = dollInventoryUI.CurSlotIndex;
+
 			selectNewEquipmentPanel.SetActive(false);
 
 			if (DataManager.Instance.CurGameData == null)
@@ -108,6 +103,7 @@ namespace Mascari4615
 		private void ApplyNewArtifact(int slotIndex)
 		{
 			// Debug.Log("ApplyNewArtifact" + slotIndex);
+			int curDollIndex = dollInventoryUI.CurSlotIndex;
 
 			DollData[] dollDatas = DataManager.Instance.CurGameData.dollDatas;
 			// int curDollIndex = DataManager.Instance.CurGameData.lastDollIndex;

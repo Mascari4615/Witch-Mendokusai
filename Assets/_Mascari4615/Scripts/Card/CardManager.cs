@@ -21,7 +21,7 @@ namespace Mascari4615
 
 		private readonly List<List<Card>> cardDataBuffers = new(3) { new(), new(), new() };
 		private int curDeckIndex;
-		
+
 		[SerializeField] private GameObject selectDeckPanel;
 		[SerializeField] private GameObject deckPanel;
 		[SerializeField] private UISlot[] deckSelectButtons;
@@ -58,28 +58,13 @@ namespace Mascari4615
 					continue;
 				cardDataBuffers[i].AddRange(equipment.Masteries);
 
-				deckUIDic[equipment.ID].Init(
-					cardSelectAction: (UISlot slot) =>
-					{
-						// SelectCard(cardSlots[i].Atrifact as Card);
-						// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈
-
-						SelectCard(slot.Artifact as Card);
-					});
-
+				// cardSelectAction: (slot) => { SelectCard(cardSlots[i].Atrifact as Card); }
+				// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈
+				deckUIDic[equipment.ID].Init(cardSelectAction: (slot) => { SelectCard(slot.Artifact as Card); });
 				deckSelectButtons[i].SetSlotIndex(i);
 				deckSelectButtons[i].SetArtifact(equipment);
-				deckSelectButtons[i].SetSelectAction(
-					(UISlot slot) =>
-					{
-						SelectDeck(slot.Index);
-					});
-
-				cardSelectButtons[i].SetSelectAction(
-					(UISlot slot) =>
-					{
-						SelectCard(slot.Artifact as Card);
-					});
+				deckSelectButtons[i].SetSelectAction((slot) => { SelectDeck(slot.Index); });
+				cardSelectButtons[i].SetSelectAction((slot) => { SelectCard(slot.Artifact as Card); });
 			}
 		}
 
@@ -131,7 +116,7 @@ namespace Mascari4615
 			RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
 
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
-			
+
 			List<Card> curDeckBuffer = cardDataBuffers[curDeckIndex];
 			selectedCardBuffer.AddItem(card);
 
