@@ -4,11 +4,18 @@ using UnityEngine;
 
 namespace Mascari4615
 {
+	public enum QuestType
+	{
+		Normal,
+		VillageQuest
+	}
+
 	[CreateAssetMenu(fileName = nameof(Quest), menuName = "Variable/" + nameof(Quest))]
 	public class Quest : Artifact
 	{
 		[field: SerializeField] public GameEvent[] GameEvents { get; private set; }
 		[field: SerializeField] public Criteria[] Criterias{ get; private set; }
+		[field: SerializeField] public QuestType QuestType{ get; private set; }
 		[System.NonSerialized] public bool IsUnlocked;
 		[System.NonSerialized] public bool IsCompleted;
 
@@ -17,7 +24,7 @@ namespace Mascari4615
 			IsUnlocked = true;
 		}
 
-		public void SetComplete()
+		public void Complete()
 		{
 			IsCompleted = true;
 		}

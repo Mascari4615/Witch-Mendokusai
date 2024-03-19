@@ -1,43 +1,58 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mascari4615
 {
+	// https://twitter.com/BinaryImpactG/status/1686306273061482496
+	// Mathf.Epsilon
 	public class TimeManager : Singleton<TimeManager>
 	{
-		// https://twitter.com/BinaryImpactG/status/1686306273061482496
-		// Mathf.Epsilon
+		public const float Tick = 0.1f;
+		public float slowFactor = 0.05f;
+		public float slowTime = .5f;
+		public float returnSpeed = 4f;
 
-		public bool Paused => SOManager.Instance.IsPaused.RuntimeValue;
-		public static float LocalTimeScale = 1f;
-		public static float DeltaTime
-		{
-			get
-			{
-				return Time.deltaTime * LocalTimeScale;
-			}
-		}
-		public static bool IsPaused
-		{
-			get
-			{
-				return LocalTimeScale == 0f;
-			}
-		}
-
-		public static float TimeScale
-		{
-			get
-			{
-				return Time.timeScale * LocalTimeScale;
-			}
-		}
+		private Action callback;
+		private Coroutine timeLoop;
 
 		protected override void Awake()
 		{
 			base.Awake();
 			SOManager.Instance.IsPaused.GameEvent.AddCallback(UpdateTimeScale);
+		}
+		
+		private void OnEnable()
+		{
+			timeLoop = StartCoroutine(UpdateTime());
+		}
+		
+		private IEnumerator UpdateTime()
+		{
+			WaitForSeconds wait = new(Tick);
+			while (true)
+			{
+				callback?.Invoke();
+				yield return wait;
+			}
+		}
+
+		public void AddCallback(Action callback)
+		{
+			if (this.callback != null)
+			{
+				foreach (Delegate existingCallback in this.callback.GetInvocationList())
+					if (existingCallback.Equals(callback))
+						return; // 이미 등록된 이벤트는 추가하지 않습니다.
+			}
+
+			this.callback += callback;
+		}
+
+		public void RemoveCallback(Action callback)
+		{
+			this.callback += callback;
 		}
 
 		public void UpdateTimeScale()
@@ -54,10 +69,6 @@ namespace Mascari4615
 		{
 			SOManager.Instance.IsPaused.RuntimeValue = false;
 		}
-
-		public float slowFactor = 0.05f;
-		public float slowTime = .5f;
-		public float returnSpeed = 4f;
 
 		[ContextMenu(nameof(DoSlowMotion))]
 		public void DoSlowMotion()

@@ -34,12 +34,14 @@ namespace Mascari4615
 		public string localDisplayName = "";
 
 		[SerializeField] private PlayFabManager _playFabManager;
+		public WorkManager WorkManager { get; private set; }
 
 		protected override void Awake()
 		{
 			base.Awake();
 
 			soManager = SOManager.Instance;
+			WorkManager = new();
 
 			foreach (ItemData item in soManager.ItemDataBuffer.InitItems)
 			{
@@ -92,17 +94,17 @@ namespace Mascari4615
 		public void CreateNewGameData()
 		{
 			Debug.Log(nameof(CreateNewGameData));
-			CurGameData = new GameData();
+			GameData newGameData = new();
 
 			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
-
 			for (int i = 0; i < 3; i++)
 			{
 				EquipmentData equipmentData = DollDic[0].EquipmentDatas[i];
 				soManager.ItemInventory.Add(equipmentData);
-
 				CurGameData.dollDatas[0].equipmentGuids[i] = soManager.ItemInventory.GetItem(soManager.ItemInventory.FindItemSlotIndex(equipmentData)).Guid;
 			}
+
+			LoadData(newGameData);
 		}
 
 		public void SaveData()
@@ -114,17 +116,18 @@ namespace Mascari4615
 			}
 
 			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
+			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
 			_playFabManager.SavePlayerData();
 		}
 
 		public void LoadData(GameData saveData)
 		{
 			CurGameData = saveData;
-			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
 
+			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
 			for (int i = 0; i < CurGameData.dummyDollCount - 1; i++)
-				soManager.Dolls.AddItem(DollDic[4444]);
-			// OnCurGameDataLoad.Invoke();
+				soManager.Dolls.AddItem(DollDic[Doll.DUMMY_ID]);
+			WorkManager.Init(CurGameData.works);
 		}
 
 		public Color GetGradeColor(Grade grade) => grade switch
@@ -156,6 +159,12 @@ namespace Mascari4615
 			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(CurGameData.dollDatas[dollIndex].equipmentGuids[equipmentIndex]))?
 			.Data as EquipmentData;
 		}
+
+		[ContextMenu(nameof(TestWork))]
+		public void TestWork()
+		{
+			WorkManager.AddWork(Doll.DUMMY_ID, new Work(WorkType.CompleteQuest, 0, 10));
+		}
 	}
 
 	[Serializable]
@@ -166,6 +175,7 @@ namespace Mascari4615
 		public DollData[] dollDatas = new DollData[10];
 		public int dummyDollCount = 1;
 		public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
+		public Dictionary<int, List<Work>> works = new();
 
 		public GameData()
 		{

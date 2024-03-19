@@ -83,7 +83,7 @@ namespace Mascari4615
 			if (DataManager.Instance.CurGameData == null)
 				return;
 
-			if (SOManager.Instance.Dolls.RuntimeItems[curDollIndex].ID == 4444)
+			if (SOManager.Instance.Dolls.RuntimeItems[curDollIndex].ID == Doll.DUMMY_ID)
 			{
 				curStuffsSlot[0].transform.parent.gameObject.SetActive(false);
 				selectDollButton.SetActive(false);

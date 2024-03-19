@@ -22,7 +22,7 @@ namespace Mascari4615
 				if (criteria.HasComplete() == false)
 					return;
 
-			DataManager.Instance.QuestDic[quest.ID].SetComplete();
+			DataManager.Instance.QuestDic[quest.ID].Complete();
 			gameObject.SetActive(false);
 			UIManager.Instance.Popup(quest);
 		}

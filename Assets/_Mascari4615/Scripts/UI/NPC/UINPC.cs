@@ -190,7 +190,14 @@ namespace Mascari4615
 			{
 				if (quest.IsCompleted)
 				{
-					// 보상
+					switch (quest.QuestType)
+					{
+						case QuestType.Normal:
+							// 보상
+							break;
+						case QuestType.VillageQuest:
+							break;
+					}
 				}
 				else
 				{
