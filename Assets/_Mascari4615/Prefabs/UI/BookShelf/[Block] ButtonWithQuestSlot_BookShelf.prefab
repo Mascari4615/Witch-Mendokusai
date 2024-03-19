@@ -269,7 +269,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6907260733322050985, guid: 7bd4d2bc1369f044abd2607c02866fca, type: 3}
       propertyPath: m_Name
-      value: '[Block] ButtonWithQuestSlot_BookShelf Variant'
+      value: '[Block] ButtonWithQuestSlot_BookShelf'
       objectReference: {fileID: 0}
     - target: {fileID: 7677635111060224910, guid: 7bd4d2bc1369f044abd2607c02866fca, type: 3}
       propertyPath: m_Type
@@ -327,7 +327,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultArtifact: {fileID: 0}
-  completeEffect: {fileID: 8264649880363696504}
+  stateObjects: []
+  progress: {fileID: 7945072206836099209}
 --- !u!114 &1857904841392010456
 MonoBehaviour:
   m_ObjectHideFlags: 0

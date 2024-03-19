@@ -9,6 +9,7 @@ namespace Mascari4615
 	{
 		public List<UISlot> Slots { get; protected set; } = new();
 		public int CurSlotIndex { get; protected set; } = 0;
+		public UISlot CurSlot => Slots[CurSlotIndex];
 		[SerializeField] protected Transform slotsParent;
 		[SerializeField] protected DataBuffer<T> dataBuffer;
 		[SerializeField] protected bool dontShowEmptySlot = false;

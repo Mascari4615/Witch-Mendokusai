@@ -1,9 +1,30 @@
+using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Mascari4615
 {
 	public class UIQuestBuffer : UIDataBuffer<Quest>
 	{
+		[SerializeField] private GameObject workButton;
+		[SerializeField] private GameObject rewardButton;
+
+		private Coroutine coroutine;
+
+		private void OnEnable()
+		{
+			if (coroutine != null)
+				StopCoroutine(coroutine);
+			coroutine = StartCoroutine(UpdateLoop());
+		}
+
+		private void OnDisable()
+		{
+			if (coroutine != null)
+				StopCoroutine(coroutine);
+		}
+
 		public override void UpdateUI()
 		{
 			for (int i = 0; i < Slots.Count; i++)
@@ -18,11 +39,53 @@ namespace Mascari4615
 				}
 				else
 				{
-					bool slotActive = quest.IsUnlocked;
+					bool slotActive = quest.QuestState > QuestState.Locked;
 
 					slot.SetArtifact(quest);
 					slot.gameObject.SetActive(slotActive);
 				}
+			}
+
+			if (CurSlot.Artifact)
+			{
+				Quest curQuest = CurSlot.Artifact as Quest;
+				workButton.SetActive(curQuest.QuestState == QuestState.NeedWorkToComplete);
+				rewardButton.SetActive(curQuest.QuestState == QuestState.Completed);
+			}
+		}
+
+		public void GetReward()
+		{
+			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
+
+			if (quest.QuestState != QuestState.Completed)
+				return;
+			quest.GetReward();
+			UpdateUI();
+		}
+
+		public void Work()
+		{
+			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
+
+			if (quest.QuestState != QuestState.NeedWorkToComplete)
+				return;
+
+			Work work = new(WorkType.CompleteQuest, quest.ID, 5);
+			if (DataManager.Instance.WorkManager.AddWork(Doll.DUMMY_ID, work))
+			{
+				quest.SetWork(work);
+				UpdateUI();
+			}
+		}
+		
+		public IEnumerator UpdateLoop()
+		{
+			WaitForSeconds wait = new(.1f);
+			while (true)
+			{
+				UpdateUI();
+				yield return wait;
 			}
 		}
 	}

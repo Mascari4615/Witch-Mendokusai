@@ -169,27 +169,24 @@ namespace Mascari4615
 		private void SelectQuest(int index)
 		{
 			Quest quest = curNPCData.Quests[index];
-			if (quest.IsUnlocked == false)
+
+			switch (quest.QuestState)
 			{
-				quest.Unlock();
-			}
-			else
-			{
-				if (quest.IsCompleted)
-				{
-					switch (quest.QuestType)
+				case QuestState.Locked:
+					quest.Unlock();
+					break;
+				case QuestState.Unlocked:
+					break;
+				case QuestState.NeedWorkToComplete:
+					break;
+				case QuestState.Completed:
+					if (quest.QuestType != QuestType.VillageQuest)
 					{
-						case QuestType.Normal:
-							// 보상
-							break;
-						case QuestType.VillageQuest:
-							break;
+						
 					}
-				}
-				else
-				{
-					// TODO : 대화
-				}
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
 			}
 
 			UIManager.Instance.SetOverlay(MPanelType.None);

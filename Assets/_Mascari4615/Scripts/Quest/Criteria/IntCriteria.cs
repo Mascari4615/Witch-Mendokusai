@@ -15,5 +15,10 @@ namespace Mascari4615
 		{
 			return intVariable.RuntimeValue >= target;
 		}
+		
+		public override float GetProgress()
+		{
+			return (float)intVariable.RuntimeValue / target;
+		}
 	}
 }

@@ -20,13 +20,14 @@ namespace Mascari4615
 			{
 				for (int i = work.Value.Count - 1; i >= 0; i--)
 				{
-					work.Value[i].Tick(TimeManager.Tick);
+					work.Value[i].Tick();
+
 					if (work.Value[i].IsCompleted)
 					{
-						switch (work.Value[i].workType)
+						switch (work.Value[i].WorkType)
 						{
 							case WorkType.CompleteQuest:
-								// SOManager.Instance.QuestDataBuffer.RuntimeItems[work.Value[i].value].Complete();
+								DataManager.Instance.QuestDic[work.Value[i].Value].ActualComplete();
 								break;
 							default:
 								throw new ArgumentOutOfRangeException();

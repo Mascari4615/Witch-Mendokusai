@@ -11,29 +11,21 @@ namespace Mascari4615
 
 	public class Work
 	{
-		public WorkType workType;
-		public int value;
-	
-		public float time;
-		public float curTime = 0;
+		public WorkType WorkType { get; private set; }
+		public int Value { get; private set; }
+
+		private readonly float time;
+		private float curTime = 0;
+
+		public void Tick() => curTime = Mathf.Clamp(curTime + TimeManager.Tick, 0, time);
+		public float Progress => curTime / time;
+		public bool IsCompleted => curTime >= time;
 
 		public Work(WorkType workType, int value, float time)
 		{
-			this.workType = workType;
-			this.value = value;
+			WorkType = workType;
+			Value = value;
 			this.time = time;
 		}
-
-		public void Tick(float tick)
-		{
-			curTime += tick;
-
-			if (IsCompleted)
-			{
-				curTime = time;
-			}
-		}
-
-		public bool IsCompleted => curTime >= time;
 	}
 }

@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Mascari4615
 {
 	public class UIQuestSlot : UISlot
 	{
-		[SerializeField] private GameObject completeEffect;
+		[SerializeField] private GameObject[] stateObjects;
+		[SerializeField] private Image progress;
 
 		public override void UpdateUI()
 		{
@@ -15,7 +17,11 @@ namespace Mascari4615
 			if (Artifact)
 			{
 				Quest quest = Artifact as Quest;
-				completeEffect.SetActive(quest.IsCompleted);
+			
+				for (int i = 0; i < stateObjects.Length; i++)
+					stateObjects[i].SetActive((int)quest.QuestState == i);
+				
+				progress.fillAmount = quest.GetProgress();
 			}
 		}
 	}
