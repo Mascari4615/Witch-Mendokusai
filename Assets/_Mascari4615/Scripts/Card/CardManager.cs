@@ -52,7 +52,7 @@ namespace Mascari4615
 
 			for (int i = 0; i < 3; i++)
 			{
-				EquipmentData equipment = DataManager.Instance.GetEquipment(DataManager.Instance.CurGameData.curDollIndex, i);
+				EquipmentData equipment = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i);
 
 				if (equipment == null)
 					continue;
@@ -106,7 +106,7 @@ namespace Mascari4615
 
 			ChangeState(CardUIState.SelectCard);
 
-			int equipmentID = DataManager.Instance.GetEquipment(DataManager.Instance.CurGameData.curDollIndex, deckIndex).ID;
+			int equipmentID = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, deckIndex).ID;
 			deckUIDic[equipmentID].UpdateUI(randomMasteries);
 			deckUIDic[equipmentID].gameObject.SetActive(true);
 		}

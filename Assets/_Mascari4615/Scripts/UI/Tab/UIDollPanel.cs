@@ -30,7 +30,7 @@ namespace Mascari4615
 
 		public void SetDoll()
 		{
-			DataManager.Instance.CurGameData.curDollIndex = dollInventoryUI.CurSlotIndex;
+			DataManager.Instance.CurDollID = dollInventoryUI.CurSlotIndex;
 			UpdateUI();
 		}
 
@@ -71,14 +71,11 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			int curDollIndex = dollInventoryUI.CurSlotIndex;
+			int curDollID = dollInventoryUI.CurSlot.Artifact.ID;
 
 			selectNewEquipmentPanel.SetActive(false);
 
-			if (DataManager.Instance.CurGameData == null)
-				return;
-
-			if (SOManager.Instance.Dolls.RuntimeItems[curDollIndex].ID == Doll.DUMMY_ID)
+			if (curDollID == Doll.DUMMY_ID)
 			{
 				curStuffsSlot[0].transform.parent.gameObject.SetActive(false);
 				selectDollButton.SetActive(false);
@@ -89,7 +86,7 @@ namespace Mascari4615
 				selectDollButton.SetActive(true);
 				for (int i = 0; i < curStuffsSlot.Length; i++)
 				{
-					curStuffsSlot[i].SetArtifact(DataManager.Instance.GetEquipment(curDollIndex, i));
+					curStuffsSlot[i].SetArtifact(DataManager.Instance.GetEquipment(curDollID, i));
 				}
 			}
 		}
@@ -105,7 +102,7 @@ namespace Mascari4615
 			// Debug.Log("ApplyNewArtifact" + slotIndex);
 			int curDollIndex = dollInventoryUI.CurSlotIndex;
 
-			DollData[] dollDatas = DataManager.Instance.CurGameData.dollDatas;
+			List<Doll> dollDatas = SOManager.Instance.DollBuffer.RuntimeItems;
 			// int curDollIndex = DataManager.Instance.CurGameData.lastDollIndex;
 
 			Item newEquipment = SOManager.Instance.ItemInventory.GetItem(slotIndex);
@@ -121,22 +118,22 @@ namespace Mascari4615
 				// Debug.Log("유효한 슬롯 선택");
 				newEquipmentGUID = newEquipment.Guid;
 
-				for (int targetDollIndex = 0; targetDollIndex < dollDatas.Length; targetDollIndex++)
+				for (int targetDollIndex = 0; targetDollIndex < dollDatas.Count; targetDollIndex++)
 				{
-					for (int ei = 0; ei < dollDatas[targetDollIndex].equipmentGuids.Length; ei++)
+					for (int ei = 0; ei < dollDatas[targetDollIndex].EquipmentGuids.Count; ei++)
 					{
-						if (dollDatas[targetDollIndex].equipmentGuids[ei] == newEquipmentGUID)
+						if (dollDatas[targetDollIndex].EquipmentGuids[ei] == newEquipmentGUID)
 						{
 							if (targetDollIndex == curDollIndex)
 							{
 								// Debug.Log("이미 이 인형이 끼고 있어요");
-								dollDatas[curDollIndex].equipmentGuids[ei] = dollDatas[curDollIndex].equipmentGuids[targetEquipmentIndex];
+								dollDatas[curDollIndex].EquipmentGuids[ei] = dollDatas[curDollIndex].EquipmentGuids[targetEquipmentIndex];
 								goto BREAK;
 							}
 							else
 							{
 								// Debug.Log("다른 인형이 끼고 있어요");
-								dollDatas[targetDollIndex].equipmentGuids[ei] = dollDatas[curDollIndex].equipmentGuids[targetEquipmentIndex];
+								dollDatas[targetDollIndex].EquipmentGuids[ei] = dollDatas[curDollIndex].EquipmentGuids[targetEquipmentIndex];
 								goto BREAK;
 							}
 						}
@@ -145,7 +142,7 @@ namespace Mascari4615
 			}
 
 			BREAK:
-			dollDatas[curDollIndex].equipmentGuids[targetEquipmentIndex] = newEquipmentGUID;
+			dollDatas[curDollIndex].EquipmentGuids[targetEquipmentIndex] = newEquipmentGUID;
 			UpdateUI();
 		}
 	}

@@ -47,11 +47,22 @@ MonoBehaviour:
   <MonsterObjectBuffer>k__BackingField: {fileID: 11400000, guid: 9759fc7f40fcd45498c9fd47e84483d0, type: 2}
   <SkillObjectBuffer>k__BackingField: {fileID: 11400000, guid: ebe67f52fa4bdc74ab31ba33c2f72b25, type: 2}
   <InteractiveObjectBuffer>k__BackingField: {fileID: 11400000, guid: 8c65629442f4c8248862fb1aed2cd2a3, type: 2}
-  <QuestDataBuffer>k__BackingField: {fileID: 11400000, guid: 5d1d254e533cbf54a8674e35c61f9580, type: 2}
-  <Units>k__BackingField:
+  <Quests>k__BackingField:
+  - {fileID: 11400000, guid: 76a572740b4f768448e2e67d14084423, type: 2}
+  - {fileID: 11400000, guid: 52358c164b5df2244a0f86b5b39b1510, type: 2}
+  - {fileID: 11400000, guid: 13e1d4cbb01b2df46bd131364b51a0b1, type: 2}
+  - {fileID: 11400000, guid: 08a85764d3f3c8a4f9022fff3a1a2301, type: 2}
+  <QuestBuffer>k__BackingField: {fileID: 11400000, guid: 5d1d254e533cbf54a8674e35c61f9580, type: 2}
+  <Dolls>k__BackingField:
   - {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
+  - {fileID: 11400000, guid: 9f85001dde9fbdd448c49a3cb01ae69b, type: 2}
   - {fileID: 11400000, guid: dd84603773e6f27479a2c830f5186349, type: 2}
-  <Dolls>k__BackingField: {fileID: 11400000, guid: d32743f508b1fb4498e16b9522cfa5b4, type: 2}
+  <NPCs>k__BackingField:
+  - {fileID: 11400000, guid: aa874dd5c58bc4a49a7d460ee885ed6b, type: 2}
+  - {fileID: 11400000, guid: b05878e4efdf6014cbe8ae3095924768, type: 2}
+  - {fileID: 11400000, guid: 370cf4f85daa01e4ba1162497bf71199, type: 2}
+  - {fileID: 11400000, guid: bf788e5976c91d244a9fe790a8488f99, type: 2}
+  <DollBuffer>k__BackingField: {fileID: 11400000, guid: d32743f508b1fb4498e16b9522cfa5b4, type: 2}
   <Dungeons>k__BackingField:
   - {fileID: 11400000, guid: 18b8fc0dced87474a9c8e0e1e099a551, type: 2}
   <ItemDataBuffer>k__BackingField: {fileID: 11400000, guid: 4d0c33ceef025d74f874ac4a13e4f6ab, type: 2}

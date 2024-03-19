@@ -170,17 +170,18 @@ namespace Mascari4615
 		{
 			Quest quest = curNPCData.Quests[index];
 
-			switch (quest.QuestState)
+			switch (quest.State)
 			{
 				case QuestState.Locked:
 					quest.Unlock();
+					SOManager.Instance.QuestBuffer.AddItem(quest);
 					break;
 				case QuestState.Unlocked:
 					break;
 				case QuestState.NeedWorkToComplete:
 					break;
 				case QuestState.Completed:
-					if (quest.QuestType != QuestType.VillageQuest)
+					if (quest.Type != QuestType.NeedWork)
 					{
 						
 					}

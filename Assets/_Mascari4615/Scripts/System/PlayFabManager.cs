@@ -132,7 +132,7 @@ namespace Mascari4615
 
 				// SceneManager.LoadScene(1);
 			}, OnError);
-// #endif
+			// #endif
 		}
 
 		public void SubmitNickname(string name)
@@ -298,13 +298,13 @@ namespace Mascari4615
 				OnError);
 		}
 
-		public void SavePlayerData()
+		public void SavePlayerData(GameData gameData)
 		{
 			var requset = new UpdateUserDataRequest
 			{
 				Data = new Dictionary<string, string>
 			{
-				{ "Player", JsonConvert.SerializeObject(DataManager.Instance.CurGameData) },
+				{ "Player", JsonConvert.SerializeObject(gameData) },
 			}
 			};
 			PlayFabClientAPI.UpdateUserData(requset, OnDataSend, OnError);
@@ -313,7 +313,6 @@ namespace Mascari4615
 		public void CreateAndSavePlayerData()
 		{
 			DataManager.Instance.CreateNewGameData();
-			SavePlayerData();
 		}
 
 		public void LoadPlayerData()

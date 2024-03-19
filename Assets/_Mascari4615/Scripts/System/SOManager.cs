@@ -60,9 +60,11 @@ namespace Mascari4615
 		[field: SerializeField] public GameObjectBuffer MonsterObjectBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer SkillObjectBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer InteractiveObjectBuffer { get; private set; }
-		[field: SerializeField] public QuestDataBuffer QuestDataBuffer { get; private set; }
-		[field: SerializeField] public Unit[] Units { get; private set; }
-		[field: SerializeField] public DollBuffer Dolls { get; private set; }
+		[field: SerializeField] public List<Quest> Quests { get; private set; }
+		[field: SerializeField] public QuestBuffer QuestBuffer { get; private set; }
+		[field: SerializeField] public List<Doll> Dolls { get; private set; }
+		[field: SerializeField] public List<NPC> NPCs { get; private set; }
+		[field: SerializeField] public DollBuffer DollBuffer { get; private set; }
 		[field: SerializeField] public Dungeon[] Dungeons { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }

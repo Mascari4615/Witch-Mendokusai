@@ -19,7 +19,7 @@ namespace Mascari4615
 				Quest quest = Artifact as Quest;
 			
 				for (int i = 0; i < stateObjects.Length; i++)
-					stateObjects[i].SetActive((int)quest.QuestState == i);
+					stateObjects[i].SetActive((int)quest.State == i);
 				
 				progress.fillAmount = quest.GetProgress();
 			}

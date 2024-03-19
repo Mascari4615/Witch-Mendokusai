@@ -11,7 +11,6 @@ namespace Mascari4615
 		public void Init(Dictionary<int, List<Work>> works)
 		{
 			Works = works;
-			TimeManager.Instance.AddCallback(TickWorks);
 		}
 
 		public void TickWorks()
@@ -22,15 +21,13 @@ namespace Mascari4615
 				{
 					work.Value[i].Tick();
 
-					if (work.Value[i].IsCompleted)
+					if (work.Value[i].IsCompleted())
 					{
 						switch (work.Value[i].WorkType)
 						{
 							case WorkType.CompleteQuest:
 								DataManager.Instance.QuestDic[work.Value[i].Value].ActualComplete();
 								break;
-							default:
-								throw new ArgumentOutOfRangeException();
 						}
 						work.Value.RemoveAt(i);
 					}

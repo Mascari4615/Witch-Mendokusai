@@ -10,19 +10,16 @@ namespace Mascari4615
 		[SerializeField] private GameObject workButton;
 		[SerializeField] private GameObject rewardButton;
 
-		private Coroutine coroutine;
-
-		private void OnEnable()
+		private void OnEnable() => StartCoroutine(UpdateLoop());
+		private void OnDisable() => StopAllCoroutines();
+		public IEnumerator UpdateLoop()
 		{
-			if (coroutine != null)
-				StopCoroutine(coroutine);
-			coroutine = StartCoroutine(UpdateLoop());
-		}
-
-		private void OnDisable()
-		{
-			if (coroutine != null)
-				StopCoroutine(coroutine);
+			WaitForSeconds wait = new(.1f);
+			while (true)
+			{
+				UpdateUI();
+				yield return wait;
+			}
 		}
 
 		public override void UpdateUI()
@@ -39,7 +36,7 @@ namespace Mascari4615
 				}
 				else
 				{
-					bool slotActive = quest.QuestState > QuestState.Locked;
+					bool slotActive = quest.State > QuestState.Locked;
 
 					slot.SetArtifact(quest);
 					slot.gameObject.SetActive(slotActive);
@@ -49,8 +46,8 @@ namespace Mascari4615
 			if (CurSlot.Artifact)
 			{
 				Quest curQuest = CurSlot.Artifact as Quest;
-				workButton.SetActive(curQuest.QuestState == QuestState.NeedWorkToComplete);
-				rewardButton.SetActive(curQuest.QuestState == QuestState.Completed);
+				workButton.SetActive(curQuest.State == QuestState.NeedWorkToComplete);
+				rewardButton.SetActive(curQuest.State == QuestState.Completed);
 			}
 		}
 
@@ -58,7 +55,7 @@ namespace Mascari4615
 		{
 			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
 
-			if (quest.QuestState != QuestState.Completed)
+			if (quest.State != QuestState.Completed)
 				return;
 			quest.GetReward();
 			UpdateUI();
@@ -68,7 +65,7 @@ namespace Mascari4615
 		{
 			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
 
-			if (quest.QuestState != QuestState.NeedWorkToComplete)
+			if (quest.State != QuestState.NeedWorkToComplete)
 				return;
 
 			Work work = new(WorkType.CompleteQuest, quest.ID, 5);
@@ -76,16 +73,6 @@ namespace Mascari4615
 			{
 				quest.SetWork(work);
 				UpdateUI();
-			}
-		}
-		
-		public IEnumerator UpdateLoop()
-		{
-			WaitForSeconds wait = new(.1f);
-			while (true)
-			{
-				UpdateUI();
-				yield return wait;
 			}
 		}
 	}

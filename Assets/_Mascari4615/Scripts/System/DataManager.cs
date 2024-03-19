@@ -12,11 +12,9 @@ namespace Mascari4615
 	{
 		private SOManager soManager;
 
-		public GameData CurGameData { get; private set; }
-
 		public readonly Dictionary<int, Quest> QuestDic = new();
-		public readonly Dictionary<int, Unit> UnitDic = new();
 		public readonly Dictionary<int, Doll> DollDic = new();
+		public readonly Dictionary<int, Unit> UnitDic = new();
 		public readonly Dictionary<int, Dungeon> DungeonDic = new();
 		public readonly Dictionary<int, ItemData> ItemDic = new();
 		public readonly Dictionary<int, ItemData> PotionDic = new();
@@ -28,8 +26,8 @@ namespace Mascari4615
 		public readonly Dictionary<int, Card> CardDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
 
-		public Action OnCurGameDataLoad;
-		// DataManager.Instance.OnCurGameDataLoad += UpdateVolume;
+		public int CurDollID;
+		public int DummyDollCount;
 
 		public string localDisplayName = "";
 
@@ -78,57 +76,116 @@ namespace Mascari4615
 			foreach (Stage stage in soManager.StageDataBuffer.InitItems)
 				StageDic.Add(stage.ID, stage);
 
-			foreach (Unit unit in soManager.Units)
-				UnitDic.Add(unit.ID, unit);
-			foreach (Doll doll in soManager.Dolls.InitItems)
+			foreach (Doll doll in soManager.Dolls)
+			{
 				DollDic.Add(doll.ID, doll);
+				UnitDic.Add(doll.ID, doll);
+			}
+			foreach (NPC npc in soManager.NPCs)
+				UnitDic.Add(npc.ID, npc);
 			foreach (Dungeon dungeon in soManager.Dungeons)
 				DungeonDic.Add(dungeon.ID, dungeon);
-			foreach (Quest quest in soManager.QuestDataBuffer.InitItems)
+			foreach (Quest quest in soManager.Quests)
 				QuestDic.Add(quest.ID, quest);
 
 			foreach (Card card in soManager.CardDataBuffer.InitItems)
 				CardDic.Add(card.ID, card);
 		}
 
-		public void CreateNewGameData()
+		private void Start()
 		{
-			GameData newGameData = new();
-			Inventory inventory = soManager.ItemInventory;
-
-			inventory.LoadSaveItems(newGameData.itemInventoryItems);
-			for (int i = 0; i < 3; i++)
-			{
-				EquipmentData equipmentData = DollDic[0].EquipmentDatas[i];
-				inventory.Add(equipmentData);
-				newGameData.dollDatas[0].equipmentGuids[i] = inventory.GetItem(inventory.FindItemSlotIndex(equipmentData)).Guid;
-			}
-
-			CurGameData = newGameData;
-			for (int i = 0; i < CurGameData.dummyDollCount - 1; i++)
-				soManager.Dolls.AddItem(DollDic[Doll.DUMMY_ID]);
-			WorkManager.Init(CurGameData.works);
+			TimeManager.Instance.AddCallback(WorkManager.TickWorks);
 		}
 
-		public void SaveData()
+		public void CreateNewGameData()
 		{
-			if (CurGameData == null)
+			GameData newGameData = new()
 			{
-				Debug.Log("?");
-				return;
-			}
+				curDollIndex = 0,
+				dummyDollCount = 1,
+				itemInventoryItems = new(),
+				dollDatas = new()
+				{
+					new(0, 1, 0, new())
+				},
+				works = new(),
+				questDatas = new()
+			};
+			
+			// 아이템(장비) 초기화
+			Doll defaultDoll = DollDic[0];
+			defaultDoll.EquipmentGuids.Clear();
 
-			CurGameData.itemInventoryItems = soManager.ItemInventory.GetInventoryData();
-			_playFabManager.SavePlayerData();
+			Inventory inventory = soManager.ItemInventory;
+			inventory.LoadSaveItems(newGameData.itemInventoryItems);
+			foreach (EquipmentData equipmentData in defaultDoll.EquipmentDatas)
+			{
+				inventory.Add(equipmentData);
+				Guid? guid = inventory.GetItem(inventory.FindItemSlotIndex(equipmentData)).Guid;
+				newGameData.dollDatas[0].EquipmentGuids.Add(guid);
+				defaultDoll.EquipmentGuids.Add(guid);
+			}
+			newGameData.itemInventoryItems = inventory.GetInventoryData();
+
+			// 장비 초기화 이후 저장
+			foreach (var d in DollDic)
+				newGameData.dollDatas.Add(d.Value.Save());
+			foreach (var q in QuestDic)
+				newGameData.questDatas.Add(q.Value.Save());
+
+			SaveData();
+			LoadData(newGameData);
 		}
 
 		public void LoadData(GameData saveData)
 		{
-			CurGameData = saveData;
-			soManager.ItemInventory.LoadSaveItems(CurGameData.itemInventoryItems);
-			for (int i = 0; i < CurGameData.dummyDollCount - 1; i++)
-				soManager.Dolls.AddItem(DollDic[Doll.DUMMY_ID]);
-			WorkManager.Init(CurGameData.works);
+			CurDollID = saveData.curDollIndex;
+			DummyDollCount = saveData.dummyDollCount;
+
+			// 아이템 초기화
+			soManager.ItemInventory.LoadSaveItems(saveData.itemInventoryItems);
+
+			// 인형 초기화
+			soManager.DollBuffer.ClearBuffer();
+			foreach (DollData dollData in saveData.dollDatas)
+			{
+				DollDic[dollData.DollID].Load(dollData);
+				soManager.DollBuffer.AddItem(DollDic[dollData.DollID]);
+			}
+			for (int i = 0; i < saveData.dummyDollCount - 1; i++)
+				soManager.DollBuffer.AddItem(DollDic[Doll.DUMMY_ID]);
+
+			// 퀘스트 초기화
+			foreach (QuestData questData in saveData.questDatas)
+			{
+				QuestDic[questData.QuestID].Load(questData);
+				
+				if (questData.State >= QuestState.Unlocked)
+					soManager.QuestBuffer.AddItem(QuestDic[questData.QuestID]);
+			}
+
+			// 작업 초기화
+			WorkManager.Init(saveData.works);
+		}
+
+		public void SaveData()
+		{
+			GameData gameData = new()
+			{
+				curDollIndex = CurDollID,
+				dummyDollCount = DummyDollCount,
+				itemInventoryItems = soManager.ItemInventory.GetInventoryData(),
+				dollDatas = new(),
+				works = WorkManager.Works,
+				questDatas = new()
+			};
+
+			foreach (var d in DollDic)
+				gameData.dollDatas.Add(d.Value.Save());
+			foreach (var q in QuestDic)
+				gameData.questDatas.Add(q.Value.Save());
+
+			_playFabManager.SavePlayerData(gameData);
 		}
 
 		public Color GetGradeColor(Grade grade) => grade switch
@@ -154,10 +211,15 @@ namespace Mascari4615
 
 		private void OnApplicationQuit() => SaveData();
 
-		public EquipmentData GetEquipment(int dollIndex, int equipmentIndex)
+		public EquipmentData GetEquipment(int dollID, int equipmentIndex)
 		{
+			List<Guid?> guids = DollDic[dollID].EquipmentGuids;
+			
+			if (guids.Count <= equipmentIndex)
+				return null;
+
 			return soManager.ItemInventory
-			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(CurGameData.dollDatas[dollIndex].equipmentGuids[equipmentIndex]))?
+			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(guids[equipmentIndex]))?
 			.Data as EquipmentData;
 		}
 
@@ -171,23 +233,23 @@ namespace Mascari4615
 	[Serializable]
 	public class GameData
 	{
-		public List<InventorySlotData> itemInventoryItems = new();
 		public int curDollIndex;
-		public DollData[] dollDatas = new DollData[10];
 		public int dummyDollCount = 1;
-		public int[] curStageIndex = Enumerable.Repeat(0, 10).ToArray();
-		public Dictionary<int, List<Work>> works = new();
 
-		public GameData()
-		{
-			for (int i = 0; i < 10; i++)
-				dollDatas[i] = new DollData(1, 0, new Guid?[3] { null, null, null });
-		}
+		public List<InventorySlotData> itemInventoryItems = new();
+		public List<DollData> dollDatas = new();
+		public Dictionary<int, List<Work>> works = new();
+		public List<QuestData> questDatas = new();
 	}
 
 	[Serializable]
 	public struct InventorySlotData
 	{
+		public int slotIndex;
+		public Guid? Guid;
+		public int itemID;
+		public int itemAmount;
+
 		public InventorySlotData(int slotIndex, Item item)
 		{
 			this.slotIndex = slotIndex;
@@ -195,25 +257,35 @@ namespace Mascari4615
 			itemID = item.Data.ID;
 			itemAmount = item.Amount;
 		}
+	}
 
-		public int slotIndex;
-		public Guid? Guid;
-		public int itemID;
-		public int itemAmount;
+	[Serializable]
+	public struct QuestData
+	{
+		public int QuestID;
+		public QuestState State;
+
+		public QuestData(int questID, QuestState state)
+		{
+			QuestID = questID;
+			State = state;
+		}
 	}
 
 	[Serializable]
 	public struct DollData
 	{
-		public DollData(int dollLevel, int dollExp, Guid?[] equipmentGuids)
-		{
-			this.dollLevel = dollLevel;
-			this.dollExp = dollExp;
-			this.equipmentGuids = equipmentGuids;
-		}
+		public int DollID;
+		public int Level;
+		public int Exp;
+		public List<Guid?> EquipmentGuids;
 
-		public int dollLevel;
-		public int dollExp;
-		public Guid?[] equipmentGuids;
+		public DollData(int dollID, int dollLevel, int dollExp, List<Guid?> equipmentGuids)
+		{
+			DollID = dollID;
+			Level = dollLevel;
+			Exp = dollExp;
+			EquipmentGuids = equipmentGuids.ToList();
+		}
 	}
 }

@@ -28,8 +28,8 @@ namespace Mascari4615
 			WaitForSeconds wait = new(.1f);
 			while (true)
 			{
-				int workableDollCount = SOManager.Instance.Dolls.RuntimeItems.Count;
-				foreach (Doll doll in SOManager.Instance.Dolls.RuntimeItems)
+				int workableDollCount = SOManager.Instance.DollBuffer.RuntimeItems.Count;
+				foreach (Doll doll in SOManager.Instance.DollBuffer.RuntimeItems)
 				{
 					if (doll.ID == Doll.DUMMY_ID)
 						continue;
@@ -41,7 +41,7 @@ namespace Mascari4615
 				if (workManager.Works.ContainsKey(Doll.DUMMY_ID))
 					workableDollCount -= workManager.Works[Doll.DUMMY_ID].Count;
 
-				text.text = $"{workableDollCount}/{SOManager.Instance.Dolls.RuntimeItems.Count} 인형";
+				text.text = $"{workableDollCount}/{SOManager.Instance.DollBuffer.RuntimeItems.Count} 인형";
 				yield return wait;
 			}
 		}
