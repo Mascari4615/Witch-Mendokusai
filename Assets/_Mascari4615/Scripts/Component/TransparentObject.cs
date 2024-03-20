@@ -38,26 +38,24 @@ namespace Mascari4615
 		private IEnumerator BecomeTransparent()
 		{
 			SetMaterialTransparent();
-			yield return SetTransparency(THRESHOLD_ALPHA, -1f);
+			yield return SetTransparency(THRESHOLD_ALPHA);
 		}
 		private IEnumerator ResetOriginalTransparent()
 		{
-			yield return SetTransparency(1f, 1f);
+			yield return SetTransparency(1f);
 			SetMaterialOpaque();
 		}
-		private IEnumerator SetTransparency(float targetAlpha, float alphaChangeRate)
+		private IEnumerator SetTransparency(float targetAlpha)
 		{
 			WaitForSeconds delay = new(TICK);
-
-			while (meshRenderers[0].material.color.a != targetAlpha)
+			for (float t = 0; t < 1; t += TICK * LERP_SPEED)
 			{
 				foreach (MeshRenderer meshR in meshRenderers)
 				{
 					foreach (Material material in meshR.materials)
 					{
 						Color color = material.color;
-						color.a += alphaChangeRate * TICK * LERP_SPEED;
-						color.a = Mathf.Clamp(color.a, Mathf.Max(targetAlpha, 0f), 1f);
+						color.a = Mathf.Lerp(color.a, targetAlpha, t);
 						material.color = color;
 					}
 				}
