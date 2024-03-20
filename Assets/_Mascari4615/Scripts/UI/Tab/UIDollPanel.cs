@@ -64,7 +64,7 @@ namespace Mascari4615
 				selectNewEquipmentInventoryUI.Slots[i].SetSelectAction((slot) =>
 				{
 					selectNewEquipmentInventoryUI.SelectSlot(slot.Index);
-					ApplyNewArtifact(slot.Index);
+					ChangeItem(slot.Index);
 				});
 			}
 		}
@@ -97,53 +97,41 @@ namespace Mascari4615
 			selectNewEquipmentPanel.SetActive(true);
 		}
 
-		private void ApplyNewArtifact(int slotIndex)
+		private void ChangeItem(int newItemSlotIndex)
 		{
 			// Debug.Log("ApplyNewArtifact" + slotIndex);
-			int curDollIndex = dollInventoryUI.CurSlotIndex;
+			Item newItem = SOManager.Instance.ItemInventory.GetItem(newItemSlotIndex);
 
-			List<Doll> dollDatas = SOManager.Instance.DollBuffer.RuntimeItems;
-			// int curDollIndex = DataManager.Instance.CurGameData.lastDollIndex;
+			// UI에서 선택한 인형
+			Doll curDoll = DataManager.Instance.DollDic[dollInventoryUI.CurSlot.Artifact.ID];
 
-			Item newEquipment = SOManager.Instance.ItemInventory.GetItem(slotIndex);
-			Guid? newEquipmentGUID = null;
-
-			// 빈 슬롯을 선택한 경우
-			if (newEquipment == null)
+			// 선택한 슬롯이 비어있는 경우
+			if (newItem == null)
 			{
-				// Debug.Log("빈 슬롯 선택");
+				curDoll.EquipmentGuids[targetEquipmentIndex] = null;
 			}
+			// 선택한 슬롯이 비어있지 않은 경우
 			else
 			{
-				// Debug.Log("유효한 슬롯 선택");
-				newEquipmentGUID = newEquipment.Guid;
-
-				for (int targetDollIndex = 0; targetDollIndex < dollDatas.Count; targetDollIndex++)
+				// 이 장비를 이미 이 인형이나 다른 인형이 착용하고 있는지 확인
+				foreach (Doll doll in SOManager.Instance.DollBuffer.RuntimeItems)
 				{
-					for (int ei = 0; ei < dollDatas[targetDollIndex].EquipmentGuids.Count; ei++)
+					for (int ei = 0; ei < doll.EquipmentGuids.Count; ei++)
 					{
-						if (dollDatas[targetDollIndex].EquipmentGuids[ei] == newEquipmentGUID)
+						// 있다면 스왑
+						if (doll.EquipmentGuids[ei] == newItem.Guid)
 						{
-							if (targetDollIndex == curDollIndex)
-							{
-								// Debug.Log("이미 이 인형이 끼고 있어요");
-								dollDatas[curDollIndex].EquipmentGuids[ei] = dollDatas[curDollIndex].EquipmentGuids[targetEquipmentIndex];
-								goto BREAK;
-							}
-							else
-							{
-								// Debug.Log("다른 인형이 끼고 있어요");
-								dollDatas[targetDollIndex].EquipmentGuids[ei] = dollDatas[curDollIndex].EquipmentGuids[targetEquipmentIndex];
-								goto BREAK;
-							}
+							doll.EquipmentGuids[ei] = curDoll.EquipmentGuids[targetEquipmentIndex];
+							curDoll.EquipmentGuids[targetEquipmentIndex] = newItem.Guid;
+							UpdateUI();
+							return;
 						}
 					}
 				}
-			}
 
-			BREAK:
-			dollDatas[curDollIndex].EquipmentGuids[targetEquipmentIndex] = newEquipmentGUID;
-			UpdateUI();
+				// 누구도 착용하고 있지 않다면, 단순히 착용
+				curDoll.EquipmentGuids[targetEquipmentIndex] = newItem.Guid;
+			}
 		}
 	}
 }
