@@ -50,6 +50,8 @@ namespace Mascari4615
 			}
 
 			SelectSlot(0);
+			if (clickToolTip != null)
+				clickToolTip.SetToolTipContent(CurSlot.Artifact);
 
 			return isInit = true;
 		}
