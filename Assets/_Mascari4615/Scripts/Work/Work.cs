@@ -17,12 +17,13 @@ namespace Mascari4615
 		public float Time { get; private set; }
 		public float CurTime { get; private set; }
 
-		public Work(int dollID, WorkType workType, int value, float time)
+		public Work(int dollID, WorkType workType, int value, float time, float curTime = 0)
 		{
 			DollID = dollID;
 			WorkType = workType;
 			Value = value;
 			Time = time;
+			CurTime = curTime;
 		}
 
 		public void Tick()

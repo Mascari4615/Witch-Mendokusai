@@ -130,7 +130,10 @@ namespace Mascari4615
 
 			// 장비 초기화 이후 저장
 			foreach (var d in DollDic)
-				newGameData.dollDatas.Add(d.Value.Save());
+			{
+				if (d.Value.ID != 0)
+					newGameData.dollDatas.Add(d.Value.Save());
+			}
 			foreach (var q in QuestDic)
 				newGameData.questDatas.Add(q.Value.Save());
 
