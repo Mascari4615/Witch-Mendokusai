@@ -106,13 +106,13 @@ namespace Mascari4615
 				itemInventoryItems = new(),
 				dollDatas = new()
 				{
-					new(0, 1, 0, new())
+					new(0, 1, 0, new(){null, null, null, null})
 				},
 				dollWorks = new(),
 				dummyWorks = new(),
 				questDatas = new()
 			};
-			
+
 			// 아이템(장비) 초기화
 			Doll defaultDoll = DollDic[0];
 			defaultDoll.EquipmentGuids.Clear();
@@ -163,7 +163,7 @@ namespace Mascari4615
 			foreach (QuestData questData in saveData.questDatas)
 			{
 				QuestDic[questData.QuestID].Load(questData);
-				
+
 				if (questData.State >= QuestState.Unlocked)
 					soManager.QuestBuffer.AddItem(QuestDic[questData.QuestID]);
 			}
@@ -219,7 +219,7 @@ namespace Mascari4615
 		public EquipmentData GetEquipment(int dollID, int equipmentIndex)
 		{
 			List<Guid?> guids = DollDic[dollID].EquipmentGuids;
-			
+
 			if (guids.Count <= equipmentIndex)
 				return null;
 

@@ -13,10 +13,10 @@ namespace Mascari4615
 
 		[field: Header("_" + nameof(Doll))]
 		[field: SerializeField] public EquipmentData[] EquipmentDatas { get; private set; }
-		
-		[field: NonSerialized] public int Level { get; private set; }
-		[field: NonSerialized] public int Exp { get; private set; }
-		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new ();
+
+		[field: NonSerialized] public int Level { get; private set; } = 0;
+		[field: NonSerialized] public int Exp { get; private set; } = 0;
+		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new() { null, null, null, null };
 
 		public void Load(DollData dollData)
 		{
