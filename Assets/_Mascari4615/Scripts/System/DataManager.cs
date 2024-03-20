@@ -41,7 +41,7 @@ namespace Mascari4615
 			soManager = SOManager.Instance;
 			WorkManager = new();
 
-			foreach (ItemData item in soManager.ItemDataBuffer.InitItems)
+			foreach (ItemData item in soManager.Items)
 			{
 				ItemDic.Add(item.ID, item);
 				switch (item.Grade)
@@ -63,7 +63,7 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (ItemData item in soManager.ItemDataBuffer.InitItems)
+			foreach (ItemData item in soManager.Items)
 			{
 				foreach (Recipe recipe in item.Recipes)
 				{
@@ -94,7 +94,7 @@ namespace Mascari4615
 
 		private void Start()
 		{
-			TimeManager.Instance.AddCallback(WorkManager.TickWorks);
+			TimeManager.Instance.AddCallback(WorkManager.TickEachWorks);
 		}
 
 		public void CreateNewGameData()
@@ -108,7 +108,8 @@ namespace Mascari4615
 				{
 					new(0, 1, 0, new())
 				},
-				works = new(),
+				dollWorks = new(),
+				dummyWorks = new(),
 				questDatas = new()
 			};
 			
@@ -165,7 +166,7 @@ namespace Mascari4615
 			}
 
 			// 작업 초기화
-			WorkManager.Init(saveData.works);
+			WorkManager.Init(saveData.dollWorks, saveData.dummyWorks);
 		}
 
 		public void SaveData()
@@ -176,7 +177,8 @@ namespace Mascari4615
 				dummyDollCount = DummyDollCount,
 				itemInventoryItems = soManager.ItemInventory.GetInventoryData(),
 				dollDatas = new(),
-				works = WorkManager.Works,
+				dollWorks = WorkManager.DollWorks,
+				dummyWorks = WorkManager.DummyWorks,
 				questDatas = new()
 			};
 
@@ -226,7 +228,7 @@ namespace Mascari4615
 		[ContextMenu(nameof(TestWork))]
 		public void TestWork()
 		{
-			WorkManager.AddWork(Doll.DUMMY_ID, new Work(WorkType.CompleteQuest, 0, 10));
+			WorkManager.AddWork(new(0, WorkType.CompleteQuest, 0, 10));
 		}
 	}
 
@@ -238,7 +240,8 @@ namespace Mascari4615
 
 		public List<InventorySlotData> itemInventoryItems = new();
 		public List<DollData> dollDatas = new();
-		public Dictionary<int, List<Work>> works = new();
+		public List<Work> dollWorks = new();
+		public List<Work> dummyWorks = new();
 		public List<QuestData> questDatas = new();
 	}
 

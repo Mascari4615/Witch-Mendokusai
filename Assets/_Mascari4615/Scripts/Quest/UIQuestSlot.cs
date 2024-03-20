@@ -20,8 +20,15 @@ namespace Mascari4615
 			
 				for (int i = 0; i < stateObjects.Length; i++)
 					stateObjects[i].SetActive((int)quest.State == i);
-				
-				progress.fillAmount = quest.GetProgress();
+
+				if (quest.State == QuestState.Working)
+				{
+					progress.fillAmount = DataManager.Instance.WorkManager.TryGetWorkByQuestID(quest.ID, out Work work) ? work.GetProgress() : 1;
+				}
+				else
+				{
+					progress.fillAmount = quest.GetProgress();
+				}
 			}
 		}
 	}

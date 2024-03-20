@@ -6,57 +6,90 @@ namespace Mascari4615
 {
 	public class WorkManager
 	{
-		public Dictionary<int, List<Work>> Works { get; private set; } = new();
+		public List<Work> DollWorks { get; private set; } = new();
+		public List<Work> DummyWorks { get; private set; } = new();
 
-		public void Init(Dictionary<int, List<Work>> works)
+		public void Init(List<Work> dollWorks, List<Work> dummyWorks)
 		{
-			Works = works;
+			DollWorks = dollWorks;
+			DummyWorks = dummyWorks;
 		}
 
-		public void TickWorks()
+		public void TickEachWorks()
 		{
-			foreach (KeyValuePair<int, List<Work>> work in Works)
-			{
-				for (int i = work.Value.Count - 1; i >= 0; i--)
-				{
-					work.Value[i].Tick();
+			TickWorks(DollWorks);
+			TickWorks(DummyWorks);
+		}
 
-					if (work.Value[i].IsCompleted())
+		public void TickWorks(List<Work> works)
+		{
+			for (int i = works.Count - 1; i >= 0 ; i--)
+			{
+				Work work = works[i];
+				work.Tick();
+				if (work.IsCompleted())
+				{
+					switch (work.WorkType)
 					{
-						switch (work.Value[i].WorkType)
-						{
-							case WorkType.CompleteQuest:
-								DataManager.Instance.QuestDic[work.Value[i].Value].ActualComplete();
-								break;
-						}
-						work.Value.RemoveAt(i);
+						case WorkType.CompleteQuest:
+							DataManager.Instance.QuestDic[work.Value].ActualComplete();
+							break;
 					}
+					works.RemoveAt(i);
 				}
 			}
 		}
 
-		public bool DoseDollHaveWork(int dollID)
+		public bool TryGetWorkByDollID(int dollID, out Work targetWork)
 		{
-			return Works.ContainsKey(dollID) && Works[dollID].Count > 0;
+			foreach (Work work in DollWorks)
+			{
+				if (work.DollID == dollID)
+				{
+					targetWork = work;
+					return true;
+				}
+			}
+			targetWork = null;
+			return false;
 		}
 
-		public bool AddWork(int dollID, Work work)
+		public bool TryGetWorkByQuestID(int questID, out Work targetWork)
 		{
-			if (dollID != Doll.DUMMY_ID && DoseDollHaveWork(dollID))
-				return false;
-
-			if (Works.ContainsKey(dollID) == false)
-				Works.Add(dollID, new List<Work>() { work });
-			else
-				Works[dollID].Add(work);
-			
-			return true;
+			foreach (Work work in DollWorks)
+			{
+				if (work.WorkType == WorkType.CompleteQuest && work.Value == questID)
+				{
+					targetWork = work;
+					return true;
+				}
+			}
+			targetWork = null;
+			return false;
 		}
 
-		public void CancleWork(int dollID, Work work)
+		public void AddWork(Work work)
 		{
-			if (DoseDollHaveWork(dollID))
-				Works[dollID].Remove(work);
+			if (work.DollID == Doll.DUMMY_ID)
+			{
+				DummyWorks.Add(work);
+			}
+			else if (TryGetWorkByDollID(work.DollID, out _) == false)
+			{
+				DollWorks.Add(work);
+			}
+		}
+
+		public void CancleWork(int dollID)
+		{
+			for (int i = DollWorks.Count - 1; i >= 0; i--)
+			{
+				if (DollWorks[i].DollID == dollID)
+				{
+					DollWorks.RemoveAt(i);
+					return;
+				}
+			}
 		}
 	}
 }

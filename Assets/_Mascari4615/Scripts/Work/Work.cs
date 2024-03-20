@@ -11,13 +11,15 @@ namespace Mascari4615
 
 	public class Work
 	{
+		public int DollID { get; private set; }
 		public WorkType WorkType { get; private set; }
 		public int Value { get; private set; }
 		public float Time { get; private set; }
 		public float CurTime { get; private set; }
 
-		public Work(WorkType workType, int value, float time)
+		public Work(int dollID, WorkType workType, int value, float time)
 		{
+			DollID = dollID;
 			WorkType = workType;
 			Value = value;
 			Time = time;

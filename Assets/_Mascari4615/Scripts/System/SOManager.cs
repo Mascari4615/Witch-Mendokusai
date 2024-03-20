@@ -66,6 +66,7 @@ namespace Mascari4615
 		[field: SerializeField] public List<NPC> NPCs { get; private set; }
 		[field: SerializeField] public DollBuffer DollBuffer { get; private set; }
 		[field: SerializeField] public Dungeon[] Dungeons { get; private set; }
+		[field: SerializeField] public List<ItemData> Items { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
 		[field: SerializeField] public Inventory ShopInventory { get; private set; }

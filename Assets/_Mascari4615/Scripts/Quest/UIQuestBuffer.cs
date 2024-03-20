@@ -63,17 +63,15 @@ namespace Mascari4615
 
 		public void Work()
 		{
+			// TODO: 어떤 인형이 일을 할지
 			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
 
 			if (quest.State != QuestState.NeedWorkToComplete)
 				return;
 
-			Work work = new(WorkType.CompleteQuest, quest.ID, 5);
-			if (DataManager.Instance.WorkManager.AddWork(Doll.DUMMY_ID, work))
-			{
-				quest.SetWork(work);
-				UpdateUI();
-			}
+			Work work = new(0, WorkType.CompleteQuest, quest.ID, 5);
+			DataManager.Instance.WorkManager.AddWork(work);
+			quest.StartWork();
 		}
 	}
 }

@@ -7,8 +7,10 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = nameof(BootstrapSettings), menuName = "BootstrapSettings")]
 	public class BootstrapSettings : ScriptableObject
 	{
+		[field: Header("_" + nameof(BootstrapSettings))]
 		[field: SerializeField] public DataManager DataManagerPrefab { get; private set; }
 		[field: SerializeField] public AudioManager AudioManagerPrefab { get; private set; }
+		[field: SerializeField] public bool UseBootstrap { get; private set; } = true;
 	}
 
 	public static class Bootstrap

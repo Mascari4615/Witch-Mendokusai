@@ -34,12 +34,11 @@ namespace Mascari4615
 					if (doll.ID == Doll.DUMMY_ID)
 						continue;
 
-					if (workManager.DoseDollHaveWork(doll.ID))
+					if (workManager.TryGetWorkByDollID(doll.ID, out _))
 						workableDollCount--;
 				}
 
-				if (workManager.Works.ContainsKey(Doll.DUMMY_ID))
-					workableDollCount -= workManager.Works[Doll.DUMMY_ID].Count;
+				workableDollCount -= workManager.DummyWorks.Count;
 
 				text.text = $"{workableDollCount}/{SOManager.Instance.DollBuffer.RuntimeItems.Count} 인형";
 				yield return wait;

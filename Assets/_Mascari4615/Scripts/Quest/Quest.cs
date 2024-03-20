@@ -31,7 +31,6 @@ namespace Mascari4615
 		[field: SerializeField] public Criteria[] Criterias { get; private set; }
 		
 		[field: NonSerialized] public QuestState State { get; private set; }
-		[field: NonSerialized] public Work Work { get; private set; }
 
 		public void Unlock()
 		{
@@ -66,32 +65,25 @@ namespace Mascari4615
 				gameEvent.RemoveCallback(TryComplete);
 		}
 
+		public void StartWork()
+		{
+			State = QuestState.Working;
+		}
+
 		public void ActualComplete()
 		{
 			State = QuestState.Completed;
 		}
 
-		public void SetWork(Work work)
-		{
-			Work = work;
-		}
-
 		public float GetProgress()
 		{
-			if (Work != null)
-			{
-				return Work.GetProgress();
-			}
-			else
-			{
-				if (Criterias.Length == 0)
-					return 1;
+			if (Criterias.Length == 0)
+				return 1;
 
-				float progress = 0;
-				foreach (Criteria criteria in Criterias)
-					progress += criteria.GetProgress();
-				return progress /= Criterias.Length;
-			}
+			float progress = 0;
+			foreach (Criteria criteria in Criterias)
+				progress += criteria.GetProgress();
+			return progress /= Criterias.Length;
 		}
 
 		public void GetReward()
@@ -105,8 +97,6 @@ namespace Mascari4615
 		public void Load(QuestData questData)
 		{
 			State = questData.State;
-			if (State == QuestState.Working)
-				Work = new Work(WorkType.CompleteQuest, 0, 0);
 		}
 
 		public QuestData Save()

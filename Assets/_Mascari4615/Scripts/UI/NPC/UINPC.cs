@@ -178,6 +178,8 @@ namespace Mascari4615
 					break;
 				case QuestState.Unlocked:
 					break;
+				case QuestState.Working:
+					break;
 				case QuestState.NeedWorkToComplete:
 					break;
 				case QuestState.Completed:
@@ -186,8 +188,11 @@ namespace Mascari4615
 						
 					}
 					break;
+				case QuestState.ReceivedReward:
+					break;
 				default:
-					throw new ArgumentOutOfRangeException();
+					Debug.Log("Invalid Quest State");
+					break;
 			}
 
 			UIManager.Instance.SetOverlay(MPanelType.None);
