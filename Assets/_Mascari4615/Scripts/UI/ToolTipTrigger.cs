@@ -77,8 +77,6 @@ namespace Mascari4615
 				ClickToolTip.SetToolTipContent(_artifact);
 			else
 				ClickToolTip.SetToolTipContent(sprite, header, description);
-
-			ClickToolTip.gameObject.SetActive(true);
 		}
 	}
 }
