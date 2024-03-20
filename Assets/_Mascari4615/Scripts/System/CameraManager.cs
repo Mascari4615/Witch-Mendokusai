@@ -77,7 +77,7 @@ namespace Mascari4615
 
 				for (int j = 0; j < obj.Length; j++)
 				{
-					obj[j]?.BecomeTransparent();
+					obj[j]?.UpdateTransparent();
 				}
 			}
 		}

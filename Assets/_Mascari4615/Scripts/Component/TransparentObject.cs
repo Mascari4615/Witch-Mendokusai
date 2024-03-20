@@ -2,178 +2,99 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TransparentObject : MonoBehaviour
+namespace Mascari4615
 {
-	public bool IsTransparent { get; private set; } = false;
-
-	private MeshRenderer[] renderers;
-	private WaitForSeconds delay = new WaitForSeconds(0.001f);
-	private WaitForSeconds resetDelay = new WaitForSeconds(0.005f);
-	private const float THRESHOLD_ALPHA = 0.25f;
-	private const float THRESHOLD_MAX_TIMER = 0.5f;
-
-	private bool isReseting = false;
-	private float timer = 0f;
-	private Coroutine timeCheckCoroutine;
-	private Coroutine resetCoroutine;
-	private Coroutine becomeTransparentCoroutine;
-
-
-	void Awake()
+	public class TransparentObject : MonoBehaviour
 	{
-		renderers = GetComponentsInChildren<MeshRenderer>();
-	}
+		private const float TICK = .01f;
+		private const float LERP_SPEED = 5f;
+		private const float THRESHOLD_ALPHA = 0.25f;
+		private const float THRESHOLD_MAX_TIMER = 0.5f;
 
-	public void BecomeTransparent()
-	{
-		if (IsTransparent)
+		private MeshRenderer[] meshRenderers;
+		private float timer = 0f;
+		private Coroutine loop;
+
+		private void Awake()
+		{
+			meshRenderers = GetComponentsInChildren<MeshRenderer>(true);
+		}
+
+		public void UpdateTransparent()
 		{
 			timer = 0f;
-			return;
+			if (loop == null)
+				loop = StartCoroutine(Loop());
 		}
 
-		if (resetCoroutine != null && isReseting)
+		private IEnumerator Loop()
 		{
-			isReseting = false;
-			IsTransparent = false;
-			StopCoroutine(resetCoroutine);
+			yield return BecomeTransparent();
+			yield return CheckTime();
+			yield return ResetOriginalTransparent();
+			loop = null;
+		}
+		
+		private IEnumerator BecomeTransparent()
+		{
+			SetMaterialTransparent();
+			yield return SetTransparency(THRESHOLD_ALPHA, -1f);
+		}
+		private IEnumerator ResetOriginalTransparent()
+		{
+			yield return SetTransparency(1f, 1f);
+			SetMaterialOpaque();
+		}
+		private IEnumerator SetTransparency(float targetAlpha, float alphaChangeRate)
+		{
+			WaitForSeconds delay = new(TICK);
+
+			while (meshRenderers[0].material.color.a != targetAlpha)
+			{
+				foreach (MeshRenderer meshR in meshRenderers)
+				{
+					foreach (Material material in meshR.materials)
+					{
+						Color color = material.color;
+						color.a += alphaChangeRate * TICK * LERP_SPEED;
+						color.a = Mathf.Clamp(color.a, Mathf.Max(targetAlpha, 0f), 1f);
+						material.color = color;
+					}
+				}
+				yield return delay;
+			}
 		}
 
-		SetMaterialTransparent();
-		IsTransparent = true;
-		becomeTransparentCoroutine = StartCoroutine(BecomeTransparentCoroutine());
-	}
-
-
-	#region #Run-time 중에 RenderingMode 바꾸는 메소드들
-	/// Runtime 중에 RenderingMode를 바꾸는 방법을 찾아보니, 다음과 같은 코드를 사용한다고 함. <summary>
-	// 0 = Opaque, 1 = Cutout, 2 = Fade, 3 = Transparent
-	private void SetMaterialRenderingMode(Material material, float mode, int renderQueue)
-	{
-		material.SetFloat("_Mode", mode);
-		material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-		material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-		material.SetInt("ZWrite", 0);
-		material.DisableKeyword("_ALPHATEST_ON");
-		material.EnableKeyword("_ALPHABLEND_ON");
-		material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-		material.renderQueue = renderQueue;
-	}
-
-	private void SetMaterialTransparent()
-	{
-		for (int i = 0; i < renderers.Length; i++)
+		private IEnumerator CheckTime()
 		{
-			foreach (Material material in renderers[i].materials)
-			{
-				material.SetFloat("_Surface", 1);
+			for (; timer < THRESHOLD_MAX_TIMER; timer += Time.deltaTime)
+				yield return null;
+		}
 
-				Color matColor = material.color;
-				matColor.a = 0.5f;
-				material.color = matColor;
-				// SetMaterialRenderingMode(material, 3f, 3000);
+		private void SetMaterialTransparent() => SetMaterialRendering(1, 3, 3000);
+		private void SetMaterialOpaque() => SetMaterialRendering(0, 0, -1);
+		private void SetMaterialRendering(float surfaceValue, int renderingMode, int renderQueue)
+		{
+			foreach (MeshRenderer meshR in meshRenderers)
+			{
+				foreach (Material material in meshR.materials)
+				{
+					material.SetFloat("_Surface", surfaceValue);
+					SetMaterialRenderingMode(material, renderingMode, renderQueue);
+				}
 			}
 		}
-	}
-
-	private void SetMaterialOpaque()
-	{
-		for (int i = 0; i < renderers.Length; i++)
+		// 0 = Opaque, 1 = Cutout, 2 = Fade, 3 = Transparent
+		private void SetMaterialRenderingMode(Material material, int mode, int renderQueue)
 		{
-			foreach (Material material in renderers[i].materials)
-			{
-				Color matColor = material.color;
-				matColor.a = 1f;
-				material.color = matColor;
-				// SetMaterialRenderingMode(material, 0f, -1);
-			}
-		}
-	}
-	#endregion
-
-	public void ResetOriginalTransparent()
-	{
-		SetMaterialOpaque();
-		resetCoroutine = StartCoroutine(ResetOriginalTransparentCoroutine());
-	}
-
-	private IEnumerator BecomeTransparentCoroutine()
-	{
-		while (true)
-		{
-			bool isComplete = true;
-
-			for (int i = 0; i < renderers.Length; i++)
-			{
-				if (renderers[i].material.color.a > THRESHOLD_ALPHA)
-					isComplete = false;
-
-				Color color = renderers[i].material.color;
-				color.a -= Time.deltaTime;
-				renderers[i].material.color = color;
-			}
-
-			if (isComplete)
-			{
-				CheckTimer();
-				break;
-			}
-
-			yield return delay;
-		}
-	}
-
-	private IEnumerator ResetOriginalTransparentCoroutine()
-	{
-		IsTransparent = false;
-
-		while (true)
-		{
-			bool isComplete = true;
-
-			for (int i = 0; i < renderers.Length; i++)
-			{
-				if (renderers[i].material.color.a < 1f)
-					isComplete = false;
-
-				Color color = renderers[i].material.color;
-				color.a += Time.deltaTime;
-				renderers[i].material.color = color;
-			}
-
-			if (isComplete)
-			{
-				isReseting = false;
-				break;
-			}
-
-			yield return resetDelay;
-		}
-	}
-
-	public void CheckTimer()
-	{
-		if (timeCheckCoroutine != null)
-			StopCoroutine(timeCheckCoroutine);
-		timeCheckCoroutine = StartCoroutine(CheckTimerCouroutine());
-	}
-
-	private IEnumerator CheckTimerCouroutine()
-	{
-		timer = 0f;
-
-		while (true)
-		{
-			timer += Time.deltaTime;
-
-			if (timer > THRESHOLD_MAX_TIMER)
-			{
-				isReseting = true;
-				ResetOriginalTransparent();
-				break;
-			}
-
-			yield return null;
+			material.SetFloat("_Mode", mode);
+			material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+			material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+			material.SetInt("ZWrite", 0);
+			material.DisableKeyword("_ALPHATEST_ON");
+			material.EnableKeyword("_ALPHABLEND_ON");
+			material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+			material.renderQueue = renderQueue;
 		}
 	}
 }
