@@ -14,7 +14,7 @@ namespace Mascari4615
 
 		private void TryLogin()
 		{
-			PlayFabManager.Instance.Login();
+			DataManager.Instance.PlayFabManager.Login();
 		}
 
 		public void ForDebug()

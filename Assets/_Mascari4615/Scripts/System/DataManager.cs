@@ -5,12 +5,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace Mascari4615
 {
 	public class DataManager : Singleton<DataManager>
 	{
-		private SOManager soManager;
+		private SOManager SOManager;
 
 		public readonly Dictionary<int, Quest> QuestDic = new();
 		public readonly Dictionary<int, Doll> DollDic = new();
@@ -31,17 +33,21 @@ namespace Mascari4615
 
 		public string localDisplayName = "";
 
-		[SerializeField] private PlayFabManager _playFabManager;
+		public PlayFabManager PlayFabManager { get; private set; }
 		public WorkManager WorkManager { get; private set; }
+
+		// HACK
+		[field:SerializeField] public bool UseLocalData { get; private set; }
 
 		protected override void Awake()
 		{
 			base.Awake();
 
-			soManager = SOManager.Instance;
+			SOManager = SOManager.Instance;
+			PlayFabManager = GetComponent<PlayFabManager>();
 			WorkManager = new();
 
-			foreach (ItemData item in soManager.Items)
+			foreach (ItemData item in SOManager.Items)
 			{
 				ItemDic.Add(item.ID, item);
 				switch (item.Grade)
@@ -63,8 +69,11 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (ItemData item in soManager.Items)
+			foreach (ItemData item in SOManager.Items)
 			{
+				if (item.Recipes == null)
+					continue;
+
 				foreach (Recipe recipe in item.Recipes)
 				{
 					List<int> recipeToList = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
@@ -73,23 +82,38 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (Stage stage in soManager.StageDataBuffer.InitItems)
+			foreach (Stage stage in SOManager.StageDataBuffer.InitItems)
 				StageDic.Add(stage.ID, stage);
 
-			foreach (Doll doll in soManager.Dolls)
+			foreach (Doll doll in SOManager.Dolls)
 			{
 				DollDic.Add(doll.ID, doll);
 				UnitDic.Add(doll.ID, doll);
 			}
-			foreach (NPC npc in soManager.NPCs)
+			foreach (NPC npc in SOManager.NPCs)
 				UnitDic.Add(npc.ID, npc);
-			foreach (Dungeon dungeon in soManager.Dungeons)
+			foreach (Dungeon dungeon in SOManager.Dungeons)
 				DungeonDic.Add(dungeon.ID, dungeon);
-			foreach (Quest quest in soManager.Quests)
+			foreach (Quest quest in SOManager.Quests)
 				QuestDic.Add(quest.ID, quest);
 
-			foreach (Card card in soManager.CardDataBuffer.InitItems)
+			foreach (Card card in SOManager.CardDataBuffer.InitItems)
 				CardDic.Add(card.ID, card);
+
+			if (UseLocalData)
+			{
+				string path = Path.Combine(Application.dataPath, "WM.json");
+
+				if (File.Exists(path))
+				{
+					string json = File.ReadAllText(path);
+					LoadData(JsonConvert.DeserializeObject<GameData>(json));
+				}
+				else
+				{
+					CreateNewGameData();
+				}
+			}
 		}
 
 		private void Start()
@@ -117,7 +141,7 @@ namespace Mascari4615
 			Doll defaultDoll = DollDic[0];
 			defaultDoll.EquipmentGuids.Clear();
 
-			Inventory inventory = soManager.ItemInventory;
+			Inventory inventory = SOManager.ItemInventory;
 			inventory.LoadSaveItems(newGameData.itemInventoryItems);
 			foreach (EquipmentData equipmentData in defaultDoll.EquipmentDatas)
 			{
@@ -147,17 +171,17 @@ namespace Mascari4615
 			DummyDollCount = saveData.dummyDollCount;
 
 			// 아이템 초기화
-			soManager.ItemInventory.LoadSaveItems(saveData.itemInventoryItems);
+			SOManager.ItemInventory.LoadSaveItems(saveData.itemInventoryItems);
 
 			// 인형 초기화
-			soManager.DollBuffer.ClearBuffer();
+			SOManager.DollBuffer.ClearBuffer();
 			foreach (DollData dollData in saveData.dollDatas)
 			{
 				DollDic[dollData.DollID].Load(dollData);
-				soManager.DollBuffer.AddItem(DollDic[dollData.DollID]);
+				SOManager.DollBuffer.AddItem(DollDic[dollData.DollID]);
 			}
 			for (int i = 0; i < saveData.dummyDollCount - 1; i++)
-				soManager.DollBuffer.AddItem(DollDic[Doll.DUMMY_ID]);
+				SOManager.DollBuffer.AddItem(DollDic[Doll.DUMMY_ID]);
 
 			// 퀘스트 초기화
 			foreach (QuestData questData in saveData.questDatas)
@@ -165,7 +189,7 @@ namespace Mascari4615
 				QuestDic[questData.QuestID].Load(questData);
 
 				if (questData.State >= QuestState.Unlocked)
-					soManager.QuestBuffer.AddItem(QuestDic[questData.QuestID]);
+					SOManager.QuestBuffer.AddItem(QuestDic[questData.QuestID]);
 			}
 
 			// 작업 초기화
@@ -178,7 +202,7 @@ namespace Mascari4615
 			{
 				curDollIndex = CurDollID,
 				dummyDollCount = DummyDollCount,
-				itemInventoryItems = soManager.ItemInventory.GetInventoryData(),
+				itemInventoryItems = SOManager.ItemInventory.GetInventoryData(),
 				dollDatas = new(),
 				dollWorks = WorkManager.DollWorks,
 				dummyWorks = WorkManager.DummyWorks,
@@ -190,7 +214,16 @@ namespace Mascari4615
 			foreach (var q in QuestDic)
 				gameData.questDatas.Add(q.Value.Save());
 
-			_playFabManager.SavePlayerData(gameData);
+			if (UseLocalData)
+			{
+				string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
+				string path = Path.Combine(Application.dataPath, "WM.json");
+				File.WriteAllText(path, json);
+			}
+			else
+			{
+				PlayFabManager.SavePlayerData(gameData);
+			}
 		}
 
 		public Color GetGradeColor(Grade grade) => grade switch
@@ -223,8 +256,8 @@ namespace Mascari4615
 			if (guids.Count <= equipmentIndex)
 				return null;
 
-			return soManager.ItemInventory
-			.GetItem(soManager.ItemInventory.FindEquipmentByGuid(guids[equipmentIndex]))?
+			return SOManager.ItemInventory
+			.GetItem(SOManager.ItemInventory.FindEquipmentByGuid(guids[equipmentIndex]))?
 			.Data as EquipmentData;
 		}
 

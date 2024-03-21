@@ -47,12 +47,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 1
+  CurDollID: 0
+  DummyDollCount: 0
   localDisplayName: 
-  _playFabManager: {fileID: 2233538775601197659}
-  stuffs:
-  - {fileID: 11400000, guid: 61cbebb97ff32a049bf1e1b9a2ad2c09, type: 2}
-  - {fileID: 11400000, guid: 016db4505076ec04ba2de9a282ace381, type: 2}
-  - {fileID: 11400000, guid: a1827cd974cc18845919c78b7f6ed5ac, type: 2}
+  <UseLocalData>k__BackingField: 1
 --- !u!114 &2233538775601197659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,7 +63,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eefc0e021eb93e4438fd1f802832b8be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
   GoogleStatusText: {fileID: 8314891099462046203}
 --- !u!1 &2761859447533706271
 GameObject:

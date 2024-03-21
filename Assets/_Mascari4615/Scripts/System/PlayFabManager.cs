@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 namespace Mascari4615
 {
-	public class PlayFabManager : Singleton<PlayFabManager>
+	public class PlayFabManager : MonoBehaviour
 	{
 		public static bool Logined = false;
 
@@ -94,7 +94,8 @@ namespace Mascari4615
 						}
 					});
 			#else*/
-			var request = new LoginWithCustomIDRequest
+
+			LoginWithCustomIDRequest loginReq = new()
 			{
 				CustomId = SystemInfo.deviceUniqueIdentifier,
 				CreateAccount = true,
@@ -105,12 +106,11 @@ namespace Mascari4615
 				}
 			};
 
-			PlayFabClientAPI.LoginWithCustomID(request, result =>
+			PlayFabClientAPI.LoginWithCustomID(loginReq, result =>
 			{
 				Debug.Log("Successful login/account create!");
 
 				Logined = true;
-
 				string name = result.InfoResultPayload.PlayerProfile?.DisplayName;
 
 				if (name != null)
@@ -125,6 +125,9 @@ namespace Mascari4615
 					SubmitNickname($"Temp_{SystemInfo.deviceUniqueIdentifier}"[0..10]);
 				}
 
+				if (DataManager.Instance.UseLocalData)
+					return;
+
 				LoadPlayerData();
 				GetAppearance();
 				GetTitleData();
@@ -133,6 +136,76 @@ namespace Mascari4615
 				// SceneManager.LoadScene(1);
 			}, OnError);
 			// #endif
+
+			void LoadPlayerData()
+			{
+				PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnPlayerDataRecieved, OnError);
+			}
+			void OnPlayerDataRecieved(GetUserDataResult result)
+			{
+				Debug.Log("Recieved PlayerData!");
+
+				if (result.Data?.ContainsKey("Player") == true)
+				{
+					GameData gameData = JsonConvert.DeserializeObject<GameData>(result.Data["Player"].Value);
+					if (gameData != null)
+					{
+						CreateAndSavePlayerData();
+						return;
+					}
+					DataManager.Instance.LoadData(gameData);
+				}
+				{
+					CreateAndSavePlayerData();
+				}
+			}
+
+			void GetAppearance()
+			{
+				return;
+
+				/*PlayFabClientAPI.GetUserData(new GetUserDataRequest(), result =>
+				{
+					if (result.Data != null && result.Data.ContainsKey("Sans"))
+					{
+						Sans = result.Data["Sans"].Value + "Ang";
+					}
+					else
+					{
+						SaveUserData(nameof(Sans), Sans);
+					}
+				}, OnError);*/
+			}
+
+			void GetTitleData()
+			{
+				PlayFabClientAPI.GetTitleData(new GetTitleDataRequest(), result =>
+					{
+						if (result.Data == null || result.Data.Count == 0)
+						{
+							Debug.Log("No TitleData!");
+							return;
+						}
+
+						if (result.Data.ContainsKey("Message"))
+							Debug.Log(result.Data["Message"]);
+
+						if (result.Data.ContainsKey("Multiplier"))
+							Debug.Log(result.Data["Multiplier"]);
+					},
+					OnError);
+			}
+
+			void GetVirtualCurrencies()
+			{
+				PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetUserInventorySuccess, OnError);
+			}
+			void OnGetUserInventorySuccess(GetUserInventoryResult result)
+			{
+				// int angelCoins = result.VirtualCurrency["AC"];
+				// Debug.Log("AngelCoins" + angelCoins);
+				// secondsLeftToRefreshEnergy = result.VirtualCurrencyRechargeTimes["AC"].SecondsToRecharge;
+			}
 		}
 
 		public void SubmitNickname(string name)
@@ -206,53 +279,16 @@ namespace Mascari4615
 			}, OnError);
 		}
 
-		public void GetAppearance()
-		{
-			return;
-
-			/*PlayFabClientAPI.GetUserData(new GetUserDataRequest(), result =>
-			{
-				if (result.Data != null && result.Data.ContainsKey("Sans"))
-				{
-					Sans = result.Data["Sans"].Value + "Ang";
-				}
-				else
-				{
-					SaveUserData(nameof(Sans), Sans);
-				}
-			}, OnError);*/
-		}
-
 		public void SaveUserData(string _key, string _value)
 		{
 			var requset = new UpdateUserDataRequest
 			{
 				Data = new Dictionary<string, string>
-			{
-				{ _key, _value }
-			}
+				{
+					{ _key, _value }
+				}
 			};
 			PlayFabClientAPI.UpdateUserData(requset, OnDataSend, OnError);
-		}
-
-		[ContextMenu(nameof(GetTitleData))]
-		private void GetTitleData()
-		{
-			PlayFabClientAPI.GetTitleData(new GetTitleDataRequest(), result =>
-				{
-					if (result.Data == null || result.Data.Count == 0)
-					{
-						Debug.Log("No TitleData!");
-						return;
-					}
-
-					if (result.Data.ContainsKey("Message"))
-						Debug.Log(result.Data["Message"]);
-
-					if (result.Data.ContainsKey("Multiplier"))
-						Debug.Log(result.Data["Multiplier"]);
-				},
-				OnError);
 		}
 
 		[ContextMenu(nameof(GetTitleNewsData))]
@@ -273,18 +309,6 @@ namespace Mascari4615
 					}
 				},
 				OnError);
-		}
-
-		public void GetVirtualCurrencies()
-		{
-			PlayFabClientAPI.GetUserInventory(new GetUserInventoryRequest(), OnGetUserInventorySuccess, OnError);
-		}
-
-		private void OnGetUserInventorySuccess(GetUserInventoryResult result)
-		{
-			// int angelCoins = result.VirtualCurrency["AC"];
-			// Debug.Log("AngelCoins" + angelCoins);
-			// secondsLeftToRefreshEnergy = result.VirtualCurrencyRechargeTimes["AC"].SecondsToRecharge;
 		}
 
 		public void BuyItem()
@@ -313,59 +337,6 @@ namespace Mascari4615
 		public void CreateAndSavePlayerData()
 		{
 			DataManager.Instance.CreateNewGameData();
-		}
-
-		public void LoadPlayerData()
-		{
-			PlayFabClientAPI.GetUserData(new GetUserDataRequest(), OnPlayerDataRecieved, OnError);
-
-			/*if (File.Exists(Path.Combine(Application.streamingAssetsPath, "game.wak")))
-			{
-				BinaryFormatter bf = new();
-				FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Open);
-
-				GameData data = bf.Deserialize(stream) as GameData;
-
-				stream.Close();
-				return data;
-			}
-			else
-			{
-				Debug.Log("�ش� ��� ������ �������� �ʾ� ���� ����ϴ�. " + Path.Combine(Application.streamingAssetsPath, "game.wak"));
-				BinaryFormatter bf = new();
-				FileStream stream = new(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Create);
-				bf.Serialize(stream, new GameData());
-				stream.Close();
-				stream = new FileStream(Path.Combine(Application.streamingAssetsPath, "game.wak"), FileMode.Open);
-				GameData data = bf.Deserialize(stream) as GameData;
-				stream.Close();
-				return data;
-			}*/
-		}
-
-		private void OnPlayerDataRecieved(GetUserDataResult result)
-		{
-			Debug.Log("Recieved PlayerData!");
-
-			if ((result.Data != null) && (result.Data.ContainsKey("Player")) && (result.Data["Player"] != null))
-			{
-				GameData gameData = JsonConvert.DeserializeObject<GameData>(result.Data["Player"].Value);
-				Debug.Log(gameData);
-				if (gameData == null)
-				{
-					CreateAndSavePlayerData();
-					return;
-				}
-
-				DataManager.Instance.LoadData(gameData);
-				// List<GameData> gameDatas = JsonConvert.DeserializeObject<List<GameData>>(result.Data["Player"].Value);
-			}
-			else
-			{
-				Debug.Log("CreateAndSavePlayerData");
-
-				CreateAndSavePlayerData();
-			}
 		}
 
 		private void OnDataSend(UpdateUserDataResult result)
