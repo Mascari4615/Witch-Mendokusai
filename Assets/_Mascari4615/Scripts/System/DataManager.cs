@@ -130,7 +130,7 @@ namespace Mascari4615
 				itemInventoryItems = new(),
 				dollDatas = new()
 				{
-					new(0, 1, 0, new(){null, null, null, null})
+					new(0, 1, 0, new(){})
 				},
 				dollWorks = new(),
 				dummyWorks = new(),
@@ -150,6 +150,7 @@ namespace Mascari4615
 				newGameData.dollDatas[0].EquipmentGuids.Add(guid);
 				defaultDoll.EquipmentGuids.Add(guid);
 			}
+			defaultDoll.EquipmentGuids.Add(null);
 			newGameData.itemInventoryItems = inventory.GetInventoryData();
 
 			// 장비 초기화 이후 저장
