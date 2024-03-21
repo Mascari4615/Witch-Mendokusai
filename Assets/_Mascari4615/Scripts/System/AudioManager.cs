@@ -34,6 +34,7 @@ namespace Mascari4615
 
 		private void Start()
 		{
+			UpdateVolume();
 			PlayMusic(_bgmTitles[0]);
 		}
 
@@ -78,13 +79,12 @@ namespace Mascari4615
 
 		public float GetVolume(BusType busType)
 		{
-			var volume = 1f;
-			var key = $"Volume{(int)busType}";
+			string key = $"Volume{(int)busType}";
 
 			if (!PlayerPrefs.HasKey(key))
 				PlayerPrefs.SetFloat(key, 1);
 
-			volume = PlayerPrefs.GetFloat(key);
+			float volume = PlayerPrefs.GetFloat(key);
 			return volume;
 		}
 
