@@ -5,20 +5,23 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(StatDicEffect), menuName = "Effect/StatDicEffect")]
-	public class StatDicEffect : Effect
+	public class StatDicEffect : NumVariableEffect<int>
 	{
 		[SerializeField] private StatDictionary statDictionary;
-		[SerializeField] private string stat;
-		[SerializeField] private int value;
+		[field: SerializeField] public Stat Stat { get; private set; }
 
 		public override void OnEffect()
 		{
-			statDictionary.SetStat(stat, value);
+			int originValue = statDictionary.GetStat(Stat);
+			int newValue = (int)Calc(originValue, Value, ArithmeticOperator);
+			statDictionary.SetStat(Stat, newValue);
 		}
 
 		public override void Cancle()
 		{
-			statDictionary.SetStat(stat, -value);
+			int originValue = statDictionary.GetStat(Stat);
+			int newValue = (int)Return(originValue, Value, ArithmeticOperator);
+			statDictionary.SetStat(Stat, newValue);
 		}
 	}
 }

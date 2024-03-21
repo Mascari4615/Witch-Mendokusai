@@ -20,7 +20,7 @@ namespace Mascari4615
 
 		public void UpdateEquipment()
 		{
-			int satelliteCount = 1 + SOManager.Instance.StatDictionary.GetStat("SATELLITE_COUNT");
+			int satelliteCount = 1 + SOManager.Instance.StatDictionary.GetStat(Stat.SATELLITE_COUNT);
 			float delta = 360f / satelliteCount;
 
 			for (int i = 0; i < transform.childCount; i++)

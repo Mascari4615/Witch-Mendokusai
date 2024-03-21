@@ -6,19 +6,16 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "IntVariableEffect", menuName = "Effect/IntVariableEffect")]
-	public class IntVariableEffect : Effect
+	public class IntVariableEffect : NumVariableEffect<int>
 	{
-		[SerializeField] private CustomVariable<int> targetStat;
-		[SerializeField] private int amount;
-
 		public override void OnEffect()
 		{
-			targetStat.RuntimeValue += amount;
+			TargetStat.RuntimeValue = (int)Calc(TargetStat.RuntimeValue, Value, ArithmeticOperator);
 		}
 
 		public override void Cancle()
 		{
-			targetStat.RuntimeValue -= amount;
+			TargetStat.RuntimeValue = (int)Return(TargetStat.RuntimeValue, Value, ArithmeticOperator);
 		}
 	}
 }

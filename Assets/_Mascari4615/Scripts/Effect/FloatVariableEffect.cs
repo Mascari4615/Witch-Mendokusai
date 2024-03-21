@@ -6,19 +6,16 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "FloatVariableEffect", menuName = "Effect/FloatVariableEffect")]
-	public class FloatVariableEffect : Effect
+	public class FloatVariableEffect : NumVariableEffect<float>
 	{
-		[SerializeField] private CustomVariable<float> targetStat;
-		[SerializeField] private float amount;
-
 		public override void OnEffect()
 		{
-			targetStat.RuntimeValue += amount;
+			TargetStat.RuntimeValue = Calc(TargetStat.RuntimeValue, Value, ArithmeticOperator);
 		}
 
 		public override void Cancle()
 		{
-			targetStat.RuntimeValue -= amount;
+			TargetStat.RuntimeValue = Return(TargetStat.RuntimeValue, Value, ArithmeticOperator);
 		}
 	}
 }

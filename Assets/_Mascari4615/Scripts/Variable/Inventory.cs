@@ -261,6 +261,19 @@ namespace Mascari4615
 			UpdateSlot(index);
 		}
 
+		public int GetItemAmount(int itemID)
+		{
+			int amount = 0;
+			foreach (Item item in RuntimeItems)
+			{
+				if (item == null)
+					continue;
+				if (item.Data.ID == itemID)
+					amount += item.Amount;
+			}
+			return amount;
+		}
+
 		private void UpdateSlot(params int[] indices)
 		{
 			foreach (int i in indices)

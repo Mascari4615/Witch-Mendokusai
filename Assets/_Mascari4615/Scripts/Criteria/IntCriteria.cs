@@ -6,19 +6,18 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(IntCriteria), menuName = "Criteria/Int")]
-	public class IntCriteria : Criteria
+	public class IntCriteria : NumCriteria
 	{
 		[SerializeField] private IntVariable intVariable;
-		[SerializeField] private int target;
 
 		public override bool IsSatisfied()
 		{
-			return intVariable.RuntimeValue >= target;
+			return IsSatisfied_(intVariable.RuntimeValue);
 		}
 		
 		public override float GetProgress()
 		{
-			return (float)intVariable.RuntimeValue / target;
+			return GetProgress_(intVariable.RuntimeValue);
 		}
 	}
 }
