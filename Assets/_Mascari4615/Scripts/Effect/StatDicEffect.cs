@@ -11,12 +11,12 @@ namespace Mascari4615
 		[SerializeField] private string stat;
 		[SerializeField] private int value;
 
-		public override void OnEquip()
+		public override void OnEffect()
 		{
 			statDictionary.SetStat(stat, value);
 		}
 
-		public override void OnRemove()
+		public override void Cancle()
 		{
 			statDictionary.SetStat(stat, -value);
 		}

@@ -11,12 +11,12 @@ namespace Mascari4615
 		[SerializeField] private CustomVariable<int> targetStat;
 		[SerializeField] private int amount;
 
-		public override void OnEquip()
+		public override void OnEffect()
 		{
 			targetStat.RuntimeValue += amount;
 		}
 
-		public override void OnRemove()
+		public override void Cancle()
 		{
 			targetStat.RuntimeValue -= amount;
 		}

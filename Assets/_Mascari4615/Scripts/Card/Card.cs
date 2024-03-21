@@ -14,13 +14,13 @@ namespace Mascari4615
 		public void OnEquip()
 		{
 			foreach (Effect effect in Effects)
-				effect.OnEquip();
+				effect.OnEffect();
 		}
 
 		public void OnRemove()
 		{
 			foreach (Effect effect in Effects)
-				effect.OnRemove();
+				effect.Cancle();
 		}
 	}
 }

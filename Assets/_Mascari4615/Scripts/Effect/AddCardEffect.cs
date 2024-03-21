@@ -11,12 +11,12 @@ namespace Mascari4615
 		[SerializeField] private CardBuffer deck;
 		[SerializeField] private Card targetCard;
 
-		public override void OnEquip()
+		public override void OnEffect()
 		{
 			deck.AddItem(targetCard);
 		}
 
-		public override void OnRemove()
+		public override void Cancle()
 		{
 		}
 	}

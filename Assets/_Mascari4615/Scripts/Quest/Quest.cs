@@ -44,7 +44,7 @@ namespace Mascari4615
 		public void TryComplete()
 		{
 			foreach (Criteria criteria in Criterias)
-				if (criteria.HasComplete() == false)
+				if (criteria.IsSatisfied() == false)
 					return;
 
 			switch (Type)

@@ -11,7 +11,7 @@ namespace Mascari4615
 		private GameObject instance;
 		[SerializeField] private GameObject targetObject;
 
-		public override void OnEquip()
+		public override void OnEffect()
 		{
 			if (instance != null)
 			{
@@ -23,7 +23,7 @@ namespace Mascari4615
 			instance.SetActive(true);
 		}
 
-		public override void OnRemove()
+		public override void Cancle()
 		{
 			if (instance == null)
 				return;

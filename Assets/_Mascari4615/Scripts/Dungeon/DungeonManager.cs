@@ -59,11 +59,11 @@ namespace Mascari4615
 				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
 
 				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 0)?.Effects)
-					effect.OnEquip();
+					effect.OnEffect();
 				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 1)?.Effects)
-					effect.OnEquip();
+					effect.OnEffect();
 				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 2)?.Effects)
-					effect.OnEquip();
+					effect.OnEffect();
 
 				SOManager.Instance.OnDungeonStart.Raise();
 				StartCoroutine(DungeonLoop(dungeon));
@@ -115,7 +115,7 @@ namespace Mascari4615
 				for (int i = 0; i < 3; i++)
 				{
 					foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i)!.Effects)
-						effect.OnEquip();
+						effect.OnEffect();
 				}
 			}
 		}

@@ -11,7 +11,7 @@ namespace Mascari4615
 		[SerializeField] private IntVariable intVariable;
 		[SerializeField] private int target;
 
-		public override bool HasComplete()
+		public override bool IsSatisfied()
 		{
 			return intVariable.RuntimeValue >= target;
 		}
