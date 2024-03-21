@@ -14,7 +14,7 @@ namespace Mascari4615
 	{
 		private SOManager SOManager;
 
-		public readonly Dictionary<int, Quest> QuestDic = new();
+		public readonly Dictionary<int, QuestData> QuestDic = new();
 		public readonly Dictionary<int, Doll> DollDic = new();
 		public readonly Dictionary<int, Unit> UnitDic = new();
 		public readonly Dictionary<int, Dungeon> DungeonDic = new();
@@ -35,6 +35,7 @@ namespace Mascari4615
 
 		public PlayFabManager PlayFabManager { get; private set; }
 		public WorkManager WorkManager { get; private set; }
+		public QuestManager QuestManager { get; private set; }
 
 		// HACK
 		[field:SerializeField] public bool UseLocalData { get; private set; }
@@ -46,6 +47,7 @@ namespace Mascari4615
 			SOManager = SOManager.Instance;
 			PlayFabManager = GetComponent<PlayFabManager>();
 			WorkManager = new();
+			QuestManager = new();
 
 			foreach (ItemData item in SOManager.Items)
 			{
@@ -94,7 +96,7 @@ namespace Mascari4615
 				UnitDic.Add(npc.ID, npc);
 			foreach (Dungeon dungeon in SOManager.Dungeons)
 				DungeonDic.Add(dungeon.ID, dungeon);
-			foreach (Quest quest in SOManager.Quests)
+			foreach (QuestData quest in SOManager.Quests)
 				QuestDic.Add(quest.ID, quest);
 
 			foreach (Card card in SOManager.CardDataBuffer.InitItems)
@@ -134,7 +136,8 @@ namespace Mascari4615
 				},
 				dollWorks = new(),
 				dummyWorks = new(),
-				questDatas = new()
+				questDatas = new(),
+				questSlots = new()
 			};
 
 			// 아이템(장비) 초기화
@@ -185,16 +188,17 @@ namespace Mascari4615
 				SOManager.DollBuffer.AddItem(DollDic[Doll.DUMMY_ID]);
 
 			// 퀘스트 초기화
-			foreach (QuestData questData in saveData.questDatas)
+			foreach (QuestSaveData questData in saveData.questDatas)
 			{
 				QuestDic[questData.QuestID].Load(questData);
 
-				if (questData.State >= QuestState.Unlocked)
-					SOManager.QuestBuffer.AddItem(QuestDic[questData.QuestID]);
+				if (questData.State >= QuestDataState.Unlocked)
+					SOManager.QuestDataBuffer.AddItem(QuestDic[questData.QuestID]);
 			}
 
 			// 작업 초기화
 			WorkManager.Init(saveData.dollWorks, saveData.dummyWorks);
+			QuestManager.Init(saveData.questSlots);
 		}
 
 		public void SaveData()
@@ -207,7 +211,8 @@ namespace Mascari4615
 				dollDatas = new(),
 				dollWorks = WorkManager.DollWorks,
 				dummyWorks = WorkManager.DummyWorks,
-				questDatas = new()
+				questDatas = new(),
+				questSlots = QuestManager.Save()
 			};
 
 			foreach (var d in DollDic)
@@ -265,7 +270,7 @@ namespace Mascari4615
 		[ContextMenu(nameof(TestWork))]
 		public void TestWork()
 		{
-			WorkManager.AddWork(new(0, WorkType.CompleteQuest, 0, 10));
+			WorkManager.AddWork(new(0, WorkType.CompleteQuest, new Guid(), 10));
 		}
 	}
 
@@ -279,7 +284,8 @@ namespace Mascari4615
 		public List<DollData> dollDatas = new();
 		public List<Work> dollWorks = new();
 		public List<Work> dummyWorks = new();
-		public List<QuestData> questDatas = new();
+		public List<QuestSaveData> questDatas = new();
+		public List<QuestSlotData> questSlots = new();
 	}
 
 	[Serializable]
@@ -300,12 +306,27 @@ namespace Mascari4615
 	}
 
 	[Serializable]
-	public struct QuestData
+	public struct QuestSlotData
 	{
+		public Guid? Guid;
 		public int QuestID;
 		public QuestState State;
 
-		public QuestData(int questID, QuestState state)
+		public QuestSlotData(Quest quest)
+		{
+			Guid = quest.Guid;
+			QuestID = quest.Data.ID;
+			State = quest.State;
+		}
+	}
+
+	[Serializable]
+	public struct QuestSaveData
+	{
+		public int QuestID;
+		public QuestDataState State;
+
+		public QuestSaveData(int questID, QuestDataState state)
 		{
 			QuestID = questID;
 			State = state;

@@ -33,6 +33,7 @@ namespace Mascari4615
 			WaitForSeconds wait = new(Tick);
 			while (true)
 			{
+				SOManager.Instance.OnTick.Raise();
 				callback?.Invoke();
 				yield return wait;
 			}

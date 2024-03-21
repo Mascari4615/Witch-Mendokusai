@@ -52,7 +52,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 52358c164b5df2244a0f86b5b39b1510, type: 2}
   - {fileID: 11400000, guid: 13e1d4cbb01b2df46bd131364b51a0b1, type: 2}
   - {fileID: 11400000, guid: 08a85764d3f3c8a4f9022fff3a1a2301, type: 2}
-  <QuestBuffer>k__BackingField: {fileID: 11400000, guid: 5d1d254e533cbf54a8674e35c61f9580, type: 2}
+  <QuestDataBuffer>k__BackingField: {fileID: 11400000, guid: 5d1d254e533cbf54a8674e35c61f9580, type: 2}
+  <QuestBuffer>k__BackingField: {fileID: 11400000, guid: 3ec24248882b83e458342ca2d5cc9992, type: 2}
   <Dolls>k__BackingField:
   - {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
   - {fileID: 11400000, guid: 9f85001dde9fbdd448c49a3cb01ae69b, type: 2}
@@ -88,3 +89,4 @@ MonoBehaviour:
   <OnPlayerDied>k__BackingField: {fileID: 11400000, guid: 5d18fed6aac604a479af521c42c711c7, type: 2}
   <OnDungeonStart>k__BackingField: {fileID: 11400000, guid: fc00031ad31f90a408acc1412869de03, type: 2}
   <OnLevelUp>k__BackingField: {fileID: 11400000, guid: 208dcbb304f22364e9b3f2d947d7140f, type: 2}
+  <OnTick>k__BackingField: {fileID: 11400000, guid: bc2038669bdb2c440ba131c24117d9ec, type: 2}

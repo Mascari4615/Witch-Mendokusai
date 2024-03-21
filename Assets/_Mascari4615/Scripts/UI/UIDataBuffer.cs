@@ -50,8 +50,6 @@ namespace Mascari4615
 			}
 
 			SelectSlot(0);
-			if (clickToolTip != null)
-				clickToolTip.SetToolTipContent(CurSlot.Artifact);
 
 			return isInit = true;
 		}
@@ -76,6 +74,9 @@ namespace Mascari4615
 						Slots[i].gameObject.SetActive(false);
 				}
 			}
+
+			if (clickToolTip != null)
+				clickToolTip.SetToolTipContent(CurSlot.Artifact);
 		}
 
 		public void SetDataBuffer(DataBuffer<T> newDataBuffer)
@@ -88,6 +89,8 @@ namespace Mascari4615
 			CurSlotIndex = index;
 			for (int i = 0; i < Slots.Count; i++)
 				Slots[i].SetSelected(i == index);
+			if (clickToolTip != null)
+				clickToolTip.SetToolTipContent(CurSlot.Artifact);
 		}
 	}
 }

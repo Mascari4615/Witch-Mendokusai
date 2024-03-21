@@ -32,7 +32,7 @@ namespace Mascari4615
 					switch (work.WorkType)
 					{
 						case WorkType.CompleteQuest:
-							DataManager.Instance.QuestDic[work.Value].ActualComplete();
+							DataManager.Instance.QuestManager.CompleteQuest(work.Value);
 							break;
 					}
 					works.RemoveAt(i);
@@ -54,11 +54,11 @@ namespace Mascari4615
 			return false;
 		}
 
-		public bool TryGetWorkByQuestID(int questID, out Work targetWork)
+		public bool TryGetWorkByQuestGuid(Guid? questGuid, out Work targetWork)
 		{
 			foreach (Work work in DollWorks)
 			{
-				if (work.WorkType == WorkType.CompleteQuest && work.Value == questID)
+				if (work.WorkType == WorkType.CompleteQuest && work.Value == questGuid)
 				{
 					targetWork = work;
 					return true;

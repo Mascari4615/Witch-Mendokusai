@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Mascari4615
@@ -66,21 +65,21 @@ namespace Mascari4615
 		{
 			canvasGroup = GetComponent<CanvasGroup>();
 
-			talkOption.SetSelectAction((slot) =>{Talk();});
-			exitOption.SetSelectAction((slot) =>{Exit();});
+			talkOption.SetSelectAction((slot) => { Talk(); });
+			exitOption.SetSelectAction((slot) => { Exit(); });
 
 			for (int i = 0; i < questOptions.Length; i++)
 			{
 				questOptions[i].SetSlotIndex(i);
 				questOptions[i].Init();
-				questOptions[i].SetSelectAction((slot) =>{SelectQuest(slot.Index);});
+				questOptions[i].SetSelectAction((slot) => { SelectQuest(slot.Index); });
 			}
 
 			for (int i = 0; i < options.Length; i++)
 			{
 				options[i].SetSlotIndex(i);
 				options[i].Init();
-				options[i].SetSelectAction((slot) =>{SetPanel((MNPCPanelType)(1 << slot.Index));});
+				options[i].SetSelectAction((slot) => { SetPanel((MNPCPanelType)(1 << slot.Index)); });
 			}
 
 			panelUIs[MNPCPanelType.Shop] = FindObjectOfType<UIShop>(true);
@@ -102,7 +101,7 @@ namespace Mascari4615
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
 
-			List<Quest> quests = curNPCData.Quests;
+			List<QuestData> quests = curNPCData.Quests;
 			for (int i = 0; i < questOptions.Length; i++)
 			{
 				if (i < quests.Count)
@@ -168,27 +167,13 @@ namespace Mascari4615
 
 		private void SelectQuest(int index)
 		{
-			Quest quest = curNPCData.Quests[index];
+			QuestData questData = curNPCData.Quests[index];
 
-			switch (quest.State)
+			switch (questData.State)
 			{
-				case QuestState.Locked:
-					quest.Unlock();
-					SOManager.Instance.QuestBuffer.AddItem(quest);
-					break;
-				case QuestState.Unlocked:
-					break;
-				case QuestState.Working:
-					break;
-				case QuestState.NeedWorkToComplete:
-					break;
-				case QuestState.Completed:
-					if (quest.Type != QuestType.NeedWork)
-					{
-						
-					}
-					break;
-				case QuestState.ReceivedReward:
+				case QuestDataState.Locked:
+					questData.Unlock();
+					DataManager.Instance.QuestManager.AddQuest(new Quest(new(), questData));
 					break;
 				default:
 					Debug.Log("Invalid Quest State");

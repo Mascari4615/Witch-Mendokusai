@@ -60,7 +60,8 @@ namespace Mascari4615
 		[field: SerializeField] public GameObjectBuffer MonsterObjectBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer SkillObjectBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer InteractiveObjectBuffer { get; private set; }
-		[field: SerializeField] public List<Quest> Quests { get; private set; }
+		[field: SerializeField] public List<QuestData> Quests { get; private set; }
+		[field: SerializeField] public QuestDataBuffer QuestDataBuffer { get; private set; }
 		[field: SerializeField] public QuestBuffer QuestBuffer { get; private set; }
 		[field: SerializeField] public List<Doll> Dolls { get; private set; }
 		[field: SerializeField] public List<NPC> NPCs { get; private set; }
@@ -80,5 +81,6 @@ namespace Mascari4615
 		[field: SerializeField] public GameEvent OnPlayerDied { get; private set; }
 		[field: SerializeField] public GameEvent OnDungeonStart { get; private set; }
 		[field: SerializeField] public GameEvent OnLevelUp { get; private set; }
+		[field: SerializeField] public GameEvent OnTick { get; private set; }
 	}
 }

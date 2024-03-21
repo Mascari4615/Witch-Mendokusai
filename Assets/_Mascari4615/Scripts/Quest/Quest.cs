@@ -1,53 +1,47 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mascari4615
 {
-	public enum QuestType
-	{
-		Normal,
-		NeedWork,
-		Achievement
-	}
-
 	public enum QuestState
 	{
-		Locked,
-		Unlocked,
+		Wait,
 		NeedWorkToComplete,
 		Working,
 		Completed,
-		ReceivedReward
 	}
 
-	[CreateAssetMenu(fileName = nameof(Quest), menuName = "Variable/" + nameof(Quest))]
-	public class Quest : Artifact
+	public class Quest
 	{
-		[field: Header("_" + nameof(Quest))]
-		[field: SerializeField] public QuestType Type { get; private set; }
-		[field: SerializeField] public GameEvent[] GameEvents { get; private set; }
-		[field: SerializeField] public Criteria[] Criterias { get; private set; }
-		
+		public Guid? Guid { get; private set; } = null;
+		public QuestData Data { get; private set; } = null;
+
 		[field: NonSerialized] public QuestState State { get; private set; }
 
-		public void Unlock()
+		public Quest(Guid? guid, QuestData data)
 		{
-			State = QuestState.Unlocked;
+			Guid = guid;
+			Data = data;
 
-			foreach (GameEvent gameEvent in GameEvents)
+			State = QuestState.Wait;
+
+			if (Data.AutoComplete)
+				Data.GameEvents.Add(SOManager.Instance.OnTick);
+			foreach (GameEvent gameEvent in Data.GameEvents)
 				gameEvent.AddCallback(TryComplete);
 			TryComplete();
 		}
 
 		public void TryComplete()
 		{
-			foreach (Criteria criteria in Criterias)
+			foreach (Criteria criteria in Data.Criterias)
 				if (criteria.IsSatisfied() == false)
 					return;
 
-			switch (Type)
+			foreach (GameEvent gameEvent in Data.GameEvents)
+				gameEvent.RemoveCallback(TryComplete);
+				
+			switch (Data.Type)
 			{
 				case QuestType.Normal:
 					State = QuestState.Completed;
@@ -57,51 +51,59 @@ namespace Mascari4615
 					break;
 				case QuestType.Achievement:
 					State = QuestState.Completed;
-					UIManager.Instance.Popup(this);
+					UIManager.Instance.Popup(Data);
 					break;
 			}
-
-			foreach (GameEvent gameEvent in GameEvents)
-				gameEvent.RemoveCallback(TryComplete);
 		}
 
-		public void StartWork()
+		public void StartWork(int dollID)
 		{
+			Work work = new(dollID, WorkType.CompleteQuest, Guid, Data.WorkTime);
+			DataManager.Instance.WorkManager.AddWork(work);
 			State = QuestState.Working;
 		}
 
-		public void ActualComplete()
+		public void WorkEnd()
 		{
 			State = QuestState.Completed;
+			// TODO : Reward 없으면 바로 리스트에서 제거
+		}	
+		
+		public void GetReward()
+		{
+			Debug.Log("GetReward");
+			Data.Complete();
+			DataManager.Instance.QuestManager.RemoveQuest(this);
 		}
 
 		public float GetProgress()
 		{
-			if (Criterias.Length == 0)
+			if (State == QuestState.Working)
+			{
+				if (DataManager.Instance.WorkManager.TryGetWorkByQuestGuid(Guid, out Work work))
+				{
+					return work.GetProgress();
+				}
+				return 0;
+			}
+
+			if (Data.Criterias.Count == 0)
 				return 1;
 
 			float progress = 0;
-			foreach (Criteria criteria in Criterias)
+			foreach (Criteria criteria in Data.Criterias)
 				progress += criteria.GetProgress();
-			return progress /= Criterias.Length;
+			return progress /= Data.Criterias.Count;
 		}
 
-		public void GetReward()
-		{
-			if (State == QuestState.Completed)
-				State = QuestState.ReceivedReward;
-
-			Debug.Log("GetReward");
-		}
-
-		public void Load(QuestData questData)
+		public void Load(QuestSlotData questData)
 		{
 			State = questData.State;
 		}
 
-		public QuestData Save()
+		public QuestSlotData Save()
 		{
-			return new QuestData(ID, State);
+			return new QuestSlotData(this);
 		}
 	}
 }

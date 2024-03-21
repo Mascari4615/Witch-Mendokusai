@@ -9,6 +9,6 @@ namespace Mascari4615
 	{
 		[field: Header("_" + nameof(NPC))]
 		[field: SerializeField] public MNPCPanelType PanelType { get; private set; }
-		[field: SerializeField] public List<Quest> Quests { get; private set; }
+		[field: SerializeField] public List<QuestData> Quests { get; private set; }
 	}
 }

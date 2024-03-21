@@ -7,7 +7,8 @@ namespace Mascari4615
 {
 	public class UIQuestSlot : UISlot
 	{
-		[SerializeField] private GameObject[] stateObjects;
+		[SerializeField] private GameObject[] questDataStateObjects;
+		[SerializeField] private GameObject[] questStateObjects;
 		[SerializeField] private Image progress;
 
 		public override void UpdateUI()
@@ -16,20 +17,21 @@ namespace Mascari4615
 
 			if (Artifact)
 			{
-				Quest quest = Artifact as Quest;
-			
-				for (int i = 0; i < stateObjects.Length; i++)
-					stateObjects[i].SetActive((int)quest.State == i);
-
-				if (quest.State == QuestState.Working)
-				{
-					progress.fillAmount = DataManager.Instance.WorkManager.TryGetWorkByQuestID(quest.ID, out Work work) ? work.GetProgress() : 1;
-				}
-				else
-				{
-					progress.fillAmount = quest.GetProgress();
-				}
+				QuestData questData = Artifact as QuestData;
+				for (int i = 0; i < questDataStateObjects.Length; i++)
+					questDataStateObjects[i].SetActive((int)questData.State == i);
 			}
+		}
+
+		public void SetQuestState(QuestState state)
+		{
+			for (int i = 0; i < questStateObjects.Length; i++)
+				questStateObjects[i].SetActive((int)state == i);
+		}
+
+		public void SetProgress(float value)
+		{
+			progress.fillAmount = value;
 		}
 	}
 }

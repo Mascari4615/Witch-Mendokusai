@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,11 +14,11 @@ namespace Mascari4615
 	{
 		public int DollID { get; private set; }
 		public WorkType WorkType { get; private set; }
-		public int Value { get; private set; }
+		public Guid? Value { get; private set; }
 		public float Time { get; private set; }
 		public float CurTime { get; private set; }
 
-		public Work(int dollID, WorkType workType, int value, float time, float curTime = 0)
+		public Work(int dollID, WorkType workType, Guid? value, float time, float curTime = 0)
 		{
 			DollID = dollID;
 			WorkType = workType;

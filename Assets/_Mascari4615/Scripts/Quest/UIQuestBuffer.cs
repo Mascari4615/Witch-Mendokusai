@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Mascari4615
 {
 	public class UIQuestBuffer : UIDataBuffer<Quest>
 	{
+		// [SerializeField] private Transform filtersParent;
+		// [SerializeField] private ItemType filter = ItemType.None;
+
 		[SerializeField] private GameObject workButton;
 		[SerializeField] private GameObject rewardButton;
 
@@ -22,12 +26,38 @@ namespace Mascari4615
 			}
 		}
 
+		public override bool Init()
+		{
+			if (base.Init() == false)
+				return false;
+
+			QuestBuffer questBuffer = dataBuffer as QuestBuffer;
+			// questBuffer.RegisterInventoryUI(this);
+
+			// foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
+			//	slot.SetInventory(questBuffer);
+
+			// if (filtersParent != null)
+			// {
+			// 	UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
+			// 	for (int i = 0; i < fillerButtons.Length; i++)
+			// 	{
+			// 		fillerButtons[i].SetSlotIndex(i);
+			// 		fillerButtons[i].SetSelectAction((slot) => {SetFilter((ItemType)(slot.Index - 1));});
+			// 	}
+			// }
+
+			return true;
+		}
+
 		public override void UpdateUI()
 		{
+			QuestBuffer questBuffer = dataBuffer as QuestBuffer;
+
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				UIQuestSlot slot = Slots[i] as UIQuestSlot;
-				Quest quest = dataBuffer.RuntimeItems.ElementAtOrDefault(i);
+				Quest quest = questBuffer.RuntimeItems.ElementAtOrDefault(i);
 
 				if (quest == null)
 				{
@@ -36,42 +66,58 @@ namespace Mascari4615
 				}
 				else
 				{
-					bool slotActive = quest.State > QuestState.Locked;
+					QuestData questData = quest.Data;
+					// bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
 
-					slot.SetArtifact(quest);
-					slot.gameObject.SetActive(slotActive);
+					slot.SetQuestState(quest.State);
+					slot.SetProgress(quest.GetProgress());
+					slot.SetArtifact(questData);
+					// slot.gameObject.SetActive(slotActive);
+					slot.gameObject.SetActive(true);
 				}
 			}
 
 			if (CurSlot.Artifact)
-			{
-				Quest curQuest = CurSlot.Artifact as Quest;
+			{	
+				Quest curQuest = SOManager.Instance.QuestBuffer.RuntimeItems[CurSlotIndex];
 				workButton.SetActive(curQuest.State == QuestState.NeedWorkToComplete);
 				rewardButton.SetActive(curQuest.State == QuestState.Completed);
 			}
+			else
+			{
+				workButton.SetActive(false);
+				rewardButton.SetActive(false);
+			}
+
+			if (clickToolTip != null)
+				clickToolTip.SetToolTipContent(CurSlot.Artifact);
 		}
+
+		// public void SetFilter(ItemType newFilter)
+		// {
+		// 	filter = newFilter;
+		// 	UpdateUI();
+		// }
 
 		public void GetReward()
 		{
-			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
-
+			Quest quest = SOManager.Instance.QuestBuffer.RuntimeItems[CurSlotIndex];
 			if (quest.State != QuestState.Completed)
 				return;
+			
 			quest.GetReward();
+			SelectSlot(0);
 			UpdateUI();
 		}
 
 		public void Work()
 		{
 			// TODO: 어떤 인형이 일을 할지
-			Quest quest = Slots[CurSlotIndex].Artifact as Quest;
-
+			Quest quest = SOManager.Instance.QuestBuffer.RuntimeItems[CurSlotIndex];
 			if (quest.State != QuestState.NeedWorkToComplete)
 				return;
 
-			Work work = new(0, WorkType.CompleteQuest, quest.ID, 5);
-			DataManager.Instance.WorkManager.AddWork(work);
-			quest.StartWork();
+			quest.StartWork(0);
 		}
 	}
 }
