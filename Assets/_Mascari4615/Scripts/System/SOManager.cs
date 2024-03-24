@@ -75,6 +75,7 @@ namespace Mascari4615
 		[field: SerializeField] public StageDataBuffer StageDataBuffer { get; private set; }
 		[field: SerializeField] public CardBuffer CardDataBuffer { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
+		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
 
 		[field: Space(10), Header("GameEvent")]
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }

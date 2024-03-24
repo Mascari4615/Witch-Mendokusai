@@ -8,7 +8,7 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = "FloatVariableEffect", menuName = "Effect/FloatVariableEffect")]
 	public class FloatVariableEffect : NumVariableEffect<float>
 	{
-		public override void OnEffect()
+		public override void Apply()
 		{
 			TargetStat.RuntimeValue = Calc(TargetStat.RuntimeValue, Value, ArithmeticOperator);
 		}

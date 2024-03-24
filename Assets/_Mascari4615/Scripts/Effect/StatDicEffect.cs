@@ -10,7 +10,7 @@ namespace Mascari4615
 		[SerializeField] private StatDictionary statDictionary;
 		[field: SerializeField] public Stat Stat { get; private set; }
 
-		public override void OnEffect()
+		public override void Apply()
 		{
 			int originValue = statDictionary.GetStat(Stat);
 			int newValue = (int)Calc(originValue, Value, ArithmeticOperator);

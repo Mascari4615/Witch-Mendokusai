@@ -8,7 +8,7 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = "IntVariableEffect", menuName = "Effect/IntVariableEffect")]
 	public class IntVariableEffect : NumVariableEffect<int>
 	{
-		public override void OnEffect()
+		public override void Apply()
 		{
 			TargetStat.RuntimeValue = (int)Calc(TargetStat.RuntimeValue, Value, ArithmeticOperator);
 		}

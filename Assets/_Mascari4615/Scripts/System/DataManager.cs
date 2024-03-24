@@ -28,6 +28,7 @@ namespace Mascari4615
 		public readonly Dictionary<int, Card> CardDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
 
+		public bool IsInited { get; private set; }
 		public int CurDollID;
 		public int DummyDollCount;
 
@@ -38,7 +39,7 @@ namespace Mascari4615
 		public QuestManager QuestManager { get; private set; }
 
 		// HACK
-		[field:SerializeField] public bool UseLocalData { get; private set; }
+		[field: SerializeField] public bool UseLocalData { get; private set; }
 
 		protected override void Awake()
 		{
@@ -134,8 +135,12 @@ namespace Mascari4615
 				{
 					new(0, 1, 0, new(){})
 				},
-				dollWorks = new(),
-				dummyWorks = new(),
+				works = new()
+				{
+					{ WorkListType.DollWork, new() },
+					{ WorkListType.DummyWork, new() },
+					{ WorkListType.VQuestWork, new() }
+				},
 				questDatas = new(),
 				questSlots = new()
 			};
@@ -197,8 +202,10 @@ namespace Mascari4615
 			}
 
 			// 작업 초기화
-			WorkManager.Init(saveData.dollWorks, saveData.dummyWorks);
+			WorkManager.Init(saveData.works);
 			QuestManager.Init(saveData.questSlots);
+
+			IsInited = true;
 		}
 
 		public void SaveData()
@@ -209,8 +216,7 @@ namespace Mascari4615
 				dummyDollCount = DummyDollCount,
 				itemInventoryItems = SOManager.ItemInventory.GetInventoryData(),
 				dollDatas = new(),
-				dollWorks = WorkManager.DollWorks,
-				dummyWorks = WorkManager.DummyWorks,
+				works = WorkManager.Works,
 				questDatas = new(),
 				questSlots = QuestManager.Save()
 			};
@@ -282,8 +288,12 @@ namespace Mascari4615
 
 		public List<InventorySlotData> itemInventoryItems = new();
 		public List<DollData> dollDatas = new();
-		public List<Work> dollWorks = new();
-		public List<Work> dummyWorks = new();
+		public Dictionary<WorkListType, List<Work>> works = new()
+		{
+			{ WorkListType.DollWork, new() },
+			{ WorkListType.DummyWork, new() },
+			{ WorkListType.VQuestWork, new() }
+		};
 		public List<QuestSaveData> questDatas = new();
 		public List<QuestSlotData> questSlots = new();
 	}

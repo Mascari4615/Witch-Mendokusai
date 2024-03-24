@@ -14,7 +14,7 @@ namespace Mascari4615
 		public void OnEquip()
 		{
 			foreach (Effect effect in Effects)
-				effect.OnEffect();
+				effect.Apply();
 		}
 
 		public void OnRemove()

@@ -11,7 +11,7 @@ namespace Mascari4615
 		private GameObject instance;
 		[SerializeField] private GameObject targetObject;
 
-		public override void OnEffect()
+		public override void Apply()
 		{
 			if (instance != null)
 			{

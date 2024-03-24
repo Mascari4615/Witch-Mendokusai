@@ -4,26 +4,40 @@ using UnityEngine;
 
 namespace Mascari4615
 {
+	public enum WorkListType
+{
+		DollWork,
+		DummyWork,
+		VQuestWork
+	}
+
 	public class WorkManager
 	{
-		public List<Work> DollWorks { get; private set; } = new();
-		public List<Work> DummyWorks { get; private set; } = new();
+		public const int NONE_WORKER_ID = -1;
 
-		public void Init(List<Work> dollWorks, List<Work> dummyWorks)
+		public Dictionary<WorkListType, List<Work>> Works { get; private set; } = new()
 		{
-			DollWorks = dollWorks;
-			DummyWorks = dummyWorks;
+			{WorkListType.DollWork, new()},
+			{WorkListType.DummyWork, new()},
+			{WorkListType.VQuestWork, new()}
+		};
+
+		public void Init(Dictionary<WorkListType, List<Work>> works)
+		{
+			Works = works;
 		}
 
 		public void TickEachWorks()
 		{
-			TickWorks(DollWorks);
-			TickWorks(DummyWorks);
+			foreach (List<Work> works in Works.Values)
+			{
+				TickWorks(works);
+			}
 		}
 
 		public void TickWorks(List<Work> works)
 		{
-			for (int i = works.Count - 1; i >= 0 ; i--)
+			for (int i = works.Count - 1; i >= 0; i--)
 			{
 				Work work = works[i];
 				work.Tick();
@@ -40,11 +54,16 @@ namespace Mascari4615
 			}
 		}
 
-		public bool TryGetWorkByDollID(int dollID, out Work targetWork)
+		public int GetWorkCount(WorkListType workListType)
 		{
-			foreach (Work work in DollWorks)
+			return Works[workListType].Count;
+		}
+
+		public bool TryGetWorkByDollID(WorkListType workListType, int dollID, out Work targetWork)
+		{
+			foreach (Work work in Works[workListType])
 			{
-				if (work.DollID == dollID)
+				if (work.WorkerID == dollID)
 				{
 					targetWork = work;
 					return true;
@@ -56,37 +75,47 @@ namespace Mascari4615
 
 		public bool TryGetWorkByQuestGuid(Guid? questGuid, out Work targetWork)
 		{
-			foreach (Work work in DollWorks)
+			foreach (List<Work> works in Works.Values)
 			{
-				if (work.WorkType == WorkType.CompleteQuest && work.Value == questGuid)
+				foreach (Work work in works)
 				{
-					targetWork = work;
-					return true;
+					if (work.WorkType == WorkType.CompleteQuest && work.Value == questGuid)
+					{
+						targetWork = work;
+						return true;
+					}
 				}
 			}
+
 			targetWork = null;
 			return false;
 		}
 
 		public void AddWork(Work work)
 		{
-			if (work.DollID == Doll.DUMMY_ID)
+			if (work.WorkerID == NONE_WORKER_ID)
 			{
-				DummyWorks.Add(work);
+				Works[WorkListType.VQuestWork].Add(work);
 			}
-			else if (TryGetWorkByDollID(work.DollID, out _) == false)
+			else if (work.WorkerID == Doll.DUMMY_ID)
 			{
-				DollWorks.Add(work);
+				Works[WorkListType.DummyWork].Add(work);
+			}
+			else
+			{
+				if (TryGetWorkByDollID(WorkListType.DollWork, work.WorkerID, out _))
+					return;
+				Works[WorkListType.DollWork].Add(work);
 			}
 		}
 
 		public void CancleWork(int dollID)
 		{
-			for (int i = DollWorks.Count - 1; i >= 0; i--)
+			for (int i = Works[WorkListType.DollWork].Count - 1; i >= 0; i--)
 			{
-				if (DollWorks[i].DollID == dollID)
+				if (Works[WorkListType.DollWork][i].WorkerID == dollID)
 				{
-					DollWorks.RemoveAt(i);
+					Works[WorkListType.DollWork].RemoveAt(i);
 					return;
 				}
 			}

@@ -8,56 +8,45 @@ namespace Mascari4615
 {
 	public class UIQuestBuffer : UIDataBuffer<Quest>
 	{
-		// [SerializeField] private Transform filtersParent;
-		// [SerializeField] private ItemType filter = ItemType.None;
+		[SerializeField] private Transform filtersParent;
+		[SerializeField] private QuestType curFilter = QuestType.None;
 
 		[SerializeField] private GameObject workButton;
 		[SerializeField] private GameObject rewardButton;
 
-		private void OnEnable() => StartCoroutine(UpdateLoop());
-		private void OnDisable() => StopAllCoroutines();
-		public IEnumerator UpdateLoop()
-		{
-			WaitForSeconds wait = new(.1f);
-			while (true)
-			{
-				UpdateUI();
-				yield return wait;
-			}
-		}
+		public QuestBuffer QuestBuffer => dataBuffer as QuestBuffer;
+		public Quest CurQuest => QuestBuffer.RuntimeItems[CurSlotIndex];
 
 		public override bool Init()
 		{
+			// 이미 한 번 Init했다면 Return
 			if (base.Init() == false)
 				return false;
 
-			QuestBuffer questBuffer = dataBuffer as QuestBuffer;
-			// questBuffer.RegisterInventoryUI(this);
-
-			// foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
-			//	slot.SetInventory(questBuffer);
-
-			// if (filtersParent != null)
-			// {
-			// 	UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
-			// 	for (int i = 0; i < fillerButtons.Length; i++)
-			// 	{
-			// 		fillerButtons[i].SetSlotIndex(i);
-			// 		fillerButtons[i].SetSelectAction((slot) => {SetFilter((ItemType)(slot.Index - 1));});
-			// 	}
-			// }
+			// 필터 버튼 초기화
+			if (filtersParent != null)
+			{
+				UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
+				for (int i = 0; i < fillerButtons.Length; i++)
+				{
+					fillerButtons[i].SetSlotIndex(i);
+					fillerButtons[i].SetSelectAction((slot) =>
+					{
+						QuestType newFilter = (QuestType)(slot.Index - 1);
+						curFilter = newFilter;
+						UpdateUI();
+					});
+				}
+			}
 
 			return true;
 		}
 
 		public override void UpdateUI()
 		{
-			QuestBuffer questBuffer = dataBuffer as QuestBuffer;
-
-			for (int i = 0; i < Slots.Count; i++)
+			foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
 			{
-				UIQuestSlot slot = Slots[i] as UIQuestSlot;
-				Quest quest = questBuffer.RuntimeItems.ElementAtOrDefault(i);
+				Quest quest = QuestBuffer.RuntimeItems.ElementAtOrDefault(slot.Index);
 
 				if (quest == null)
 				{
@@ -67,21 +56,19 @@ namespace Mascari4615
 				else
 				{
 					QuestData questData = quest.Data;
-					// bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
+					bool slotActive = (curFilter == QuestType.None) || (questData.Type == curFilter);
 
 					slot.SetQuestState(quest.State);
 					slot.SetProgress(quest.GetProgress());
 					slot.SetArtifact(questData);
-					// slot.gameObject.SetActive(slotActive);
-					slot.gameObject.SetActive(true);
+					slot.gameObject.SetActive(slotActive);
 				}
 			}
-
+			
 			if (CurSlot.Artifact)
-			{	
-				Quest curQuest = SOManager.Instance.QuestBuffer.RuntimeItems[CurSlotIndex];
-				workButton.SetActive(curQuest.State == QuestState.NeedWorkToComplete);
-				rewardButton.SetActive(curQuest.State == QuestState.Completed);
+			{
+				workButton.SetActive(CurQuest.State == QuestState.NeedWorkToComplete);
+				rewardButton.SetActive(CurQuest.State == QuestState.Completed);
 			}
 			else
 			{
@@ -93,19 +80,12 @@ namespace Mascari4615
 				clickToolTip.SetToolTipContent(CurSlot.Artifact);
 		}
 
-		// public void SetFilter(ItemType newFilter)
-		// {
-		// 	filter = newFilter;
-		// 	UpdateUI();
-		// }
-
 		public void GetReward()
 		{
-			Quest quest = SOManager.Instance.QuestBuffer.RuntimeItems[CurSlotIndex];
-			if (quest.State != QuestState.Completed)
+			if (CurQuest.State != QuestState.Completed)
 				return;
-			
-			quest.GetReward();
+
+			CurQuest.GetReward();
 			SelectSlot(0);
 			UpdateUI();
 		}
@@ -113,11 +93,22 @@ namespace Mascari4615
 		public void Work()
 		{
 			// TODO: 어떤 인형이 일을 할지
-			Quest quest = SOManager.Instance.QuestBuffer.RuntimeItems[CurSlotIndex];
-			if (quest.State != QuestState.NeedWorkToComplete)
+			if (CurQuest.State != QuestState.NeedWorkToComplete)
 				return;
 
-			quest.StartWork(0);
+			CurQuest.StartWork(0);
+		}
+
+		private void OnEnable() => StartCoroutine(UpdateLoop());
+		private void OnDisable() => StopAllCoroutines();
+		public IEnumerator UpdateLoop()
+		{
+			WaitForSeconds wait = new(.1f);
+			while (true)
+			{
+				UpdateUI();
+				yield return wait;
+			}
 		}
 	}
 }

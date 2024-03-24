@@ -15,14 +15,12 @@ namespace Mascari4615
 	{
 		public Guid? Guid { get; private set; } = null;
 		public QuestData Data { get; private set; } = null;
-
-		[field: NonSerialized] public QuestState State { get; private set; }
+		public QuestState State { get; private set; }
 
 		public Quest(Guid? guid, QuestData data)
 		{
 			Guid = guid;
 			Data = data;
-
 			State = QuestState.Wait;
 
 			if (Data.AutoComplete)
@@ -40,14 +38,16 @@ namespace Mascari4615
 
 			foreach (GameEvent gameEvent in Data.GameEvents)
 				gameEvent.RemoveCallback(TryComplete);
-				
+
 			switch (Data.Type)
 			{
 				case QuestType.Normal:
 					State = QuestState.Completed;
 					break;
-				case QuestType.NeedWork:
+				case QuestType.VillageRequest:
 					State = QuestState.NeedWorkToComplete;
+					if (Data.AutoWork)
+						StartWork();
 					break;
 				case QuestType.Achievement:
 					State = QuestState.Completed;
@@ -56,9 +56,9 @@ namespace Mascari4615
 			}
 		}
 
-		public void StartWork(int dollID)
+		public void StartWork(int workerID = WorkManager.NONE_WORKER_ID)
 		{
-			Work work = new(dollID, WorkType.CompleteQuest, Guid, Data.WorkTime);
+			Work work = new(workerID, WorkType.CompleteQuest, Guid, Data.WorkTime);
 			DataManager.Instance.WorkManager.AddWork(work);
 			State = QuestState.Working;
 		}
@@ -67,13 +67,18 @@ namespace Mascari4615
 		{
 			State = QuestState.Completed;
 			// TODO : Reward 없으면 바로 리스트에서 제거
-		}	
-		
+
+			if (Data.AutoReward)
+				GetReward();
+		}
+
 		public void GetReward()
 		{
 			Debug.Log("GetReward");
 			Data.Complete();
 			DataManager.Instance.QuestManager.RemoveQuest(this);
+			foreach (Effect reward in Data.Rewards)
+				reward.Apply();
 		}
 
 		public float GetProgress()

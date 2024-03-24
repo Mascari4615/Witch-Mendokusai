@@ -7,20 +7,20 @@ namespace Mascari4615
 {
 	public enum WorkType
 	{
-		CompleteQuest
+		CompleteQuest,
 	}
 
 	public class Work
 	{
-		public int DollID { get; private set; }
 		public WorkType WorkType { get; private set; }
 		public Guid? Value { get; private set; }
 		public float Time { get; private set; }
 		public float CurTime { get; private set; }
+		public int WorkerID { get; private set; }
 
-		public Work(int dollID, WorkType workType, Guid? value, float time, float curTime = 0)
+		public Work(int workerID, WorkType workType, Guid? value, float time, float curTime = 0)
 		{
-			DollID = dollID;
+			WorkerID = workerID;
 			WorkType = workType;
 			Value = value;
 			Time = time;

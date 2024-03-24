@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class QuestManager : MonoBehaviour
+	public class QuestManager
 	{
 		private List<Quest> Quests => SOManager.Instance.QuestBuffer.RuntimeItems;
 
@@ -42,6 +42,11 @@ namespace Mascari4615
 		public void RemoveQuest(Quest quest)
 		{
 			Quests.Remove(quest);
+		}
+		
+		public int GetQuestCount(QuestType questType)
+		{
+			return Quests.FindAll(x => x.Data.Type == questType).Count;
 		}
 
 		public List<QuestSlotData> Save()

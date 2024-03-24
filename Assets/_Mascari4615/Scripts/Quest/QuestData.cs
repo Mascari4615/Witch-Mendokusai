@@ -7,8 +7,9 @@ namespace Mascari4615
 {
 	public enum QuestType
 	{
+		None = -1,
 		Normal,
-		NeedWork,
+		VillageRequest,
 		Achievement
 	}
 
@@ -26,8 +27,12 @@ namespace Mascari4615
 		[field: SerializeField] public QuestType Type { get; private set; }
 		[field: SerializeField] public List<GameEvent> GameEvents { get; private set; }
 		[field: SerializeField] public List<Criteria> Criterias { get; private set; }
+		[field: SerializeField] public List<Effect> Rewards { get; private set; }
+
 		[field: SerializeField] public float WorkTime { get; private set; }
 		[field: SerializeField] public bool AutoComplete { get; private set; }
+		[field: SerializeField] public bool AutoWork { get; private set; }
+		[field: SerializeField] public bool AutoReward { get; private set; }
 
 		[field: NonSerialized] public QuestDataState State { get; private set; }
 
