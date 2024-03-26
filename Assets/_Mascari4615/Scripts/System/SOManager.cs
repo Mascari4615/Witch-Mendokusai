@@ -43,8 +43,8 @@ namespace Mascari4615
 		[field: SerializeField] public BoolVariable IsDied { get; private set; }
 		[field: SerializeField] public BoolVariable IsMouseOnUI { get; private set; }
 		[field: SerializeField] public EnemyObjectVariable LastHitEnemyObject { get; private set; }
-
 		[field: SerializeField] public IntVariable Nyang { get; private set; }
+		[field: SerializeField] public IntVariable VQExp { get; private set; }
 		[field: SerializeField] public ItemVariable LastEquipedItem { get; private set; }
 
 		[field: Space(10), Header("Buffer")]
@@ -70,7 +70,7 @@ namespace Mascari4615
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
 		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
 
-		[field: Space(10), Header("GameEvent")]
+		[field: Space(10), Header(nameof(GameEvent))]
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }
 		[field: SerializeField] public GameEvent OnPlayerDied { get; private set; }
 		[field: SerializeField] public GameEvent OnDungeonStart { get; private set; }

@@ -63,12 +63,12 @@ namespace Mascari4615
 			{
 				if (i < dataBuffer.RuntimeItems.Count)
 				{
-					Slots[i].SetArtifact(dataBuffer.RuntimeItems[i] as Artifact);
+					Slots[i].SetSlot(dataBuffer.RuntimeItems[i] as Artifact);
 					Slots[i].gameObject.SetActive(true);
 				}
 				else
 				{
-					Slots[i].SetArtifact(null);
+					Slots[i].SetSlot(null);
 
 					if (dontShowEmptySlot)
 						Slots[i].gameObject.SetActive(false);
@@ -76,7 +76,7 @@ namespace Mascari4615
 			}
 
 			if (clickToolTip != null)
-				clickToolTip.SetToolTipContent(CurSlot.Artifact);
+				clickToolTip.SetToolTipContent(CurSlot.Data);
 		}
 
 		public void SetDataBuffer(DataBuffer<T> newDataBuffer)
@@ -90,7 +90,7 @@ namespace Mascari4615
 			for (int i = 0; i < Slots.Count; i++)
 				Slots[i].SetSelected(i == index);
 			if (clickToolTip != null)
-				clickToolTip.SetToolTipContent(CurSlot.Artifact);
+				clickToolTip.SetToolTipContent(CurSlot.Data);
 		}
 	}
 }

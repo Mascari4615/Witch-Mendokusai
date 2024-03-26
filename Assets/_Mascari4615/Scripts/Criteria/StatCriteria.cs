@@ -8,23 +8,18 @@ namespace Mascari4615
 {
 	public class StatCriteria : NumCriteria
 	{
-		public StatType StatType { get; private set; }
+		public StatType Type { get; private set; }
 
-		public StatCriteria(ComparisonOperator comparisonOperator, int targetValue, StatType statType) : base(comparisonOperator, targetValue)
+		public StatCriteria(ComparisonOperator comparisonOperator, int targetValue, StatType type) : base(comparisonOperator, targetValue)
 		{
-			StatType = statType;
+			Type = type;
 		}
 
 		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
 
-		public override bool Evaluate()
+		public override int GetCurValue()
 		{
-			return Evaluate_(PlayerStat[StatType]);
-		}
-
-		public override float GetProgress()
-		{
-			return GetProgress_(PlayerStat[StatType]);
+			return PlayerStat[Type];
 		}
 	}
 }

@@ -11,35 +11,13 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI descriptionText;
 		[SerializeField] private TextMeshProUGUI gradeText;
 
-		public void Init()
+		public void SetToolTipContent(SlotData slotData)
 		{
-			image.enabled = false;
-			nameText.text = "";
-			descriptionText.text = "";
-			gradeText.text = "";
-		}
+			image.sprite = slotData.Sprite;
+			image.color = slotData.Sprite == null ? Color.clear : Color.white;
+			nameText.text = slotData.Name;
+			descriptionText.text = slotData.Description;
 
-		public void SetToolTipContent(Artifact artifact)
-		{
-			if (artifact == null)
-			{
-				Init();
-				return;
-			}
-
-			SetToolTipContent(artifact.Thumbnail, artifact.Name, artifact.Description);
-		}
-
-		public void SetToolTipContent(Sprite sprite, string header, string description)
-		{
-			image.enabled = true;
-			image.sprite = sprite;
-
-			nameText.text = header;
-			nameText.color = Color.white;
-
-			descriptionText.text = description;
-			
 			gradeText.text = "";
 		}
 	}

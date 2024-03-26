@@ -19,17 +19,9 @@ namespace Mascari4615
 			toolTipHeight = rectTransform.sizeDelta.y;
 		}
 
-		public void Show(Sprite sprite, string header, string description)
+		public void Show(SlotData slotData)
 		{
-			popupToolTip.SetToolTipContent(sprite, header, description);
-			popupToolTip.transform.position = GetVec();
-			popupToolTip.gameObject.SetActive(true);
-		}
-
-		public void Show(Artifact artifact)
-		{
-			// Debug.Log("Show");
-			popupToolTip.SetToolTipContent(artifact);
+			popupToolTip.SetToolTipContent(slotData);
 			popupToolTip.transform.position = GetVec();
 			popupToolTip.gameObject.SetActive(true);
 		}

@@ -46,7 +46,7 @@ namespace Mascari4615
 
 				if (item == null)
 				{
-					slot.SetArtifact(null);
+					slot.SetSlot(null);
 					slot.gameObject.SetActive(dontShowEmptySlot == false);
 				}
 				else
@@ -54,7 +54,7 @@ namespace Mascari4615
 					ItemData itemData = item.Data;
 					bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
 
-					slot.SetArtifact(itemData, item.Amount);
+					slot.SetSlot(itemData, item.Amount);
 					slot.gameObject.SetActive(slotActive);
 				}
 			}
@@ -64,11 +64,11 @@ namespace Mascari4615
 		{
 			if (item != null)
 			{
-				Slots[index].SetArtifact(item.Data, item.Amount);
+				Slots[index].SetSlot(item.Data, item.Amount);
 			}
 			else
 			{
-				Slots[index].SetArtifact(null, 1);
+				Slots[index].SetSlot(null);
 			}
 		}
 

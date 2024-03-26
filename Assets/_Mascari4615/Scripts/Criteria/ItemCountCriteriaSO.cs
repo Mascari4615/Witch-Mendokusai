@@ -13,6 +13,9 @@ namespace Mascari4615
 
 		public override void OnAfterDeserialize()
 		{
+			if (itemData == null)
+				return;
+
 			Data = new ItemCountCriteria(comparisonOperator, targetValue, itemData.ID);
 		}
 	}

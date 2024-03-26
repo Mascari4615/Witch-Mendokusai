@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(Doll), menuName = "Variable/" + nameof(Unit) +"/"+ nameof(Doll))]
-	public class Doll : Unit
+	public class Doll : Unit, ISavable<DollData>
 	{
 		public const int DUMMY_ID = 4444;
 

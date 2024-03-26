@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
-	public class Inventory : DataBuffer<Item>, ISerializationCallbackReceiver
+	public class Inventory : DataBuffer<Item>, ISavable<List<InventorySlotData>>, ISerializationCallbackReceiver
 	{
 		private const int NONE = -1;
 		private const int DefaultCapacity = 30;
@@ -201,32 +201,6 @@ namespace Mascari4615
 			UpdateSlot(index);
 		}
 
-		public void LoadSaveItems(List<InventorySlotData> savedItems)
-		{
-			RuntimeItems = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
-			
-			foreach (InventorySlotData itemData in savedItems)
-			{
-				RuntimeItems[itemData.slotIndex] = new Item(
-					itemData.Guid,
-					DataManager.Instance.ItemDic[itemData.itemID],
-					itemData.itemAmount);
-			}
-		}
-
-		public List<InventorySlotData> GetInventoryData()
-		{
-			List<InventorySlotData> InventoryData = new(Capacity);
-			for (int i = 0; i < RuntimeItems.Count; i++)
-			{
-				if (RuntimeItems[i] == null)
-					continue;
-				InventoryData.Add(new InventorySlotData(i, RuntimeItems[i]));
-			}
-			// Debug.Log($"InventoryData.Count: {InventoryData.Count}");
-			return InventoryData;
-		}
-
 		private bool IsValidIndex(int index)
 		{
 			return index >= 0 && index < Capacity;
@@ -301,10 +275,35 @@ namespace Mascari4615
 			}
 		}
 
+		public void Load(List<InventorySlotData> savedItems)
+		{
+			RuntimeItems = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
+			
+			foreach (InventorySlotData itemData in savedItems)
+			{
+				RuntimeItems[itemData.slotIndex] = new Item(
+					itemData.Guid,
+					DataManager.Instance.ItemDic[itemData.itemID],
+					itemData.itemAmount);
+			}
+		}
+
+		public List<InventorySlotData> Save()
+		{
+			List<InventorySlotData> InventoryData = new(Capacity);
+			for (int i = 0; i < RuntimeItems.Count; i++)
+			{
+				if (RuntimeItems[i] == null)
+					continue;
+				InventoryData.Add(new InventorySlotData(i, RuntimeItems[i]));
+			}
+			// Debug.Log($"InventoryData.Count: {InventoryData.Count}");
+			return InventoryData;
+		}
+
 		public override void OnAfterDeserialize()
 		{
 			RuntimeItems = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
 		}
-		public override void OnBeforeSerialize() { }
 	}
 }

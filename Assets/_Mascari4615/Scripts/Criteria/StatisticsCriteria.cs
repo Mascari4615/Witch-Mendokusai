@@ -8,21 +8,16 @@ namespace Mascari4615
 {
 	public class StatisticsCriteria : NumCriteria
 	{
-		public StatisticsType StatisticsType { get; private set; }
+		public StatisticsType Type { get; private set; }
 
-		public StatisticsCriteria(ComparisonOperator comparisonOperator, int targetValue, StatisticsType statisticsType) : base(comparisonOperator, targetValue)
+		public StatisticsCriteria(ComparisonOperator comparisonOperator, int targetValue, StatisticsType type) : base(comparisonOperator, targetValue)
 		{
-			StatisticsType = statisticsType;
+			Type = type;
 		}
 
-		public override bool Evaluate()
+		public override int GetCurValue()
 		{
-			return Evaluate_(SOManager.Instance.Statistics[StatisticsType]);
-		}
-
-		public override float GetProgress()
-		{
-			return GetProgress_(SOManager.Instance.Statistics[StatisticsType]);
+			return SOManager.Instance.Statistics[Type];
 		}
 	}
 }

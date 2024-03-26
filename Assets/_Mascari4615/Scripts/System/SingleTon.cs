@@ -18,7 +18,7 @@ namespace Mascari4615
 			private set => instance = value;
 		}
 
-		[SerializeField] private bool dontDestroyOnLoad = true;
+		[SerializeField] private bool dontDestroyOnLoad = false;
 
 		protected virtual void Awake()
 		{

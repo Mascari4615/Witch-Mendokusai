@@ -15,13 +15,15 @@ MonoBehaviour:
   <ID>k__BackingField: 10000
   <Name>k__BackingField: "\uB9C8\uC744 \uC758\uB8B0 \uBD88\uB7EC\uC624\uB294\uC911"
   <Description>k__BackingField: 
-  <Thumbnail>k__BackingField: {fileID: 21300000, guid: 6a95ad93c0d2b4831b68b04cf5efc0de, type: 3}
+  <Sprite>k__BackingField: {fileID: 21300034, guid: 9bd9265533309304db171aa9f916554a, type: 3}
   <Type>k__BackingField: 1
-  <GameEvents>k__BackingField: []
+  <GameEvents>k__BackingField:
+  - {fileID: 11400000, guid: bc2038669bdb2c440ba131c24117d9ec, type: 2}
   <Criterias>k__BackingField: []
   <CompleteEffects>k__BackingField: []
-  <Rewards>k__BackingField:
+  <RewardEffects>k__BackingField:
   - {fileID: 11400000, guid: ccc1bfeb50fe9a14bb0b6b64f9c1c0e7, type: 2}
+  <Rewards>k__BackingField: []
   <WorkTime>k__BackingField: 10
   <AutoComplete>k__BackingField: 1
   <AutoWork>k__BackingField: 1

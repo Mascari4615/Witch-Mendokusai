@@ -7,6 +7,7 @@ namespace Mascari4615
 {
 	public class UIQuestSlot : UISlot
 	{
+		[SerializeField] private Image[] criteriaObjects;
 		[SerializeField] private GameObject[] questDataStateObjects;
 		[SerializeField] private GameObject[] questStateObjects;
 		[SerializeField] private Image progress;
@@ -32,6 +33,22 @@ namespace Mascari4615
 		public void SetProgress(float value)
 		{
 			progress.fillAmount = value;
+		}
+
+		public void SetQuest(Quest quest)
+		{
+			for (int i = 0; i < criteriaObjects.Length; i++)
+			{
+				if (i < quest.Criterias.Count)
+				{
+					criteriaObjects[i].color = quest.Criterias[i].IsCompleted ? Color.green : Color.red;
+					criteriaObjects[i].gameObject.SetActive(true);
+				}
+				else
+				{
+					criteriaObjects[i].gameObject.SetActive(false);
+				}
+			}
 		}
 	}
 }

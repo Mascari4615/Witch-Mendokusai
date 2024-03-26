@@ -39,7 +39,7 @@ namespace Mascari4615
 			{
 				ItemData itemData = toolTipStacks.Dequeue();
 				
-				uiSlots[curElementIndex].SetArtifact(itemData);
+				uiSlots[curElementIndex].SetSlot(itemData);
 				uiSlots[curElementIndex].transform.SetAsFirstSibling();
 				mmfPlayers[curElementIndex].StopFeedbacks();
 				mmfPlayers[curElementIndex].PlayFeedbacks();

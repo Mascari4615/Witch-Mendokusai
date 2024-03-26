@@ -14,7 +14,7 @@ namespace Mascari4615
 		public void Init(ItemData itemData)
 		{
 			this.itemData = itemData;
-			spriteRenderer.sprite = itemData.Thumbnail;
+			spriteRenderer.sprite = itemData.Sprite;
 		}
 
 		public override void Effect()

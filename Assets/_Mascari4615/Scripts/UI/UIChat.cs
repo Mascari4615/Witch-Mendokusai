@@ -46,7 +46,7 @@ namespace Mascari4615
 				// TODO : 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
 				Unit unit = DataManager.Instance.UnitDic[lineData.unitID];
 				unitID = lineData.unitID;
-				unitImage.sprite = unit.Thumbnail;
+				unitImage.sprite = unit.Sprite;
 				unitName.text = unit.Name;
 
 				Coroutine coroutine = StartCoroutine(PrintLine(lineData));

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(Card), menuName = "Variable/" + nameof(Card))]
+	[CreateAssetMenu(fileName = "C_", menuName = "Variable/" + nameof(Card))]
 	public class Card : Artifact
 	{
 		[field: Header("_" + nameof(Card))]

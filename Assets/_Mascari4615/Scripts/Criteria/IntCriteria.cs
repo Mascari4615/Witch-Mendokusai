@@ -15,14 +15,9 @@ namespace Mascari4615
 			IntVariable = intVariable;
 		}
 
-		public override bool Evaluate()
+		public override int GetCurValue()
 		{
-			return Evaluate_(IntVariable.RuntimeValue);
-		}
-
-		public override float GetProgress()
-		{
-			return GetProgress_(IntVariable.RuntimeValue);
+			return IntVariable.RuntimeValue;
 		}
 	}
 }

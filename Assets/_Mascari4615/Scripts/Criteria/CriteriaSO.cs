@@ -1,10 +1,11 @@
+using System;
 using UnityEngine;
 
 namespace Mascari4615
 {
 	public abstract class CriteriaSO : ScriptableObject, ICriteria, ISerializationCallbackReceiver
 	{
-		public Criteria Data { get; protected set; }
+		[field: NonSerialized] public Criteria Data { get; protected set; }
 
 		public virtual float GetProgress()
 		{

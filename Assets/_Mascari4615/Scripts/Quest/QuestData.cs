@@ -28,19 +28,19 @@ namespace Mascari4615
 	}
 
 	[CreateAssetMenu(fileName = "Q_", menuName = "Variable/" + nameof(QuestData))]
-	public class QuestData : Artifact
+	public class QuestData : Artifact, ISavable<QuestSaveData>
 	{
 		[field: Header("_" + nameof(QuestData))]
 		[field: SerializeField] public QuestType Type { get; private set; }
 		[field: SerializeField] public List<GameEvent> GameEvents { get; private set; }
 		[field: SerializeField] public List<CriteriaInfo> Criterias { get; private set; }
 		[field: SerializeField] public List<Effect> CompleteEffects { get; private set; }
-		[field: SerializeField] public List<Effect> Rewards { get; private set; }
+		[field: SerializeField] public List<Effect> RewardEffects { get; private set; }
+		[field: SerializeField] public List<RewardInfo> Rewards { get; private set; }
 
 		[field: SerializeField] public float WorkTime { get; private set; }
-		[field: SerializeField] public bool AutoComplete { get; private set; }
 		[field: SerializeField] public bool AutoWork { get; private set; }
-		[field: SerializeField] public bool AutoReward { get; private set; }
+		[field: SerializeField] public bool AutoComplete { get; private set; }
 
 		[field: NonSerialized] public QuestDataState State { get; private set; }
 

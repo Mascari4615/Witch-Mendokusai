@@ -16,6 +16,11 @@ namespace Mascari4615
 			TargetValue = targetValue;
 		}
 
+		public override bool Evaluate()
+		{
+			return Evaluate_(GetCurValue());
+		}
+
 		protected bool Evaluate_(int curValue)
 		{
 			return ComparisonOperator switch
@@ -30,9 +35,19 @@ namespace Mascari4615
 			};
 		}
 
+		public override float GetProgress()
+		{
+			return GetProgress_(GetCurValue());
+		}
+
 		public float GetProgress_(int curValue)
 		{
 			return (float)curValue / TargetValue;
+		}
+		
+		public override int GetTargetValue()
+		{
+			return TargetValue;
 		}
 	}
 }

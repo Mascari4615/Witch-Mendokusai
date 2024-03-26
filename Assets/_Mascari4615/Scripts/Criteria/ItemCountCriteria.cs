@@ -15,20 +15,10 @@ namespace Mascari4615
 			ItemID = itemID;
 		}
 
-		private int GetCount()
+		public override int GetCurValue()
 		{
 			Inventory inventory = SOManager.Instance.ItemInventory;
 			return inventory.GetItemAmount(ItemID);
-		}
-
-		public override bool Evaluate()
-		{
-			return Evaluate_(GetCount());
-		}
-		
-		public override float GetProgress()
-		{
-			return GetProgress_(GetCount());
 		}
 	}
 }

@@ -7,7 +7,7 @@ namespace Mascari4615
 {
 	public enum WorkType
 	{
-		CompleteQuest,
+		QuestWork,
 	}
 
 	public class Work

@@ -106,7 +106,7 @@ namespace Mascari4615
 			{
 				if (i < quests.Count)
 				{
-					questOptions[i].SetArtifact(quests[i]);
+					questOptions[i].SetSlot(quests[i]);
 					questOptions[i].gameObject.SetActive(true);
 				}
 				else

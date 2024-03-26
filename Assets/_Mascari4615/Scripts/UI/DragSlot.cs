@@ -7,35 +7,32 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class DragSlot : MonoBehaviour
+	public class DragSlot : Singleton<DragSlot>
 	{
-		public bool isHoldingSomething => _holdingSlot != null;
-		public UIItemSlot HoldingSlot => _holdingSlot;
+		private UIItemSlot holdingSlot;
 
-		static public DragSlot instance;
-		private UIItemSlot _holdingSlot;
 		[SerializeField] private CanvasGroup canvasGroup;
-		[SerializeField] private Image specialThingImage;
+		[SerializeField] private Image slotImage;
 
-		private void Awake()
-		{
-			instance = this;
-		}
+		public bool IsHolding => holdingSlot != null;
+		public UIItemSlot HoldingSlot => holdingSlot;
 
 		public void SetSlot(UIItemSlot slot)
 		{
-			_holdingSlot = slot;
+			holdingSlot = slot;
 
 			if (slot == null)
 				return;
 
-			specialThingImage.sprite = slot.Artifact.Thumbnail;
-			SetColor(1);
+			slotImage.sprite = slot.Artifact.Sprite;
+			slotImage.color = slotImage.sprite == null ? Color.clear : Color.white;
+
+			SetActive(true);
 		}
 
-		public void SetColor(float _alpha)
+		public void SetActive(bool active)
 		{
-			canvasGroup.alpha = _alpha;
+			canvasGroup.alpha = active ? 1 : 0;
 		}
 	}
 }

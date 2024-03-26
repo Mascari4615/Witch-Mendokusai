@@ -89,7 +89,7 @@ namespace Mascari4615
 			int skillCount = 0;
 			foreach ((Skill skill, SkillCoolTime skillCoolTime) in PlayerController.Instance.PlayerObject.UnitSkillHandler.SkillDic.Values)
 			{
-				curSkillSlots[skillCount].SetArtifact(skill);
+				curSkillSlots[skillCount].SetSlot(skill);
 				curSkillSlots[skillCount++].UpdateCooltime(skill, skillCoolTime);
 			}
 

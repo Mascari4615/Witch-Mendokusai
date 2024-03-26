@@ -65,10 +65,13 @@ namespace Mascari4615
 
 				// cardSelectAction: (slot) => { SelectCard(cardSlots[i].Atrifact as Card); }
 				// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈
+
 				deckUIDic[equipment.ID].Init(cardSelectAction: (slot) => { SelectCard(slot.Artifact as Card); });
+
 				deckSelectButtons[i].SetSlotIndex(i);
-				deckSelectButtons[i].SetArtifact(equipment);
+				deckSelectButtons[i].SetSlot(equipment);
 				deckSelectButtons[i].SetSelectAction((slot) => { SelectDeck(slot.Index); });
+
 				cardSelectButtons[i].SetSelectAction((slot) => { SelectCard(slot.Artifact as Card); });
 			}
 		}
@@ -105,7 +108,7 @@ namespace Mascari4615
 				if (randomMasteries.Contains(randomCard))
 					continue;
 
-				cardSelectButtons[randomMasteries.Count].SetArtifact(randomCard);
+				cardSelectButtons[randomMasteries.Count].SetSlot(randomCard);
 				randomMasteries.Add(randomCard);
 			}
 

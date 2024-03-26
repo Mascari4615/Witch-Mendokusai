@@ -17,14 +17,14 @@ namespace Mascari4615
 
 				if (quest == null)
 				{
-					slot.SetArtifact(null);
+					slot.SetSlot(null);
 					slot.gameObject.SetActive(dontShowEmptySlot == false);
 				}
 				else
 				{
 					// bool slotActive = quest.State > QuestState.Wait;
 
-					slot.SetArtifact(quest);
+					slot.SetSlot(quest);
 					// slot.gameObject.SetActive(slotActive);
 					slot.gameObject.SetActive(true);
 				}

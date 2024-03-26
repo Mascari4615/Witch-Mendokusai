@@ -86,7 +86,7 @@ namespace Mascari4615
 				selectDollButton.SetActive(true);
 				for (int i = 0; i < curStuffsSlot.Length; i++)
 				{
-					curStuffsSlot[i].SetArtifact(DataManager.Instance.GetEquipment(curDollID, i));
+					curStuffsSlot[i].SetSlot(DataManager.Instance.GetEquipment(curDollID, i));
 				}
 			}
 		}
@@ -103,7 +103,7 @@ namespace Mascari4615
 			Item newItem = SOManager.Instance.ItemInventory.GetItem(newItemSlotIndex);
 
 			// UI에서 선택한 인형
-			Doll curDoll = DataManager.Instance.DollDic[dollInventoryUI.CurSlot.Artifact.ID];
+			Doll curDoll = dollInventoryUI.CurSlot.Artifact as Doll;
 
 			// 선택한 슬롯이 비어있는 경우
 			if (newItem == null)

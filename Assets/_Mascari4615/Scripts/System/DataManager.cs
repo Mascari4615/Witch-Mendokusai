@@ -155,7 +155,7 @@ namespace Mascari4615
 			defaultDoll.EquipmentGuids.Clear();
 
 			Inventory inventory = SOManager.ItemInventory;
-			inventory.LoadSaveItems(newGameData.itemInventoryItems);
+			inventory.Load(newGameData.itemInventoryItems);
 			foreach (EquipmentData equipmentData in defaultDoll.EquipmentDatas)
 			{
 				inventory.Add(equipmentData);
@@ -164,7 +164,7 @@ namespace Mascari4615
 				defaultDoll.EquipmentGuids.Add(guid);
 			}
 			defaultDoll.EquipmentGuids.Add(null);
-			newGameData.itemInventoryItems = inventory.GetInventoryData();
+			newGameData.itemInventoryItems = inventory.Save();
 
 			// 장비 초기화 이후 저장
 			foreach (var d in DollDic)
@@ -188,7 +188,7 @@ namespace Mascari4615
 			SOManager.Statistics.Load(saveData.statistics);
 
 			// 아이템 초기화
-			SOManager.ItemInventory.LoadSaveItems(saveData.itemInventoryItems);
+			SOManager.ItemInventory.Load(saveData.itemInventoryItems);
 
 			// 인형 초기화
 			SOManager.DollBuffer.ClearBuffer();
@@ -221,7 +221,7 @@ namespace Mascari4615
 			{
 				curDollIndex = CurDollID,
 				dummyDollCount = DummyDollCount,
-				itemInventoryItems = SOManager.ItemInventory.GetInventoryData(),
+				itemInventoryItems = SOManager.ItemInventory.Save(),
 				dollDatas = new(),
 				works = WorkManager.Works,
 				questDatas = new(),
@@ -287,8 +287,14 @@ namespace Mascari4615
 		[ContextMenu(nameof(TestWork))]
 		public void TestWork()
 		{
-			WorkManager.AddWork(new(0, WorkType.CompleteQuest, new Guid(), 10));
+			WorkManager.AddWork(new(0, WorkType.QuestWork, new Guid(), 10));
 		}
+	}
+
+	public interface ISavable<T>
+	{
+		void Load(T saveData);
+		T Save();
 	}
 
 	[Serializable]

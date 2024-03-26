@@ -8,45 +8,10 @@ namespace Mascari4615
 	public enum QuestState
 	{
 		InProgress,
-		NeedWorkToComplete,
+		CanWork,
 		Working,
+		CanComplete,
 		Completed,
-	}
-
-	public class RuntimeCriteria : ICriteria
-	{
-		public Criteria Criteria { get; private set; }
-		// 한 번만 달성하면 되는지
-		public bool JustOnce { get; private set; }
-		public bool IsCompleted { get; private set; }
-
-		public bool Evaluate()
-		{
-			if (JustOnce && IsCompleted)
-				return true;
-
-			Debug.Log(Criteria.Evaluate());
-			return IsCompleted = Criteria.Evaluate();
-		}
-
-		public float GetProgress()
-		{
-			return Criteria.GetProgress();
-		}
-
-		// 동적인 조건 정보 (i.e. 에디터 타임에 정해지지 않은, 어떤 아이템이 필요하다)
-		[JsonConstructor]
-		public RuntimeCriteria(Criteria criteria, bool justOnce = false)
-		{
-			Criteria = criteria;
-			JustOnce = justOnce;
-		}
-
-		public RuntimeCriteria(CriteriaInfo criteriaInfo)
-		{
-			Criteria = criteriaInfo.CriteriaSO.Data;
-			JustOnce = criteriaInfo.JustOnce;
-		}
 	}
 
 	public class Quest
@@ -55,6 +20,7 @@ namespace Mascari4615
 		public int DataID { get; private set; }
 		public QuestState State { get; private set; }
 		public List<RuntimeCriteria> Criterias { get; private set; }
+		public List<RewardData> Rewards { get; private set; }
 
 		public QuestData GetData()
 		{
@@ -63,12 +29,13 @@ namespace Mascari4615
 		private QuestData Data => GetData();
 
 		[JsonConstructor]
-		public Quest(Guid? guid, int dataID, QuestState state, List<RuntimeCriteria> criterias)
+		public Quest(Guid? guid, int dataID, QuestState state, List<RuntimeCriteria> criterias, List<RewardData> rewards)
 		{
 			Guid = guid;
 			DataID = dataID;
 			State = state;
 			Criterias = criterias;
+			Rewards = rewards;
 
 			StartQuest();
 		}
@@ -78,6 +45,7 @@ namespace Mascari4615
 			Guid = System.Guid.NewGuid();
 			DataID = questData.ID;
 			Criterias = Data.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
+			Rewards = Data.Rewards.ConvertAll(rewardData => new RewardData(rewardData));
 
 			StartQuest();
 		}
@@ -93,6 +61,12 @@ namespace Mascari4615
 
 		public void Evaluate()
 		{
+			if (Data.Type == QuestType.VillageRequest)
+			{
+				if (State >= QuestState.Working)
+					return;
+			}
+
 			foreach (RuntimeCriteria criteria in Criterias)
 			{
 				criteria.Evaluate();
@@ -103,44 +77,41 @@ namespace Mascari4615
 				}
 			}
 
-			switch (Data.Type)
+			if (Data.Type == QuestType.VillageRequest)
 			{
-				case QuestType.Normal:
-					State = QuestState.Completed;
-					break;
-				case QuestType.VillageRequest:
-					State = QuestState.NeedWorkToComplete;
-					if (Data.AutoWork)
-						StartWork();
-					break;
-				case QuestType.Achievement:
-					State = QuestState.Completed;
-					UIManager.Instance.Popup(Data);
-					break;
+				State = QuestState.CanWork;
+				if (Data.AutoWork)
+					StartWork();
+			}
+			else
+			{
+				State = QuestState.CanComplete;
 			}
 		}
 
 		public void StartWork(int workerID = WorkManager.NONE_WORKER_ID)
 		{
+			State = QuestState.Working;
+			
 			foreach (GameEvent gameEvent in Data.GameEvents)
 				gameEvent.RemoveCallback(Evaluate);
 
-			Work work = new(workerID, WorkType.CompleteQuest, Guid, Data.WorkTime);
+			Work work = new(workerID, WorkType.QuestWork, Guid, Data.WorkTime);
 			DataManager.Instance.WorkManager.AddWork(work);
-			State = QuestState.Working;
 		}
 
-		public void WorkEnd()
+		public void EndWork()
+		{
+			State = QuestState.CanComplete;
+
+			if (Data.AutoComplete)
+				Complete();
+		}
+
+		public void Complete()
 		{
 			State = QuestState.Completed;
-			// TODO : Reward 없으면 바로 리스트에서 제거
-
-			if (Data.AutoReward)
-				GetReward();
-		}
-
-		public void GetReward()
-		{
+		
 			DataManager.Instance.QuestManager.RemoveQuest(this);
 			Data.Complete();
 
@@ -150,8 +121,21 @@ namespace Mascari4615
 			foreach (Effect completeEffect in Data.CompleteEffects)
 				completeEffect.Apply();
 
-			foreach (Effect reward in Data.Rewards)
+			if (Data.Type == QuestType.Achievement)
+			{
+				UIManager.Instance.Popup(Data);
+			}
+
+			GetReward();
+		}
+
+		private void GetReward()
+		{
+			foreach (Effect reward in Data.RewardEffects)
 				reward.Apply();
+
+			foreach (RewardData rewardData in Rewards)
+				Reward.GetReward(rewardData);
 		}
 
 		public float GetProgress()
@@ -165,13 +149,13 @@ namespace Mascari4615
 				return 0;
 			}
 
-			if (Data.Criterias.Count == 0)
+			if (Criterias.Count == 0)
 				return 1;
 
 			float progress = 0;
 			foreach (RuntimeCriteria runtimeCriteria in Criterias)
 				progress += runtimeCriteria.GetProgress();
-			return progress /= Data.Criterias.Count;
+			return progress /= Criterias.Count;
 		}
 	}
 }

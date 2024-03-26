@@ -36,7 +36,12 @@ namespace Mascari4615
 
 		public void CompleteQuest(Guid? guid)
 		{
-			GetQuest(guid).WorkEnd();
+			GetQuest(guid).Complete();
+		}
+
+		public void EndQuestWork(Guid? guid)
+		{
+			GetQuest(guid).EndWork();
 		}
 
 		public void RemoveQuest(Quest quest)

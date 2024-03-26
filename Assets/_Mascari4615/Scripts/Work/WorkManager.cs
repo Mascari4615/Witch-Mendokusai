@@ -30,9 +30,7 @@ namespace Mascari4615
 		public void TickEachWorks()
 		{
 			foreach (List<Work> works in Works.Values)
-			{
 				TickWorks(works);
-			}
 		}
 
 		public void TickWorks(List<Work> works)
@@ -45,8 +43,8 @@ namespace Mascari4615
 				{
 					switch (work.WorkType)
 					{
-						case WorkType.CompleteQuest:
-							DataManager.Instance.QuestManager.CompleteQuest(work.Value);
+						case WorkType.QuestWork:
+							DataManager.Instance.QuestManager.EndQuestWork(work.Value);
 							break;
 					}
 					works.RemoveAt(i);
@@ -79,7 +77,7 @@ namespace Mascari4615
 			{
 				foreach (Work work in works)
 				{
-					if (work.WorkType == WorkType.CompleteQuest && work.Value == questGuid)
+					if (work.WorkType == WorkType.QuestWork && work.Value == questGuid)
 					{
 						targetWork = work;
 						return true;
