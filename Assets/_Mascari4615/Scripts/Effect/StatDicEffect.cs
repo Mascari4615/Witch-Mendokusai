@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(StatEffect), menuName = "Effect/" + nameof(StatEffect))]
-	public class StatEffect : NumVariableEffect<int>
+	public class StatEffect : NumEffect<int>
 	{
 		[field: SerializeField] public StatType Type { get; private set; }
 
@@ -13,15 +13,13 @@ namespace Mascari4615
 
 		public override void Apply()
 		{
-			int originValue = PlayerStat[Type];
-			int newValue = (int)Calc(originValue, Value, ArithmeticOperator);
+			int newValue = (int)Calc(PlayerStat[Type], Value, ArithmeticOperator);
 			PlayerStat[Type] = newValue;
 		}
 
 		public override void Cancle()
 		{
-			int originValue = PlayerStat[Type];
-			int newValue = (int)Return(originValue, Value, ArithmeticOperator);
+			int newValue = (int)Return(PlayerStat[Type], Value, ArithmeticOperator);
 			PlayerStat[Type] = newValue;
 		}
 	}

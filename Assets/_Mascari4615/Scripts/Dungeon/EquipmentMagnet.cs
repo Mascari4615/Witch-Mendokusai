@@ -8,6 +8,12 @@ namespace Mascari4615
 	{
 		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
 
+		private void Start()
+		{
+			PlayerStat.AddListener(StatType.PLAYER_EXP_COLLIDER_SCALE, UpdateEquipment);
+			UpdateEquipment();
+		}
+
 		public void UpdateEquipment()
 		{
 			PlayerController.Instance.ExpCollider.transform.localScale =

@@ -20,6 +20,12 @@ namespace Mascari4615
 			UpdateEquipment();
 		}
 
+		private void Start()
+		{
+			PlayerStat.AddListener(StatType.SATELLITE_COUNT, UpdateEquipment);
+			UpdateEquipment();
+		}
+
 		public void UpdateEquipment()
 		{
 			int satelliteCount = 1 + PlayerStat[StatType.SATELLITE_COUNT];

@@ -5,9 +5,8 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public abstract class NumVariableEffect<T> : Effect
+	public abstract class NumEffect<T> : Effect
 	{
-		[field: SerializeField] public CustomVariable<T> TargetStat { get; private set; }
 		[field: SerializeField] public ArithmeticOperator ArithmeticOperator { get; private set; }
 		[field: SerializeField] public T Value { get; private set; }
 		private float originValue;
