@@ -24,6 +24,8 @@ namespace Mascari4615
 		private bool vaild = true;
 		private int curHitCount;
 
+		private SkillObject skillObject;
+
 		public void OnTriggerEnter(Collider other)
 		{
 			if (vaild == false)
@@ -54,6 +56,7 @@ namespace Mascari4615
 
 		public override void InitContext(SkillObject skillObject)
 		{
+			this.skillObject = skillObject;
 			usedByPlayer = skillObject.UsedByPlayer;
 			vaild = true;
 			curHitCount = hitCount;
@@ -71,7 +74,11 @@ namespace Mascari4615
 
 			if (usedByPlayer)
 			{
-				calcDamage = (int)(calcDamage * (1 + (SOManager.Instance.DamageBonus.RuntimeValue / 100f)));
+				// HACK
+				if (skillObject == null)
+					return calcDamage;
+
+				calcDamage = (int)(calcDamage * (1 + (skillObject.User.Stat[StatType.DAMAGE_BONUS] / 100f)));
 			}
 
 			return calcDamage;

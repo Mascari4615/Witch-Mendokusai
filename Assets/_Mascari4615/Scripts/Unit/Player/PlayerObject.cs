@@ -10,14 +10,15 @@ namespace Mascari4615
 		private Coroutine invincibleRoutine = null;
 		[SerializeField] private GameObject diedX;
 
+		private void Start()
+		{
+			Stat.AddListener(StatType.COOLTIME_BONUS, UpdateCoolTime);
+		}
+
 		public override void Init(Unit unitData)
 		{
 			base.Init(unitData);
-
-			SOManager.Instance.MaxHp.RuntimeValue = MaxHp;
-			SOManager.Instance.CurHp.RuntimeValue = CurHp;
 			SOManager.Instance.IsDied.RuntimeValue = false;
-
 			diedX.SetActive(false);
 		}
 
@@ -33,7 +34,6 @@ namespace Mascari4615
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Hit", transform.position);
 			SOManager.Instance.OnPlayerHit.Raise();
-			SOManager.Instance.CurHp.RuntimeValue = CurHp;
 			CameraManager.Instance.뽀삐뽀삐뽀();
 
 			if (invincibleRoutine != null)
@@ -44,7 +44,7 @@ namespace Mascari4615
 			ObjectManager.Instance.PopObject("Effect_Hit",
 				transform.position + (Vector3.Normalize(Wakgood.Instance.transform.position - transform.position) * .5f));*/
 
-			switch (CurHp)
+			switch (Stat[StatType.HP_CUR])
 			{
 				case > 0:
 					// Animator.SetTrigger("AHYA");
@@ -82,7 +82,7 @@ namespace Mascari4615
 
 		public void UpdateCoolTime()
 		{
-			UnitSkillHandler.SetCoolTimeBonus(SOManager.Instance.CoolTimeBonus.RuntimeValue);
+			UnitSkillHandler.SetCoolTimeBonus(Stat[StatType.COOLTIME_BONUS]);
 		}
 	}
 }

@@ -4,24 +4,25 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(StatDicEffect), menuName = "Effect/StatDicEffect")]
-	public class StatDicEffect : NumVariableEffect<int>
+	[CreateAssetMenu(fileName = nameof(StatEffect), menuName = "Effect/" + nameof(StatEffect))]
+	public class StatEffect : NumVariableEffect<int>
 	{
-		[SerializeField] private StatDictionary statDictionary;
-		[field: SerializeField] public Stat Stat { get; private set; }
+		[field: SerializeField] public StatType Type { get; private set; }
+
+		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
 
 		public override void Apply()
 		{
-			int originValue = statDictionary.GetStat(Stat);
+			int originValue = PlayerStat[Type];
 			int newValue = (int)Calc(originValue, Value, ArithmeticOperator);
-			statDictionary.SetStat(Stat, newValue);
+			PlayerStat[Type] = newValue;
 		}
 
 		public override void Cancle()
 		{
-			int originValue = statDictionary.GetStat(Stat);
+			int originValue = PlayerStat[Type];
 			int newValue = (int)Return(originValue, Value, ArithmeticOperator);
-			statDictionary.SetStat(Stat, newValue);
+			PlayerStat[Type] = newValue;
 		}
 	}
 }

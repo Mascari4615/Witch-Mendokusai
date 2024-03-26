@@ -9,8 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeebad81cf1c0aa47905b14bff6d7577, type: 3}
-  m_Name: MaxHP
+  m_Script: {fileID: 11500000, guid: 01e5feb10f1f1b642ad445e54a3c6048, type: 3}
+  m_Name: StatDictionary 1
   m_EditorClassIdentifier: 
-  <InitialValue>k__BackingField: 30
-  <GameEvent>k__BackingField: {fileID: 11400000, guid: 3569f6437166fec40ad91a0c876c0d8e, type: 2}
+  initStats:
+  - stat: 1
+    value: 30
+  - stat: 300
+    value: 4

@@ -9,6 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ac028fec63efb5458d615bb7caf0d61, type: 3}
-  m_Name: OnHpChanged
+  m_Script: {fileID: 11500000, guid: 01e5feb10f1f1b642ad445e54a3c6048, type: 3}
+  m_Name: StatDictionary
   m_EditorClassIdentifier: 
+  initStats:
+  - stat: 1
+    value: 20
+  - stat: 300
+    value: 2

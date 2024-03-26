@@ -54,10 +54,10 @@ namespace Mascari4615
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
 
+				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
 				expChecker.Init();
 				cardManager.Init();
-				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
-
+				
 				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 0)?.Effects)
 					effect.Apply();
 				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 1)?.Effects)

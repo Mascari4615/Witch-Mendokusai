@@ -10,15 +10,14 @@ namespace Mascari4615
 	public abstract class UnitObject : MonoBehaviour
 	{
 		[field: SerializeField] public Unit UnitData { get; private set; }
+		public Stat Stat { get; private set; }
+		
 		public UnitSkillHandler UnitSkillHandler { get; protected set; }
 		[field: SerializeField] public SpriteRenderer SpriteRenderer { get; protected set; }
 		public NavMeshAgent NavMeshAgent { get; protected set; }
 		private Vector3 originScale;
 
-		public int CurHp { get; protected set; }
-		public int MaxHp { get; protected set; }
-
-		public bool IsAlive => CurHp > 0;
+		public bool IsAlive => Stat[StatType.HP_CUR] > 0;
 
 		[SerializeField] private MMF_Player mmfPlayer;
 		[SerializeField] protected Animator animator;
@@ -42,11 +41,15 @@ namespace Mascari4615
 
 		public virtual void Init(Unit unitData)
 		{
-			this.UnitData = unitData;
+			UnitData = unitData;
 			UnitSkillHandler = new UnitSkillHandler(this);
 
-			MaxHp = unitData.MaxHp;
-			SetHp(unitData.MaxHp);
+			if (Stat == null)
+				Stat = new Stat();
+
+			Stat.Init(UnitData.InitStatSO.Stats);
+			Stat[StatType.HP_MAX] = unitData.InitStatSO.Stats[StatType.HP_MAX];
+			SetHp(Stat[StatType.HP_MAX]);
 
 			for (int i = 0; i < unitData.DefaultSkills.Length; i++)
 				UnitSkillHandler.SetSkill(i, unitData.DefaultSkills[i]);
@@ -56,7 +59,7 @@ namespace Mascari4615
 			if (NavMeshAgent)
 			{
 				NavMeshAgent.stoppingDistance = stoppingDistance;
-				NavMeshAgent.speed = UnitData.MoveSpeed;
+				NavMeshAgent.speed = Stat[StatType.MOVEMENT_SPEED];
 				// agent.destination = moveDest;
 				NavMeshAgent.updateRotation = updateRotation;
 				NavMeshAgent.acceleration = acceleration;
@@ -75,8 +78,8 @@ namespace Mascari4615
 
 		protected virtual void SetHp(int newHp)
 		{
-			CurHp = newHp;
-			if (CurHp <= 0)
+			Stat[StatType.HP_CUR] = newHp;
+			if (Stat[StatType.HP_CUR] <= 0)
 				Die();
 		}
 
@@ -85,7 +88,7 @@ namespace Mascari4615
 			if (!IsAlive)
 				return;
 
-			SetHp(Mathf.Clamp(CurHp - damage, 0, int.MaxValue));
+			SetHp(Mathf.Clamp(Stat[StatType.HP_CUR] - damage, 0, int.MaxValue));
 			mmfPlayer?.PlayFeedbacks();
 		}
 

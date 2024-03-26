@@ -23,15 +23,11 @@ namespace Mascari4615
 
 		[field: Header("_" + nameof(SOManager))]
 		[field: Space(10), Header("PlayerData")]
-		[field: SerializeField] public IntVariable CurHp { get; private set; }
-		[field: SerializeField] public IntVariable MaxHp{ get; private set; }
-		[field: SerializeField] public IntVariable CurExp { get; private set; }
-		[field: SerializeField] public IntVariable MaxExp { get; private set; }
-		[field: SerializeField] public IntVariable CurLevel { get; private set; }
+		[field: SerializeField] public Statistics Statistics { get; private set; }
+
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickX { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }
-		[field: SerializeField] public FloatVariable MovementSpeed { get; private set; }
 		[field: SerializeField] public FloatVariable DashDuration { get; private set; }
 		[field: SerializeField] public FloatVariable DashSpeed { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerMoveDirection { get; private set; }
@@ -46,11 +42,8 @@ namespace Mascari4615
 		[field: SerializeField] public BoolVariable IsPaused { get; private set; }
 		[field: SerializeField] public BoolVariable IsDied { get; private set; }
 		[field: SerializeField] public BoolVariable IsMouseOnUI { get; private set; }
-		[field: SerializeField] public StatDictionary StatDictionary { get; private set; }
 		[field: SerializeField] public EnemyObjectVariable LastHitEnemyObject { get; private set; }
-		[field: SerializeField] public IntVariable MonsterKill { get; private set; }
-		[field: SerializeField] public IntVariable CoolTimeBonus { get; private set; }
-		[field: SerializeField] public IntVariable DamageBonus { get; private set; }
+
 		[field: SerializeField] public IntVariable Nyang { get; private set; }
 		[field: SerializeField] public ItemVariable LastEquipedItem { get; private set; }
 
@@ -81,7 +74,7 @@ namespace Mascari4615
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }
 		[field: SerializeField] public GameEvent OnPlayerDied { get; private set; }
 		[field: SerializeField] public GameEvent OnDungeonStart { get; private set; }
-		[field: SerializeField] public GameEvent OnLevelUp { get; private set; }
 		[field: SerializeField] public GameEvent OnTick { get; private set; }
+		[field: SerializeField] public GameEvent OnLevelUp { get; private set; }
 	}
 }

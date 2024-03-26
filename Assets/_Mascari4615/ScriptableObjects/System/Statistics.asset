@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeebad81cf1c0aa47905b14bff6d7577, type: 3}
-  m_Name: MonsterKill
+  m_Script: {fileID: 11500000, guid: 5fad462c6817214419e0865edb16bf54, type: 3}
+  m_Name: Statistics
   m_EditorClassIdentifier: 
-  initialValue: 0
-  <GameEvent>k__BackingField: {fileID: 11400000, guid: ab2655099eb57be498ff6348eeed2adf, type: 2}
+  gameEvent: {fileID: 0}
+  initStatistics:
+  - type: 0
+    value: 0

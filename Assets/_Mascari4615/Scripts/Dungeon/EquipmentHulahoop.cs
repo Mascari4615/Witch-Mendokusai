@@ -9,6 +9,8 @@ namespace Mascari4615
 	{
 		[SerializeField] private float rotateSpeed = 3;
 
+		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+
 		private void OnEnable()
 		{
 			Transform parent = PlayerController.Instance.transform;
@@ -20,7 +22,7 @@ namespace Mascari4615
 
 		public void UpdateEquipment()
 		{
-			int satelliteCount = 1 + SOManager.Instance.StatDictionary.GetStat(Stat.SATELLITE_COUNT);
+			int satelliteCount = 1 + PlayerStat[StatType.SATELLITE_COUNT];
 			float delta = 360f / satelliteCount;
 
 			for (int i = 0; i < transform.childCount; i++)

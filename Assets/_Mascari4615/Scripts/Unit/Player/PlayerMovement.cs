@@ -72,7 +72,7 @@ namespace Mascari4615
 			else if (SOManager.Instance.IsDashing.RuntimeValue)
 				finalVelocity = moveDirection * SOManager.Instance.DashSpeed.RuntimeValue;
 			else
-				finalVelocity = moveDirection * playerObject.UnitData.MoveSpeed * SOManager.Instance.MovementSpeed.RuntimeValue;
+				finalVelocity = moveDirection * playerObject.Stat[StatType.MOVEMENT_SPEED];
 
 			playerRigidBody.velocity = finalVelocity;
 			// playerRigidBody.AddForce(finalVelocity, ForceMode.VelocityChange);

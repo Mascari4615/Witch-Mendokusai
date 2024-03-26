@@ -38,6 +38,11 @@ namespace Mascari4615
 			ChangeState(CardUIState.Wait);
 		}
 
+		private void Start()
+		{
+			SOManager.Instance.OnLevelUp.AddCallback(LevelUp);
+		}
+
 		public void Init()
 		{
 			ChangeState(CardUIState.Wait);

@@ -10292,20 +10292,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: cur
-      value: 
-      objectReference: {fileID: 11400000, guid: 7253201fde7720349b2cf6d5c7de72bb, type: 2}
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: max
-      value: 
-      objectReference: {fileID: 11400000, guid: 4cb1bdce53ad64243a52bae19a2eb1e1, type: 2}
+      value: 21
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: curType
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: maxType
+      value: 201
+      objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: isExpBar
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: textType
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: textTarget
-      value: 
-      objectReference: {fileID: 11400000, guid: 7253201fde7720349b2cf6d5c7de72bb, type: 2}
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -21743,20 +21755,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: cur
-      value: 
-      objectReference: {fileID: 11400000, guid: e17c1fbc32be8ce44adf70b3cc21f933, type: 2}
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: max
-      value: 
-      objectReference: {fileID: 11400000, guid: f432416c7d9ce054789a2e0d6012600b, type: 2}
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: maxType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: isExpBar
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: textTarget
-      value: 
-      objectReference: {fileID: 11400000, guid: e17c1fbc32be8ce44adf70b3cc21f933, type: 2}
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -27606,8 +27622,6 @@ GameObject:
   - component: {fileID: 1099597012}
   - component: {fileID: 1099597015}
   - component: {fileID: 1099597014}
-  - component: {fileID: 1099597013}
-  - component: {fileID: 1099597016}
   m_Layer: 0
   m_Name: CardManager
   m_TagString: Untagged
@@ -27630,34 +27644,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 980674218}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1099597013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1099597011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 296465009a6d2224ca0acb8481e2dfee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 6956b3ceaad23a94badba4a4dbe4fcc2, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1099597014}
-        m_TargetAssemblyTypeName: AbilityModule, Assembly-CSharp
-        m_MethodName: UpdateLevel
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &1099597014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27693,34 +27679,6 @@ MonoBehaviour:
   - {fileID: 351891065}
   - {fileID: 162218966}
   - {fileID: 1699703173}
---- !u!114 &1099597016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1099597011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 296465009a6d2224ca0acb8481e2dfee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 208dcbb304f22364e9b3f2d947d7140f, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1099597015}
-        m_TargetAssemblyTypeName: MasteryManager, Assembly-CSharp
-        m_MethodName: LevelUp
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1001 &1101846329
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -47310,7 +47268,6 @@ GameObject:
   - component: {fileID: 1692693423}
   - component: {fileID: 1692693429}
   - component: {fileID: 1692693431}
-  - component: {fileID: 1692693432}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -47475,34 +47432,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attenuationObject: {fileID: 0}
---- !u!114 &1692693432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1692693417}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 296465009a6d2224ca0acb8481e2dfee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 52e43f5eaa1016744b5c54dbf6a66588, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1692693430}
-        m_TargetAssemblyTypeName: Mascari4615.PlayerObject, Assembly-CSharp
-        m_MethodName: UpdateCoolTime
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!1 &1698909996
 GameObject:
   m_ObjectHideFlags: 0
@@ -80136,6 +80065,30 @@ PrefabInstance:
     - target: {fileID: 3736486990721849706, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: m_Color.r
       value: 0.90943396
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: cur
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: max
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: curType
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: maxType
+      value: 101
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: textType
+      value: 102
+      objectReference: {fileID: 0}
+    - target: {fileID: 5886813220476812995, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
+      propertyPath: textTarget
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

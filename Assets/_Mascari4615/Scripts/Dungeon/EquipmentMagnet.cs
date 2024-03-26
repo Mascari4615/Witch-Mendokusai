@@ -6,10 +6,12 @@ namespace Mascari4615
 {
 	public class EquipmentMagnet : MonoBehaviour
 	{
+		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+
 		public void UpdateEquipment()
 		{
 			PlayerController.Instance.ExpCollider.transform.localScale =
-				Vector3.one * (1 + (SOManager.Instance.StatDictionary.GetStat(Stat.PLAYER_EXP_COLLIDER_SCALE) * .5f));
+				Vector3.one * (1 + (PlayerStat[StatType.PLAYER_EXP_COLLIDER_SCALE] * .5f));
 		}
 	}
 }

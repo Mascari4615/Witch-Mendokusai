@@ -4,13 +4,18 @@ using UnityEngine;
 
 namespace Mascari4615
 {
+	public abstract class SkillComponent : MonoBehaviour
+	{
+		public abstract void InitContext(SkillObject skillObject);
+	}
+
 	public class SkillObject : MonoBehaviour
 	{
 		[field: Header("Context")]
 		public UnitObject User { get; private set; }
 		public bool UsedByPlayer { get; private set; }
 
-		[SerializeField] private SkillComponent[] _skillComponents;
+		private SkillComponent[] skillComponents;
 
 		private void OnEnable()
 		{
@@ -27,13 +32,10 @@ namespace Mascari4615
 			User = unitObject;
 			UsedByPlayer = (unitObject is PlayerObject);
 
-			foreach (var skillComponent in _skillComponents)
+			skillComponents = GetComponentsInChildren<SkillComponent>(true);
+
+			foreach (SkillComponent skillComponent in skillComponents)
 				skillComponent.InitContext(this);
 		}
-	}
-
-	public abstract class SkillComponent : MonoBehaviour
-	{
-		public abstract void InitContext(SkillObject skillObject);
 	}
 }
