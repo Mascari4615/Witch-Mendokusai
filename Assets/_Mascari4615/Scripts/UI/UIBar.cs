@@ -35,7 +35,7 @@ namespace Mascari4615
 
 		public void UpdateUI()
 		{
-			Debug.Log(gameObject.name + "UpdateUI");
+			// Debug.Log(gameObject.name + "UpdateUI");
 			if (routine != null)
 				StopCoroutine(routine);
 			routine = StartCoroutine(UpdateBarLerp());
@@ -45,7 +45,7 @@ namespace Mascari4615
 
 		private IEnumerator UpdateBarLerp()
 		{
-			Debug.Log(gameObject.name + "UpdateBarLerp");
+			// Debug.Log(gameObject.name + "UpdateBarLerp");
 			float t = 0;
 			float origin = bar.fillAmount;
 			float target = (float)Cur / Max;
@@ -56,7 +56,7 @@ namespace Mascari4615
 
 			while (true)
 			{
-				Debug.Log(gameObject.name + "UpdateBarLerp Tick");
+				// Debug.Log(gameObject.name + "UpdateBarLerp Tick");
 				bar.fillAmount = Mathf.Lerp(origin, target, t);
 				t += Time.deltaTime * lerpSpeed;
 				yield return null;

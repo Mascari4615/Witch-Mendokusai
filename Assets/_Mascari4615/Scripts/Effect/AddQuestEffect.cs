@@ -12,7 +12,7 @@ namespace Mascari4615
 
 		public override void Apply()
 		{
-			DataManager.Instance.QuestManager.AddQuest(new(new(), quest));
+			DataManager.Instance.QuestManager.AddQuest(new(quest));
 		}
 
 		public override void Cancle()

@@ -55,7 +55,16 @@ namespace Mascari4615
 				}
 				else
 				{
-					QuestData questData = quest.Data;
+					// // TEMP
+					// foreach (RuntimeCriteria criteriaData in quest.Criterias)
+					// {
+					// 	if (criteriaData.Criteria is IntCriteria intCriteria)
+					// 		Debug.Log($"{intCriteria.IntVariable.name} {intCriteria.IntVariable.RuntimeValue}");
+					// 	else if (criteriaData.Criteria is ItemCountCriteria itemCountCriteria)
+					// 		Debug.Log($"{itemCountCriteria.ItemID}");
+					// }
+
+					QuestData questData = quest.GetData();
 					bool slotActive = (curFilter == QuestType.None) || (questData.Type == curFilter);
 
 					slot.SetQuestState(quest.State);

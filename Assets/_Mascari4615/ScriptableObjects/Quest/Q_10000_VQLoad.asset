@@ -10,15 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 57bcccf40b075204a842ff5fb93c7f74, type: 3}
-  m_Name: Quest_FindQuest
+  m_Name: Q_10000_VQLoad
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 100
-  <Name>k__BackingField: "\uB9C8\uC744 \uC758\uB8B0 \uB300\uAE30"
-  <Description>k__BackingField: "\uC0C8\uB85C\uC6B4 \uB9C8\uC744 \uC758\uB8B0\uB97C
-    \uBC1B\uAE30 \uC704\uD574 \uB300\uAE30\uD558\uACE0 \uC788\uC5B4\uC694"
-  <Thumbnail>k__BackingField: {fileID: 21300038, guid: 9bd9265533309304db171aa9f916554a, type: 3}
+  <ID>k__BackingField: 10000
+  <Name>k__BackingField: "\uB9C8\uC744 \uC758\uB8B0 \uBD88\uB7EC\uC624\uB294\uC911"
+  <Description>k__BackingField: 
+  <Thumbnail>k__BackingField: {fileID: 21300000, guid: 6a95ad93c0d2b4831b68b04cf5efc0de, type: 3}
   <Type>k__BackingField: 1
   <GameEvents>k__BackingField: []
   <Criterias>k__BackingField: []
-  <WorkTime>k__BackingField: 15
+  <CompleteEffects>k__BackingField: []
+  <Rewards>k__BackingField:
+  - {fileID: 11400000, guid: ccc1bfeb50fe9a14bb0b6b64f9c1c0e7, type: 2}
+  <WorkTime>k__BackingField: 10
   <AutoComplete>k__BackingField: 1
+  <AutoWork>k__BackingField: 1
+  <AutoReward>k__BackingField: 1

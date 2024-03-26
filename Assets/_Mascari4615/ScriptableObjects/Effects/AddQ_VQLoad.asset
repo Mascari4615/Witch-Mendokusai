@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57bcccf40b075204a842ff5fb93c7f74, type: 3}
-  m_Name: Quest_0 1
+  m_Script: {fileID: 11500000, guid: 6fed7b9d3b9649744a69225dfc5795aa, type: 3}
+  m_Name: AddQ_VQLoad
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 3
-  <Name>k__BackingField: sda
-  <Description>k__BackingField: qweqeqew
+  <ID>k__BackingField: 0
+  <Name>k__BackingField: 
+  <Description>k__BackingField: 
   <Thumbnail>k__BackingField: {fileID: 0}
-  <Type>k__BackingField: 0
-  <GameEvents>k__BackingField: []
-  <Criterias>k__BackingField: []
+  quest: {fileID: 11400000, guid: d8833ad6264114a4a9063683bb2db8bc, type: 2}

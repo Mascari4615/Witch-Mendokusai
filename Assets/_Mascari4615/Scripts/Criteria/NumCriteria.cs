@@ -7,10 +7,16 @@ namespace Mascari4615
 {
 	public abstract class NumCriteria : Criteria
 	{
-		[field: SerializeField] public ComparisonOperator ComparisonOperator { get; private set; }
-		[field: SerializeField] public int TargetValue { get; private set; }
+		public ComparisonOperator ComparisonOperator { get; private set; }
+		public int TargetValue { get; private set; }
 
-		protected bool IsSatisfied_(int curValue)
+		public NumCriteria(ComparisonOperator comparisonOperator, int targetValue)
+		{
+			ComparisonOperator = comparisonOperator;
+			TargetValue = targetValue;
+		}
+
+		protected bool Evaluate_(int curValue)
 		{
 			return ComparisonOperator switch
 			{

@@ -1,43 +1,107 @@
 using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace Mascari4615
 {
 	public enum QuestState
 	{
-		Wait,
+		InProgress,
 		NeedWorkToComplete,
 		Working,
 		Completed,
 	}
 
+	public class RuntimeCriteria : ICriteria
+	{
+		public Criteria Criteria { get; private set; }
+		// 한 번만 달성하면 되는지
+		public bool JustOnce { get; private set; }
+		public bool IsCompleted { get; private set; }
+
+		public bool Evaluate()
+		{
+			if (JustOnce && IsCompleted)
+				return true;
+
+			Debug.Log(Criteria.Evaluate());
+			return IsCompleted = Criteria.Evaluate();
+		}
+
+		public float GetProgress()
+		{
+			return Criteria.GetProgress();
+		}
+
+		// 동적인 조건 정보 (i.e. 에디터 타임에 정해지지 않은, 어떤 아이템이 필요하다)
+		[JsonConstructor]
+		public RuntimeCriteria(Criteria criteria, bool justOnce = false)
+		{
+			Criteria = criteria;
+			JustOnce = justOnce;
+		}
+
+		public RuntimeCriteria(CriteriaInfo criteriaInfo)
+		{
+			Criteria = criteriaInfo.CriteriaSO.Data;
+			JustOnce = criteriaInfo.JustOnce;
+		}
+	}
+
 	public class Quest
 	{
-		public Guid? Guid { get; private set; } = null;
-		public QuestData Data { get; private set; } = null;
+		public Guid? Guid { get; private set; }
+		public int DataID { get; private set; }
 		public QuestState State { get; private set; }
+		public List<RuntimeCriteria> Criterias { get; private set; }
 
-		public Quest(Guid? guid, QuestData data)
+		public QuestData GetData()
+		{
+			return DataManager.Instance.QuestDic[DataID];
+		}
+		private QuestData Data => GetData();
+
+		[JsonConstructor]
+		public Quest(Guid? guid, int dataID, QuestState state, List<RuntimeCriteria> criterias)
 		{
 			Guid = guid;
-			Data = data;
-			State = QuestState.Wait;
+			DataID = dataID;
+			State = state;
+			Criterias = criterias;
 
+			StartQuest();
+		}
+
+		public Quest(QuestData questData)
+		{
+			Guid = System.Guid.NewGuid();
+			DataID = questData.ID;
+			Criterias = Data.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
+
+			StartQuest();
+		}
+
+		public void StartQuest()
+		{
 			if (Data.AutoComplete)
 				Data.GameEvents.Add(SOManager.Instance.OnTick);
 			foreach (GameEvent gameEvent in Data.GameEvents)
-				gameEvent.AddCallback(TryComplete);
-			TryComplete();
+				gameEvent.AddCallback(Evaluate);
+			Evaluate();
 		}
 
-		public void TryComplete()
+		public void Evaluate()
 		{
-			foreach (Criteria criteria in Data.Criterias)
-				if (criteria.IsSatisfied() == false)
+			foreach (RuntimeCriteria criteria in Criterias)
+			{
+				criteria.Evaluate();
+				if (criteria.IsCompleted == false)
+				{
+					State = QuestState.InProgress;
 					return;
-
-			foreach (GameEvent gameEvent in Data.GameEvents)
-				gameEvent.RemoveCallback(TryComplete);
+				}
+			}
 
 			switch (Data.Type)
 			{
@@ -58,6 +122,9 @@ namespace Mascari4615
 
 		public void StartWork(int workerID = WorkManager.NONE_WORKER_ID)
 		{
+			foreach (GameEvent gameEvent in Data.GameEvents)
+				gameEvent.RemoveCallback(Evaluate);
+
 			Work work = new(workerID, WorkType.CompleteQuest, Guid, Data.WorkTime);
 			DataManager.Instance.WorkManager.AddWork(work);
 			State = QuestState.Working;
@@ -74,9 +141,15 @@ namespace Mascari4615
 
 		public void GetReward()
 		{
-			Debug.Log("GetReward");
-			Data.Complete();
 			DataManager.Instance.QuestManager.RemoveQuest(this);
+			Data.Complete();
+
+			foreach (GameEvent gameEvent in Data.GameEvents)
+				gameEvent.RemoveCallback(Evaluate);
+
+			foreach (Effect completeEffect in Data.CompleteEffects)
+				completeEffect.Apply();
+
 			foreach (Effect reward in Data.Rewards)
 				reward.Apply();
 		}
@@ -96,19 +169,9 @@ namespace Mascari4615
 				return 1;
 
 			float progress = 0;
-			foreach (Criteria criteria in Data.Criterias)
-				progress += criteria.GetProgress();
+			foreach (RuntimeCriteria runtimeCriteria in Criterias)
+				progress += runtimeCriteria.GetProgress();
 			return progress /= Data.Criterias.Count;
-		}
-
-		public void Load(QuestSlotData questData)
-		{
-			State = questData.State;
-		}
-
-		public QuestSlotData Save()
-		{
-			return new QuestSlotData(this);
 		}
 	}
 }

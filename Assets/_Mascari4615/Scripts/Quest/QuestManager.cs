@@ -6,16 +6,16 @@ namespace Mascari4615
 {
 	public class QuestManager
 	{
-		private List<Quest> Quests => SOManager.Instance.QuestBuffer.RuntimeItems;
+		public List<Quest> Quests => SOManager.Instance.QuestBuffer.RuntimeItems;
 
-		public void Init(List<QuestSlotData> questDatas)
+		public void Init(List<Quest> quests)
 		{
 			Quests.Clear();
 
-			foreach (QuestSlotData questData in questDatas)
+			foreach (Quest quest in quests)
 			{
-				Quest quest = new(questData.Guid, DataManager.Instance.QuestDic[questData.QuestID]);
 				Quests.Add(quest);
+				quest.StartQuest();
 			}
 		}
 
@@ -26,7 +26,7 @@ namespace Mascari4615
 
 		public Quest GetQuest(QuestData questData)
 		{
-			return Quests.Find(x => x.Data == questData);
+			return Quests.Find(x => x.GetData() == questData);
 		}
 
 		public Quest GetQuest(Guid? guid)
@@ -46,17 +46,7 @@ namespace Mascari4615
 		
 		public int GetQuestCount(QuestType questType)
 		{
-			return Quests.FindAll(x => x.Data.Type == questType).Count;
-		}
-
-		public List<QuestSlotData> Save()
-		{
-			List<QuestSlotData> questDatas = new();
-
-			foreach (Quest quest in Quests)
-				questDatas.Add(new QuestSlotData(quest));
-
-			return questDatas;
+			return Quests.FindAll(x => x.GetData().Type == questType).Count;
 		}
 	}
 }

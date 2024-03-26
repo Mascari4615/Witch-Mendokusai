@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,9 +15,15 @@ namespace Mascari4615
 		LessThanOrEqualTo
 	}
 
-	public abstract class Criteria : ScriptableObject
+	public interface ICriteria
 	{
-		public abstract bool IsSatisfied();
+		bool Evaluate();
+		float GetProgress();
+	}
+
+	public abstract class Criteria : ICriteria
+	{
+		public abstract bool Evaluate();
 		public abstract float GetProgress();
 	}
 }

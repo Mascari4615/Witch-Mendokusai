@@ -20,13 +20,21 @@ namespace Mascari4615
 		Completed
 	}
 
-	[CreateAssetMenu(fileName = nameof(QuestData), menuName = "Variable/" + nameof(QuestData))]
+	[Serializable]
+	public struct CriteriaInfo
+	{
+		public CriteriaSO CriteriaSO;
+		public bool JustOnce;
+	}
+
+	[CreateAssetMenu(fileName = "Q_", menuName = "Variable/" + nameof(QuestData))]
 	public class QuestData : Artifact
 	{
 		[field: Header("_" + nameof(QuestData))]
 		[field: SerializeField] public QuestType Type { get; private set; }
 		[field: SerializeField] public List<GameEvent> GameEvents { get; private set; }
-		[field: SerializeField] public List<Criteria> Criterias { get; private set; }
+		[field: SerializeField] public List<CriteriaInfo> Criterias { get; private set; }
+		[field: SerializeField] public List<Effect> CompleteEffects { get; private set; }
 		[field: SerializeField] public List<Effect> Rewards { get; private set; }
 
 		[field: SerializeField] public float WorkTime { get; private set; }

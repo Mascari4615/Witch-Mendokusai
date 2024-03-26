@@ -173,7 +173,7 @@ namespace Mascari4615
 			{
 				case QuestDataState.Locked:
 					questData.Unlock();
-					DataManager.Instance.QuestManager.AddQuest(new Quest(new(), questData));
+					DataManager.Instance.QuestManager.AddQuest(new Quest(questData));
 					break;
 				default:
 					Debug.Log("Invalid Quest State");

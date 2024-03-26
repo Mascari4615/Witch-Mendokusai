@@ -9,14 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff06c5171d78d5744861b9523deeb21e, type: 3}
-  m_Name: SatelliteCount1
+  m_Script: {fileID: 11500000, guid: 634dde48c9b9d264fa23174cf97354a3, type: 3}
+  m_Name: RemoveItemEffect
   m_EditorClassIdentifier: 
   <ID>k__BackingField: 0
   <Name>k__BackingField: 
   <Description>k__BackingField: 
-  <Thumbnail>k__BackingField: {fileID: 0}
-  <TargetStat>k__BackingField: {fileID: 0}
-  <ArithmeticOperator>k__BackingField: 1
-  <Value>k__BackingField: 1
-  <Type>k__BackingField: 100001
+  <Thumbnail>k__BackingField: {fileID: -879822008, guid: bbd7dc40015022146bb2bc7dbec9e92c, type: 3}
+  targetItem: {fileID: 11400000, guid: 4953f4b841176404d9ff2bc35ecf6a84, type: 2}
+  amount: 1

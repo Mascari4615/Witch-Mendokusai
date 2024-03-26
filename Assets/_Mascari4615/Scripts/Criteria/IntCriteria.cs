@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Mascari4615;
@@ -5,19 +6,23 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(IntCriteria), menuName = "Criteria/Int")]
 	public class IntCriteria : NumCriteria
 	{
-		[SerializeField] private IntVariable intVariable;
+		public IntVariable IntVariable { get; private set; }
 
-		public override bool IsSatisfied()
+		public IntCriteria(ComparisonOperator comparisonOperator, int targetValue, IntVariable intVariable) : base(comparisonOperator, targetValue)
 		{
-			return IsSatisfied_(intVariable.RuntimeValue);
+			IntVariable = intVariable;
 		}
-		
+
+		public override bool Evaluate()
+		{
+			return Evaluate_(IntVariable.RuntimeValue);
+		}
+
 		public override float GetProgress()
 		{
-			return GetProgress_(intVariable.RuntimeValue);
+			return GetProgress_(IntVariable.RuntimeValue);
 		}
 	}
 }

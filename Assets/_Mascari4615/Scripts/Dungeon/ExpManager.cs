@@ -24,15 +24,15 @@ namespace Mascari4615
 			PlayerStat[StatType.EXP_MAX] = REQUIRE_EXP_INCREASEMENT;
 			PlayerStat[StatType.EXP_CUR] = 0;
 			PlayerStat[StatType.LEVEL_CUR] = 0;
-			Debug.Log(nameof(Init) + PlayerStat[StatType.EXP_CUR] + " / " + PlayerStat[StatType.EXP_MAX]);
+			// Debug.Log(nameof(Init) + PlayerStat[StatType.EXP_CUR] + " / " + PlayerStat[StatType.EXP_MAX]);
 		}
 
 		public void UpdateLevel()
 		{
-			Debug.Log("Try Level Up" + PlayerStat[StatType.EXP_CUR] + " / " + PlayerStat[StatType.EXP_MAX]);
+			// Debug.Log("Try Level Up" + PlayerStat[StatType.EXP_CUR] + " / " + PlayerStat[StatType.EXP_MAX]);
 			if (PlayerStat[StatType.EXP_CUR] >= PlayerStat[StatType.EXP_MAX])
 			{
-				Debug.Log("Level Up");
+				// Debug.Log("Level Up");
 				RuntimeManager.PlayOneShot("event:/SFX/LevelUp", transform.position);
 
 				PlayerStat[StatType.EXP_CUR] -= PlayerStat[StatType.EXP_MAX];

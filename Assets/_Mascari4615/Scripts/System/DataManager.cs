@@ -27,6 +27,7 @@ namespace Mascari4615
 		public readonly Dictionary<int, Stage> StageDic = new();
 		public readonly Dictionary<int, Card> CardDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
+		public readonly Dictionary<int, string> StatDic = new();
 
 		public bool IsInited { get; private set; }
 		public int CurDollID;
@@ -110,7 +111,10 @@ namespace Mascari4615
 				if (File.Exists(path))
 				{
 					string json = File.ReadAllText(path);
-					LoadData(JsonConvert.DeserializeObject<GameData>(json));
+					LoadData(JsonConvert.DeserializeObject<GameData>(json, new JsonSerializerSettings
+					{
+						TypeNameHandling = TypeNameHandling.Auto
+					}));
 				}
 				else
 				{
@@ -142,7 +146,8 @@ namespace Mascari4615
 					{ WorkListType.VQuestWork, new() }
 				},
 				questDatas = new(),
-				questSlots = new()
+				quests = new(),
+				statistics = new()
 			};
 
 			// 아이템(장비) 초기화
@@ -179,6 +184,9 @@ namespace Mascari4615
 			CurDollID = saveData.curDollIndex;
 			DummyDollCount = saveData.dummyDollCount;
 
+			// 통계 초기화
+			SOManager.Statistics.Load(saveData.statistics);
+
 			// 아이템 초기화
 			SOManager.ItemInventory.LoadSaveItems(saveData.itemInventoryItems);
 
@@ -196,14 +204,13 @@ namespace Mascari4615
 			foreach (QuestSaveData questData in saveData.questDatas)
 			{
 				QuestDic[questData.QuestID].Load(questData);
-
 				if (questData.State >= QuestDataState.Unlocked)
 					SOManager.QuestDataBuffer.AddItem(QuestDic[questData.QuestID]);
 			}
 
 			// 작업 초기화
 			WorkManager.Init(saveData.works);
-			QuestManager.Init(saveData.questSlots);
+			QuestManager.Init(saveData.quests);
 
 			IsInited = true;
 		}
@@ -218,7 +225,8 @@ namespace Mascari4615
 				dollDatas = new(),
 				works = WorkManager.Works,
 				questDatas = new(),
-				questSlots = QuestManager.Save()
+				quests = QuestManager.Quests,
+				statistics = SOManager.Statistics.Save()
 			};
 
 			foreach (var d in DollDic)
@@ -228,7 +236,10 @@ namespace Mascari4615
 
 			if (UseLocalData)
 			{
-				string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
+				string json = JsonConvert.SerializeObject(gameData, Formatting.Indented, new JsonSerializerSettings
+				{
+					TypeNameHandling = TypeNameHandling.Auto
+				});
 				string path = Path.Combine(Application.dataPath, "WM.json");
 				File.WriteAllText(path, json);
 			}
@@ -295,7 +306,8 @@ namespace Mascari4615
 			{ WorkListType.VQuestWork, new() }
 		};
 		public List<QuestSaveData> questDatas = new();
-		public List<QuestSlotData> questSlots = new();
+		public List<Quest> quests = new();
+		public Dictionary<StatisticsType, int> statistics = new();
 	}
 
 	[Serializable]
@@ -312,21 +324,6 @@ namespace Mascari4615
 			Guid = item.Guid;
 			itemID = item.Data.ID;
 			itemAmount = item.Amount;
-		}
-	}
-
-	[Serializable]
-	public struct QuestSlotData
-	{
-		public Guid? Guid;
-		public int QuestID;
-		public QuestState State;
-
-		public QuestSlotData(Quest quest)
-		{
-			Guid = quest.Guid;
-			QuestID = quest.Data.ID;
-			State = quest.State;
 		}
 	}
 
