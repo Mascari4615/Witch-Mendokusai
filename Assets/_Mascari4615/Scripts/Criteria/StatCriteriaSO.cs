@@ -11,9 +11,9 @@ namespace Mascari4615
 	{
 		[SerializeField] private StatType statType;
 
-		public override void OnAfterDeserialize()
+		public override Criteria CreateCriteria()
 		{
-			Data = new StatCriteria(comparisonOperator, targetValue, statType);
+			return new StatCriteria(comparisonOperator, targetValue, statType);
 		}
 	}
 }

@@ -64,7 +64,7 @@ namespace Mascari4615
 
 		public RuntimeCriteria(CriteriaInfo criteriaInfo)
 		{
-			Criteria = criteriaInfo.CriteriaSO.Data;
+			Criteria = criteriaInfo.CriteriaSO.CreateCriteria();
 			JustOnce = criteriaInfo.JustOnce;
 		}
 	}

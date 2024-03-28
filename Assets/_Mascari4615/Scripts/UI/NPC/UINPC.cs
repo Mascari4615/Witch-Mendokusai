@@ -101,12 +101,12 @@ namespace Mascari4615
 			canvasGroup.interactable = false;
 			canvasGroup.blocksRaycasts = false;
 
-			List<QuestData> quests = curNPCData.Quests;
+			List<QuestData> questDatas = curNPCData.QuestDatas;
 			for (int i = 0; i < questOptions.Length; i++)
 			{
-				if (i < quests.Count)
+				if (i < questDatas.Count)
 				{
-					questOptions[i].SetSlot(quests[i]);
+					questOptions[i].SetSlot(questDatas[i]);
 					questOptions[i].gameObject.SetActive(true);
 				}
 				else
@@ -167,7 +167,7 @@ namespace Mascari4615
 
 		private void SelectQuest(int index)
 		{
-			QuestData questData = curNPCData.Quests[index];
+			QuestData questData = curNPCData.QuestDatas[index];
 
 			switch (questData.State)
 			{

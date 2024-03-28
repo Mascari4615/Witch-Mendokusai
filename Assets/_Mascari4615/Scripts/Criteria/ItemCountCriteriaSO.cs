@@ -10,13 +10,10 @@ namespace Mascari4615
 	public class ItemCountCriteriaSO : NumCriteriaSO
 	{
 		[SerializeField] private ItemData itemData;
-
-		public override void OnAfterDeserialize()
+		
+		public override Criteria CreateCriteria()
 		{
-			if (itemData == null)
-				return;
-
-			Data = new ItemCountCriteria(comparisonOperator, targetValue, itemData.ID);
+			return new ItemCountCriteria(comparisonOperator, targetValue, itemData.ID);
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace Mascari4615
 	}
 
 	[CreateAssetMenu(fileName = "Q_", menuName = "Variable/" + nameof(QuestData))]
-	public class QuestData : Artifact, ISavable<QuestSaveData>
+	public class QuestData : Artifact, ISavable<QuestDataSave>
 	{
 		[field: Header("_" + nameof(QuestData))]
 		[field: SerializeField] public QuestType Type { get; private set; }
@@ -54,12 +54,12 @@ namespace Mascari4615
 			State = QuestDataState.Completed;
 		}
 
-		public QuestSaveData Save()
+		public QuestDataSave Save()
 		{
-			return new QuestSaveData(ID, State);
+			return new QuestDataSave(ID, State);
 		}
 
-		public void Load(QuestSaveData questSaveData)
+		public void Load(QuestDataSave questSaveData)
 		{
 			State = questSaveData.State;
 		}

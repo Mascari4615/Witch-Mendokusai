@@ -201,7 +201,7 @@ namespace Mascari4615
 				SOManager.DollBuffer.AddItem(DollDic[Doll.DUMMY_ID]);
 
 			// 퀘스트 초기화
-			foreach (QuestSaveData questData in saveData.questDatas)
+			foreach (QuestDataSave questData in saveData.questDatas)
 			{
 				QuestDic[questData.QuestID].Load(questData);
 				if (questData.State >= QuestDataState.Unlocked)
@@ -311,7 +311,7 @@ namespace Mascari4615
 			{ WorkListType.DummyWork, new() },
 			{ WorkListType.VQuestWork, new() }
 		};
-		public List<QuestSaveData> questDatas = new();
+		public List<QuestDataSave> questDatas = new();
 		public List<Quest> quests = new();
 		public Dictionary<StatisticsType, int> statistics = new();
 	}
@@ -334,12 +334,12 @@ namespace Mascari4615
 	}
 
 	[Serializable]
-	public struct QuestSaveData
+	public struct QuestDataSave
 	{
 		public int QuestID;
 		public QuestDataState State;
 
-		public QuestSaveData(int questID, QuestDataState state)
+		public QuestDataSave(int questID, QuestDataState state)
 		{
 			QuestID = questID;
 			State = state;

@@ -11,9 +11,9 @@ namespace Mascari4615
 	{
 		[SerializeField] private IntVariable intVariable;
 
-		public override void OnAfterDeserialize()
+		public override Criteria CreateCriteria()
 		{
-			Data = new IntCriteria(comparisonOperator, targetValue, intVariable);
+			return new IntCriteria(comparisonOperator, targetValue, intVariable);
 		}
 	}
 }
