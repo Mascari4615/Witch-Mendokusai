@@ -13,7 +13,7 @@ namespace Mascari4615
 
 		public override void Apply()
 		{
-			deck.AddItem(targetCard);
+			deck.Add(targetCard);
 		}
 
 		public override void Cancle()

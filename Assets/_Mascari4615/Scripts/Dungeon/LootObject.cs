@@ -17,7 +17,7 @@ namespace Mascari4615
 		{
 			StopAllCoroutines();
 			_moveLoop = null;
-			SOManager.Instance.DropsBuffer.AddItem(gameObject);
+			SOManager.Instance.DropsBuffer.Add(gameObject);
 		}
 
 		public void OnTriggerEnter(Collider other)
@@ -54,7 +54,7 @@ namespace Mascari4615
 
 		private void OnDisable()
 		{
-			SOManager.Instance.DropsBuffer.RemoveItem(gameObject);
+			SOManager.Instance.DropsBuffer.Remove(gameObject);
 		}
 	}
 }

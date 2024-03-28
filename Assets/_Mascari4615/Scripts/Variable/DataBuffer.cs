@@ -11,30 +11,9 @@ namespace Mascari4615
 		[field: SerializeField] public List<T> InitItems { get; private set; }
 		[field: NonSerialized] public List<T> RuntimeItems { get; protected set; } = new();
 
-		public virtual void AddItem(T t)
-		{
-			// if (!Items.Contains(t))
-			{
-				RuntimeItems.Add(t);
-			}
-		}
-
-		public virtual void RemoveItem(T t)
-		{
-			if (RuntimeItems.Contains(t))
-			{
-				RuntimeItems.Remove(t);
-			}
-		}
-
-		public virtual void ClearBuffer()
-		{
-			if (RuntimeItems == null)
-				return;
-
-			for (int i = RuntimeItems.Count - 1; i >= 0; i--)
-				RemoveItem(RuntimeItems[i]);
-		}
+		public virtual void Add(T t) => RuntimeItems.Add(t);
+		public virtual bool Remove(T t) => RuntimeItems.Remove(t);
+		public virtual void Clear() => RuntimeItems.Clear();
 
 		public virtual void OnAfterDeserialize()
 		{

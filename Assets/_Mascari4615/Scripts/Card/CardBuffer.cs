@@ -9,20 +9,20 @@ namespace Mascari4615
 	{
 		[SerializeField] private bool applyEffect;
 
-		public override void AddItem(Card card)
+		public override void Add(Card card)
 		{
-			base.AddItem(card);
+			base.Add(card);
 			if (applyEffect)
 				card.OnEquip();
 		}
 
-		public override void RemoveItem(Card card)
+		public override bool Remove(Card card)
 		{
 			if (applyEffect)
 				if (RuntimeItems.Contains(card))
 					card.OnRemove();
 
-			base.RemoveItem(card);
+			return base.Remove(card);
 		}
 	}
 }

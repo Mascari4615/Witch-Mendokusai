@@ -191,21 +191,21 @@ namespace Mascari4615
 			SOManager.ItemInventory.Load(saveData.itemInventoryItems);
 
 			// 인형 초기화
-			SOManager.DollBuffer.ClearBuffer();
+			SOManager.DollBuffer.Clear();
 			foreach (DollData dollData in saveData.dollDatas)
 			{
 				DollDic[dollData.DollID].Load(dollData);
-				SOManager.DollBuffer.AddItem(DollDic[dollData.DollID]);
+				SOManager.DollBuffer.Add(DollDic[dollData.DollID]);
 			}
 			for (int i = 0; i < saveData.dummyDollCount - 1; i++)
-				SOManager.DollBuffer.AddItem(DollDic[Doll.DUMMY_ID]);
+				SOManager.DollBuffer.Add(DollDic[Doll.DUMMY_ID]);
 
 			// 퀘스트 초기화
 			foreach (QuestDataSave questData in saveData.questDatas)
 			{
 				QuestDic[questData.QuestID].Load(questData);
 				if (questData.State >= QuestDataState.Unlocked)
-					SOManager.QuestDataBuffer.AddItem(QuestDic[questData.QuestID]);
+					SOManager.QuestDataBuffer.Add(QuestDic[questData.QuestID]);
 			}
 
 			// 작업 초기화
@@ -225,7 +225,7 @@ namespace Mascari4615
 				dollDatas = new(),
 				works = WorkManager.Works,
 				questDatas = new(),
-				quests = QuestManager.Quests,
+				quests = QuestManager.Quests.RuntimeItems,
 				statistics = SOManager.Statistics.Save()
 			};
 

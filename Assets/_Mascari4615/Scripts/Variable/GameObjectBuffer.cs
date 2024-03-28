@@ -11,7 +11,7 @@ namespace Mascari4615
 		{
 			for (int i = RuntimeItems.Count - 1; i >= 0; i--)
 				RuntimeItems[i].SetActive(false);
-			ClearBuffer();
+			Clear();
 		}
 	}
 }

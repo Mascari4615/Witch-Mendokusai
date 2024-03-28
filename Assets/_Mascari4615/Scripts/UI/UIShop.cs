@@ -51,7 +51,7 @@ namespace Mascari4615
 			if (itemData.PurchasePrice <= SOManager.Instance.Nyang.RuntimeValue)
 			{
 				SOManager.Instance.Nyang.RuntimeValue -= itemData.PurchasePrice;
-				SOManager.Instance.ItemDataBuffer.AddItem(itemData);
+				SOManager.Instance.ItemDataBuffer.Add(itemData);
 				UpdateUI();
 			}
 		}

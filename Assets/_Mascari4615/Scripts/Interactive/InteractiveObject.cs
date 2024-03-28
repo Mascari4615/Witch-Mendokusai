@@ -27,12 +27,12 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			SOManager.Instance.InteractiveObjectBuffer.AddItem(gameObject);
+			SOManager.Instance.InteractiveObjectBuffer.Add(gameObject);
 		}
 
 		private void OnDisable()
 		{
-			SOManager.Instance.InteractiveObjectBuffer.RemoveItem(gameObject);
+			SOManager.Instance.InteractiveObjectBuffer.Remove(gameObject);
 		}
 	}
 }
