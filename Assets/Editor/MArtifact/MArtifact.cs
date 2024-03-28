@@ -9,11 +9,16 @@ namespace Mascari4615
 {
 	public class MArtifact : EditorWindow
 	{
+		private const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
+		private const int ID_MAX = 10_000_000;
+
 		// [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
-		private List<QuestData> questDatas = new();
+		private List<QuestDataBuffer> questDataBuffers = new();
+		private Dictionary<int, QuestData> questDataDic = new();
+		private List<QuestData> badIDQuestDatas = new();
 
 		[MenuItem("Mascari4615/MArtifact")]
-		public static void ShowExample()
+		public static void ShowMArtifact()
 		{
 			MArtifact wnd = GetWindow<MArtifact>();
 			wnd.titleContent = new GUIContent("MArtifact");
@@ -24,20 +29,6 @@ namespace Mascari4615
 			// Each editor window contains a root VisualElement object
 			VisualElement root = rootVisualElement;
 
-			// VisualElements objects can contain other VisualElement following a tree hierarchy.
-			// VisualElement label = new Label("Hello World! From C#");
-			// root.Add(label);
-
-			// Button button = new Button();
-			// button.name = "button3";
-			// button.text = "This is button3.";
-			// root.Add(button);
-
-			// Toggle toggle = new Toggle();
-			// toggle.name = "toggle3";
-			// toggle.label = "Number?";
-			// root.Add(toggle);
-
 			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifact.uxml");
 
 			// Instantiate UXML
@@ -46,22 +37,22 @@ namespace Mascari4615
 
 			BindAllList();
 
+			System.Diagnostics.Stopwatch sw = new();
+			sw.Start();
+
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			foreach (QuestData questData in questDatas)
+			for (int i = 0; i < ID_MAX; i++)
 			{
-				MArtifactVisual mAritifactVisual = new(questData);
-				mAritifactVisual.RegisterCallback<ClickEvent>(ShowArtifact);
-
-				// 마우스를 올렸을때
-				// mAritifactVisual.RegisterCallback<MouseEnterEvent>(ShowArtifact);
-
-				grid.Add(mAritifactVisual);
+				if (questDataDic.TryGetValue(i, out QuestData questData))
+				{
+					MArtifactVisual mAritifactVisual = new(questData);
+					mAritifactVisual.RegisterCallback<ClickEvent>(ShowArtifact);
+					grid.Add(mAritifactVisual);
+				}
 			}
 
-			// SlotIcon.style.backgroundImage = questDatas[0].Sprite.texture;
-
-			//Call the event handler
-			// SetupButtonHandler();
+			sw.Stop();
+			Debug.Log($"TryGetValue x {ID_MAX} = {sw.ElapsedMilliseconds}ms");
 		}
 
 		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
@@ -81,7 +72,8 @@ namespace Mascari4615
 		private void OnEnable()
 		{
 			Debug.Log("OnEnable is executed.");
-			InitAllList();
+			InitList();
+			InitDic();
 		}
 
 		private void OnValidate()
@@ -89,11 +81,10 @@ namespace Mascari4615
 			Debug.Log("OnValidate is executed.");
 		}
 
-		private void InitAllList()
+		private void InitList()
 		{
-			const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
-			questDatas = new();
-			InitList(ref questDatas, QUEST_DIRECTORY_PATH);
+			questDataBuffers = new();
+			InitList(ref questDataBuffers, QUEST_DIRECTORY_PATH);
 
 			static void InitList<T>(ref List<T> list, string dirPath, bool searchSubDir = true) where T : ScriptableObject
 			{
@@ -109,8 +100,8 @@ namespace Mascari4615
 					if (AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}") != typeof(T))
 						continue;
 
-					// Debug.Log(file.Name);
-					list.Add(AssetDatabase.LoadAssetAtPath<T>($"{dirPath}/{file.Name}"));
+					T asset = AssetDatabase.LoadAssetAtPath<T>($"{dirPath}/{file.Name}");
+					list.Add(asset);
 				}
 
 				if (searchSubDir)
@@ -122,9 +113,53 @@ namespace Mascari4615
 			}
 		}
 
+		private void InitDic()
+		{
+			badIDQuestDatas = new();
+			questDataDic = new();
+			InitDic(ref questDataDic, QUEST_DIRECTORY_PATH, badArtifactList: badIDQuestDatas);
+
+			static void InitDic<T>(ref Dictionary<int, T> dic, string dirPath, bool searchSubDir = true, List<T> badArtifactList = null) where T : Artifact
+			{
+				const string extension = ".asset";
+
+				DirectoryInfo dir = new(dirPath);
+				foreach (FileInfo file in dir.GetFiles())
+				{
+					if (string.Compare(file.Extension, extension, StringComparison.Ordinal) != 0)
+						continue;
+
+					// QuestData 스크립터블 객체가 아니면 Continue
+					if (AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}") != typeof(T))
+						continue;
+
+					T asset = AssetDatabase.LoadAssetAtPath<T>($"{dirPath}/{file.Name}");
+
+					if (dic.ContainsKey(asset.ID))
+					{
+						Debug.LogError($"이미 존재하는 키입니다. {file.Name}");
+
+						if (badArtifactList != null)
+							badArtifactList.Add(asset);
+					}
+					else
+					{
+						dic.Add(asset.ID, asset);
+					}
+				}
+
+				if (searchSubDir)
+				{
+					// dir 아래 모든 폴더 안에 있는 파일을 탐색
+					foreach (DirectoryInfo subDir in dir.GetDirectories())
+						InitDic(ref dic, $"{dirPath}/{subDir.Name}/");
+				}
+			}
+		}
+
 		private void BindAllList()
 		{
-			BindEntryList("QuestList", questDatas);
+			BindEntryList("QuestList", questDataBuffers);
 
 			// 설명: 리스트뷰에 데이터를 바인딩하는 함수
 			// 매개변수: 리스트뷰 이름, 바인딩할 리스트
