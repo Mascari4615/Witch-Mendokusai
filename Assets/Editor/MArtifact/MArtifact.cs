@@ -1,26 +1,81 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MyWorldWindow : EditorWindow
+	public class MArtifact : EditorWindow
 	{
-		private List<FactEntry> factEntries = new();
-		private List<RuleEntry> ruleEntries = new();
-		private List<EventEntry> eventEntries = new();
+		// [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
+		private List<QuestData> questDatas = new();
 
-
-		[MenuItem("Mascari4615/MyWorld")]
-		static void CreateMenu()
+		[MenuItem("Mascari4615/MArtifact")]
+		public static void ShowExample()
 		{
-			MyWorldWindow window = GetWindow<MyWorldWindow>();
-			window.titleContent = new GUIContent("MyWorld");
+			MArtifact wnd = GetWindow<MArtifact>();
+			wnd.titleContent = new GUIContent("MArtifact");
+		}
+
+		public void CreateGUI()
+		{
+			// Each editor window contains a root VisualElement object
+			VisualElement root = rootVisualElement;
+
+			// VisualElements objects can contain other VisualElement following a tree hierarchy.
+			// VisualElement label = new Label("Hello World! From C#");
+			// root.Add(label);
+
+			// Button button = new Button();
+			// button.name = "button3";
+			// button.text = "This is button3.";
+			// root.Add(button);
+
+			// Toggle toggle = new Toggle();
+			// toggle.name = "toggle3";
+			// toggle.label = "Number?";
+			// root.Add(toggle);
+
+			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifact.uxml");
+
+			// Instantiate UXML
+			VisualElement labelFromUXML = visualTree.Instantiate();
+			root.Add(labelFromUXML);
+
+			BindAllList();
+
+			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
+			foreach (QuestData questData in questDatas)
+			{
+				MArtifactVisual mAritifactVisual = new(questData);
+				mAritifactVisual.RegisterCallback<ClickEvent>(ShowArtifact);
+
+				// 마우스를 올렸을때
+				// mAritifactVisual.RegisterCallback<MouseEnterEvent>(ShowArtifact);
+
+				grid.Add(mAritifactVisual);
+			}
+
+			// SlotIcon.style.backgroundImage = questDatas[0].Sprite.texture;
+
+			//Call the event handler
+			// SetupButtonHandler();
+		}
+
+		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
+		private void ShowArtifact(MouseEnterEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
+
+		private void UpdateTooltip(Artifact artifact)
+		{
+			VisualElement root = rootVisualElement;
+
+			Label nameLabel = root.Q<Label>(name: nameof(Artifact.Name));
+			nameLabel.text = artifact.Name;
+
+			Label descriptionLabel = root.Q<Label>(name: nameof(Artifact.Description));
+			descriptionLabel.text = artifact.Description;
 		}
 
 		private void OnEnable()
@@ -29,15 +84,16 @@ namespace Mascari4615
 			InitAllList();
 		}
 
+		private void OnValidate()
+		{
+			Debug.Log("OnValidate is executed.");
+		}
+
 		private void InitAllList()
 		{
-			const string ENTRY_DIRECTORY_PATH = "Assets/_Mascari4615/Entry/";
-			factEntries = new();
-			ruleEntries = new();
-			eventEntries = new();
-			InitList(ref factEntries, ENTRY_DIRECTORY_PATH + nameof(FactEntry));
-			InitList(ref ruleEntries, ENTRY_DIRECTORY_PATH + nameof(RuleEntry));
-			InitList(ref eventEntries, ENTRY_DIRECTORY_PATH + nameof(EventEntry));
+			const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
+			questDatas = new();
+			InitList(ref questDatas, QUEST_DIRECTORY_PATH);
 
 			static void InitList<T>(ref List<T> list, string dirPath, bool searchSubDir = true) where T : ScriptableObject
 			{
@@ -66,21 +122,9 @@ namespace Mascari4615
 			}
 		}
 
-		public void CreateGUI()
-		{
-			VisualElement root = rootVisualElement;
-			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MWindow/MWindow.uxml");
-			VisualElement labelFromUXML = visualTree.Instantiate();
-			root.Add(labelFromUXML);
-
-			BindAllList();
-		}
-
 		private void BindAllList()
 		{
-			BindEntryList("FactList", factEntries);
-			BindEntryList("RuleList", ruleEntries);
-			BindEntryList("EventList", eventEntries);
+			BindEntryList("QuestList", questDatas);
 
 			// 설명: 리스트뷰에 데이터를 바인딩하는 함수
 			// 매개변수: 리스트뷰 이름, 바인딩할 리스트
@@ -107,10 +151,6 @@ namespace Mascari4615
 				listView.bindItem = (VisualElement element, int index) =>
 					((Label)element).text = list[index].name;
 			}
-		}
-		private void OnValidate()
-		{
-			Debug.Log("OnValidate is executed.");
 		}
 	}
 }

@@ -1,0 +1,36 @@
+Label {
+    color: rgb(255, 255, 255);
+}
+
+.header_main {
+    font-size: 50px;
+}
+
+.btn-main {
+    flex-grow: 1;
+    height: 52px;
+    font-size: 24px;
+    border-left-color: rgb(226, 137, 45);
+    border-right-color: rgb(226, 137, 45);
+    border-top-color: rgb(226, 137, 45);
+    border-bottom-color: rgb(226, 137, 45);
+    background-color: rgb(226, 137, 45);
+}
+
+.slot-icons {
+    width: 150px;
+    border-left-color: rgb(75, 75, 75);
+    border-right-color: rgb(75, 75, 75);
+    border-top-color: rgb(75, 75, 75);
+    border-bottom-color: rgb(75, 75, 75);
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    min-width: 100px;
+    min-height: 100px;
+    max-width: 150px;
+    max-height: 150px;
+    height: 150px;
+    flex-direction: column-reverse;
+}

@@ -6,7 +6,7 @@
             <ui:Instance template="KarmoToolBar" name="MToolBar" />
             <ui:ListView focusable="true" name="TableList" />
         </ui:VisualElement>
-        <ui:VisualElement name="entry" class="karmo-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 25%;">
+        <ui:VisualElement name="entry" class="m-panel" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 25%;">
             <ui:Instance template="KarmoToolBar" name="MToolBar" />
             <ui:ScrollView name="entryList">
                 <ui:Foldout text="Facts" name="Facts" class="entry-foldout">
@@ -17,6 +17,9 @@
                 </ui:Foldout>
                 <ui:Foldout text="Events" name="Events" class="entry-foldout">
                     <ui:ListView focusable="true" name="EventList" />
+                </ui:Foldout>
+                <ui:Foldout text="Events" name="Quests" class="entry-foldout">
+                    <ui:ListView focusable="true" name="QuestList" />
                 </ui:Foldout>
             </ui:ScrollView>
         </ui:VisualElement>
