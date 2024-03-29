@@ -9,12 +9,20 @@ namespace Mascari4615
 {
 	public class MArtifact : EditorWindow
 	{
-		private const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
+		// MArtifact window = EditorWindow.GetWindow<MArtifact>()
+		public static MArtifact Instance { get; private set; }
+
+		public MArtifactDetail MArtifactDetail { get; private set; }
+
+		public const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
 		private const int ID_MAX = 10_000_000;
 
 		// [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
 		private List<QuestDataBuffer> questDataBuffers = new();
+
+		public Dictionary<int, QuestData> QuestDataDic => questDataDic;
 		private Dictionary<int, QuestData> questDataDic = new();
+
 		private List<QuestData> badIDQuestDatas = new();
 
 		[MenuItem("Mascari4615/MArtifact")]
@@ -26,52 +34,32 @@ namespace Mascari4615
 
 		public void CreateGUI()
 		{
-			// Each editor window contains a root VisualElement object
+			Debug.Log("CreateGUI is executed.");
+			
 			VisualElement root = rootVisualElement;
-
 			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifact.uxml");
 
 			// Instantiate UXML
 			VisualElement labelFromUXML = visualTree.Instantiate();
 			root.Add(labelFromUXML);
 
-			BindAllList();
+			MArtifactDetail = new();
 
-			System.Diagnostics.Stopwatch sw = new();
-			sw.Start();
+			BindAllList();
 
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
 			for (int i = 0; i < ID_MAX; i++)
 			{
 				if (questDataDic.TryGetValue(i, out QuestData questData))
-				{
-					MArtifactVisual mAritifactVisual = new(questData);
-					mAritifactVisual.RegisterCallback<ClickEvent>(ShowArtifact);
-					grid.Add(mAritifactVisual);
-				}
+					grid.Add(new MArtifactVisual(questData));
 			}
-
-			sw.Stop();
-			Debug.Log($"TryGetValue x {ID_MAX} = {sw.ElapsedMilliseconds}ms");
-		}
-
-		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
-		private void ShowArtifact(MouseEnterEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
-
-		private void UpdateTooltip(Artifact artifact)
-		{
-			VisualElement root = rootVisualElement;
-
-			Label nameLabel = root.Q<Label>(name: nameof(Artifact.Name));
-			nameLabel.text = artifact.Name;
-
-			Label descriptionLabel = root.Q<Label>(name: nameof(Artifact.Description));
-			descriptionLabel.text = artifact.Description;
 		}
 
 		private void OnEnable()
 		{
 			Debug.Log("OnEnable is executed.");
+			Instance = this;
+
 			InitList();
 			InitDic();
 		}
@@ -185,6 +173,45 @@ namespace Mascari4615
 				// 설명 : ListView.bindItem은 ListView.makeItem에서 반환한 VisualElement와 데이터를 바인딩하는 함수입니다.
 				listView.bindItem = (VisualElement element, int index) =>
 					((Label)element).text = list[index].name;
+			}
+		}
+
+		public void DuplicateArtifact(Artifact artifact)
+		{
+			string nName = artifact.Name + " Copy";
+			// CurArtifact의 ID에서 1씩 증가시키면서 중복되지 않는 ID를 찾는다.
+			int nID = artifact.ID + 1;
+			while (questDataDic.ContainsKey(nID))
+				nID++;
+
+			string assetName = $"Q_{nID}_{nName}";
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
+
+			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(artifact), path);
+			Artifact newArtifact = AssetDatabase.LoadAssetAtPath<Artifact>(path);
+			newArtifact.ID = nID;
+			newArtifact.Name = nName;
+
+			AddArtifactToDictionary(newArtifact);
+
+			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
+			grid.Add(new MArtifactVisual((QuestData)artifact));
+			Repaint();
+		}
+
+		// Artifact에 타입에 맞는 Dictionary에 추가하는 함수
+		public void AddArtifactToDictionary(Artifact artifact)
+		{
+			Type type = artifact.GetType();
+			switch (type)
+			{
+				case Type t when t == typeof(QuestData):
+					questDataDic.Add(artifact.ID, (QuestData)artifact);
+					Debug.Log($"AddArtifact: {artifact.ID} {artifact.Name}");
+					break;
+				default:
+					Debug.LogError($"해당 타입을 찾을 수 없습니다. {type}");
+					break;
 			}
 		}
 	}

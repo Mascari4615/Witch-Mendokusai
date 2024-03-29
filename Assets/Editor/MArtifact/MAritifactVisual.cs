@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -23,7 +24,18 @@ namespace Mascari4615
 
 			if (artifact.Sprite != null)
 				style.backgroundImage = artifact.Sprite.texture;
+
+			RegisterCallback<ClickEvent>(ShowArtifact);
+		
 			AddToClassList("slot-icons");
+		}
+
+		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
+		private void ShowArtifact(MouseEnterEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
+
+		private void UpdateTooltip(Artifact artifact)
+		{
+			MArtifact.Instance.MArtifactDetail.UpdateCurArtifact(artifact);
 		}
 	}
 }

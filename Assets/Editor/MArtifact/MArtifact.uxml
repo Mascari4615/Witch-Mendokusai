@@ -23,12 +23,12 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="Body" style="flex-grow: 1; flex-direction: row-reverse; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-            <ui:VisualElement name="ItemDetail" style="width: 25%; margin-right: 15px; margin-bottom: 50px; margin-left: 0; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(255, 128, 0); border-right-color: rgb(255, 128, 0); border-top-color: rgb(255, 128, 0); border-bottom-color: rgb(255, 128, 0); margin-top: 50px;">
+            <ui:VisualElement name="ArtifactDetail">
                 <ui:Label tabindex="-1" text="ItemName" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Name" style="font-size: 36px; white-space: normal;" />
                 <ui:Label tabindex="-1" text=" Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam eu tortor eget justo ullamcorper malesuada nec a nisi. Phasellus hendrerit id ex eget vestibulum. Phasellus pretium ac risus in viverra." parse-escape-sequences="true" display-tooltip-when-elided="true" name="Description" style="white-space: normal; flex-grow: 1; font-size: 20px; padding-right: 1px; padding-left: 2px; padding-top: 10px; padding-bottom: 0;" />
                 <ui:VisualElement name="Container_Buttons" style="flex-direction: row; padding-top: 10px; padding-right: 1px; padding-left: 2px;">
-                    <ui:Button text="EQUIP" parse-escape-sequences="true" display-tooltip-when-elided="true" name="btn_Equip" class="btn-main" />
-                    <ui:Button text="Drop" parse-escape-sequences="true" display-tooltip-when-elided="true" name="btn_Drop" class="btn-main" />
+                    <ui:Button text="DUP" name="BTN_Dup" class="btn-main" />
+                    <ui:Button text="Drop" name="btn_Drop" parse-escape-sequences="true" display-tooltip-when-elided="true" class="btn-main" />
                 </ui:VisualElement>
                 <ui:VisualElement name="Footer">
                     <ui:VisualElement name="Container_Currency" style="flex-direction: row; justify-content: center; align-items: center; margin-top: 20px; padding-top: 5px; border-left-color: rgb(255, 128, 0); border-right-color: rgb(255, 128, 0); border-top-color: rgb(255, 128, 0); border-bottom-color: rgb(255, 128, 0); border-top-width: 1px; flex-grow: 1;">
