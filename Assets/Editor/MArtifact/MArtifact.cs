@@ -31,7 +31,7 @@ namespace Mascari4615
 
 		public void CreateGUI()
 		{
-			Debug.Log("CreateGUI is executed.");
+			// Debug.Log("CreateGUI is executed.");
 			
 			VisualElement root = rootVisualElement;
 			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifact.uxml");
@@ -62,7 +62,7 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			Debug.Log("OnEnable is executed.");
+			// Debug.Log("OnEnable is executed.");
 			Instance = this;
 
 			InitList();
@@ -71,7 +71,7 @@ namespace Mascari4615
 
 		private void OnValidate()
 		{
-			Debug.Log("OnValidate is executed.");
+			// Debug.Log("OnValidate is executed.");
 		}
 
 		private void InitList()

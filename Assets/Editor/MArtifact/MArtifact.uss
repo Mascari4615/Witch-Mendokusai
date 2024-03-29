@@ -1,14 +1,10 @@
-Label {
-    color: rgb(255, 255, 255);
-}
-
 .header_main {
     font-size: 50px;
 }
 
 .btn-main {
     flex-grow: 1;
-    height: 52px;
+    height: 30px;
     font-size: 24px;
     border-left-color: rgb(226, 137, 45);
     border-right-color: rgb(226, 137, 45);
@@ -36,10 +32,11 @@ Label {
 }
 
 #ArtifactDetail {
-    width: 25%;
-    margin-right: 15px;
-    margin-bottom: 50px;
+    width: 30%;
+    margin-top: 20px;
+    margin-bottom: 20px;
     margin-left: 0;
+    margin-right: 15px;
     padding-top: 10px;
     padding-right: 10px;
     padding-bottom: 10px;
@@ -52,5 +49,30 @@ Label {
     border-right-color: rgb(255, 128, 0);
     border-top-color: rgb(255, 128, 0);
     border-bottom-color: rgb(255, 128, 0);
-    margin-top: 50px;
+}
+
+.property-block {
+    flex-direction: row;
+}
+
+.property-value {
+    white-space: normal;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-direction: column;
+}
+
+.property-sprite {
+    width: 150px;
+    height: 150px;
+}
+
+.property-name {
+    font-size: 18px;
+    white-space: normal;
+    flex-wrap: wrap;
+    width: 150px;
+    max-width: 150px;
+    flex-grow: 1;
 }

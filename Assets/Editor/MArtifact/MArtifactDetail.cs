@@ -1,4 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,23 +13,27 @@ namespace Mascari4615
 	{
 		public Artifact CurArtifact { get; private set; }
 
-		private readonly VisualElement root;
-		private readonly Label nameLabel;
-		private readonly Label descriptionLabel;
-		private readonly Button duplicateButton;
-		private readonly Button deleteButton;
+		private VisualElement root;
+
+		private VisualElement artifactDetail;
+		private VisualElement artifactContent;
 
 		public MArtifactDetail()
 		{
-			VisualElement root = MArtifact.Instance.rootVisualElement;
+			Init();
+		}
 
-			nameLabel = root.Q<Label>(name: nameof(Artifact.Name));
-			descriptionLabel = root.Q<Label>(name: nameof(Artifact.Description));
+		private void Init()
+		{
+			root = MArtifact.Instance.rootVisualElement;
 
-			duplicateButton = root.Q<Button>(name: "BTN_Dup");
+			artifactDetail = root.Q<VisualElement>(name: "ArtifactDetail");
+			artifactContent = root.Q<VisualElement>(name: "ArtifactContent");
+
+			Button duplicateButton = root.Q<Button>(name: "BTN_Dup");
 			duplicateButton.clicked += DuplicateCurArtifact;
 
-			deleteButton = root.Q<Button>(name: "BTN_Del");
+			Button deleteButton = root.Q<Button>(name: "BTN_Del");
 			deleteButton.clicked += DeleteCurArtifact;
 		}
 
@@ -36,8 +45,33 @@ namespace Mascari4615
 
 		public void UpdateUI()
 		{
-			nameLabel.text = CurArtifact.Name;
-			descriptionLabel.text = CurArtifact.Description;
+			SerializedObject serializedObject = new(CurArtifact);
+		
+			// CurArtifact의 모든 프로퍼티를 리플렉션으로 가져오기
+			List<PropertyInfo> propertyInfos = CurArtifact.GetType()
+			.GetProperties()
+			.OrderBy(
+				p =>
+				{
+					var attribute = p.GetCustomAttribute(typeof(PropertyOrderAttribute));
+					if (attribute == null)
+						return int.MaxValue;
+					else
+						return ((PropertyOrderAttribute)attribute).Order;
+				}).ToList();
+
+			// CurArtifact의 모든 프로퍼티를 PropertyBlock으로 만들어서 artifactContent에 추가
+			artifactContent.Clear();
+			foreach (PropertyInfo propertyInfo in propertyInfos)
+			{
+				if (propertyInfo.Name == "name" || propertyInfo.Name == "hideFlags")
+					continue;
+
+				// HACK : 자동으로 생성되는 프로퍼티의 필드의 이름 = <프로퍼티이름>k__BackingField
+				PropertyField propertyField = new (serializedObject.FindProperty($"<{propertyInfo.Name}>k__BackingField"));
+				propertyField.Bind(serializedObject);
+				artifactContent.Add(propertyField);
+			}
 		}
 
 		public void DuplicateCurArtifact()

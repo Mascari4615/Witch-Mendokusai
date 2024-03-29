@@ -31,16 +31,16 @@ namespace Mascari4615
 	public class QuestData : Artifact, ISavable<QuestDataSave>
 	{
 		[field: Header("_" + nameof(QuestData))]
-		[field: SerializeField] public QuestType Type { get; private set; }
-		[field: SerializeField] public List<GameEvent> GameEvents { get; private set; }
-		[field: SerializeField] public List<CriteriaInfo> Criterias { get; private set; }
-		[field: SerializeField] public List<Effect> CompleteEffects { get; private set; }
-		[field: SerializeField] public List<Effect> RewardEffects { get; private set; }
-		[field: SerializeField] public List<RewardInfo> Rewards { get; private set; }
+		[PropertyOrder(0)] [field: SerializeField] public QuestType Type { get; private set; }
+		[PropertyOrder(1)] [field: SerializeField] public List<GameEvent> GameEvents { get; private set; }
+		[PropertyOrder(2)] [field: SerializeField] public List<CriteriaInfo> Criterias { get; private set; }
+		[PropertyOrder(3)] [field: SerializeField] public List<Effect> CompleteEffects { get; private set; }
+		[PropertyOrder(4)] [field: SerializeField] public List<Effect> RewardEffects { get; private set; }
+		[PropertyOrder(5)] [field: SerializeField] public List<RewardInfo> Rewards { get; private set; }
 
-		[field: SerializeField] public float WorkTime { get; private set; }
-		[field: SerializeField] public bool AutoWork { get; private set; }
-		[field: SerializeField] public bool AutoComplete { get; private set; }
+		[PropertyOrder(6)] [field: SerializeField] public float WorkTime { get; private set; }
+		[PropertyOrder(7)] [field: SerializeField] public bool AutoWork { get; private set; }
+		[PropertyOrder(8)] [field: SerializeField] public bool AutoComplete { get; private set; }
 
 		[field: NonSerialized] public QuestDataState State { get; private set; }
 
