@@ -12,6 +12,7 @@ namespace Mascari4615
 		private readonly Label nameLabel;
 		private readonly Label descriptionLabel;
 		private readonly Button duplicateButton;
+		private readonly Button deleteButton;
 
 		public MArtifactDetail()
 		{
@@ -22,6 +23,9 @@ namespace Mascari4615
 
 			duplicateButton = root.Q<Button>(name: "BTN_Dup");
 			duplicateButton.clicked += DuplicateCurArtifact;
+
+			deleteButton = root.Q<Button>(name: "BTN_Del");
+			deleteButton.clicked += DeleteCurArtifact;
 		}
 
 		public void UpdateCurArtifact(Artifact artifact)
@@ -39,6 +43,11 @@ namespace Mascari4615
 		public void DuplicateCurArtifact()
 		{
 			MArtifact.Instance.DuplicateArtifact(CurArtifact);
+		}
+
+		public void DeleteCurArtifact()
+		{
+			MArtifact.Instance.DeleteArtifact(CurArtifact);
 		}
 	}
 }

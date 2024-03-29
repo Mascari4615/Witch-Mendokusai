@@ -43,15 +43,21 @@ namespace Mascari4615
 			MArtifactDetail = new();
 
 			BindAllList();
+			UpdateGrid();
+		}
 
+		private void UpdateGrid()
+		{
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-
+			
+			grid.Clear();
 			Dictionary<int, Artifact> targetDic = dataDics[typeof(QuestData)];
 			for (int i = 0; i < ID_MAX; i++)
 			{
 				if (targetDic.TryGetValue(i, out Artifact artifact))
 					grid.Add(new MArtifactVisual(artifact));
 			}
+			Repaint();
 		}
 
 		private void OnEnable()
@@ -196,9 +202,21 @@ namespace Mascari4615
 
 			dic.Add(nID, newArtifact);
 
-			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			grid.Add(new MArtifactVisual(newArtifact));
-			Repaint();
+			UpdateGrid();
+		}
+
+		public void DeleteArtifact(Artifact artifact)
+		{
+			Type type = artifact.GetType();
+			Dictionary<int, Artifact> dic = dataDics[type];
+
+			string assetName = $"Q_{artifact.ID}_{artifact.Name}";
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
+
+			dic.Remove(artifact.ID);
+			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(artifact));
+
+			UpdateGrid();
 		}
 	}
 }
