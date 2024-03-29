@@ -19,11 +19,8 @@ namespace Mascari4615
 
 		// [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
 		private List<QuestDataBuffer> questDataBuffers = new();
-
-		public Dictionary<int, QuestData> QuestDataDic => questDataDic;
-		private Dictionary<int, QuestData> questDataDic = new();
-
-		private List<QuestData> badIDQuestDatas = new();
+		private readonly Dictionary<Type, Dictionary<int, Artifact>> dataDics = new();
+		private List<QuestData> badIDArtifacts = new();
 
 		[MenuItem("Mascari4615/MArtifact")]
 		public static void ShowMArtifact()
@@ -48,10 +45,12 @@ namespace Mascari4615
 			BindAllList();
 
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
+
+			Dictionary<int, Artifact> targetDic = dataDics[typeof(QuestData)];
 			for (int i = 0; i < ID_MAX; i++)
 			{
-				if (questDataDic.TryGetValue(i, out QuestData questData))
-					grid.Add(new MArtifactVisual(questData));
+				if (targetDic.TryGetValue(i, out Artifact artifact))
+					grid.Add(new MArtifactVisual(artifact));
 			}
 		}
 
@@ -103,11 +102,12 @@ namespace Mascari4615
 
 		private void InitDic()
 		{
-			badIDQuestDatas = new();
-			questDataDic = new();
-			InitDic(ref questDataDic, QUEST_DIRECTORY_PATH, badArtifactList: badIDQuestDatas);
+			badIDArtifacts = new();
+			Dictionary<int, Artifact> questDataDic = new();
+			InitDic<QuestData>(ref questDataDic, QUEST_DIRECTORY_PATH, badArtifactList: badIDArtifacts);
+			dataDics.Add(typeof(QuestData), questDataDic);
 
-			static void InitDic<T>(ref Dictionary<int, T> dic, string dirPath, bool searchSubDir = true, List<T> badArtifactList = null) where T : Artifact
+			static void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<T> badArtifactList = null) where T : Artifact
 			{
 				const string extension = ".asset";
 
@@ -117,7 +117,6 @@ namespace Mascari4615
 					if (string.Compare(file.Extension, extension, StringComparison.Ordinal) != 0)
 						continue;
 
-					// QuestData 스크립터블 객체가 아니면 Continue
 					if (AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}") != typeof(T))
 						continue;
 
@@ -140,7 +139,7 @@ namespace Mascari4615
 				{
 					// dir 아래 모든 폴더 안에 있는 파일을 탐색
 					foreach (DirectoryInfo subDir in dir.GetDirectories())
-						InitDic(ref dic, $"{dirPath}/{subDir.Name}/");
+						InitDic<T>(ref dic, $"{dirPath}/{subDir.Name}/");
 				}
 			}
 		}
@@ -178,10 +177,13 @@ namespace Mascari4615
 
 		public void DuplicateArtifact(Artifact artifact)
 		{
+			Type type = artifact.GetType();
+			Dictionary<int, Artifact> dic = dataDics[type];
+
 			string nName = artifact.Name + " Copy";
-			// CurArtifact의 ID에서 1씩 증가시키면서 중복되지 않는 ID를 찾는다.
+			// 사용되지 않은 ID를 찾는다.
 			int nID = artifact.ID + 1;
-			while (questDataDic.ContainsKey(nID))
+			while (dic.ContainsKey(nID))
 				nID++;
 
 			string assetName = $"Q_{nID}_{nName}";
@@ -192,27 +194,11 @@ namespace Mascari4615
 			newArtifact.ID = nID;
 			newArtifact.Name = nName;
 
-			AddArtifactToDictionary(newArtifact);
+			dic.Add(nID, newArtifact);
 
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			grid.Add(new MArtifactVisual((QuestData)artifact));
+			grid.Add(new MArtifactVisual(newArtifact));
 			Repaint();
-		}
-
-		// Artifact에 타입에 맞는 Dictionary에 추가하는 함수
-		public void AddArtifactToDictionary(Artifact artifact)
-		{
-			Type type = artifact.GetType();
-			switch (type)
-			{
-				case Type t when t == typeof(QuestData):
-					questDataDic.Add(artifact.ID, (QuestData)artifact);
-					Debug.Log($"AddArtifact: {artifact.ID} {artifact.Name}");
-					break;
-				default:
-					Debug.LogError($"해당 타입을 찾을 수 없습니다. {type}");
-					break;
-			}
 		}
 	}
 }
