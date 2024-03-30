@@ -8,6 +8,9 @@ namespace Mascari4615
 	{
 		public Artifact Artifact { get; private set; }
 
+		private readonly Label nameLabel;
+		private readonly Label idLabel;
+
 		public MArtifactVisual(Artifact artifact)
 		{
 			this.Artifact = artifact;
@@ -17,8 +20,11 @@ namespace Mascari4615
 			// style.width
 			// style.visibility = Visibility.Hidden;
 
-			Add(new Label() { text = artifact.Name });
-			Add(new Label() { text = artifact.ID.ToString() });
+			nameLabel = new Label() { text = artifact.Name };
+			idLabel = new Label() { text = artifact.ID.ToString() };
+
+			Add(nameLabel);
+			Add(idLabel);
 
 			// icon.AddToClassList("visual-icon");
 
@@ -28,6 +34,14 @@ namespace Mascari4615
 			RegisterCallback<ClickEvent>(ShowArtifact);
 		
 			AddToClassList("slot-icons");
+		}
+
+		public void UpdateUI()
+		{
+			nameLabel.text = Artifact.Name;
+			idLabel.text = Artifact.ID.ToString();
+			if (Artifact.Sprite != null)
+				style.backgroundImage = Artifact.Sprite.texture;
 		}
 
 		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);

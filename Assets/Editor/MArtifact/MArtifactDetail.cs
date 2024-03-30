@@ -12,6 +12,7 @@ namespace Mascari4615
 	public class MArtifactDetail
 	{
 		public Artifact CurArtifact { get; private set; }
+		private MArtifactVisual curSlot;
 
 		private VisualElement root;
 
@@ -70,7 +71,16 @@ namespace Mascari4615
 				// HACK : 자동으로 생성되는 프로퍼티의 필드의 이름 = <프로퍼티이름>k__BackingField
 				PropertyField propertyField = new (serializedObject.FindProperty($"<{propertyInfo.Name}>k__BackingField"));
 				propertyField.Bind(serializedObject);
+				propertyField.RegisterValueChangeCallback((evt) =>
+				{
+					serializedObject.ApplyModifiedProperties();
+					MArtifact.Instance.MArtifactVisuals[CurArtifact.ID].UpdateUI();
+				});
 				artifactContent.Add(propertyField);
+
+				// 보이지만 수정은 불가능한 프로퍼티
+				if (propertyInfo.Name == "ID")
+					propertyField.SetEnabled(false);
 			}
 		}
 

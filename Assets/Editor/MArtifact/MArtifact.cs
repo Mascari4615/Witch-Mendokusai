@@ -13,6 +13,7 @@ namespace Mascari4615
 		public static MArtifact Instance { get; private set; }
 
 		public MArtifactDetail MArtifactDetail { get; private set; }
+		public Dictionary<int, MArtifactVisual> MArtifactVisuals { get; private set; } = new();
 
 		public const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
 		private const int ID_MAX = 10_000_000;
@@ -44,19 +45,47 @@ namespace Mascari4615
 
 			BindAllList();
 			UpdateGrid();
+
+			Artifact firstArtifact = null;
+			for (int i = 0; i < ID_MAX; i++)
+			{
+				if (dataDics[typeof(QuestData)].TryGetValue(i, out firstArtifact))
+				{
+					MArtifactDetail.UpdateCurArtifact(firstArtifact);
+					break;
+				}
+			}
+			MArtifactDetail.UpdateCurArtifact(firstArtifact);
 		}
 
 		private void UpdateGrid()
 		{
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			
+			MArtifactVisuals = new();
+
 			grid.Clear();
 			Dictionary<int, Artifact> targetDic = dataDics[typeof(QuestData)];
 			for (int i = 0; i < ID_MAX; i++)
 			{
 				if (targetDic.TryGetValue(i, out Artifact artifact))
-					grid.Add(new MArtifactVisual(artifact));
+				{
+					MArtifactVisual mArtifactVisual = new(artifact);
+					grid.Add(mArtifactVisual);
+					MArtifactVisuals.Add(i, mArtifactVisual);
+				}
 			}
+
+			Button addButton = new()
+			{
+				text = "+",
+			};
+			addButton.AddToClassList("slot-icons");
+			addButton.RegisterCallback<ClickEvent>(ev =>
+			{
+				AddArtifact(MArtifactDetail.CurArtifact.GetType());
+			});
+			grid.Add(addButton);
+
 			Repaint();
 		}
 
@@ -181,7 +210,32 @@ namespace Mascari4615
 			}
 		}
 
-		public void DuplicateArtifact(Artifact artifact)
+		public Artifact AddArtifact(Type type)
+		{
+			Dictionary<int, Artifact> dic = dataDics[type];
+
+			string nName = type.Name;
+			// 사용되지 않은 ID를 찾는다.
+			int nID = 0;
+			while (dic.ContainsKey(nID))
+				nID++;
+
+			string assetName = $"Q_{nID}_{nName}";
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
+
+			Artifact newArtifact = CreateInstance(type) as Artifact;
+			AssetDatabase.CreateAsset(newArtifact, path);
+			newArtifact.ID = nID;
+			newArtifact.Name = nName;
+
+			dic.Add(nID, newArtifact);
+
+			UpdateGrid();
+			MArtifactDetail.UpdateCurArtifact(newArtifact);
+			return newArtifact;
+		}
+
+		public Artifact DuplicateArtifact(Artifact artifact)
 		{
 			Type type = artifact.GetType();
 			Dictionary<int, Artifact> dic = dataDics[type];
@@ -203,6 +257,8 @@ namespace Mascari4615
 			dic.Add(nID, newArtifact);
 
 			UpdateGrid();
+			MArtifactDetail.UpdateCurArtifact(newArtifact);
+			return newArtifact;
 		}
 
 		public void DeleteArtifact(Artifact artifact)
@@ -210,13 +266,23 @@ namespace Mascari4615
 			Type type = artifact.GetType();
 			Dictionary<int, Artifact> dic = dataDics[type];
 
-			string assetName = $"Q_{artifact.ID}_{artifact.Name}";
+			int id = artifact.ID;
+			string assetName = $"Q_{id}_{artifact.Name}";
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
 
 			dic.Remove(artifact.ID);
 			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(artifact));
 
 			UpdateGrid();
+
+			Artifact prevArtifact = null;
+			while (prevArtifact == null)
+			{
+				id--;
+				if (dic.TryGetValue(id, out prevArtifact))
+					break;
+			}
+			MArtifactDetail.UpdateCurArtifact(prevArtifact);
 		}
 	}
 }
