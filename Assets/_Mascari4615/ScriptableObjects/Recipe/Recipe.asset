@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3a3c9004633b04479e2f567687c2430, type: 3}
   m_Name: Recipe
   m_EditorClassIdentifier: 
-  ingredients:
-  - {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
-  percentage: 100
+  <Ingredients>k__BackingField:
+  - {fileID: 11400000, guid: eeed87409dcb3054ba7b5e21d0b93da6, type: 2}
+  <Percentage>k__BackingField: 0
