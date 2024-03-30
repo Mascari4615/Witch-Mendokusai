@@ -12,7 +12,7 @@ namespace Mascari4615
 	public class MArtifactDetail
 	{
 		public Artifact CurArtifact { get; private set; }
-		private MArtifactVisual curSlot;
+		private MArtifactSlot curSlot;
 
 		private VisualElement root;
 

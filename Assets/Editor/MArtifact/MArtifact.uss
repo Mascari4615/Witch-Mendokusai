@@ -1,5 +1,5 @@
 .header_main {
-    font-size: 50px;
+    font-size: 30px;
 }
 
 .btn-main {
@@ -33,14 +33,7 @@
 
 #ArtifactDetail {
     width: 30%;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    margin-left: 0;
-    margin-right: 15px;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
+    min-width: 30%;
     border-top-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 1px;
@@ -49,6 +42,10 @@
     border-right-color: rgb(255, 128, 0);
     border-top-color: rgb(255, 128, 0);
     border-bottom-color: rgb(255, 128, 0);
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
 }
 
 .property-block {

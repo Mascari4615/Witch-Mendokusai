@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
     <Style src="project://database/Assets/Editor/MArtifact/MArtifact.uss?fileID=7433441132597879392&amp;guid=10628fedc867f4a4eb552243cab70531&amp;type=3#MArtifact" />
     <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgb(29, 29, 29);">
-        <ui:VisualElement name="Header" style="flex-direction: row; height: 100px; max-height: 150px; min-height: 100px; border-left-color: rgb(255, 124, 0); border-right-color: rgb(255, 124, 0); border-top-color: rgb(255, 124, 0); border-bottom-color: rgb(255, 124, 0); border-left-width: 0; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;">
-            <ui:Label tabindex="-1" text="INVENTORY" parse-escape-sequences="true" display-tooltip-when-elided="true" name="b_Header" class="header_main" style="-unity-text-align: middle-left; flex-grow: 1;" />
+        <ui:VisualElement name="Header" style="flex-direction: row; height: 60px; border-left-color: rgb(255, 124, 0); border-right-color: rgb(255, 124, 0); border-top-color: rgb(255, 124, 0); border-bottom-color: rgb(255, 124, 0); border-left-width: 0; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;">
+            <ui:Label tabindex="-1" text="ARTIFACT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="b_Header" class="header_main" style="-unity-text-align: middle-left; flex-grow: 1;" />
             <ui:VisualElement name="Container_Level" style="flex-grow: 1; flex-direction: row; justify-content: center;">
                 <ui:Label text="30" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Level_Value" tabindex="-1" class="header_main" style="-unity-text-align: middle-left;" />
                 <ui:VisualElement name="Container_Level_Bar" style="flex-grow: 1; justify-content: center;">
@@ -13,16 +13,9 @@
                     <ui:Label tabindex="-1" text="1500/2000" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Experience_Value" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="Container_Currency" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; padding-left: 10px;">
-                <ui:VisualElement name="Icon" style="width: 60px; height: 60px; background-image: url(&quot;project://database/Assets/_Mascari4615/Sprite/Nyang.png?fileID=2800000&amp;guid=bc6284f43d22ec44a9e7be7a03eb947a&amp;type=3#Nyang&quot;); margin-right: 10px;" />
-                <ui:Label tabindex="-1" text="521" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Value" class="header_main" />
-            </ui:VisualElement>
-            <ui:VisualElement name="Container_Weight" style="flex-grow: 1; flex-direction: row; justify-content: flex-end; align-items: center; padding-left: 10px;">
-                <ui:VisualElement name="Icon" style="width: 60px; height: 60px; background-image: url(&quot;project://database/Assets/_Mascari4615/Sprite/UI/Icons/backpack.png?fileID=2800000&amp;guid=0af7373749ea1724c9edd76a089aabb9&amp;type=3#backpack&quot;); margin-right: 10px;" />
-                <ui:Label tabindex="-1" text="100/300" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Value" class="header_main" />
-            </ui:VisualElement>
+            <ui:VisualElement name="Menu" style="flex-grow: 1; flex-direction: row; justify-content: center; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;" />
         </ui:VisualElement>
-        <ui:VisualElement name="Body" style="flex-grow: 1; flex-direction: row-reverse; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
+        <ui:VisualElement name="Body" style="flex-grow: 1; flex-direction: row-reverse; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
             <ui:VisualElement name="ArtifactDetail">
                 <ui:ScrollView style="flex-grow: 1;">
                     <ui:Label tabindex="-1" text="ItemName" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Name" style="font-size: 36px; white-space: normal; display: none;" />
@@ -40,12 +33,12 @@
                     </ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="Inventory" style="flex-grow: 1; justify-content: center; align-items: center; margin-right: 20px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px;">
+            <ui:VisualElement name="Artifacts" style="flex-grow: 1; justify-content: center; align-items: center;">
                 <ui:ScrollView style="flex-grow: 1;">
                     <ui:VisualElement name="Grid" style="flex-direction: row; flex-wrap: wrap; height: 100%; justify-content: center;" />
                 </ui:ScrollView>
+                <ui:Button text="ADD" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Add" style="width: 100px; height: 40px; font-size: 30px;" />
             </ui:VisualElement>
-            <ui:ListView name="QuestList" style="flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); flex-wrap: wrap; width: 161px;" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

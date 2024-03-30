@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -10,24 +11,34 @@ namespace Mascari4615
 	public class MArtifact : EditorWindow
 	{
 		// MArtifact window = EditorWindow.GetWindow<MArtifact>()
+		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
+		private const int ID_MAX = 10_000_000;
+		
 		public static MArtifact Instance { get; private set; }
 
 		public MArtifactDetail MArtifactDetail { get; private set; }
-		public Dictionary<int, MArtifactVisual> MArtifactVisuals { get; private set; } = new();
-
-		public const string QUEST_DIRECTORY_PATH = "Assets/_Mascari4615/ScriptableObjects/Quest/";
-		private const int ID_MAX = 10_000_000;
+		public Dictionary<int, MArtifactSlot> MArtifactVisuals { get; private set; } = new();
 
 		// [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
-		private List<QuestDataBuffer> questDataBuffers = new();
 		private readonly Dictionary<Type, Dictionary<int, Artifact>> dataDics = new();
-		private List<QuestData> badIDArtifacts = new();
+		private List<Artifact> badIDArtifacts = new();
+
+		private Type CurType { get; set; } = typeof(QuestData);
 
 		[MenuItem("Mascari4615/MArtifact")]
 		public static void ShowMArtifact()
 		{
 			MArtifact wnd = GetWindow<MArtifact>();
 			wnd.titleContent = new GUIContent("MArtifact");
+		}
+
+		private void OnEnable()
+		{
+			// Debug.Log("OnEnable is executed.");
+			Instance = this;
+
+			InitList();
+			InitDic();
 		}
 
 		public void CreateGUI()
@@ -43,18 +54,47 @@ namespace Mascari4615
 
 			MArtifactDetail = new();
 
-			BindAllList();
 			UpdateGrid();
 
-			Artifact firstArtifact = null;
-			for (int i = 0; i < ID_MAX; i++)
+			Button addButton = rootVisualElement.Q<Button>(name: "BTN_Add");
+			addButton.RegisterCallback<ClickEvent>(ev =>
 			{
-				if (dataDics[typeof(QuestData)].TryGetValue(i, out firstArtifact))
+				AddArtifact(MArtifactDetail.CurArtifact.GetType());
+			});
+
+			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
+			foreach (Type type in dataDics.Keys)
+			{
+				Button button = new()
 				{
-					MArtifactDetail.UpdateCurArtifact(firstArtifact);
-					break;
-				}
+					text = type.Name,
+				};
+				// button.AddToClassList("menu-buttons");
+				button.clicked += () =>
+				{
+					CurType = type;
+					UpdateGrid();
+					MArtifactDetail.UpdateCurArtifact(dataDics[CurType].Values.First());
+				};
+				menu.Add(button);
 			}
+
+			// ListView menu = rootVisualElement.Q<ListView>(name: "MenuList");
+			// List<Type> types = dataDics.Keys.ToList();
+			// menu.itemsSource = types;
+			// menu.makeItem = () => new Button();
+			// menu.bindItem = (VisualElement element, int index) =>
+			// {
+			// 	((Button)element).text = types[index].Name;
+			// 	((Button)element).clicked += () =>
+			// 	{
+			// 		CurType = types[index];
+			// 		UpdateGrid();
+			// 		MArtifactDetail.UpdateCurArtifact(dataDics[CurType].Values.First());
+			// 	};
+			// };
+
+			Artifact firstArtifact = dataDics[CurType].Values.First();
 			MArtifactDetail.UpdateCurArtifact(firstArtifact);
 		}
 
@@ -64,38 +104,17 @@ namespace Mascari4615
 			MArtifactVisuals = new();
 
 			grid.Clear();
-			Dictionary<int, Artifact> targetDic = dataDics[typeof(QuestData)];
 			for (int i = 0; i < ID_MAX; i++)
 			{
-				if (targetDic.TryGetValue(i, out Artifact artifact))
+				if (dataDics[CurType].TryGetValue(i, out Artifact artifact))
 				{
-					MArtifactVisual mArtifactVisual = new(artifact);
+					MArtifactSlot mArtifactVisual = new(artifact);
 					grid.Add(mArtifactVisual);
 					MArtifactVisuals.Add(i, mArtifactVisual);
 				}
 			}
 
-			Button addButton = new()
-			{
-				text = "+",
-			};
-			addButton.AddToClassList("slot-icons");
-			addButton.RegisterCallback<ClickEvent>(ev =>
-			{
-				AddArtifact(MArtifactDetail.CurArtifact.GetType());
-			});
-			grid.Add(addButton);
-
 			Repaint();
-		}
-
-		private void OnEnable()
-		{
-			// Debug.Log("OnEnable is executed.");
-			Instance = this;
-
-			InitList();
-			InitDic();
 		}
 
 		private void OnValidate()
@@ -105,9 +124,6 @@ namespace Mascari4615
 
 		private void InitList()
 		{
-			questDataBuffers = new();
-			InitList(ref questDataBuffers, QUEST_DIRECTORY_PATH);
-
 			static void InitList<T>(ref List<T> list, string dirPath, bool searchSubDir = true) where T : ScriptableObject
 			{
 				const string extension = ".asset";
@@ -138,11 +154,26 @@ namespace Mascari4615
 		private void InitDic()
 		{
 			badIDArtifacts = new();
-			Dictionary<int, Artifact> questDataDic = new();
-			InitDic<QuestData>(ref questDataDic, QUEST_DIRECTORY_PATH, badArtifactList: badIDArtifacts);
-			dataDics.Add(typeof(QuestData), questDataDic);
 
-			static void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<T> badArtifactList = null) where T : Artifact
+			Temp<QuestData>();
+			Temp<Card>();
+			Temp<Effect>();
+			Temp<ItemData>();
+			Temp<MonsterWave>();
+			Temp<Skill>();
+			Temp<Stage>();
+			Temp<Doll>();
+			Temp<NPC>();
+			Temp<Monster>();
+
+			void Temp<T>() where T : Artifact
+			{
+				Dictionary<int, Artifact> dic = new();
+				InitDic<T>(ref dic, SCRIPTABLE_OBJECTS_DIR, badArtifactList: badIDArtifacts);
+				dataDics.Add(typeof(T), dic);
+			}
+
+			static void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<Artifact> badArtifactList = null) where T : Artifact
 			{
 				const string extension = ".asset";
 
@@ -152,7 +183,10 @@ namespace Mascari4615
 					if (string.Compare(file.Extension, extension, StringComparison.Ordinal) != 0)
 						continue;
 
-					if (AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}") != typeof(T))
+					Type type = AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}");
+
+					// 만약 type이 T이거나 T의 하위 클래스가 아니면 Continue
+					if (type != typeof(T) && !type.IsSubclassOf(typeof(T)))
 						continue;
 
 					T asset = AssetDatabase.LoadAssetAtPath<T>($"{dirPath}/{file.Name}");
@@ -179,37 +213,6 @@ namespace Mascari4615
 			}
 		}
 
-		private void BindAllList()
-		{
-			BindEntryList("QuestList", questDataBuffers);
-
-			// 설명: 리스트뷰에 데이터를 바인딩하는 함수
-			// 매개변수: 리스트뷰 이름, 바인딩할 리스트
-			// 제네릭: T는 BaseEntry를 상속받은 클래스여야 함
-			void BindEntryList<T>(string listViewName, List<T> list) where T : ScriptableObject
-			{
-				// Q(Query) 함수는 VisualElement의 자식 요소를 찾는 함수
-				// 즉 rootVisualElement의 자식 요소 중에서 이름이 listViewName인 요소를 찾아서 반환
-				ListView listView = rootVisualElement.Q<ListView>(name: listViewName);
-
-				// Set ListView.itemsSource to populate the data in the list.
-				// 리스트뷰에 데이터를 채우기 위해 ListView.itemsSource를 설정합니다.
-				// itemSource는 리스트뷰에 표시할 데이터를 설정하는 속성입니다.
-				// 리스트뷰에 표시할 데이터를 설정하면 리스트뷰에 데이터가 표시됩니다.
-				listView.itemsSource = list;
-
-				// Set ListView.makeItem to initialize each entry in the list.
-				// ListView.makeItem을 설정하여 목록의 각 항목을 초기화합니다.
-				// makeItem은 리스트뷰에 표시할 각 항목을 초기화하는 함수입니다.
-				// makeItem은 항목을 초기화하는 데 사용할 VisualElement를 반환합니다.
-				listView.makeItem = () => new Label();
-
-				// 설명 : ListView.bindItem은 ListView.makeItem에서 반환한 VisualElement와 데이터를 바인딩하는 함수입니다.
-				listView.bindItem = (VisualElement element, int index) =>
-					((Label)element).text = list[index].name;
-			}
-		}
-
 		public Artifact AddArtifact(Type type)
 		{
 			Dictionary<int, Artifact> dic = dataDics[type];
@@ -221,7 +224,7 @@ namespace Mascari4615
 				nID++;
 
 			string assetName = $"Q_{nID}_{nName}";
-			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{SCRIPTABLE_OBJECTS_DIR}{assetName}.asset");
 
 			Artifact newArtifact = CreateInstance(type) as Artifact;
 			AssetDatabase.CreateAsset(newArtifact, path);
@@ -247,7 +250,7 @@ namespace Mascari4615
 				nID++;
 
 			string assetName = $"Q_{nID}_{nName}";
-			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{SCRIPTABLE_OBJECTS_DIR}{assetName}.asset");
 
 			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(artifact), path);
 			Artifact newArtifact = AssetDatabase.LoadAssetAtPath<Artifact>(path);
@@ -268,21 +271,34 @@ namespace Mascari4615
 
 			int id = artifact.ID;
 			string assetName = $"Q_{id}_{artifact.Name}";
-			string path = AssetDatabase.GenerateUniqueAssetPath($"{QUEST_DIRECTORY_PATH}{assetName}.asset");
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{SCRIPTABLE_OBJECTS_DIR}{assetName}.asset");
 
 			dic.Remove(artifact.ID);
 			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(artifact));
 
 			UpdateGrid();
 
-			Artifact prevArtifact = null;
-			while (prevArtifact == null)
+			Artifact prevArtifact = GetNearArtifact(id, dic);
+			MArtifactDetail.UpdateCurArtifact(prevArtifact);
+		}
+
+		private Artifact GetNearArtifact(int id, Dictionary<int, Artifact> dic)
+		{
+			Artifact nearArtifact = null;
+			for (int newID = id; newID < ID_MAX; newID++)
 			{
-				id--;
-				if (dic.TryGetValue(id, out prevArtifact))
+				if (dic.TryGetValue(newID, out nearArtifact))
 					break;
 			}
-			MArtifactDetail.UpdateCurArtifact(prevArtifact);
+			if (nearArtifact == null)
+			{
+				for (int newID = id; newID >= 0; newID--)
+				{
+					if (dic.TryGetValue(newID, out nearArtifact))
+						break;
+				}
+			}
+			return nearArtifact;
 		}
 	}
 }

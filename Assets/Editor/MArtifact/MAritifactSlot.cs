@@ -4,14 +4,14 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MArtifactVisual : Button
+	public class MArtifactSlot : Button
 	{
 		public Artifact Artifact { get; private set; }
 
 		private readonly Label nameLabel;
 		private readonly Label idLabel;
 
-		public MArtifactVisual(Artifact artifact)
+		public MArtifactSlot(Artifact artifact)
 		{
 			this.Artifact = artifact;
 
@@ -44,8 +44,8 @@ namespace Mascari4615
 				style.backgroundImage = Artifact.Sprite.texture;
 		}
 
-		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
-		private void ShowArtifact(MouseEnterEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactVisual).Artifact);
+		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactSlot).Artifact);
+		private void ShowArtifact(MouseEnterEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactSlot).Artifact);
 
 		private void UpdateTooltip(Artifact artifact)
 		{

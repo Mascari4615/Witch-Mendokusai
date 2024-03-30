@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb879bc427291c946bd314c89f343330, type: 3}
   m_Name: MonsterWave
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 0
+  <ID>k__BackingField: 1
   <Name>k__BackingField: 
   <Description>k__BackingField: 
-  <Thumbnail>k__BackingField: {fileID: 0}
+  <Sprite>k__BackingField: {fileID: 0}
   <Monsters>k__BackingField:
   - {fileID: 11400000, guid: d3b4b260c0d5fcd478b6ccbf48fc8d43, type: 2}
   - {fileID: 11400000, guid: 473eb54ca0151684ca8411fd1914123f, type: 2}
   - {fileID: 11400000, guid: 4f25ead5ae81f4645a28cf31239e5a74, type: 2}
   <StartTime>k__BackingField: 0
   <EndTime>k__BackingField: 3600
+  <SpawnDelay>k__BackingField: 0.2
   <Once>k__BackingField: 0
