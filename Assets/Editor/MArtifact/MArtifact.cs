@@ -10,16 +10,15 @@ namespace Mascari4615
 {
 	public class MArtifact : EditorWindow
 	{
-		// MArtifact window = EditorWindow.GetWindow<MArtifact>()
 		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
 		private const int ID_MAX = 10_000_000;
 		
 		public static MArtifact Instance { get; private set; }
 
 		public MArtifactDetail MArtifactDetail { get; private set; }
-		public Dictionary<int, MArtifactSlot> MArtifactVisuals { get; private set; } = new();
+		public Dictionary<int, MArtifactSlot> ArtifactSlots { get; private set; } = new();
+		public MArtifactSlot CurSlot { get; private set; }
 
-		// [SerializeField] private VisualTreeAsset m_VisualTreeAsset = default;
 		private readonly Dictionary<Type, Dictionary<int, Artifact>> dataDics = new();
 		private List<Artifact> badIDArtifacts = new();
 
@@ -65,17 +64,8 @@ namespace Mascari4615
 			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
 			foreach (Type type in dataDics.Keys)
 			{
-				Button button = new()
-				{
-					text = type.Name,
-				};
-				// button.AddToClassList("menu-buttons");
-				button.clicked += () =>
-				{
-					CurType = type;
-					UpdateGrid();
-					MArtifactDetail.UpdateCurArtifact(dataDics[CurType].Values.First());
-				};
+				Button button = new() { text = type.Name, };
+				button.clicked += () => SetType(type);
 				menu.Add(button);
 			}
 
@@ -94,23 +84,22 @@ namespace Mascari4615
 			// 	};
 			// };
 
-			Artifact firstArtifact = dataDics[CurType].Values.First();
-			MArtifactDetail.UpdateCurArtifact(firstArtifact);
+			SelectArifactSlot(ArtifactSlots.Values.First());
 		}
 
 		private void UpdateGrid()
 		{
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			MArtifactVisuals = new();
+			ArtifactSlots = new();
 
 			grid.Clear();
 			for (int i = 0; i < ID_MAX; i++)
 			{
 				if (dataDics[CurType].TryGetValue(i, out Artifact artifact))
 				{
-					MArtifactSlot mArtifactVisual = new(artifact);
-					grid.Add(mArtifactVisual);
-					MArtifactVisuals.Add(i, mArtifactVisual);
+					MArtifactSlot slot = new(artifact);
+					ArtifactSlots.Add(i, slot);
+					grid.Add(slot.VisualElement);
 				}
 			}
 
@@ -120,6 +109,12 @@ namespace Mascari4615
 		private void OnValidate()
 		{
 			// Debug.Log("OnValidate is executed.");
+		}
+
+		private void SetType(Type type)
+		{
+			CurType = type;
+			UpdateGrid();
 		}
 
 		private void InitList()
@@ -234,7 +229,7 @@ namespace Mascari4615
 			dic.Add(nID, newArtifact);
 
 			UpdateGrid();
-			MArtifactDetail.UpdateCurArtifact(newArtifact);
+			SelectArifactSlot(ArtifactSlots[nID]);
 			return newArtifact;
 		}
 
@@ -260,7 +255,7 @@ namespace Mascari4615
 			dic.Add(nID, newArtifact);
 
 			UpdateGrid();
-			MArtifactDetail.UpdateCurArtifact(newArtifact);
+			SelectArifactSlot(ArtifactSlots[nID]);
 			return newArtifact;
 		}
 
@@ -278,27 +273,36 @@ namespace Mascari4615
 
 			UpdateGrid();
 
-			Artifact prevArtifact = GetNearArtifact(id, dic);
-			MArtifactDetail.UpdateCurArtifact(prevArtifact);
+			SelectArifactSlot(GetNearSlot(id));
 		}
 
-		private Artifact GetNearArtifact(int id, Dictionary<int, Artifact> dic)
+		private MArtifactSlot GetNearSlot(int startID)
 		{
-			Artifact nearArtifact = null;
-			for (int newID = id; newID < ID_MAX; newID++)
+			MArtifactSlot slot = null;
+			for (int newID = startID; newID < ID_MAX; newID++)
 			{
-				if (dic.TryGetValue(newID, out nearArtifact))
+				if (ArtifactSlots.TryGetValue(newID, out slot))
 					break;
 			}
-			if (nearArtifact == null)
+			if (slot == null)
 			{
-				for (int newID = id; newID >= 0; newID--)
+				for (int newID = startID; newID >= 0; newID--)
 				{
-					if (dic.TryGetValue(newID, out nearArtifact))
+					if (ArtifactSlots.TryGetValue(newID, out slot))
 						break;
 				}
 			}
-			return nearArtifact;
+			return slot;
+		}
+
+		public void SelectArifactSlot(MArtifactSlot slot)
+		{
+			MArtifactSlot oldSlot = CurSlot;
+			CurSlot = slot;
+			oldSlot?.UpdateUI();
+			CurSlot.UpdateUI();
+
+			MArtifactDetail.UpdateCurArtifact(slot.Artifact);
 		}
 	}
 }

@@ -1,16 +1,19 @@
 .header_main {
-    font-size: 30px;
+    font-size: 43px;
+    -unity-font-style: bold;
 }
 
 .btn-main {
     flex-grow: 1;
     height: 30px;
-    font-size: 24px;
-    border-left-color: rgb(226, 137, 45);
-    border-right-color: rgb(226, 137, 45);
-    border-top-color: rgb(226, 137, 45);
-    border-bottom-color: rgb(226, 137, 45);
-    background-color: rgb(226, 137, 45);
+    font-size: 20px;
+    -unity-font-style: bold;
+    border-left-color: rgb(16, 16, 51);
+    border-right-color: rgb(16, 16, 51);
+    border-top-color: rgb(16, 16, 51);
+    border-bottom-color: rgb(16, 16, 51);
+    border-bottom-width: 1px;
+    border-right-width: 1px;
 }
 
 .slot-icons {
@@ -19,12 +22,12 @@
     border-right-color: rgb(75, 75, 75);
     border-top-color: rgb(75, 75, 75);
     border-bottom-color: rgb(75, 75, 75);
-    border-top-width: 1px;
-    border-right-width: 1px;
-    border-bottom-width: 1px;
-    border-left-width: 1px;
-    min-width: 100px;
-    min-height: 100px;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 3px;
+    border-left-width: 5px;
+    min-width: 150px;
+    min-height: 150px;
     max-width: 150px;
     max-height: 150px;
     height: 150px;
@@ -38,10 +41,10 @@
     border-right-width: 1px;
     border-bottom-width: 1px;
     border-left-width: 1px;
-    border-left-color: rgb(255, 128, 0);
-    border-right-color: rgb(255, 128, 0);
-    border-top-color: rgb(255, 128, 0);
-    border-bottom-color: rgb(255, 128, 0);
+    border-left-color: rgba(255, 255, 255, 0.39);
+    border-right-color: rgba(255, 255, 255, 0.39);
+    border-top-color: rgba(255, 255, 255, 0.39);
+    border-bottom-color: rgba(255, 255, 255, 0.39);
     padding-top: 10px;
     padding-right: 10px;
     padding-bottom: 10px;

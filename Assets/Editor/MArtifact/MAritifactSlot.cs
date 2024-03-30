@@ -4,36 +4,28 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MArtifactSlot : Button
+	public class MArtifactSlot
 	{
 		public Artifact Artifact { get; private set; }
+		public VisualElement VisualElement { get; private set; }
 
+		private readonly Button button;
 		private readonly Label nameLabel;
 		private readonly Label idLabel;
 
 		public MArtifactSlot(Artifact artifact)
 		{
-			this.Artifact = artifact;
+			VisualTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifactSlot.uxml");
+			VisualElement = treeAsset.Instantiate();
 
-			name = $"{artifact.Name}";
-			// style.height
-			// style.width
-			// style.visibility = Visibility.Hidden;
+			Artifact = artifact;
 
-			nameLabel = new Label() { text = artifact.Name };
-			idLabel = new Label() { text = artifact.ID.ToString() };
+			button = VisualElement.Q<Button>();
+			nameLabel = VisualElement.Q<Label>(name: "Name");
+			idLabel = VisualElement.Q<Label>(name: "ID");
 
-			Add(nameLabel);
-			Add(idLabel);
-
-			// icon.AddToClassList("visual-icon");
-
-			if (artifact.Sprite != null)
-				style.backgroundImage = artifact.Sprite.texture;
-
-			RegisterCallback<ClickEvent>(ShowArtifact);
-		
-			AddToClassList("slot-icons");
+			button.RegisterCallback<ClickEvent>(ShowArtifact);
+			UpdateUI();
 		}
 
 		public void UpdateUI()
@@ -41,15 +33,20 @@ namespace Mascari4615
 			nameLabel.text = Artifact.Name;
 			idLabel.text = Artifact.ID.ToString();
 			if (Artifact.Sprite != null)
-				style.backgroundImage = Artifact.Sprite.texture;
+				button.style.backgroundImage = new(Artifact.Sprite);
+
+			// new Color(226 / 255f, 137 / 255f, 45 / 255f)
+			Color borderColor = MArtifact.Instance.CurSlot == this ? Color.white : Color.black;
+			button.style.borderTopColor = borderColor;
+			button.style.borderBottomColor = borderColor;
+			button.style.borderLeftColor =borderColor;
+			button.style.borderRightColor = borderColor;
 		}
 
-		private void ShowArtifact(ClickEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactSlot).Artifact);
-		private void ShowArtifact(MouseEnterEvent evt) => UpdateTooltip((evt.currentTarget as MArtifactSlot).Artifact);
-
-		private void UpdateTooltip(Artifact artifact)
+		private void ShowArtifact(ClickEvent evt) => UpdateTooltip();
+		private void UpdateTooltip()
 		{
-			MArtifact.Instance.MArtifactDetail.UpdateCurArtifact(artifact);
+			MArtifact.Instance.SelectArifactSlot(this);
 		}
 	}
 }
