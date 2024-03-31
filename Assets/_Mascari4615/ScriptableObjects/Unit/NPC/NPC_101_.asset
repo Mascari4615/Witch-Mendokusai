@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27295272ebf3533408ef818242e78912, type: 3}
-  m_Name: NPC 3
+  m_Name: NPC_101_
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 103
-  <Name>k__BackingField: 
+  <ID>k__BackingField: 101
+  <Name>k__BackingField: "\uB358\uC804 \uC785\uC7A5 \uD14C\uC2A4\uD2B8"
   <Description>k__BackingField: 
-  <Sprite>k__BackingField: {fileID: 0}
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 824b9eac07ee3e340b3a148cbd1b11d5, type: 3}
   <Prefab>k__BackingField: {fileID: 0}
   <DefaultSkills>k__BackingField: []
   <Material>k__BackingField: {fileID: 0}
   <InitStatSO>k__BackingField: {fileID: 11400000, guid: 0fc5d6de7c2c3624cbfc7f59c07e50f9, type: 2}
-  <PanelType>k__BackingField: 4
-  <QuestDatas>k__BackingField:
-  - {fileID: 11400000, guid: 08a85764d3f3c8a4f9022fff3a1a2301, type: 2}
+  <PanelInfos>k__BackingField:
+  - Type: 2
+    Artifacts: []

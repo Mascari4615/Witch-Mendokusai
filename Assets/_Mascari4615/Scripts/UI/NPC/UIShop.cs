@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIShop : UIPanel
+	public class UIShop : UINPCPanel
 	{
 		private UIItemInventory itemInventoryUI;
 		private UIItemInventory shopInventoryUI;
@@ -66,6 +66,10 @@ namespace Mascari4615
 				SOManager.Instance.ItemInventory.Remove(slotIndex);
 				UpdateUI();
 			}
+		}
+
+		public override void SetNPC(NPCObject npc)
+		{
 		}
 	}
 }

@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public class UIPot : UIPanel
+	public class UIPot : UINPCPanel
 	{
 		private int curPanelIndex = 0;
 		private UIPanel[] tabPanels;
@@ -39,6 +39,10 @@ namespace Mascari4615
 		}
 
 		public override void UpdateUI()
+		{
+		}
+
+		public override void SetNPC(NPCObject npc)
 		{
 		}
 	}

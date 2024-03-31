@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIDungeonEntrance : UIPanel
+	public class UIDungeonEntrance : UINPCPanel
 	{
 		[SerializeField] private GameObject[] dungeonSelectButtons;
 		private int _curDungeonIndex = 0;
@@ -49,6 +49,10 @@ namespace Mascari4615
 		public void EnterTheDungeon()
 		{
 			DungeonManager.Instance.StartDungeon(_dungeonDatas[_curDungeonIndex]);
+		}
+
+		public override void SetNPC(NPCObject npc)
+		{
 		}
 	}
 }
