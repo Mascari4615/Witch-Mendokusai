@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Unity.Properties;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -12,7 +13,35 @@ namespace Mascari4615
 	{
 		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
 		private const int ID_MAX = 10_000_000;
-		
+
+		private readonly Dictionary<Type, string> assetPrefixes = new()
+		{
+			{ typeof(QuestData), "Q" },
+			{ typeof(Card), "C" },
+			{ typeof(Effect), "E" },
+			{ typeof(ItemData), "I" },
+			{ typeof(MonsterWave), "MW" },
+			{ typeof(Skill), "SKL" },
+			{ typeof(Stage), "STG" },
+			{ typeof(Doll), "DOL" },
+			{ typeof(NPC), "NPC" },
+			{ typeof(Monster), "MOB" },
+		};
+
+		private readonly Dictionary<Type, string> assetPaths = new()
+		{
+			{ typeof(QuestData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestData)}/" },
+			{ typeof(Card), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Card)}/" },
+			{ typeof(Effect), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Effect)}/" },
+			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
+			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
+			{ typeof(Skill), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Skill)}/" },
+			{ typeof(Stage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Stage)}/" },
+			{ typeof(Doll), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Doll)}/" },
+			{ typeof(NPC), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(NPC)}/" },
+			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Monster)}/" },
+		};
+
 		public static MArtifact Instance { get; private set; }
 
 		public MArtifactDetail MArtifactDetail { get; private set; }
@@ -85,6 +114,29 @@ namespace Mascari4615
 			// };
 
 			SelectArifactSlot(ArtifactSlots.Values.First());
+
+			Selection.selectionChanged += () =>
+			{
+				Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
+				
+				if (Selection.activeObject is Artifact artifact)
+				{
+					Type type = artifact.GetType();
+
+					while (type != typeof(Artifact) && dataDics.ContainsKey(type) == false)
+						type = type.BaseType;
+
+					if (type == typeof(Artifact))
+						return;
+
+					if (dataDics[type].ContainsKey(artifact.ID) == false)
+						return;
+
+					SetType(type);
+					MArtifactSlot slot = ArtifactSlots[artifact.ID];
+					SelectArifactSlot(slot);
+				}
+			};
 		}
 
 		private void UpdateGrid()
@@ -168,7 +220,7 @@ namespace Mascari4615
 				dataDics.Add(typeof(T), dic);
 			}
 
-			static void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<Artifact> badArtifactList = null) where T : Artifact
+			void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<Artifact> badArtifactList = null) where T : Artifact
 			{
 				const string extension = ".asset";
 
@@ -178,14 +230,14 @@ namespace Mascari4615
 					if (string.Compare(file.Extension, extension, StringComparison.Ordinal) != 0)
 						continue;
 
-					Type type = AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}");
+					string filePath = $"{dirPath}/{file.Name}";
+					Type type = AssetDatabase.GetMainAssetTypeAtPath(filePath);
 
 					// 만약 type이 T이거나 T의 하위 클래스가 아니면 Continue
 					if (type != typeof(T) && !type.IsSubclassOf(typeof(T)))
 						continue;
 
-					T asset = AssetDatabase.LoadAssetAtPath<T>($"{dirPath}/{file.Name}");
-
+					T asset = AssetDatabase.LoadAssetAtPath<T>(filePath);
 					if (dic.ContainsKey(asset.ID))
 					{
 						Debug.LogError($"이미 존재하는 키입니다. {file.Name}");
@@ -196,6 +248,13 @@ namespace Mascari4615
 					else
 					{
 						dic.Add(asset.ID, asset);
+						
+						if (asset.name.StartsWith($"{assetPrefixes[typeof(T)]}_{asset.ID}") == false)
+						{
+							string newName = $"{assetPrefixes[typeof(T)]}_{asset.ID}_{asset.Name}";
+							Debug.Log($"에셋 이름을 변경합니다. {asset.name} -> {newName}");
+							AssetDatabase.RenameAsset(filePath, newName);
+						}
 					}
 				}
 
@@ -218,8 +277,8 @@ namespace Mascari4615
 			while (dic.ContainsKey(nID))
 				nID++;
 
-			string assetName = $"Q_{nID}_{nName}";
-			string path = AssetDatabase.GenerateUniqueAssetPath($"{SCRIPTABLE_OBJECTS_DIR}{assetName}.asset");
+			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
 			Artifact newArtifact = CreateInstance(type) as Artifact;
 			AssetDatabase.CreateAsset(newArtifact, path);
@@ -244,8 +303,8 @@ namespace Mascari4615
 			while (dic.ContainsKey(nID))
 				nID++;
 
-			string assetName = $"Q_{nID}_{nName}";
-			string path = AssetDatabase.GenerateUniqueAssetPath($"{SCRIPTABLE_OBJECTS_DIR}{assetName}.asset");
+			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
+			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
 			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(artifact), path);
 			Artifact newArtifact = AssetDatabase.LoadAssetAtPath<Artifact>(path);
@@ -265,9 +324,6 @@ namespace Mascari4615
 			Dictionary<int, Artifact> dic = dataDics[type];
 
 			int id = artifact.ID;
-			string assetName = $"Q_{id}_{artifact.Name}";
-			string path = AssetDatabase.GenerateUniqueAssetPath($"{SCRIPTABLE_OBJECTS_DIR}{assetName}.asset");
-
 			dic.Remove(artifact.ID);
 			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(artifact));
 

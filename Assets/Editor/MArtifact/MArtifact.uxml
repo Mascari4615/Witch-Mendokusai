@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/Editor/MArtifact/MArtifact.uss?fileID=7433441132597879392&amp;guid=10628fedc867f4a4eb552243cab70531&amp;type=3#MArtifact" />
     <ui:VisualElement name="Container" style="flex-grow: 1; background-color: rgb(36, 37, 42);">
         <ui:VisualElement name="Header" style="flex-direction: row; height: 60px; border-left-color: rgba(255, 255, 255, 0.39); border-right-color: rgba(255, 255, 255, 0.39); border-top-color: rgba(255, 255, 255, 0.39); border-bottom-color: rgba(255, 255, 255, 0.39); border-left-width: 0; border-bottom-width: 1px; padding-right: 10px; padding-left: 10px;">
-            <ui:Label tabindex="-1" text="ARTIFACT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="b_Header" class="header_main" style="-unity-text-align: middle-left; flex-grow: 1;" />
+            <ui:Label tabindex="-1" text="Artifact" parse-escape-sequences="true" display-tooltip-when-elided="true" name="b_Header" class="m-text" style="-unity-text-align: middle-left; flex-grow: 1;" />
             <ui:VisualElement name="Menu" style="flex-grow: 1; justify-content: flex-start; padding-top: 15px; padding-right: 15px; padding-bottom: 10px; padding-left: 15px; flex-direction: row-reverse;" />
         </ui:VisualElement>
         <ui:VisualElement name="Body" style="flex-grow: 1; flex-direction: row-reverse; padding-top: 30px; padding-right: 30px; padding-bottom: 30px; padding-left: 30px;">
