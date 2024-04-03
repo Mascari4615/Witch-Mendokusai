@@ -2,10 +2,8 @@
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(Stage), menuName = "Variable/Stage")]
-	public class Stage : Artifact
+	public abstract class Stage : Artifact
 	{
-		public StageObject Prefab => prefab;
-		[SerializeField] private StageObject prefab;
+		[field: SerializeField] public StageObject Prefab { get; private set; }
 	}
 }

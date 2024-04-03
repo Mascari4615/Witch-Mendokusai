@@ -43,8 +43,9 @@ namespace Mascari4615
 		
 			foreach (LineData lineData in curChatDatas)
 			{
-				// TODO : 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
-				Unit unit = DataManager.Instance.UnitDic[lineData.unitID];
+				// HACK: 현재 플레이어가 플레이하고 있는 인형
+				// TODO: 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
+				Unit unit = lineData.unitID == -1 ? DataManager.Instance.DollDic[0] : DataManager.Instance.NPCDic[lineData.unitID];
 				unitID = lineData.unitID;
 				unitImage.sprite = unit.Sprite;
 				unitName.text = unit.Name;

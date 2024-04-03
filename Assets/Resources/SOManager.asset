@@ -49,8 +49,8 @@ MonoBehaviour:
   <QuestBuffer>k__BackingField: {fileID: 11400000, guid: 3ec24248882b83e458342ca2d5cc9992, type: 2}
   <Dolls>k__BackingField:
   - {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
-  - {fileID: 11400000, guid: 9f85001dde9fbdd448c49a3cb01ae69b, type: 2}
   - {fileID: 11400000, guid: dd84603773e6f27479a2c830f5186349, type: 2}
+  - {fileID: 11400000, guid: 9f85001dde9fbdd448c49a3cb01ae69b, type: 2}
   <NPCs>k__BackingField:
   - {fileID: 11400000, guid: aa874dd5c58bc4a49a7d460ee885ed6b, type: 2}
   - {fileID: 11400000, guid: b05878e4efdf6014cbe8ae3095924768, type: 2}
@@ -75,10 +75,14 @@ MonoBehaviour:
   <ItemInventory>k__BackingField: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
   <ShopInventory>k__BackingField: {fileID: 11400000, guid: 253ea4e354952e3459cc55a484960f37, type: 2}
   <ShopKeeperItemBuffer>k__BackingField: {fileID: 11400000, guid: ceefdce94fecec64e9949b845ad2aedf, type: 2}
-  <StageDataBuffer>k__BackingField: {fileID: 11400000, guid: 63c47c9efb75ece418f24eef7a6643f9, type: 2}
   <CardDataBuffer>k__BackingField: {fileID: 11400000, guid: d3bf6c29ed2b8814691c55729ba835a6, type: 2}
   <SelectedCardBuffer>k__BackingField: {fileID: 11400000, guid: f13c31923217cf246898171312ed6c19, type: 2}
   <VQuestLoadQuest>k__BackingField: {fileID: 11400000, guid: d8833ad6264114a4a9063683bb2db8bc, type: 2}
+  <DungeonConstraints>k__BackingField: []
+  <WorldStages>k__BackingField:
+  - {fileID: 11400000, guid: 9be0868af3c253b4d8d59d7a55a26dcc, type: 2}
+  - {fileID: 11400000, guid: a9e3b44cff83bad47852b0e937ec9340, type: 2}
+  - {fileID: 11400000, guid: 35207414aebbd0c4dbfb6881f0cfc110, type: 2}
   <OnPlayerHit>k__BackingField: {fileID: 11400000, guid: f76e99a695cb99b4daa6689fb44455db, type: 2}
   <OnPlayerDied>k__BackingField: {fileID: 11400000, guid: 5d18fed6aac604a479af521c42c711c7, type: 2}
   <OnDungeonStart>k__BackingField: {fileID: 11400000, guid: fc00031ad31f90a408acc1412869de03, type: 2}

@@ -45,7 +45,8 @@ namespace Mascari4615
 		public void StartDungeon(Dungeon dungeon)
 		{
 			Debug.Log($"{nameof(StartDungeon)}");
-			StageManager.Instance.LoadStage(dungeon, 0, InitDungeonAndPlayer);
+			// TODO: 던전
+			StageManager.Instance.LoadStage(dungeon.Stages[0], 0, InitDungeonAndPlayer);
 
 			void InitDungeonAndPlayer()
 			{

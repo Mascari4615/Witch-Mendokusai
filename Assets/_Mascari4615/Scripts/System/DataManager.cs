@@ -16,7 +16,7 @@ namespace Mascari4615
 
 		public readonly Dictionary<int, QuestData> QuestDic = new();
 		public readonly Dictionary<int, Doll> DollDic = new();
-		public readonly Dictionary<int, Unit> UnitDic = new();
+		public readonly Dictionary<int, NPC> NPCDic = new();
 		public readonly Dictionary<int, Dungeon> DungeonDic = new();
 		public readonly Dictionary<int, ItemData> ItemDic = new();
 		public readonly Dictionary<int, ItemData> PotionDic = new();
@@ -24,7 +24,7 @@ namespace Mascari4615
 		public readonly Dictionary<int, ItemData> UncommonItemDic = new();
 		public readonly Dictionary<int, ItemData> RareItemDic = new();
 		public readonly Dictionary<int, ItemData> LegendItemDic = new();
-		public readonly Dictionary<int, Stage> StageDic = new();
+		public readonly Dictionary<int, WorldStage> WorldStageDic = new();
 		public readonly Dictionary<int, Card> CardDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
 		public readonly Dictionary<int, string> StatDic = new();
@@ -86,16 +86,13 @@ namespace Mascari4615
 				}
 			}
 
-			foreach (Stage stage in SOManager.StageDataBuffer.InitItems)
-				StageDic.Add(stage.ID, stage);
+			foreach (WorldStage stage in SOManager.WorldStages)
+				WorldStageDic.Add(stage.ID, stage);
 
 			foreach (Doll doll in SOManager.Dolls)
-			{
 				DollDic.Add(doll.ID, doll);
-				UnitDic.Add(doll.ID, doll);
-			}
 			foreach (NPC npc in SOManager.NPCs)
-				UnitDic.Add(npc.ID, npc);
+				NPCDic.Add(npc.ID, npc);
 			foreach (Dungeon dungeon in SOManager.Dungeons)
 				DungeonDic.Add(dungeon.ID, dungeon);
 			foreach (QuestData quest in SOManager.Quests)

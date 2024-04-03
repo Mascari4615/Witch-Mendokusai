@@ -22,7 +22,9 @@ namespace Mascari4615
 			{ typeof(ItemData), "I" },
 			{ typeof(MonsterWave), "MW" },
 			{ typeof(Skill), "SKL" },
-			{ typeof(Stage), "STG" },
+			{ typeof(WorldStage), "WS" },
+			{ typeof(Dungeon), "D" },
+			{ typeof(DungeonStage), "DS" },
 			{ typeof(Doll), "DOL" },
 			{ typeof(NPC), "NPC" },
 			{ typeof(Monster), "MOB" },
@@ -36,7 +38,9 @@ namespace Mascari4615
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
 			{ typeof(Skill), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Skill)}/" },
-			{ typeof(Stage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Stage)}/" },
+			{ typeof(WorldStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(WorldStage)}/" },
+			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
+			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
 			{ typeof(Doll), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Doll)}/" },
 			{ typeof(NPC), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(NPC)}/" },
 			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Monster)}/" },
@@ -208,7 +212,9 @@ namespace Mascari4615
 			Temp<ItemData>();
 			Temp<MonsterWave>();
 			Temp<Skill>();
-			Temp<Stage>();
+			Temp<WorldStage>();
+			Temp<Dungeon>();
+			Temp<DungeonStage>();
 			Temp<Doll>();
 			Temp<NPC>();
 			Temp<Monster>();
@@ -232,6 +238,9 @@ namespace Mascari4615
 
 					string filePath = $"{dirPath}/{file.Name}";
 					Type type = AssetDatabase.GetMainAssetTypeAtPath(filePath);
+
+					if (type == null)
+						continue;
 
 					// 만약 type이 T이거나 T의 하위 클래스가 아니면 Continue
 					if (type != typeof(T) && !type.IsSubclassOf(typeof(T)))

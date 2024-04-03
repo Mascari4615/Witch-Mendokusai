@@ -59,16 +59,17 @@ namespace Mascari4615
 		[field: SerializeField] public List<Doll> Dolls { get; private set; }
 		[field: SerializeField] public List<NPC> NPCs { get; private set; }
 		[field: SerializeField] public DollBuffer DollBuffer { get; private set; }
-		[field: SerializeField] public Dungeon[] Dungeons { get; private set; }
+		[field: SerializeField] public List<Dungeon> Dungeons { get; private set; }
 		[field: SerializeField] public List<ItemData> Items { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
 		[field: SerializeField] public Inventory ShopInventory { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ShopKeeperItemBuffer { get; private set; }
-		[field: SerializeField] public StageDataBuffer StageDataBuffer { get; private set; }
 		[field: SerializeField] public CardBuffer CardDataBuffer { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
 		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
+		[field: SerializeField] public List<DungeonConstraint> DungeonConstraints { get; private set; }
+		[field: SerializeField] public List<WorldStage> WorldStages { get; private set; }
 
 		[field: Space(10), Header(nameof(GameEvent))]
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }
