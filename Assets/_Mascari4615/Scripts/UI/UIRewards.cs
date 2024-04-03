@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIQuestTooltipReward : MonoBehaviour
+	public class UIRewards : MonoBehaviour
 	{
 		private UISlot[] slots;
 
@@ -19,33 +20,35 @@ namespace Mascari4615
 			}
 		}
 
-		public void SetReward(Quest quest)
+		public void UpdateUI(List<RewardInfo> infos) =>
+			UpdateUI(Reward.InfoToData(infos));
+
+		public void UpdateUI(List<RewardData> datas)
 		{
-			if (quest == null || quest.Rewards == null)
+			if (datas == null || datas.Count == 0)
 			{
 				foreach (UISlot slot in slots)
 					slot.gameObject.SetActive(false);
 				return;
 			}
 
-			List<RewardData> rewards = quest.Rewards;
 			for (int i = 0; i < slots.Length; i++)
 			{
-				if (i < rewards.Count)
+				if (i < datas.Count)
 				{
 					slots[i].gameObject.SetActive(true);
 
-					switch (rewards[i].Type)
+					switch (datas[i].Type)
 					{
 						case RewardType.Item:
-							ItemData itemData = DataManager.Instance.ItemDic[rewards[i].ArtifactID];
+							ItemData itemData = DataManager.Instance.ItemDic[datas[i].ArtifactID];
 							slots[i].SetSlot(itemData);
 							break;
 						case RewardType.Gold:
-							slots[i].SetSlot(SOManager.Instance.Nyang, rewards[i].Amount);
+							slots[i].SetSlot(SOManager.Instance.Nyang, datas[i].Amount);
 							break;
 						case RewardType.Exp:
-							slots[i].SetSlot(SOManager.Instance.VQExp, rewards[i].Amount);
+							slots[i].SetSlot(SOManager.Instance.VQExp, datas[i].Amount);
 							break;
 					}
 				}

@@ -14,7 +14,7 @@ namespace Mascari4615
 		[SerializeField] private GameObject workButton;
 		[SerializeField] private GameObject rewardButton;
 
-		[SerializeField] private UIQuestTooltipReward questRewardUI;
+		[SerializeField] private UIRewards rewardUI;
 		[SerializeField] private UIQuestTooltipCriteria questCriteriaUI;
 
 		private QuestBuffer QuestBuffer => dataBuffer as QuestBuffer;
@@ -41,8 +41,8 @@ namespace Mascari4615
 				}
 			}
 
-			if (questRewardUI != null)
-				questRewardUI.Init();
+			if (rewardUI != null)
+				rewardUI.Init();
 
 			if (questCriteriaUI != null)
 				questCriteriaUI.Init();
@@ -89,8 +89,8 @@ namespace Mascari4615
 			if (clickToolTip != null)
 				clickToolTip.SetToolTipContent(CurSlot.Data);
 
-			if (questRewardUI != null)
-				questRewardUI.SetReward(CurQuest);
+			if (rewardUI != null)
+				rewardUI.UpdateUI(CurQuest.Rewards);
 
 			if (questCriteriaUI != null)
 				questCriteriaUI.SetCriteria(CurQuest);

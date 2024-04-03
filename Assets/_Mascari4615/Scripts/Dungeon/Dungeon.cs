@@ -9,7 +9,7 @@ namespace Mascari4615
 	{
 		[field: Header("_" + nameof(Dungeon))]
 		[field: SerializeField] public List<MonsterWave> MonsterWaves { get; set; }
-		[field: SerializeField] public int Reword { get; set; }
+		[field: SerializeField] public List<RewardInfo> Rewards { get; set; }
 		[field: SerializeField] public int Difficulty { get; set; }
 	}
 }

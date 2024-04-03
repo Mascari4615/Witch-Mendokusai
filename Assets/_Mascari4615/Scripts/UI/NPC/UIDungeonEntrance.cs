@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Microsoft.Unity.VisualStudio.Editor;
 using TMPro;
 using UnityEngine;
 
@@ -7,23 +8,44 @@ namespace Mascari4615
 {
 	public class UIDungeonEntrance : UINPCPanel
 	{
-		[SerializeField] private GameObject[] dungeonSelectButtons;
+		[SerializeField] private Transform dungeonSelectButtonParent;
+		[SerializeField] private UISlot dungeonSlot;
+
+		private UISlot[] dungeonSelectButtons;
+		private UIRewards rewardUI;
+
 		private int curDungeonIndex = 0;
 		private List<Dungeon> dungeons;
 
-		[SerializeField] private TextMeshProUGUI dungeonNameText;
-		[SerializeField] private TextMeshProUGUI dungeonDescriptionText;
+		private Dungeon CurDungeon => dungeons[curDungeonIndex];
+
+		public override void Init()
+		{
+			dungeonSelectButtons = dungeonSelectButtonParent.GetComponentsInChildren<UISlot>(true);
+
+			for (int i = 0; i < dungeonSelectButtons.Length; i++)
+			{
+				dungeonSelectButtons[i].SetSlotIndex(i);
+				dungeonSelectButtons[i].Init();
+				dungeonSelectButtons[i].SetSelectAction((UISlot slot) => SelectDungeon(slot.Index));
+			}
+
+			rewardUI = GetComponentInChildren<UIRewards>(true);
+			rewardUI.Init();
+		}
 
 		public override void SetNPC(NPCObject npc)
 		{
-			// Debug.Log($"SetNPC: {npc.Data.Dungeons.Count}");
 			dungeons = npc.Data.Dungeons;
+
+			if (dungeons == null || dungeons.Count == 0)
+				Debug.LogError("No Dungeon Data");
 		}
 
 		public override void UpdateUI()
 		{
 			for (int i = 0; i < dungeonSelectButtons.Length; i++)
-				dungeonSelectButtons[i].SetActive(dungeons.Count > i);
+				dungeonSelectButtons[i].gameObject.SetActive(dungeons.Count > i);
 
 			SelectDungeon(0);
 		}
@@ -36,28 +58,13 @@ namespace Mascari4615
 
 		private void UpdateDungeonPanel()
 		{
-			// Debug.Log($"UpdateDungeonPanel: {curDungeonIndex}, {dungeons.Count}");
-			if (dungeons.Count <= curDungeonIndex)
-			{
-				Debug.LogWarning("Invalid Dungeon Index");
-				return;
-			}
-
-			Dungeon curDungeon = dungeons[curDungeonIndex];
-
-			dungeonNameText.text = curDungeon.Name;
-			dungeonDescriptionText.text = curDungeon.Description;
+			dungeonSlot.SetSlot(CurDungeon);
+			rewardUI.UpdateUI(CurDungeon.Rewards);
 		}
 
 		public void EnterTheDungeon()
 		{
-			if (dungeons.Count <= curDungeonIndex)
-			{
-				Debug.LogWarning("Invalid Dungeon Index");
-				return;
-			}
-
-			DungeonManager.Instance.StartDungeon(dungeons[curDungeonIndex]);
+			DungeonManager.Instance.StartDungeon(CurDungeon);
 		}
 	}
 }

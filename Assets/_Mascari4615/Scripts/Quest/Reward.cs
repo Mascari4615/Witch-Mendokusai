@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Mascari4615
 {
@@ -34,6 +35,9 @@ namespace Mascari4615
 
 	public class Reward
 	{
+		public static List<RewardData> InfoToData(List<RewardInfo> rewards) =>
+			rewards.ConvertAll((RewardInfo i) => new RewardData(i));
+
 		public static void GetReward(RewardData reward)
 		{
 			switch (reward.Type)
