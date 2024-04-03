@@ -135,7 +135,7 @@ namespace Mascari4615
 				curDollIndex = 0,
 				dummyDollCount = 1,
 				itemInventoryItems = new(),
-				dollDatas = new()
+				dollDataList = new()
 				{
 					new(0, 1, 0, new(){})
 				},
@@ -145,7 +145,7 @@ namespace Mascari4615
 					{ WorkListType.DummyWork, new() },
 					{ WorkListType.VQuestWork, new() }
 				},
-				questDatas = new(),
+				questDataList = new(),
 				quests = new(),
 				statistics = new()
 			};
@@ -156,11 +156,11 @@ namespace Mascari4615
 
 			Inventory inventory = SOManager.ItemInventory;
 			inventory.Load(newGameData.itemInventoryItems);
-			foreach (EquipmentData equipmentData in defaultDoll.EquipmentDatas)
+			foreach (EquipmentData equipmentData in defaultDoll.DefaultEquipments)
 			{
 				inventory.Add(equipmentData);
 				Guid? guid = inventory.GetItem(inventory.FindItemSlotIndex(equipmentData)).Guid;
-				newGameData.dollDatas[0].EquipmentGuids.Add(guid);
+				newGameData.dollDataList[0].EquipmentGuids.Add(guid);
 				defaultDoll.EquipmentGuids.Add(guid);
 			}
 			defaultDoll.EquipmentGuids.Add(null);
@@ -170,10 +170,10 @@ namespace Mascari4615
 			foreach (var d in DollDic)
 			{
 				if (d.Value.ID != 0)
-					newGameData.dollDatas.Add(d.Value.Save());
+					newGameData.dollDataList.Add(d.Value.Save());
 			}
 			foreach (var q in QuestDic)
-				newGameData.questDatas.Add(q.Value.Save());
+				newGameData.questDataList.Add(q.Value.Save());
 
 			SaveData();
 			LoadData(newGameData);
@@ -192,7 +192,7 @@ namespace Mascari4615
 
 			// 인형 초기화
 			SOManager.DollBuffer.Clear();
-			foreach (DollData dollData in saveData.dollDatas)
+			foreach (DollData dollData in saveData.dollDataList)
 			{
 				DollDic[dollData.DollID].Load(dollData);
 				SOManager.DollBuffer.Add(DollDic[dollData.DollID]);
@@ -201,7 +201,7 @@ namespace Mascari4615
 				SOManager.DollBuffer.Add(DollDic[Doll.DUMMY_ID]);
 
 			// 퀘스트 초기화
-			foreach (QuestDataSave questData in saveData.questDatas)
+			foreach (QuestDataSave questData in saveData.questDataList)
 			{
 				QuestDic[questData.QuestID].Load(questData);
 				if (questData.State >= QuestDataState.Unlocked)
@@ -222,17 +222,17 @@ namespace Mascari4615
 				curDollIndex = CurDollID,
 				dummyDollCount = DummyDollCount,
 				itemInventoryItems = SOManager.ItemInventory.Save(),
-				dollDatas = new(),
+				dollDataList = new(),
 				works = WorkManager.Works,
-				questDatas = new(),
+				questDataList = new(),
 				quests = QuestManager.Quests.RuntimeItems,
 				statistics = SOManager.Statistics.Save()
 			};
 
 			foreach (var d in DollDic)
-				gameData.dollDatas.Add(d.Value.Save());
+				gameData.dollDataList.Add(d.Value.Save());
 			foreach (var q in QuestDic)
-				gameData.questDatas.Add(q.Value.Save());
+				gameData.questDataList.Add(q.Value.Save());
 
 			if (UseLocalData)
 			{
@@ -304,14 +304,14 @@ namespace Mascari4615
 		public int dummyDollCount = 1;
 
 		public List<InventorySlotData> itemInventoryItems = new();
-		public List<DollData> dollDatas = new();
+		public List<DollData> dollDataList = new();
 		public Dictionary<WorkListType, List<Work>> works = new()
 		{
 			{ WorkListType.DollWork, new() },
 			{ WorkListType.DummyWork, new() },
 			{ WorkListType.VQuestWork, new() }
 		};
-		public List<QuestDataSave> questDatas = new();
+		public List<QuestDataSave> questDataList = new();
 		public List<Quest> quests = new();
 		public Dictionary<StatisticsType, int> statistics = new();
 	}

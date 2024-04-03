@@ -12,12 +12,16 @@ namespace Mascari4615
 		[field: Header("_" + nameof(NPC))]
 		[field: SerializeField] public List<NPCPanelInfo> PanelInfos { get; private set; }
 
-		// curNPCData가 가지고 있는 PanelInfos 중 Quest 타입의 Artifacts를 모두 가져온다.
-		public List<QuestData> QuestDatas => PanelInfos
-				.Where(i => i.Type == NPCPanelType.Quest)
-				.SelectMany(i => i.Artifacts)
-				.Cast<QuestData>()
-				.ToList();
+		public List<QuestData> QuestData => GetAllArtifacts(NPCPanelType.Quest).Cast<QuestData>().ToList();
+		public List<Dungeon> Dungeons => GetAllArtifacts(NPCPanelType.DungeonEntrance).Cast<Dungeon>().ToList();
+
+		private List<Artifact> GetAllArtifacts(NPCPanelType panelType)
+		{
+			return PanelInfos
+					.Where(i => i.Type == panelType)
+					.SelectMany(i => i.Artifacts)
+					.ToList();
+		}
 
 		public NPCPanelType AllPanelTypes => PanelInfos
 				.Select(i => i.Type)

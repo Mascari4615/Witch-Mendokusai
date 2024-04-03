@@ -12,7 +12,7 @@ namespace Mascari4615
 		public const int DUMMY_ID = 4444;
 
 		[field: Header("_" + nameof(Doll))]
-		[field: SerializeField] public EquipmentData[] EquipmentDatas { get; private set; }
+		[field: SerializeField] public List<EquipmentData> DefaultEquipments { get; private set; }
 
 		[field: NonSerialized] public int Level { get; private set; } = 0;
 		[field: NonSerialized] public int Exp { get; private set; } = 0;

@@ -8,39 +8,42 @@ namespace Mascari4615
 	public class UIDungeonEntrance : UINPCPanel
 	{
 		[SerializeField] private GameObject[] dungeonSelectButtons;
-		private int _curDungeonIndex = 0;
-		private List<Dungeon> _dungeonDatas;
+		private int curDungeonIndex = 0;
+		private List<Dungeon> dungeons;
 
 		[SerializeField] private TextMeshProUGUI dungeonNameText;
 		[SerializeField] private TextMeshProUGUI dungeonDescriptionText;
 
+		public override void SetNPC(NPCObject npc)
+		{
+			// Debug.Log($"SetNPC: {npc.Data.Dungeons.Count}");
+			dungeons = npc.Data.Dungeons;
+		}
+
 		public override void UpdateUI()
 		{
-			// if (someData == null)
-			//	return;
-
-			_dungeonDatas = new();
-			// for (int i = 0; i < someData.Length; i++)
-			{
-				if (DataManager.Instance.DungeonDic.TryGetValue(0, out Dungeon dungeon))
-					_dungeonDatas.Add(dungeon);
-			}
-
 			for (int i = 0; i < dungeonSelectButtons.Length; i++)
-				dungeonSelectButtons[i].SetActive(_dungeonDatas.Count > i);
+				dungeonSelectButtons[i].SetActive(dungeons.Count > i);
 
 			SelectDungeon(0);
 		}
 
 		public void SelectDungeon(int index)
 		{
-			_curDungeonIndex = index;
+			curDungeonIndex = index;
 			UpdateDungeonPanel();
 		}
 
 		private void UpdateDungeonPanel()
 		{
-			Dungeon curDungeon = _dungeonDatas[_curDungeonIndex];
+			// Debug.Log($"UpdateDungeonPanel: {curDungeonIndex}, {dungeons.Count}");
+			if (dungeons.Count <= curDungeonIndex)
+			{
+				Debug.LogWarning("Invalid Dungeon Index");
+				return;
+			}
+
+			Dungeon curDungeon = dungeons[curDungeonIndex];
 
 			dungeonNameText.text = curDungeon.Name;
 			dungeonDescriptionText.text = curDungeon.Description;
@@ -48,11 +51,13 @@ namespace Mascari4615
 
 		public void EnterTheDungeon()
 		{
-			DungeonManager.Instance.StartDungeon(_dungeonDatas[_curDungeonIndex]);
-		}
+			if (dungeons.Count <= curDungeonIndex)
+			{
+				Debug.LogWarning("Invalid Dungeon Index");
+				return;
+			}
 
-		public override void SetNPC(NPCObject npc)
-		{
+			DungeonManager.Instance.StartDungeon(dungeons[curDungeonIndex]);
 		}
 	}
 }

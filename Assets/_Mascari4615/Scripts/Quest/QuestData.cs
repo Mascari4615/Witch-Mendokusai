@@ -44,27 +44,6 @@ namespace Mascari4615
 
 		[field: NonSerialized] public QuestDataState State { get; private set; }
 
-		public QuestData(QuestData questData)
-		{
-			ID = questData.ID;
-			Name = questData.Name;
-			Description = questData.Description;
-			Sprite = questData.Sprite;
-
-			Type = questData.Type;
-			GameEvents = questData.GameEvents;
-			Criterias = questData.Criterias;
-			CompleteEffects = questData.CompleteEffects;
-			RewardEffects = questData.RewardEffects;
-			Rewards = questData.Rewards;
-
-			WorkTime = questData.WorkTime;
-			AutoWork = questData.AutoWork;
-			AutoComplete = questData.AutoComplete;
-
-			State = QuestDataState.Locked;
-		}
-
 		public void Unlock()
 		{
 			State = QuestDataState.Unlocked;

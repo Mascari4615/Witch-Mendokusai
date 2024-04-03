@@ -46,7 +46,7 @@ namespace Mascari4615
 		private void ShowArtifact(ClickEvent evt) => UpdateTooltip();
 		private void UpdateTooltip()
 		{
-			MArtifact.Instance.SelectArifactSlot(this);
+			MArtifact.Instance.SelectArtifactSlot(this);
 		}
 	}
 }

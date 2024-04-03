@@ -48,7 +48,7 @@ namespace Mascari4615
 		public Dictionary<int, MArtifactSlot> ArtifactSlots { get; private set; } = new();
 		public MArtifactSlot CurSlot { get; private set; }
 
-		private readonly Dictionary<Type, Dictionary<int, Artifact>> dataDics = new();
+		private readonly Dictionary<Type, Dictionary<int, Artifact>> dataByType = new();
 		private List<Artifact> badIDArtifacts = new();
 
 		private Type CurType { get; set; } = typeof(QuestData);
@@ -91,7 +91,7 @@ namespace Mascari4615
 			});
 
 			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
-			foreach (Type type in dataDics.Keys)
+			foreach (Type type in dataByType.Keys)
 			{
 				Button button = new() { text = type.Name, };
 				button.clicked += () => SetType(type);
@@ -113,28 +113,28 @@ namespace Mascari4615
 			// 	};
 			// };
 
-			SelectArifactSlot(ArtifactSlots.Values.First());
+			SelectArtifactSlot(ArtifactSlots.Values.First());
 
 			Selection.selectionChanged += () =>
 			{
-				Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
+				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
 				
 				if (Selection.activeObject is Artifact artifact)
 				{
 					Type type = artifact.GetType();
 
-					while (type != typeof(Artifact) && dataDics.ContainsKey(type) == false)
+					while (type != typeof(Artifact) && dataByType.ContainsKey(type) == false)
 						type = type.BaseType;
 
 					if (type == typeof(Artifact))
 						return;
 
-					if (dataDics[type].ContainsKey(artifact.ID) == false)
+					if (dataByType[type].ContainsKey(artifact.ID) == false)
 						return;
 
 					SetType(type);
 					MArtifactSlot slot = ArtifactSlots[artifact.ID];
-					SelectArifactSlot(slot);
+					SelectArtifactSlot(slot);
 				}
 			};
 		}
@@ -147,7 +147,7 @@ namespace Mascari4615
 			grid.Clear();
 			for (int i = 0; i < ID_MAX; i++)
 			{
-				if (dataDics[CurType].TryGetValue(i, out Artifact artifact))
+				if (dataByType[CurType].TryGetValue(i, out Artifact artifact))
 				{
 					MArtifactSlot slot = new(artifact);
 					ArtifactSlots.Add(i, slot);
@@ -217,7 +217,7 @@ namespace Mascari4615
 			{
 				Dictionary<int, Artifact> dic = new();
 				InitDic<T>(ref dic, SCRIPTABLE_OBJECTS_DIR, badArtifactList: badIDArtifacts);
-				dataDics.Add(typeof(T), dic);
+				dataByType.Add(typeof(T), dic);
 			}
 
 			void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<Artifact> badArtifactList = null) where T : Artifact
@@ -269,7 +269,7 @@ namespace Mascari4615
 
 		public Artifact AddArtifact(Type type)
 		{
-			Dictionary<int, Artifact> dic = dataDics[type];
+			Dictionary<int, Artifact> dic = dataByType[type];
 
 			string nName = type.Name;
 			// 사용되지 않은 ID를 찾는다.
@@ -288,14 +288,14 @@ namespace Mascari4615
 			dic.Add(nID, newArtifact);
 
 			UpdateGrid();
-			SelectArifactSlot(ArtifactSlots[nID]);
+			SelectArtifactSlot(ArtifactSlots[nID]);
 			return newArtifact;
 		}
 
 		public Artifact DuplicateArtifact(Artifact artifact)
 		{
 			Type type = artifact.GetType();
-			Dictionary<int, Artifact> dic = dataDics[type];
+			Dictionary<int, Artifact> dic = dataByType[type];
 
 			string nName = artifact.Name + " Copy";
 			// 사용되지 않은 ID를 찾는다.
@@ -314,14 +314,14 @@ namespace Mascari4615
 			dic.Add(nID, newArtifact);
 
 			UpdateGrid();
-			SelectArifactSlot(ArtifactSlots[nID]);
+			SelectArtifactSlot(ArtifactSlots[nID]);
 			return newArtifact;
 		}
 
 		public void DeleteArtifact(Artifact artifact)
 		{
 			Type type = artifact.GetType();
-			Dictionary<int, Artifact> dic = dataDics[type];
+			Dictionary<int, Artifact> dic = dataByType[type];
 
 			int id = artifact.ID;
 			dic.Remove(artifact.ID);
@@ -329,7 +329,7 @@ namespace Mascari4615
 
 			UpdateGrid();
 
-			SelectArifactSlot(GetNearSlot(id));
+			SelectArtifactSlot(GetNearSlot(id));
 		}
 
 		private MArtifactSlot GetNearSlot(int startID)
@@ -351,7 +351,7 @@ namespace Mascari4615
 			return slot;
 		}
 
-		public void SelectArifactSlot(MArtifactSlot slot)
+		public void SelectArtifactSlot(MArtifactSlot slot)
 		{
 			MArtifactSlot oldSlot = CurSlot;
 			CurSlot = slot;

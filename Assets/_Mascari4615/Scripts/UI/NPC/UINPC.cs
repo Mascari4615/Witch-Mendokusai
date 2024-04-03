@@ -103,7 +103,7 @@ namespace Mascari4615
 			canvasGroup.blocksRaycasts = false;
 
 			NPC curNPCData = curNPC.UnitData as NPC;
-			List<QuestData> questDatas = curNPCData.QuestDatas;
+			List<QuestData> questDatas = curNPCData.QuestData;
 			for (int i = 0; i < questOptions.Length; i++)
 			{
 				if (i < questDatas.Count)
@@ -169,7 +169,7 @@ namespace Mascari4615
 		private void SelectQuest(int index)
 		{
 			NPC curNPCData = curNPC.UnitData as NPC;
-			List<QuestData> questDatas = curNPCData.QuestDatas;
+			List<QuestData> questDatas = curNPCData.QuestData;
 			QuestData questData = questDatas[index];
 
 			switch (questData.State)
