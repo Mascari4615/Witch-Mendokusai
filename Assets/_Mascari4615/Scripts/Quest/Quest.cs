@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -24,7 +25,7 @@ namespace Mascari4615
 
 		public QuestData GetData()
 		{
-			return DataManager.Instance.QuestDic[DataID];
+			return GetQuest(DataID);
 		}
 		private QuestData Data => GetData();
 

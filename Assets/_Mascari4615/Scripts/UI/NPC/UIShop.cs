@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -47,7 +48,7 @@ namespace Mascari4615
 
 		public void BuyItem(int itemID)
 		{
-			ItemData itemData = DataManager.Instance.ItemDic[itemID];
+			ItemData itemData = GetItemData(itemID);
 			if (itemData.PurchasePrice <= SOManager.Instance.Nyang.RuntimeValue)
 			{
 				SOManager.Instance.Nyang.RuntimeValue -= itemData.PurchasePrice;

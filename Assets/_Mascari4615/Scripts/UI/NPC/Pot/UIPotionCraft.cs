@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -30,7 +31,7 @@ namespace Mascari4615
 			string key = string.Join(',', recipeToList);
 			if (DataManager.Instance.CraftDic.ContainsKey(key) == false)
 				return;
-			ItemData resultItemData = DataManager.Instance.ItemDic[DataManager.Instance.CraftDic[key]];
+			ItemData resultItemData = GetItemData(DataManager.Instance.CraftDic[key]);
 
 			// Make Potion
 			if (resultSlot.Artifact)

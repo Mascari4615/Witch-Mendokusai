@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 using System.IO;
 using Newtonsoft.Json;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -14,20 +15,7 @@ namespace Mascari4615
 	{
 		private SOManager SOManager;
 
-		public readonly Dictionary<int, QuestData> QuestDic = new();
-		public readonly Dictionary<int, Doll> DollDic = new();
-		public readonly Dictionary<int, NPC> NPCDic = new();
-		public readonly Dictionary<int, Dungeon> DungeonDic = new();
-		public readonly Dictionary<int, ItemData> ItemDic = new();
-		public readonly Dictionary<int, ItemData> PotionDic = new();
-		public readonly Dictionary<int, ItemData> CommonItemDic = new();
-		public readonly Dictionary<int, ItemData> UncommonItemDic = new();
-		public readonly Dictionary<int, ItemData> RareItemDic = new();
-		public readonly Dictionary<int, ItemData> LegendItemDic = new();
-		public readonly Dictionary<int, WorldStage> WorldStageDic = new();
-		public readonly Dictionary<int, Card> CardDic = new();
 		public readonly Dictionary<string, int> CraftDic = new();
-		public readonly Dictionary<int, string> StatDic = new();
 
 		public bool IsInited { get; private set; }
 		public int CurDollID;
@@ -51,55 +39,18 @@ namespace Mascari4615
 			WorkManager = new();
 			QuestManager = new();
 
-			foreach (ItemData item in SOManager.Items)
+			ForEach<ItemData>(itemData => 
 			{
-				ItemDic.Add(item.ID, item);
-				switch (item.Grade)
-				{
-					case Grade.Common:
-						CommonItemDic.Add(item.ID, item);
-						break;
-					case Grade.Uncommon:
-						UncommonItemDic.Add(item.ID, item);
-						break;
-					case Grade.Rare:
-						RareItemDic.Add(item.ID, item);
-						break;
-					case Grade.Legendary:
-						LegendItemDic.Add(item.ID, item);
-						break;
-					default:
-						throw new ArgumentOutOfRangeException();
-				}
-			}
+				if (itemData.Recipes == null)
+					return;
 
-			foreach (ItemData item in SOManager.Items)
-			{
-				if (item.Recipes == null)
-					continue;
-
-				foreach (Recipe recipe in item.Recipes)
+				foreach (Recipe recipe in itemData.Recipes)
 				{
 					List<int> recipeToList = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
 					recipeToList.Sort();
-					CraftDic.Add(string.Join(',', recipeToList), item.ID);
+					CraftDic.Add(string.Join(',', recipeToList), itemData.ID);
 				}
-			}
-
-			foreach (WorldStage stage in SOManager.WorldStages)
-				WorldStageDic.Add(stage.ID, stage);
-
-			foreach (Doll doll in SOManager.Dolls)
-				DollDic.Add(doll.ID, doll);
-			foreach (NPC npc in SOManager.NPCs)
-				NPCDic.Add(npc.ID, npc);
-			foreach (Dungeon dungeon in SOManager.Dungeons)
-				DungeonDic.Add(dungeon.ID, dungeon);
-			foreach (QuestData quest in SOManager.Quests)
-				QuestDic.Add(quest.ID, quest);
-
-			foreach (Card card in SOManager.CardDataBuffer.InitItems)
-				CardDic.Add(card.ID, card);
+			});
 
 			if (UseLocalData)
 			{
@@ -148,7 +99,7 @@ namespace Mascari4615
 			};
 
 			// 아이템(장비) 초기화
-			Doll defaultDoll = DollDic[0];
+			Doll defaultDoll = GetDoll(0);
 			defaultDoll.EquipmentGuids.Clear();
 
 			Inventory inventory = SOManager.ItemInventory;
@@ -164,13 +115,12 @@ namespace Mascari4615
 			newGameData.itemInventoryItems = inventory.Save();
 
 			// 장비 초기화 이후 저장
-			foreach (var d in DollDic)
+			ForEach<Doll>(doll =>
 			{
-				if (d.Value.ID != 0)
-					newGameData.dollDataList.Add(d.Value.Save());
-			}
-			foreach (var q in QuestDic)
-				newGameData.questDataList.Add(q.Value.Save());
+				if (doll.ID != 0)
+					newGameData.dollDataList.Add(doll.Save());
+			});
+			ForEach<QuestData>(questData => newGameData.questDataList.Add(questData.Save()));
 
 			SaveData();
 			LoadData(newGameData);
@@ -191,18 +141,18 @@ namespace Mascari4615
 			SOManager.DollBuffer.Clear();
 			foreach (DollData dollData in saveData.dollDataList)
 			{
-				DollDic[dollData.DollID].Load(dollData);
-				SOManager.DollBuffer.Add(DollDic[dollData.DollID]);
+				GetDoll(dollData.DollID).Load(dollData);
+				SOManager.DollBuffer.Add(GetDoll(dollData.DollID));
 			}
 			for (int i = 0; i < saveData.dummyDollCount - 1; i++)
-				SOManager.DollBuffer.Add(DollDic[Doll.DUMMY_ID]);
+				SOManager.DollBuffer.Add(GetDoll(Doll.DUMMY_ID));
 
 			// 퀘스트 초기화
 			foreach (QuestDataSave questData in saveData.questDataList)
 			{
-				QuestDic[questData.QuestID].Load(questData);
+				GetQuest(questData.QuestID).Load(questData);
 				if (questData.State >= QuestDataState.Unlocked)
-					SOManager.QuestDataBuffer.Add(QuestDic[questData.QuestID]);
+					SOManager.QuestDataBuffer.Add(GetQuest(questData.QuestID));
 			}
 
 			// 작업 초기화
@@ -226,10 +176,8 @@ namespace Mascari4615
 				statistics = SOManager.Statistics.Save()
 			};
 
-			foreach (var d in DollDic)
-				gameData.dollDataList.Add(d.Value.Save());
-			foreach (var q in QuestDic)
-				gameData.questDataList.Add(q.Value.Save());
+			ForEach<Doll>(doll => gameData.dollDataList.Add(doll.Save()));
+			ForEach<QuestData>(questData => gameData.questDataList.Add(questData.Save()));
 
 			if (UseLocalData)
 			{
@@ -255,23 +203,11 @@ namespace Mascari4615
 			_ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
 		};
 
-		public int GetRandomItemID() =>
-			GetRandomItemID((Grade)Random.Range(0, 4));
-
-		public int GetRandomItemID(Grade grade) => grade switch
-		{
-			Grade.Common => CommonItemDic.ElementAt(Random.Range(0, CommonItemDic.Count)).Value.ID,
-			Grade.Uncommon => UncommonItemDic.ElementAt(Random.Range(0, UncommonItemDic.Count)).Value.ID,
-			Grade.Rare => RareItemDic.ElementAt(Random.Range(0, RareItemDic.Count)).Value.ID,
-			Grade.Legendary => LegendItemDic.ElementAt(Random.Range(0, LegendItemDic.Count)).Value.ID,
-			_ => throw new ArgumentOutOfRangeException(nameof(Grade), grade, null)
-		};
-
 		private void OnApplicationQuit() => SaveData();
 
 		public EquipmentData GetEquipment(int dollID, int equipmentIndex)
 		{
-			List<Guid?> guids = DollDic[dollID].EquipmentGuids;
+			List<Guid?> guids = GetDoll(dollID).EquipmentGuids;
 
 			if (guids.Count <= equipmentIndex)
 				return null;

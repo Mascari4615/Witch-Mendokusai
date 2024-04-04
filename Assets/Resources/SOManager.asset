@@ -78,7 +78,10 @@ MonoBehaviour:
   <CardDataBuffer>k__BackingField: {fileID: 11400000, guid: d3bf6c29ed2b8814691c55729ba835a6, type: 2}
   <SelectedCardBuffer>k__BackingField: {fileID: 11400000, guid: f13c31923217cf246898171312ed6c19, type: 2}
   <VQuestLoadQuest>k__BackingField: {fileID: 11400000, guid: d8833ad6264114a4a9063683bb2db8bc, type: 2}
-  <DungeonConstraints>k__BackingField: []
+  <DungeonConstraints>k__BackingField:
+  - {fileID: 11400000, guid: c5df60f552d80b54786d60d96c339214, type: 2}
+  - {fileID: 11400000, guid: fc549d676aeac8044bf686b52196e891, type: 2}
+  - {fileID: 11400000, guid: 2d63efb33b5a0ef45b4d6d2077774871, type: 2}
   <WorldStages>k__BackingField:
   - {fileID: 11400000, guid: 9be0868af3c253b4d8d59d7a55a26dcc, type: 2}
   - {fileID: 11400000, guid: a9e3b44cff83bad47852b0e937ec9340, type: 2}

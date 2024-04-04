@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -41,7 +42,7 @@ namespace Mascari4615
 					switch (datas[i].Type)
 					{
 						case RewardType.Item:
-							ItemData itemData = DataManager.Instance.ItemDic[datas[i].ArtifactID];
+							ItemData itemData = GetItemData(datas[i].ArtifactID);
 							slots[i].SetSlot(itemData);
 							break;
 						case RewardType.Gold:

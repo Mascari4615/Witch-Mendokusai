@@ -7,6 +7,7 @@ using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -45,7 +46,7 @@ namespace Mascari4615
 			{
 				// HACK: 현재 플레이어가 플레이하고 있는 인형
 				// TODO: 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
-				Unit unit = lineData.unitID == -1 ? DataManager.Instance.DollDic[0] : DataManager.Instance.NPCDic[lineData.unitID];
+				Unit unit = lineData.unitID == -1 ? GetDoll(0) : GetNPC(lineData.unitID);
 				unitID = lineData.unitID;
 				unitImage.sprite = unit.Sprite;
 				unitName.text = unit.Name;

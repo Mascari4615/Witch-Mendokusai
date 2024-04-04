@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = nameof(SOManager), menuName = "SOManager")]
 	public class SOManager : ScriptableObject
 	{
-		[System.NonSerialized] private static SOManager instance;
+		[NonSerialized] private static SOManager instance;
 		public static SOManager Instance
 		{
 			get
@@ -22,9 +23,10 @@ namespace Mascari4615
 		}
 
 		[field: Header("_" + nameof(SOManager))]
+		[field: SerializeField] public Dictionary<Type, Dictionary<int, Artifact>> Artifacts { get; private set; } = new();
+	
 		[field: Space(10), Header("PlayerData")]
 		[field: SerializeField] public Statistics Statistics { get; private set; }
-
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickX { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }
@@ -53,14 +55,9 @@ namespace Mascari4615
 		[field: SerializeField] public GameObjectBuffer MonsterObjectBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer SkillObjectBuffer { get; private set; }
 		[field: SerializeField] public GameObjectBuffer InteractiveObjectBuffer { get; private set; }
-		[field: SerializeField] public List<QuestData> Quests { get; private set; }
 		[field: SerializeField] public QuestDataBuffer QuestDataBuffer { get; private set; }
 		[field: SerializeField] public QuestBuffer QuestBuffer { get; private set; }
-		[field: SerializeField] public List<Doll> Dolls { get; private set; }
-		[field: SerializeField] public List<NPC> NPCs { get; private set; }
 		[field: SerializeField] public DollBuffer DollBuffer { get; private set; }
-		[field: SerializeField] public List<Dungeon> Dungeons { get; private set; }
-		[field: SerializeField] public List<ItemData> Items { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
 		[field: SerializeField] public Inventory ShopInventory { get; private set; }
@@ -68,8 +65,6 @@ namespace Mascari4615
 		[field: SerializeField] public CardBuffer CardDataBuffer { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
 		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
-		[field: SerializeField] public List<DungeonConstraint> DungeonConstraints { get; private set; }
-		[field: SerializeField] public List<WorldStage> WorldStages { get; private set; }
 
 		[field: Space(10), Header(nameof(GameEvent))]
 		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }

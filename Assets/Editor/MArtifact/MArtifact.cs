@@ -25,6 +25,7 @@ namespace Mascari4615
 			{ typeof(WorldStage), "WS" },
 			{ typeof(Dungeon), "D" },
 			{ typeof(DungeonStage), "DS" },
+			{ typeof(DungeonConstraint), "DC" },
 			{ typeof(Doll), "DOL" },
 			{ typeof(NPC), "NPC" },
 			{ typeof(Monster), "MOB" },
@@ -41,6 +42,7 @@ namespace Mascari4615
 			{ typeof(WorldStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(WorldStage)}/" },
 			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
 			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
+			{ typeof(DungeonConstraint), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonConstraint)}/" },
 			{ typeof(Doll), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Doll)}/" },
 			{ typeof(NPC), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(NPC)}/" },
 			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Monster)}/" },
@@ -52,10 +54,11 @@ namespace Mascari4615
 		public Dictionary<int, MArtifactSlot> ArtifactSlots { get; private set; } = new();
 		public MArtifactSlot CurSlot { get; private set; }
 
-		private readonly Dictionary<Type, Dictionary<int, Artifact>> dataByType = new();
+		private Dictionary<Type, Dictionary<int, Artifact>> artifacts;
 		private List<Artifact> badIDArtifacts = new();
 
 		private Type CurType { get; set; } = typeof(QuestData);
+
 
 		[MenuItem("Mascari4615/MArtifact")]
 		public static void ShowMArtifact()
@@ -66,8 +69,12 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			// Debug.Log("OnEnable is executed.");
+			Debug.Log("OnEnable is executed.");
 			Instance = this;
+
+			SOManager soManager = Resources.Load(typeof(SOManager).Name) as SOManager;
+			artifacts = soManager.Artifacts;
+			artifacts.Clear();
 
 			InitList();
 			InitDic();
@@ -75,8 +82,8 @@ namespace Mascari4615
 
 		public void CreateGUI()
 		{
-			// Debug.Log("CreateGUI is executed.");
-			
+			Debug.Log("CreateGUI is executed.");
+
 			VisualElement root = rootVisualElement;
 			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifact.uxml");
 
@@ -95,7 +102,7 @@ namespace Mascari4615
 			});
 
 			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
-			foreach (Type type in dataByType.Keys)
+			foreach (Type type in artifacts.Keys)
 			{
 				Button button = new() { text = type.Name, };
 				button.clicked += () => SetType(type);
@@ -127,13 +134,13 @@ namespace Mascari4615
 				{
 					Type type = artifact.GetType();
 
-					while (type != typeof(Artifact) && dataByType.ContainsKey(type) == false)
+					while (type != typeof(Artifact) && artifacts.ContainsKey(type) == false)
 						type = type.BaseType;
 
 					if (type == typeof(Artifact))
 						return;
 
-					if (dataByType[type].ContainsKey(artifact.ID) == false)
+					if (artifacts[type].ContainsKey(artifact.ID) == false)
 						return;
 
 					SetType(type);
@@ -151,7 +158,7 @@ namespace Mascari4615
 			grid.Clear();
 			for (int i = 0; i < ID_MAX; i++)
 			{
-				if (dataByType[CurType].TryGetValue(i, out Artifact artifact))
+				if (artifacts[CurType].TryGetValue(i, out Artifact artifact))
 				{
 					MArtifactSlot slot = new(artifact);
 					ArtifactSlots.Add(i, slot);
@@ -215,6 +222,7 @@ namespace Mascari4615
 			Temp<WorldStage>();
 			Temp<Dungeon>();
 			Temp<DungeonStage>();
+			Temp<DungeonConstraint>();
 			Temp<Doll>();
 			Temp<NPC>();
 			Temp<Monster>();
@@ -223,7 +231,7 @@ namespace Mascari4615
 			{
 				Dictionary<int, Artifact> dic = new();
 				InitDic<T>(ref dic, SCRIPTABLE_OBJECTS_DIR, badArtifactList: badIDArtifacts);
-				dataByType.Add(typeof(T), dic);
+				artifacts.Add(typeof(T), dic);
 			}
 
 			void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<Artifact> badArtifactList = null) where T : Artifact
@@ -278,7 +286,7 @@ namespace Mascari4615
 
 		public Artifact AddArtifact(Type type)
 		{
-			Dictionary<int, Artifact> dic = dataByType[type];
+			Dictionary<int, Artifact> dic = artifacts[type];
 
 			string nName = type.Name;
 			// 사용되지 않은 ID를 찾는다.
@@ -304,7 +312,7 @@ namespace Mascari4615
 		public Artifact DuplicateArtifact(Artifact artifact)
 		{
 			Type type = artifact.GetType();
-			Dictionary<int, Artifact> dic = dataByType[type];
+			Dictionary<int, Artifact> dic = artifacts[type];
 
 			string nName = artifact.Name + " Copy";
 			// 사용되지 않은 ID를 찾는다.
@@ -330,7 +338,7 @@ namespace Mascari4615
 		public void DeleteArtifact(Artifact artifact)
 		{
 			Type type = artifact.GetType();
-			Dictionary<int, Artifact> dic = dataByType[type];
+			Dictionary<int, Artifact> dic = artifacts[type];
 
 			int id = artifact.ID;
 			dic.Remove(artifact.ID);

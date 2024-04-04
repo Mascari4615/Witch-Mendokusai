@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -43,7 +44,7 @@ namespace Mascari4615
 			switch (reward.Type)
 			{
 				case RewardType.Item:
-					ItemData itemData = DataManager.Instance.ItemDic[reward.ArtifactID];
+					ItemData itemData = GetItemData(reward.ArtifactID);
 					SOManager.Instance.ItemInventory.Add(itemData, reward.Amount);
 					break;
 				case RewardType.Gold:

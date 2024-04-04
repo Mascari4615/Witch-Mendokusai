@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -283,7 +284,7 @@ namespace Mascari4615
 			{
 				RuntimeItems[itemData.slotIndex] = new Item(
 					itemData.Guid,
-					DataManager.Instance.ItemDic[itemData.itemID],
+					SOHelper.GetItemData(itemData.itemID),
 					itemData.itemAmount);
 			}
 		}

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -48,8 +49,8 @@ namespace Mascari4615
 							criteriaName = intCriteria.IntVariable.Name;
 							break;
 						case ItemCountCriteria itemCountCriteria:
-							criteriaSprite = DataManager.Instance.ItemDic[itemCountCriteria.ItemID].Sprite;
-							criteriaName = DataManager.Instance.ItemDic[itemCountCriteria.ItemID].Name;
+							criteriaSprite = GetItemData(itemCountCriteria.ItemID).Sprite;
+							criteriaName = GetItemData(itemCountCriteria.ItemID).Name;
 							break;
 						case StatCriteria statCriteria:
 							// HACK
