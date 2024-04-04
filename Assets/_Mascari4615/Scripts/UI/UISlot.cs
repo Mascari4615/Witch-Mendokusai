@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
 namespace Mascari4615
 {
@@ -80,6 +81,7 @@ namespace Mascari4615
 		private Action<UISlot> selectAction;
 
 		private bool isInit = false;
+		private bool isDisable = false;
 
 		public Artifact Artifact => Data.Artifact;
 
@@ -90,6 +92,8 @@ namespace Mascari4615
 			isInit = true;
 
 			button = GetComponent<Button>();
+			if (button)
+				button.onClick.AddListener(Select);
 
 			iconImage = transform.Find("[Image] IconBackground").Find("[Image] Icon").GetComponent<Image>();
 			disableImage = transform.Find("[Image] Disable").GetComponent<Image>();
@@ -149,8 +153,7 @@ namespace Mascari4615
 
 		public void SetDisable(bool isDisable)
 		{
-			if (button)
-				button.interactable = !isDisable;
+			this.isDisable = isDisable;
 			disableImage.gameObject.SetActive(isDisable);
 		}
 
@@ -163,6 +166,9 @@ namespace Mascari4615
 		{
 			// Debug.Log("Select");
 			selectAction?.Invoke(this);
+
+			if (ToolTipTrigger)
+				ToolTipTrigger.Click();
 		}
 
 		public void SetSelected(bool isSelect)
