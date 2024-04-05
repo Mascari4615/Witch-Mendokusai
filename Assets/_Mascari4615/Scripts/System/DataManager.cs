@@ -74,6 +74,7 @@ namespace Mascari4615
 		private void Start()
 		{
 			TimeManager.Instance.AddCallback(WorkManager.TickEachWorks);
+			PlayerController.Instance.PlayerObject.Init(GetDoll(CurDollID));
 		}
 
 		public void CreateNewGameData()

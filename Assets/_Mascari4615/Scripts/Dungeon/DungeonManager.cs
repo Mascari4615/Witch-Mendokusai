@@ -5,6 +5,7 @@ using Cinemachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -55,7 +56,7 @@ namespace Mascari4615
 				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
 
-				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
+				PlayerController.Instance.PlayerObject.Init(GetDoll(DataManager.Instance.CurDollID));
 				expChecker.Init();
 				cardManager.Init();
 				
