@@ -66,13 +66,13 @@ namespace Mascari4615
 				// cardSelectAction: (slot) => { SelectCard(cardSlots[i].Atrifact as Card); }
 				// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈
 
-				deckUIDic[equipment.ID].Init(cardSelectAction: (slot) => { SelectCard(slot.Artifact as Card); });
+				deckUIDic[equipment.ID].Init(cardSelectAction: (slot) => { SelectCard(slot.DataSO as Card); });
 
 				deckSelectButtons[i].SetSlotIndex(i);
 				deckSelectButtons[i].SetSlot(equipment);
 				deckSelectButtons[i].SetSelectAction((slot) => { SelectDeck(slot.Index); });
 
-				cardSelectButtons[i].SetSelectAction((slot) => { SelectCard(slot.Artifact as Card); });
+				cardSelectButtons[i].SetSelectAction((slot) => { SelectCard(slot.DataSO as Card); });
 			}
 		}
 
@@ -99,23 +99,23 @@ namespace Mascari4615
 				return;
 			}
 
-			List<Card> randomMasteries = new();
-			while (randomMasteries.Count < 3)
+			List<Card> randomCards = new();
+			while (randomCards.Count < 3)
 			{
 				int randomIndex = Random.Range(0, curDeckBuffer.Count);
 				Card randomCard = curDeckBuffer[randomIndex];
 
-				if (randomMasteries.Contains(randomCard))
+				if (randomCards.Contains(randomCard))
 					continue;
 
-				cardSelectButtons[randomMasteries.Count].SetSlot(randomCard);
-				randomMasteries.Add(randomCard);
+				cardSelectButtons[randomCards.Count].SetSlot(randomCard);
+				randomCards.Add(randomCard);
 			}
 
 			ChangeState(CardUIState.SelectCard);
 
 			int equipmentID = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, deckIndex).ID;
-			deckUIDic[equipmentID].UpdateUI(randomMasteries);
+			deckUIDic[equipmentID].UpdateUI(randomCards);
 			deckUIDic[equipmentID].gameObject.SetActive(true);
 		}
 

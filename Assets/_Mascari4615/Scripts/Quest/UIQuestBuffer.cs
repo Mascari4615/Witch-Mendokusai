@@ -75,7 +75,7 @@ namespace Mascari4615
 				}
 			}
 
-			if (CurSlot.Artifact)
+			if (CurSlot.DataSO)
 			{
 				workButton.SetActive(CurQuest.State == QuestState.CanWork);
 				rewardButton.SetActive(CurQuest.State == QuestState.CanComplete);

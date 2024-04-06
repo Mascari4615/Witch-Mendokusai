@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MArtifact : EditorWindow
+	public class MDataSO : EditorWindow
 	{
 		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
 		private const int ID_MAX = 10_000_000;
@@ -48,23 +48,23 @@ namespace Mascari4615
 			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Monster)}/" },
 		};
 
-		public static MArtifact Instance { get; private set; }
+		public static MDataSO Instance { get; private set; }
 
-		public MArtifactDetail MArtifactDetail { get; private set; }
-		public Dictionary<int, MArtifactSlot> ArtifactSlots { get; private set; } = new();
-		public MArtifactSlot CurSlot { get; private set; }
+		public MDataSODetail MDataSODetail { get; private set; }
+		public Dictionary<int, MDataSOSlot> DataSOSlots { get; private set; } = new();
+		public MDataSOSlot CurSlot { get; private set; }
 
-		private Dictionary<Type, Dictionary<int, Artifact>> artifacts;
-		private List<Artifact> badIDArtifacts = new();
+		private Dictionary<Type, Dictionary<int, DataSO>> dataSOs;
+		private List<DataSO> badIDDataSOs = new();
 
 		private Type CurType { get; set; } = typeof(QuestData);
 
 
-		[MenuItem("Mascari4615/MArtifact")]
-		public static void ShowMArtifact()
+		[MenuItem("Mascari4615/MDataSO")]
+		public static void ShowMDataSO()
 		{
-			MArtifact wnd = GetWindow<MArtifact>();
-			wnd.titleContent = new GUIContent("MArtifact");
+			MDataSO wnd = GetWindow<MDataSO>();
+			wnd.titleContent = new GUIContent("MDataSO");
 		}
 
 		private void OnEnable()
@@ -73,8 +73,8 @@ namespace Mascari4615
 			Instance = this;
 
 			SOManager soManager = Resources.Load(typeof(SOManager).Name) as SOManager;
-			artifacts = soManager.Artifacts;
-			artifacts.Clear();
+			dataSOs = soManager.DataSOs;
+			dataSOs.Clear();
 
 			InitList();
 			InitDic();
@@ -85,24 +85,24 @@ namespace Mascari4615
 			Debug.Log("CreateGUI is executed.");
 
 			VisualElement root = rootVisualElement;
-			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifact.uxml");
+			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MDataSO/MDataSO.uxml");
 
 			// Instantiate UXML
 			VisualElement labelFromUXML = visualTree.Instantiate();
 			root.Add(labelFromUXML);
 
-			MArtifactDetail = new();
+			MDataSODetail = new();
 
 			UpdateGrid();
 
 			Button addButton = rootVisualElement.Q<Button>(name: "BTN_Add");
 			addButton.RegisterCallback<ClickEvent>(ev =>
 			{
-				AddArtifact(MArtifactDetail.CurArtifact.GetType());
+				AddDataSO(MDataSODetail.CurDataSO.GetType());
 			});
 
 			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
-			foreach (Type type in artifacts.Keys)
+			foreach (Type type in dataSOs.Keys)
 			{
 				Button button = new() { text = type.Name, };
 				button.clicked += () => SetType(type);
@@ -120,32 +120,32 @@ namespace Mascari4615
 			// 	{
 			// 		CurType = types[index];
 			// 		UpdateGrid();
-			// 		MArtifactDetail.UpdateCurArtifact(dataDics[CurType].Values.First());
+			// 		MDataSODetail.UpdateCurDataSO(dataDics[CurType].Values.First());
 			// 	};
 			// };
 
-			SelectArtifactSlot(ArtifactSlots.Values.First());
+			SelectDataSOSlot(DataSOSlots.Values.First());
 
 			Selection.selectionChanged += () =>
 			{
 				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
 				
-				if (Selection.activeObject is Artifact artifact)
+				if (Selection.activeObject is DataSO dataSO)
 				{
-					Type type = artifact.GetType();
+					Type type = dataSO.GetType();
 
-					while (type != typeof(Artifact) && artifacts.ContainsKey(type) == false)
+					while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
 						type = type.BaseType;
 
-					if (type == typeof(Artifact))
+					if (type == typeof(DataSO))
 						return;
 
-					if (artifacts[type].ContainsKey(artifact.ID) == false)
+					if (dataSOs[type].ContainsKey(dataSO.ID) == false)
 						return;
 
 					SetType(type);
-					MArtifactSlot slot = ArtifactSlots[artifact.ID];
-					SelectArtifactSlot(slot);
+					MDataSOSlot slot = DataSOSlots[dataSO.ID];
+					SelectDataSOSlot(slot);
 				}
 			};
 		}
@@ -153,15 +153,15 @@ namespace Mascari4615
 		private void UpdateGrid()
 		{
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			ArtifactSlots = new();
+			DataSOSlots = new();
 
 			grid.Clear();
 			for (int i = 0; i < ID_MAX; i++)
 			{
-				if (artifacts[CurType].TryGetValue(i, out Artifact artifact))
+				if (dataSOs[CurType].TryGetValue(i, out DataSO dataSO))
 				{
-					MArtifactSlot slot = new(artifact);
-					ArtifactSlots.Add(i, slot);
+					MDataSOSlot slot = new(dataSO);
+					DataSOSlots.Add(i, slot);
 					grid.Add(slot.VisualElement);
 				}
 			}
@@ -211,7 +211,7 @@ namespace Mascari4615
 
 		private void InitDic()
 		{
-			badIDArtifacts = new();
+			badIDDataSOs = new();
 
 			Temp<QuestData>();
 			Temp<Card>();
@@ -227,14 +227,14 @@ namespace Mascari4615
 			Temp<NPC>();
 			Temp<Monster>();
 
-			void Temp<T>() where T : Artifact
+			void Temp<T>() where T : DataSO
 			{
-				Dictionary<int, Artifact> dic = new();
-				InitDic<T>(ref dic, SCRIPTABLE_OBJECTS_DIR, badArtifactList: badIDArtifacts);
-				artifacts.Add(typeof(T), dic);
+				Dictionary<int, DataSO> dic = new();
+				InitDic<T>(ref dic, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
+				dataSOs.Add(typeof(T), dic);
 			}
 
-			void InitDic<T>(ref Dictionary<int, Artifact> dic, string dirPath, bool searchSubDir = true, List<Artifact> badArtifactList = null) where T : Artifact
+			void InitDic<T>(ref Dictionary<int, DataSO> dic, string dirPath, bool searchSubDir = true, List<DataSO> badDataSOList = null) where T : DataSO
 			{
 				const string extension = ".asset";
 
@@ -259,8 +259,8 @@ namespace Mascari4615
 					{
 						Debug.LogError($"이미 존재하는 키입니다. {file.Name}");
 
-						if (badArtifactList != null)
-							badArtifactList.Add(asset);
+						if (badDataSOList != null)
+							badDataSOList.Add(asset);
 					}
 					else
 					{
@@ -284,9 +284,9 @@ namespace Mascari4615
 			}
 		}
 
-		public Artifact AddArtifact(Type type)
+		public DataSO AddDataSO(Type type)
 		{
-			Dictionary<int, Artifact> dic = artifacts[type];
+			Dictionary<int, DataSO> dic = dataSOs[type];
 
 			string nName = type.Name;
 			// 사용되지 않은 ID를 찾는다.
@@ -297,85 +297,85 @@ namespace Mascari4615
 			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
-			Artifact newArtifact = CreateInstance(type) as Artifact;
-			AssetDatabase.CreateAsset(newArtifact, path);
-			newArtifact.ID = nID;
-			newArtifact.Name = nName;
+			DataSO newDataSO = CreateInstance(type) as DataSO;
+			AssetDatabase.CreateAsset(newDataSO, path);
+			newDataSO.ID = nID;
+			newDataSO.Name = nName;
 
-			dic.Add(nID, newArtifact);
+			dic.Add(nID, newDataSO);
 
 			UpdateGrid();
-			SelectArtifactSlot(ArtifactSlots[nID]);
-			return newArtifact;
+			SelectDataSOSlot(DataSOSlots[nID]);
+			return newDataSO;
 		}
 
-		public Artifact DuplicateArtifact(Artifact artifact)
+		public DataSO DuplicateDataSO(DataSO dataSO)
 		{
-			Type type = artifact.GetType();
-			Dictionary<int, Artifact> dic = artifacts[type];
+			Type type = dataSO.GetType();
+			Dictionary<int, DataSO> dic = dataSOs[type];
 
-			string nName = artifact.Name + " Copy";
+			string nName = dataSO.Name + " Copy";
 			// 사용되지 않은 ID를 찾는다.
-			int nID = artifact.ID + 1;
+			int nID = dataSO.ID + 1;
 			while (dic.ContainsKey(nID))
 				nID++;
 
 			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
-			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(artifact), path);
-			Artifact newArtifact = AssetDatabase.LoadAssetAtPath<Artifact>(path);
-			newArtifact.ID = nID;
-			newArtifact.Name = nName;
+			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(dataSO), path);
+			DataSO newDataSO = AssetDatabase.LoadAssetAtPath<DataSO>(path);
+			newDataSO.ID = nID;
+			newDataSO.Name = nName;
 
-			dic.Add(nID, newArtifact);
-
-			UpdateGrid();
-			SelectArtifactSlot(ArtifactSlots[nID]);
-			return newArtifact;
-		}
-
-		public void DeleteArtifact(Artifact artifact)
-		{
-			Type type = artifact.GetType();
-			Dictionary<int, Artifact> dic = artifacts[type];
-
-			int id = artifact.ID;
-			dic.Remove(artifact.ID);
-			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(artifact));
+			dic.Add(nID, newDataSO);
 
 			UpdateGrid();
-
-			SelectArtifactSlot(GetNearSlot(id));
+			SelectDataSOSlot(DataSOSlots[nID]);
+			return newDataSO;
 		}
 
-		private MArtifactSlot GetNearSlot(int startID)
+		public void DeleteDataSO(DataSO dataSO)
 		{
-			MArtifactSlot slot = null;
+			Type type = dataSO.GetType();
+			Dictionary<int, DataSO> dic = dataSOs[type];
+
+			int id = dataSO.ID;
+			dic.Remove(dataSO.ID);
+			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(dataSO));
+
+			UpdateGrid();
+
+			SelectDataSOSlot(GetNearSlot(id));
+		}
+
+		private MDataSOSlot GetNearSlot(int startID)
+		{
+			MDataSOSlot slot = null;
 			for (int newID = startID; newID < ID_MAX; newID++)
 			{
-				if (ArtifactSlots.TryGetValue(newID, out slot))
+				if (DataSOSlots.TryGetValue(newID, out slot))
 					break;
 			}
 			if (slot == null)
 			{
 				for (int newID = startID; newID >= 0; newID--)
 				{
-					if (ArtifactSlots.TryGetValue(newID, out slot))
+					if (DataSOSlots.TryGetValue(newID, out slot))
 						break;
 				}
 			}
 			return slot;
 		}
 
-		public void SelectArtifactSlot(MArtifactSlot slot)
+		public void SelectDataSOSlot(MDataSOSlot slot)
 		{
-			MArtifactSlot oldSlot = CurSlot;
+			MDataSOSlot oldSlot = CurSlot;
 			CurSlot = slot;
 			oldSlot?.UpdateUI();
 			CurSlot.UpdateUI();
 
-			MArtifactDetail.UpdateCurArtifact(slot.Artifact);
+			MDataSODetail.UpdateCurDataSO(slot.DataSO);
 		}
 	}
 }

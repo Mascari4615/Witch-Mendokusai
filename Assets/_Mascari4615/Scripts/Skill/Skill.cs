@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public abstract class Skill : Artifact
+	public abstract class Skill : DataSO
 	{
 		[field: SerializeField] public bool AutoUse { get; set; }
 		[field: SerializeField] public float Cooltime { get; set; }

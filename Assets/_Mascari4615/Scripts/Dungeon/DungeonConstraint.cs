@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "DC_", menuName = "Variable/" + nameof(DungeonConstraint))]
-	public class DungeonConstraint : Artifact
+	public class DungeonConstraint : DataSO
 	{
 		[field:SerializeField] public List<Effect> Effects { get; private set; } = new();
 		[field: NonSerialized] public bool IsSelected { get; private set; } = false;

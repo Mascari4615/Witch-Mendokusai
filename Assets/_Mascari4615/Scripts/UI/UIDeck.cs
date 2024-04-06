@@ -32,7 +32,7 @@ namespace Mascari4615
 
 			foreach (UICardSlot cardSlot in cardSlots)
 			{
-				bool isTargetCard = cardIds.Contains(cardSlot.Artifact.ID);
+				bool isTargetCard = cardIds.Contains(cardSlot.DataSO.ID);
 				cardSlot.SetDisable(!isTargetCard);
 			}
 		}

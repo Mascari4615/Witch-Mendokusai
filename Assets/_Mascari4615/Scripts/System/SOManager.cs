@@ -23,7 +23,7 @@ namespace Mascari4615
 		}
 
 		[field: Header("_" + nameof(SOManager))]
-		[field: SerializeField] public Dictionary<Type, Dictionary<int, Artifact>> Artifacts { get; private set; } = new();
+		[field: SerializeField] public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; } = new();
 	
 		[field: Space(10), Header("PlayerData")]
 		[field: SerializeField] public Statistics Statistics { get; private set; }
@@ -60,9 +60,6 @@ namespace Mascari4615
 		[field: SerializeField] public DollBuffer DollBuffer { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
-		[field: SerializeField] public Inventory ShopInventory { get; private set; }
-		[field: SerializeField] public ItemDataBuffer ShopKeeperItemBuffer { get; private set; }
-		[field: SerializeField] public CardBuffer CardDataBuffer { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
 		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
 

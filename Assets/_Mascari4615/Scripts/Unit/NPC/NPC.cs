@@ -12,14 +12,14 @@ namespace Mascari4615
 		[field: Header("_" + nameof(NPC))]
 		[field: SerializeField] public List<NPCPanelInfo> PanelInfos { get; private set; }
 
-		public List<QuestData> QuestData => GetAllArtifacts(NPCPanelType.Quest).Cast<QuestData>().ToList();
-		public List<Dungeon> Dungeons => GetAllArtifacts(NPCPanelType.DungeonEntrance).Cast<Dungeon>().ToList();
+		public List<QuestData> QuestData => GetAllDataSOs(NPCPanelType.Quest).Cast<QuestData>().ToList();
+		public List<Dungeon> Dungeons => GetAllDataSOs(NPCPanelType.DungeonEntrance).Cast<Dungeon>().ToList();
 
-		private List<Artifact> GetAllArtifacts(NPCPanelType panelType)
+		private List<DataSO> GetAllDataSOs(NPCPanelType panelType)
 		{
 			return PanelInfos
 					.Where(i => i.Type == panelType)
-					.SelectMany(i => i.Artifacts)
+					.SelectMany(i => i.DataSOs)
 					.ToList();
 		}
 

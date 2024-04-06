@@ -42,7 +42,7 @@ namespace Mascari4615
 					switch (datas[i].Type)
 					{
 						case RewardType.Item:
-							ItemData itemData = GetItemData(datas[i].ArtifactID);
+							ItemData itemData = GetItemData(datas[i].DataSOID);
 							slots[i].SetSlot(itemData);
 							break;
 						case RewardType.Gold:

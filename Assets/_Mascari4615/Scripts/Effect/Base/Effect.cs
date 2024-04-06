@@ -13,7 +13,7 @@ namespace Mascari4615
 		Power
 	}
 
-	public abstract class Effect : Artifact
+	public abstract class Effect : DataSO
 	{
 		public abstract void Apply();
 		public abstract void Cancle();

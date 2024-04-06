@@ -9,12 +9,12 @@ namespace Mascari4615
 		[SerializeField] private UISlot slot;
 		[SerializeField] private Animator animator;
 
-		private readonly Queue<Artifact> artifacts = new();
+		private readonly Queue<DataSO> dataSOs = new();
 		private Coroutine coroutine;
 
-		public void Popup(Artifact artifact)
+		public void Popup(DataSO dataSO)
 		{
-			artifacts.Enqueue(artifact);
+			dataSOs.Enqueue(dataSO);
 
 			if (coroutine == null)
 				coroutine = StartCoroutine(PopupCoroutine());
@@ -22,11 +22,11 @@ namespace Mascari4615
 
 		private IEnumerator PopupCoroutine()
 		{
-			while (artifacts.Count > 0)
+			while (dataSOs.Count > 0)
 			{
-				Artifact targetArtifact = artifacts.Dequeue();
+				DataSO targetDataSO = dataSOs.Dequeue();
 
-				slot.SetSlot(targetArtifact);
+				slot.SetSlot(targetDataSO);
 				animator.SetTrigger("POP");
 				yield return new WaitForSecondsRealtime(animator.GetCurrentAnimatorStateInfo(0).length);
 			}

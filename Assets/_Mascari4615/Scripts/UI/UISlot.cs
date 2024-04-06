@@ -9,7 +9,7 @@ namespace Mascari4615
 {
 	public class SlotData
 	{
-		public Artifact Artifact { get; private set; }= null;
+		public DataSO DataSO { get; private set; }= null;
 		public Sprite Sprite{ get; private set; } = null;
 		public string Name { get; private set; }= "";
 		public string Description { get; private set; }= "";
@@ -20,7 +20,7 @@ namespace Mascari4615
 		{
 			if (sprite != null || string.IsNullOrEmpty(name) == false)
 			{
-				Artifact = null;
+				DataSO = null;
 				Sprite = sprite;
 				Name = name;
 				Description = description;
@@ -33,14 +33,14 @@ namespace Mascari4615
 			}
 		}
 
-		public void SetData(Artifact artifact)
+		public void SetData(DataSO dataSO)
 		{
-			if (artifact)
+			if (dataSO)
 			{
-				Artifact = artifact;
-				Sprite = artifact.Sprite;
-				Name = artifact.Name;
-				Description = artifact.Description;
+				DataSO = dataSO;
+				Sprite = dataSO.Sprite;
+				Name = dataSO.Name;
+				Description = dataSO.Description;
 
 				IsEmpty = false;
 			}
@@ -52,7 +52,7 @@ namespace Mascari4615
 
 		public void Init()
 		{
-			Artifact = null;
+			DataSO = null;
 			Sprite = null;
 			Name = "";
 			Description = "";
@@ -68,7 +68,7 @@ namespace Mascari4615
 		public SlotData Data { get; private set; }
 		public int Amount { get; private set; }
 
-		[SerializeField] protected Artifact defaultArtifact;
+		[SerializeField] protected DataSO defaultDataSO;
 
 		protected Button button;
 		protected Image iconImage;
@@ -83,7 +83,7 @@ namespace Mascari4615
 		private bool isInit = false;
 		private bool isDisable = false;
 
-		public Artifact Artifact => Data.Artifact;
+		public DataSO DataSO => Data.DataSO;
 
 		public virtual bool Init()
 		{
@@ -107,19 +107,19 @@ namespace Mascari4615
 
 			Data = new();
 
-			if (defaultArtifact != null)
-				SetSlot(defaultArtifact);
+			if (defaultDataSO != null)
+				SetSlot(defaultDataSO);
 
 			return true;
 		}
 
 		public void SetSlotIndex(int index) => Index = index;
 
-		public void SetSlot(Artifact artifact, int amount = 1)
+		public void SetSlot(DataSO dataSO, int amount = 1)
 		{
 			Init();
 
-			Data.SetData(artifact);
+			Data.SetData(dataSO);
 			Amount = amount;
 
 			if (ToolTipTrigger)

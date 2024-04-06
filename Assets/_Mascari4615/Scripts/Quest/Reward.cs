@@ -15,7 +15,7 @@ namespace Mascari4615
 	public struct RewardInfo
 	{
 		public RewardType Type;
-		public Artifact Artifact;
+		public DataSO DataSO;
 		public int Amount;
 	}
 
@@ -23,13 +23,13 @@ namespace Mascari4615
 	public struct RewardData
 	{
 		public RewardType Type;
-		public int ArtifactID;
+		public int DataSOID;
 		public int Amount;
 
 		public RewardData(RewardInfo rewardInfo)
 		{
 			Type = rewardInfo.Type;
-			ArtifactID = rewardInfo.Artifact ? rewardInfo.Artifact.ID : Artifact.NONE_ID;
+			DataSOID = rewardInfo.DataSO ? rewardInfo.DataSO.ID : DataSO.NONE_ID;
 			Amount = rewardInfo.Amount;
 		}
 	}
@@ -44,7 +44,7 @@ namespace Mascari4615
 			switch (reward.Type)
 			{
 				case RewardType.Item:
-					ItemData itemData = GetItemData(reward.ArtifactID);
+					ItemData itemData = GetItemData(reward.DataSOID);
 					SOManager.Instance.ItemInventory.Add(itemData, reward.Amount);
 					break;
 				case RewardType.Gold:

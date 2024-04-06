@@ -24,7 +24,7 @@ namespace Mascari4615
 				slot.SetSelectAction((slot) =>
 				{
 					shopInventoryUI.SelectSlot(slot.Index);
-					BuyItem(slot.Artifact.ID);
+					BuyItem(slot.DataSO.ID);
 				});
 			}
 
@@ -38,6 +38,10 @@ namespace Mascari4615
 					SellItem(slot.Index);
 				});
 			}
+		}
+
+		public override void SetNPC(NPCObject npc)
+		{
 		}
 
 		public override void UpdateUI()
@@ -67,10 +71,6 @@ namespace Mascari4615
 				SOManager.Instance.ItemInventory.Remove(slotIndex);
 				UpdateUI();
 			}
-		}
-
-		public override void SetNPC(NPCObject npc)
-		{
 		}
 	}
 }

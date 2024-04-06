@@ -16,9 +16,9 @@ namespace Mascari4615
 		{
 			base.UpdateUI();
 
-			if (Artifact)
+			if (DataSO)
 			{
-				QuestData questData = Artifact as QuestData;
+				QuestData questData = DataSO as QuestData;
 				for (int i = 0; i < questDataStateObjects.Length; i++)
 					questDataStateObjects[i].SetActive((int)questData.State == i);
 			}

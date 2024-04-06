@@ -22,7 +22,7 @@ namespace Mascari4615
 			List<int> recipeToList = new(slots.Length);
 			foreach (UIItemSlot slot in slots)
 			{
-				if (slot.Artifact)
+				if (slot.DataSO)
 					recipeToList.Add(craftTableInventory.GetItem(slot.Index).Data.ID);
 			}
 			recipeToList.Sort();
@@ -34,9 +34,9 @@ namespace Mascari4615
 			ItemData resultItemData = GetItemData(DataManager.Instance.CraftDic[key]);
 
 			// Make Potion
-			if (resultSlot.Artifact)
+			if (resultSlot.DataSO)
 			{
-				if (resultSlot.Artifact.ID != resultItemData.ID)
+				if (resultSlot.DataSO.ID != resultItemData.ID)
 					return;
 				else
 					craftTableInventory.SetItemAmount(resultSlot.Index, craftTableInventory.GetItem(resultSlot.Index).Amount + 1);
@@ -50,7 +50,7 @@ namespace Mascari4615
 			// Actual Remove
 			foreach (UIItemSlot slot in slots)
 			{
-				if (slot.Artifact)
+				if (slot.DataSO)
 					craftTableInventory.Remove(slot.Index);
 			}
 		}

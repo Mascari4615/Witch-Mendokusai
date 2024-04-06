@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = "C_", menuName = "Variable/" + nameof(Card))]
-	public class Card : Artifact
+	public class Card : DataSO
 	{
 		[field: Header("_" + nameof(Card))]
 		[field: SerializeField] public Effect[] Effects { get; private set; }

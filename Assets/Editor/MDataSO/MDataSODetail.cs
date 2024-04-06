@@ -9,46 +9,46 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MArtifactDetail
+	public class MDataSODetail
 	{
-		public Artifact CurArtifact { get; private set; }
+		public DataSO CurDataSO { get; private set; }
 
 		private VisualElement root;
 
-		private VisualElement artifactDetail;
-		private VisualElement artifactContent;
+		private VisualElement dataSODetail;
+		private VisualElement dataSOContent;
 
-		public MArtifactDetail()
+		public MDataSODetail()
 		{
 			Init();
 		}
 
 		private void Init()
 		{
-			root = MArtifact.Instance.rootVisualElement;
+			root = MDataSO.Instance.rootVisualElement;
 
-			artifactDetail = root.Q<VisualElement>(name: "ArtifactDetail");
-			artifactContent = root.Q<VisualElement>(name: "ArtifactContent");
+			dataSODetail = root.Q<VisualElement>(name: "DataSODetail");
+			dataSOContent = root.Q<VisualElement>(name: "DataSOContent");
 
 			Button duplicateButton = root.Q<Button>(name: "BTN_Dup");
-			duplicateButton.clicked += DuplicateCurArtifact;
+			duplicateButton.clicked += DuplicateCurDataSO;
 
 			Button deleteButton = root.Q<Button>(name: "BTN_Del");
-			deleteButton.clicked += DeleteCurArtifact;
+			deleteButton.clicked += DeleteCurDataSO;
 		}
 
-		public void UpdateCurArtifact(Artifact artifact)
+		public void UpdateCurDataSO(DataSO dataSO)
 		{
-			CurArtifact = artifact;
+			CurDataSO = dataSO;
 			UpdateUI();
 		}
 
 		public void UpdateUI()
 		{
-			SerializedObject serializedObject = new(CurArtifact);
+			SerializedObject serializedObject = new(CurDataSO);
 
-			// CurArtifact의 모든 프로퍼티를 리플렉션으로 가져오기
-			List<PropertyInfo> propertyInfos = CurArtifact.GetType()
+			// CurDataSO의 모든 프로퍼티를 리플렉션으로 가져오기
+			List<PropertyInfo> propertyInfos = CurDataSO.GetType()
 			.GetProperties()
 			.OrderBy(
 				p =>
@@ -60,8 +60,8 @@ namespace Mascari4615
 						return ((PropertyOrderAttribute)attribute).Order;
 				}).ToList();
 
-			// CurArtifact의 모든 프로퍼티를 PropertyBlock으로 만들어서 artifactContent에 추가
-			artifactContent.Clear();
+			// CurDataSO의 모든 프로퍼티를 PropertyBlock으로 만들어서 dataSOContent에 추가
+			dataSOContent.Clear();
 			foreach (PropertyInfo propertyInfo in propertyInfos)
 			{
 				if (propertyInfo.Name == "name" || propertyInfo.Name == "hideFlags")
@@ -73,9 +73,9 @@ namespace Mascari4615
 				propertyField.RegisterValueChangeCallback((evt) =>
 				{
 					serializedObject.ApplyModifiedProperties();
-					MArtifact.Instance.ArtifactSlots[CurArtifact.ID].UpdateUI();
+					MDataSO.Instance.DataSOSlots[CurDataSO.ID].UpdateUI();
 				});
-				artifactContent.Add(propertyField);
+				dataSOContent.Add(propertyField);
 
 				// 보이지만 수정은 불가능한 프로퍼티
 				if (propertyInfo.Name == "ID")
@@ -83,14 +83,14 @@ namespace Mascari4615
 			}
 		}
 
-		public void DuplicateCurArtifact()
+		public void DuplicateCurDataSO()
 		{
-			MArtifact.Instance.DuplicateArtifact(CurArtifact);
+			MDataSO.Instance.DuplicateDataSO(CurDataSO);
 		}
 
-		public void DeleteCurArtifact()
+		public void DeleteCurDataSO()
 		{
-			MArtifact.Instance.DeleteArtifact(CurArtifact);
+			MDataSO.Instance.DeleteDataSO(CurDataSO);
 		}
 	}
 }

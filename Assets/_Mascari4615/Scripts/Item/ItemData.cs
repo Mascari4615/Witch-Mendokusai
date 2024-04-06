@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(ItemData), menuName = "Variable/ItemData")]
-	public class ItemData : Artifact
+	public class ItemData : DataSO
 	{
 		public bool IsCountable => MaxAmount != 1;
 		

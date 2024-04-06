@@ -11,15 +11,15 @@ namespace Mascari4615
 	/// </summary>
 	public class PropertyBlock : VisualElement
 	{
-		private readonly Artifact artifact;
+		private readonly DataSO dataSO;
 		private readonly PropertyInfo propertyInfo;
 
 		public Label PropertyName { get; private set; }
 		public VisualElement PropertyValue { get; private set; }
 
-		public PropertyBlock(Artifact artifact, PropertyInfo propertyInfo)
+		public PropertyBlock(DataSO dataSO, PropertyInfo propertyInfo)
 		{
-			this.artifact = artifact;
+			this.dataSO = dataSO;
 			this.propertyInfo = propertyInfo;
 
 			PropertyName = new Label(propertyInfo.Name);
@@ -33,7 +33,7 @@ namespace Mascari4615
 
 		private void SetPropertyValueWithType<T, U>() where U : BaseField<T>, new()
 		{
-			T value = (T)propertyInfo.GetValue(artifact);
+			T value = (T)propertyInfo.GetValue(dataSO);
 			PropertyValue = new U();
 			(PropertyValue as U).value = value;
 		}
@@ -54,7 +54,7 @@ namespace Mascari4615
 					break;
 				case Type stringType when stringType == typeof(string):
 					SetPropertyValueWithType<string, TextField>();
-					bool isDescription = propertyInfo.Name == nameof(Artifact.Description);
+					bool isDescription = propertyInfo.Name == nameof(DataSO.Description);
 					if (isDescription)
 					{
 						(PropertyValue as TextField).multiline = true;
@@ -63,16 +63,16 @@ namespace Mascari4615
 
 					PropertyValue.RegisterCallback<ChangeEvent<string>>(evt =>
 					{
-						propertyInfo.SetValue(artifact, evt.newValue);
+						propertyInfo.SetValue(dataSO, evt.newValue);
 					});
 					break;
 				case Type enumType when enumType.IsEnum:
-					Enum enumValue = (Enum)propertyInfo.GetValue(artifact);
+					Enum enumValue = (Enum)propertyInfo.GetValue(dataSO);
 					PropertyValue = new EnumField();
 					(PropertyValue as EnumField).Init(enumValue);
 					break;
 				case Type spriteType when spriteType == typeof(Sprite):
-					Sprite spriteValue = (Sprite)propertyInfo.GetValue(artifact);
+					Sprite spriteValue = (Sprite)propertyInfo.GetValue(dataSO);
 					PropertyValue = new VisualElement();
 
 					ObjectField objectField = new()

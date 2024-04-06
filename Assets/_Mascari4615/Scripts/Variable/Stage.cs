@@ -2,7 +2,7 @@
 
 namespace Mascari4615
 {
-	public abstract class Stage : Artifact
+	public abstract class Stage : DataSO
 	{
 		[field: SerializeField] public StageObject Prefab { get; private set; }
 	}

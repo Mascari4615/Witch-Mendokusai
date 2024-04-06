@@ -130,9 +130,9 @@ namespace Mascari4615
 			TimeManager.Instance.Resume();
 		}
 
-		public void Popup(Artifact artifact)
+		public void Popup(DataSO dataSO)
 		{
-			popup.Popup(artifact);
+			popup.Popup(dataSO);
 		}
 
 		public void ToggleOverlayUI_Tab()

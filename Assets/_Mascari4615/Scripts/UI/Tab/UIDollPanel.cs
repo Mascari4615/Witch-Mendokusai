@@ -71,7 +71,7 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			int curDollID = dollInventoryUI.CurSlot.Artifact.ID;
+			int curDollID = dollInventoryUI.CurSlot.DataSO.ID;
 
 			selectNewEquipmentPanel.SetActive(false);
 
@@ -99,11 +99,11 @@ namespace Mascari4615
 
 		private void ChangeItem(int newItemSlotIndex)
 		{
-			// Debug.Log("ApplyNewArtifact" + slotIndex);
+			// Debug.Log("ApplyNewDataSO" + slotIndex);
 			Item newItem = SOManager.Instance.ItemInventory.GetItem(newItemSlotIndex);
 
 			// UI에서 선택한 인형
-			Doll curDoll = dollInventoryUI.CurSlot.Artifact as Doll;
+			Doll curDoll = dollInventoryUI.CurSlot.DataSO as Doll;
 
 			// 선택한 슬롯이 비어있는 경우
 			if (newItem == null)

@@ -11,7 +11,7 @@ namespace Mascari4615
 	public struct NPCPanelInfo
 	{
 		public NPCPanelType Type;
-		public List<Artifact> Artifacts;
+		public List<DataSO> DataSOs;
 	}
 
 	[CustomPropertyDrawer(typeof(NPCPanelInfo))]
@@ -23,7 +23,7 @@ namespace Mascari4615
 		
 			var popup = new UnityEngine.UIElements.PopupWindow();
 			popup.Add(new PropertyField(property.FindPropertyRelative($"{nameof(NPCPanelInfo.Type)}"), "Type"));
-			popup.Add(new PropertyField(property.FindPropertyRelative($"{nameof(NPCPanelInfo.Artifacts)}"), "Artifacts"));
+			popup.Add(new PropertyField(property.FindPropertyRelative($"{nameof(NPCPanelInfo.DataSOs)}"), "DataSOs"));
 			container.Add(popup);
 		
 			return container;

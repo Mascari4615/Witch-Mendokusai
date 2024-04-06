@@ -24,7 +24,7 @@ namespace Mascari4615
 			if (slot == null)
 				return;
 
-			slotImage.sprite = slot.Artifact.Sprite;
+			slotImage.sprite = slot.DataSO.Sprite;
 			slotImage.color = slotImage.sprite == null ? Color.clear : Color.white;
 
 			SetActive(true);

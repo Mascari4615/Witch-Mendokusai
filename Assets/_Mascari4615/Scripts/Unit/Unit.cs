@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public abstract class Unit : Artifact
+	public abstract class Unit : DataSO
 	{
 		[field: Header("_" + nameof(Unit))]
 		[field: SerializeField] public GameObject Prefab { get; set; }

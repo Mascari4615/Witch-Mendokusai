@@ -134,7 +134,7 @@ namespace Mascari4615
 		{
 			Probability<ItemData> probability = new(shouldFill100Percent: true);
 			foreach (var item in (UnitData as Monster).Loots)
-				probability.Add(item.Artifact as ItemData, item.Percentage);
+				probability.Add(item.DataSO as ItemData, item.Percentage);
 
 			ItemData dropItem = probability.Get();
 			if (dropItem != default)

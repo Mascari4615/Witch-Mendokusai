@@ -63,7 +63,7 @@ namespace Mascari4615
 			{
 				if (i < dataBuffer.RuntimeItems.Count)
 				{
-					Slots[i].SetSlot(dataBuffer.RuntimeItems[i] as Artifact);
+					Slots[i].SetSlot(dataBuffer.RuntimeItems[i] as DataSO);
 					Slots[i].gameObject.SetActive(true);
 				}
 				else

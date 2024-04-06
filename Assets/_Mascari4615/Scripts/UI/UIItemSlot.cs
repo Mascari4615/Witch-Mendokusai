@@ -26,13 +26,6 @@ namespace Mascari4615
 		public bool canDrag = true;
 		private PriceType priceType = PriceType.Buy;
 
-		public void SetInventory(Inventory inventory) => Inventory = inventory;
-		public void SetPriceType(PriceType priceType)
-		{
-			this.priceType = priceType;
-			UpdateUI();
-		}
-
 		public override bool Init()
 		{
 			if (base.Init() == false)
@@ -47,9 +40,9 @@ namespace Mascari4615
 		{
 			base.UpdateUI();
 			
-			if (Artifact)
+			if (DataSO)
 			{
-				ItemData itemData = Artifact as ItemData;
+				ItemData itemData = DataSO as ItemData;
 				priceText.text = (priceType == PriceType.Buy) ? itemData.PurchasePrice.ToString() : itemData.SalePrice.ToString();
 			}
 			else
@@ -63,7 +56,7 @@ namespace Mascari4615
 			if (!canDrag)
 				return;
 
-			if (Artifact == null)
+			if (DataSO == null)
 				return;
 
 			DragSlot.Instance.SetSlot(this);
@@ -74,7 +67,7 @@ namespace Mascari4615
 			if (!canDrag)
 				return;
 
-			if (Artifact == null)
+			if (DataSO == null)
 				return;
 
 			DragSlot.Instance.transform.position = eventData.position;
@@ -108,7 +101,7 @@ namespace Mascari4615
 		{
 			if (onlyOneItem)
 			{
-				if (Artifact == null)
+				if (DataSO == null)
 				{
 					// DragSlot.HoldingSlot의 Item에서 하나만 가져오기 (빼오기)
 				}
@@ -165,6 +158,13 @@ namespace Mascari4615
 			// 두 슬롯 정보 갱신
 			slotA.Inventory.UpdateSlot(slotA.Index);
 			slotB.Inventory.UpdateSlot(slotB.Index);
+		}
+
+		public void SetInventory(Inventory inventory) => Inventory = inventory;
+		public void SetPriceType(PriceType priceType)
+		{
+			this.priceType = priceType;
+			UpdateUI();
 		}
 	}
 }

@@ -3,7 +3,7 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public abstract class CustomVariable<T> : Artifact, ISerializationCallbackReceiver
+	public abstract class CustomVariable<T> : DataSO, ISerializationCallbackReceiver
 	{
 		[field: Header("_" + nameof(CustomVariable<T>))]
 		[field: SerializeField] public T InitialValue { get; private set; }

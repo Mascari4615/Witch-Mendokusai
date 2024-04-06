@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
-    <Style src="project://database/Assets/Editor/MArtifact/MArtifact.uss?fileID=7433441132597879392&amp;guid=10628fedc867f4a4eb552243cab70531&amp;type=3#MArtifact" />
-    <ui:Button name="MArtifactSlot" class="slot-icons" style="padding-top: 0; padding-bottom: 0; padding-right: 0; padding-left: 0;">
+    <Style src="project://database/Assets/Editor/MDataSO/MDataSO.uss?fileID=7433441132597879392&amp;guid=10628fedc867f4a4eb552243cab70531&amp;type=3#MDataSO" />
+    <ui:Button name="MDataSOSlot" class="slot-icons" style="padding-top: 0; padding-bottom: 0; padding-right: 0; padding-left: 0;">
         <ui:VisualElement name="Background" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.59); height: 15px; max-height: 15px; min-height: 15px; justify-content: center; width: 50px; max-width: 50px; min-width: 50px; position: absolute; top: 0; left: 0;">
             <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ID" class="m-text" style="font-size: 12px;" />
         </ui:VisualElement>

@@ -4,49 +4,49 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MArtifactSlot
+	public class MDataSOSlot
 	{
-		public Artifact Artifact { get; private set; }
+		public DataSO DataSO { get; private set; }
 		public VisualElement VisualElement { get; private set; }
 
 		private readonly Button button;
 		private readonly Label nameLabel;
 		private readonly Label idLabel;
 
-		public MArtifactSlot(Artifact artifact)
+		public MDataSOSlot(DataSO dataSO)
 		{
-			VisualTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MArtifact/MArtifactSlot.uxml");
+			VisualTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MDataSO/MDataSOSlot.uxml");
 			VisualElement = treeAsset.Instantiate();
 
-			Artifact = artifact;
+			DataSO = dataSO;
 
 			button = VisualElement.Q<Button>();
 			nameLabel = VisualElement.Q<Label>(name: "Name");
 			idLabel = VisualElement.Q<Label>(name: "ID");
 
-			button.RegisterCallback<ClickEvent>(ShowArtifact);
+			button.RegisterCallback<ClickEvent>(ShowDataSO);
 			UpdateUI();
 		}
 
 		public void UpdateUI()
 		{
-			nameLabel.text = Artifact.Name;
-			idLabel.text = Artifact.ID.ToString();
-			if (Artifact.Sprite != null)
-				button.style.backgroundImage = new(Artifact.Sprite);
+			nameLabel.text = DataSO.Name;
+			idLabel.text = DataSO.ID.ToString();
+			if (DataSO.Sprite != null)
+				button.style.backgroundImage = new(DataSO.Sprite);
 
 			// new Color(226 / 255f, 137 / 255f, 45 / 255f)
-			Color borderColor = MArtifact.Instance.CurSlot == this ? Color.white : Color.black;
+			Color borderColor = MDataSO.Instance.CurSlot == this ? Color.white : Color.black;
 			button.style.borderTopColor = borderColor;
 			button.style.borderBottomColor = borderColor;
 			button.style.borderLeftColor =borderColor;
 			button.style.borderRightColor = borderColor;
 		}
 
-		private void ShowArtifact(ClickEvent evt) => UpdateTooltip();
+		private void ShowDataSO(ClickEvent evt) => UpdateTooltip();
 		private void UpdateTooltip()
 		{
-			MArtifact.Instance.SelectArtifactSlot(this);
+			MDataSO.Instance.SelectDataSOSlot(this);
 		}
 	}
 }

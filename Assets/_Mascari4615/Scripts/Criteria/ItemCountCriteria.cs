@@ -8,7 +8,7 @@ namespace Mascari4615
 {
 	public class ItemCountCriteria : NumCriteria
 	{
-		public int ItemID { get; private set; } = Artifact.NONE_ID;
+		public int ItemID { get; private set; } = DataSO.NONE_ID;
 
 		public ItemCountCriteria(ComparisonOperator comparisonOperator, int targetValue, int itemID) : base(comparisonOperator, targetValue)
 		{

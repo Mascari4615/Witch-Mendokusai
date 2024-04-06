@@ -28,7 +28,7 @@ namespace Mascari4615
 	}
 
 	[CreateAssetMenu(fileName = "Q_", menuName = "Variable/" + nameof(QuestData))]
-	public class QuestData : Artifact, ISavable<QuestDataSave>
+	public class QuestData : DataSO, ISavable<QuestDataSave>
 	{
 		[field: Header("_" + nameof(QuestData))]
 		[PropertyOrder(0)] [field: SerializeField] public QuestType Type { get; private set; }

@@ -6,7 +6,7 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public abstract class DataBuffer<T> : ScriptableObject, ISerializationCallbackReceiver
+	public abstract class DataBuffer<T> : DataSO, ISerializationCallbackReceiver
 	{
 		[field: SerializeField] public List<T> InitItems { get; private set; }
 		[field: NonSerialized] public List<T> RuntimeItems { get; protected set; } = new();

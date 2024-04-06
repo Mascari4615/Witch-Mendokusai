@@ -7,6 +7,6 @@ namespace Mascari4615
 	public class Monster : Unit
 	{
 		[field: Header("_" + nameof(Monster))]
-		[field: SerializeField] public ArtifactWithPercentage[] Loots { get; set; }
+		[field: SerializeField] public DataSOWithPercentage[] Loots { get; set; }
 	}
 }

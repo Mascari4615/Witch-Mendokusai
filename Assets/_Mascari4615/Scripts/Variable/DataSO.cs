@@ -15,11 +15,11 @@ namespace Mascari4615
 		}
 	}
 	
-	public abstract class Artifact : ScriptableObject
+	public abstract class DataSO : ScriptableObject
 	{
 		public const int NONE_ID = -1;
 
-		[field: Header("_" + nameof(Artifact))]
+		[field: Header("_" + nameof(DataSO))]
 		
 		[PropertyOrder(-100)] [field: SerializeField] public int ID { get; set; }
 		[PropertyOrder(-99)] [field: SerializeField] public string Name { get; set; }
@@ -28,10 +28,10 @@ namespace Mascari4615
 	}
 
 	[System.Serializable]
-	public struct ArtifactWithPercentage
+	public struct DataSOWithPercentage
 	{
-		[field: Header("_" + nameof(ArtifactWithPercentage))]
-		[field: SerializeField] public Artifact Artifact { get; set; }
+		[field: Header("_" + nameof(DataSOWithPercentage))]
+		[field: SerializeField] public DataSO DataSO { get; set; }
 		[field: SerializeField] public float Percentage { get; set; }
 	}
 }
