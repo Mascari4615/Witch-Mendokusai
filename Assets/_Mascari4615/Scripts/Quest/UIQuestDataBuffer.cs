@@ -13,7 +13,7 @@ namespace Mascari4615
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				UIQuestSlot slot = Slots[i] as UIQuestSlot;
-				QuestData quest = dataBuffer.RuntimeItems.ElementAtOrDefault(i);
+				QuestData quest = DataBuffer.RuntimeItems.ElementAtOrDefault(i);
 
 				if (quest == null)
 				{

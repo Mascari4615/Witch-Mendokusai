@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(GameObjectBuffer), menuName = "GameSystem/DataBuffer/GameObject")]
+	[CreateAssetMenu(fileName = nameof(GameObjectBuffer), menuName = "DataBuffer/" + nameof(GameObject))]
 	public class GameObjectBuffer : DataBuffer<GameObject>
 	{
 		public void ClearObjects()

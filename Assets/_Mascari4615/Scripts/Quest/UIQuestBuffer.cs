@@ -17,7 +17,7 @@ namespace Mascari4615
 		[SerializeField] private UIRewards rewardUI;
 		[SerializeField] private UIQuestTooltipCriteria questCriteriaUI;
 
-		private QuestBuffer QuestBuffer => dataBuffer as QuestBuffer;
+		private QuestBuffer QuestBuffer => DataBuffer as QuestBuffer;
 		private Quest CurQuest => QuestBuffer.RuntimeItems.Count > 0 ? QuestBuffer.RuntimeItems[CurSlotIndex] : null;
 
 		public override bool Init()

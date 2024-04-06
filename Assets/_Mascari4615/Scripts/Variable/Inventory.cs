@@ -7,7 +7,7 @@ using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = "Inventory", menuName = "GameSystem/RunTimeSet/Inventory")]
+	[CreateAssetMenu(fileName = nameof(Inventory), menuName = "DataBuffer/" + nameof(Item))]
 	public class Inventory : DataBuffer<Item>, ISavable<List<InventorySlotData>>, ISerializationCallbackReceiver
 	{
 		private const int NONE = -1;

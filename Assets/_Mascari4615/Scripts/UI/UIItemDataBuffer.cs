@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIItemInventory : UIDataBuffer<Item>
+	public class UIItemDataBuffer : UIDataBuffer<ItemData>
 	{
 		[SerializeField] private Transform filtersParent;
 		[SerializeField] private ItemType filter = ItemType.None;
@@ -15,12 +15,6 @@ namespace Mascari4615
 		{
 			if (base.Init() == false)
 				return false;
-
-			Inventory inventory = DataBuffer as Inventory;
-			inventory.RegisterInventoryUI(this);
-
-			foreach (UIItemSlot slot in Slots.Cast<UIItemSlot>())
-				slot.SetInventory(inventory);
 
 			if (filtersParent != null)
 			{
@@ -37,24 +31,21 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			Inventory inventory = DataBuffer as Inventory;
-
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				UIItemSlot slot = Slots[i] as UIItemSlot;
-				Item item = inventory.RuntimeItems.ElementAtOrDefault(i);
+				ItemData itemData = DataBuffer.RuntimeItems.ElementAtOrDefault(i);
 
-				if (item == null)
+				if (itemData == null)
 				{
 					slot.SetSlot(null);
 					slot.gameObject.SetActive(dontShowEmptySlot == false);
 				}
 				else
 				{
-					ItemData itemData = item.Data;
 					bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
 
-					slot.SetSlot(itemData, item.Amount);
+					slot.SetSlot(itemData);
 					slot.gameObject.SetActive(slotActive);
 				}
 			}

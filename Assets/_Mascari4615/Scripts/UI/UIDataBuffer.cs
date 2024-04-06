@@ -7,11 +7,11 @@ namespace Mascari4615
 {
 	public abstract class UIDataBuffer<T> : MonoBehaviour
 	{
+		[field: SerializeField] public DataBuffer<T> DataBuffer { get; private set; }
 		public List<UISlot> Slots { get; protected set; } = new();
 		public int CurSlotIndex { get; protected set; } = 0;
 		public UISlot CurSlot => Slots[CurSlotIndex];
 		[SerializeField] protected Transform slotsParent;
-		[SerializeField] protected DataBuffer<T> dataBuffer;
 		[SerializeField] protected bool dontShowEmptySlot = false;
 		[SerializeField] protected ToolTip clickToolTip;
 		private bool isInit = false;
@@ -42,7 +42,7 @@ namespace Mascari4615
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				Slots[i].SetSlotIndex(i);
-				Slots[i].SetSelectAction((slot) => { SelectSlot(slot.Index);});
+				Slots[i].SetSelectAction((slot) => { SelectSlot(slot.Index); });
 				Slots[i].Init();
 
 				if (clickToolTip != null)
@@ -61,9 +61,9 @@ namespace Mascari4615
 		{
 			for (int i = 0; i < Slots.Count; i++)
 			{
-				if (i < dataBuffer.RuntimeItems.Count)
+				if (i < DataBuffer.RuntimeItems.Count)
 				{
-					Slots[i].SetSlot(dataBuffer.RuntimeItems[i] as DataSO);
+					Slots[i].SetSlot(DataBuffer.RuntimeItems[i] as DataSO);
 					Slots[i].gameObject.SetActive(true);
 				}
 				else
@@ -81,7 +81,7 @@ namespace Mascari4615
 
 		public void SetDataBuffer(DataBuffer<T> newDataBuffer)
 		{
-			dataBuffer = newDataBuffer;
+			DataBuffer = newDataBuffer;
 		}
 
 		public void SelectSlot(int index)

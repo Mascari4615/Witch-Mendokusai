@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = "ItemDataBuffer", menuName = "GameSystem/DataBuffer/Item")]
+	[CreateAssetMenu(fileName = nameof(ItemDataBuffer), menuName = "DataBuffer/" + nameof(ItemData))]
 	public class ItemDataBuffer : DataBuffer<ItemData>
 	{
 		[System.NonSerialized] public Dictionary<int, int> itemCountDic = new();

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(CardBuffer), menuName = "GameSystem/DataBuffer/" + nameof(Card))]
+	[CreateAssetMenu(fileName = nameof(CardBuffer), menuName = "DataBuffer/" + nameof(Card))]
 	public class CardBuffer : DataBuffer<Card>
 	{
 		[SerializeField] private bool applyEffect;
