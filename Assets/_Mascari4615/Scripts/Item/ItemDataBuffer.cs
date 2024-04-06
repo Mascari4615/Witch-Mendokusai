@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(ItemDataBuffer), menuName = "DataBuffer/" + nameof(ItemData))]
-	public class ItemDataBuffer : DataBuffer<ItemData>
+	public class ItemDataBuffer : DataBufferSO<ItemData>
 	{
 		[System.NonSerialized] public Dictionary<int, int> itemCountDic = new();
 		public override void Add(ItemData itemData)
@@ -16,7 +16,7 @@ namespace Mascari4615
 			else
 			{
 				itemCountDic.Add(itemData.ID, 1);
-				RuntimeItems.Add(itemData);
+				Datas.Add(itemData);
 			}
 		}
 
@@ -28,7 +28,7 @@ namespace Mascari4615
 				if (itemCountDic[itemData.ID] <= 0)
 				{
 					itemCountDic.Remove(itemData.ID);
-					RuntimeItems.Remove(itemData);
+					Datas.Remove(itemData);
 				}
 				return true;
 			}
@@ -37,7 +37,7 @@ namespace Mascari4615
 
 		public override void Clear()
 		{
-			RuntimeItems.Clear();
+			Datas.Clear();
 			itemCountDic.Clear();
 		}
 	}

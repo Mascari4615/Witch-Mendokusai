@@ -8,11 +8,11 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = "E_" + nameof(AddRandomQuestEffect), menuName = "Effect/" + nameof(AddRandomQuestEffect))]
 	public class AddRandomQuestEffect : Effect
 	{
-		[SerializeField] private DataBuffer<QuestData> questDataBuffer;
+		[SerializeField] private DataBufferSO<QuestData> questDataBuffer;
 
 		public override void Apply()
 		{
-			QuestData randomQuest = questDataBuffer.RuntimeItems[Random.Range(0, questDataBuffer.RuntimeItems.Count)];
+			QuestData randomQuest = questDataBuffer.Datas[Random.Range(0, questDataBuffer.Datas.Count)];
 			DataManager.Instance.QuestManager.AddQuest(new(randomQuest));
 		}
 

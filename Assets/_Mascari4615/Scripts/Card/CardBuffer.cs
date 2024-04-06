@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(CardBuffer), menuName = "DataBuffer/" + nameof(Card))]
-	public class CardBuffer : DataBuffer<Card>
+	public class CardBuffer : DataBufferSO<Card>
 	{
 		[SerializeField] private bool applyEffect;
 
@@ -19,7 +19,7 @@ namespace Mascari4615
 		public override bool Remove(Card card)
 		{
 			if (applyEffect)
-				if (RuntimeItems.Contains(card))
+				if (Datas.Contains(card))
 					card.OnRemove();
 
 			return base.Remove(card);

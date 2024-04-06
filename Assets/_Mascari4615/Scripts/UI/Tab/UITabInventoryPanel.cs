@@ -6,11 +6,11 @@ namespace Mascari4615
 {
 	public class UITabInventoryPanel : UIPanel
 	{
-		private UIItemInventory itemInventoryUI;
+		private UIItemGrid itemInventoryUI;
 
 		public override void Init()
 		{
-			itemInventoryUI = GetComponentInChildren<UIItemInventory>(true);
+			itemInventoryUI = GetComponentInChildren<UIItemGrid>(true);
 			itemInventoryUI.Init();
 		}
 

@@ -6,11 +6,11 @@ namespace Mascari4615
 {
 	public class UIQuestPanel : UIPanel
 	{
-		private UIQuestBuffer questBufferUI;
+		private UIQuestGrid questBufferUI;
 
 		public override void Init()
 		{
-			questBufferUI = GetComponentInChildren<UIQuestBuffer>(true);
+			questBufferUI = GetComponentInChildren<UIQuestGrid>(true);
 			questBufferUI.Init();
 		}
 

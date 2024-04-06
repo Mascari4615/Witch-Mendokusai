@@ -13,8 +13,8 @@ namespace Mascari4615
 		[SerializeField] private UIItemSlot[] slots;
 		[SerializeField] private UIItemSlot resultSlot;
 		[SerializeField] private Inventory craftTableInventory;
-		[SerializeField] private UIItemInventory itemInventoryUI;
-		[SerializeField] private UIItemInventory potInventoryUI;
+		[SerializeField] private UIItemGrid itemInventoryUI;
+		[SerializeField] private UIItemGrid potInventoryUI;
 
 		public void TryCraft()
 		{

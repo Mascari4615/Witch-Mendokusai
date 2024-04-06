@@ -8,6 +8,7 @@ namespace Mascari4615
 	public class BootstrapSettings : ScriptableObject
 	{
 		[field: Header("_" + nameof(BootstrapSettings))]
+		[field: SerializeField] public TimeManager TimeManagerPrefab { get; private set; }
 		[field: SerializeField] public DataManager DataManagerPrefab { get; private set; }
 		[field: SerializeField] public AudioManager AudioManagerPrefab { get; private set; }
 		[field: SerializeField] public bool UseBootstrap { get; private set; } = true;
@@ -27,6 +28,7 @@ namespace Mascari4615
 				return;
 			}
 
+			Object.Instantiate(bootstrapStuff.TimeManagerPrefab);
 			Object.Instantiate(bootstrapStuff.DataManagerPrefab);
 			Object.Instantiate(bootstrapStuff.AudioManagerPrefab);
 		}

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
-using Random = UnityEngine.Random;
 using System.IO;
 using Newtonsoft.Json;
 using static Mascari4615.SOHelper;
@@ -13,9 +12,11 @@ namespace Mascari4615
 {
 	public class DataManager : Singleton<DataManager>
 	{
-		private SOManager SOManager;
-
+		public WorkManager WorkManager { get; private set; }
+		public QuestManager QuestManager { get; private set; }
 		public readonly Dictionary<string, int> CraftDic = new();
+
+		private SOManager SOManager;
 
 		public bool IsInited { get; private set; }
 		public int CurDollID;
@@ -24,8 +25,6 @@ namespace Mascari4615
 		public string localDisplayName = "";
 
 		public PlayFabManager PlayFabManager { get; private set; }
-		public WorkManager WorkManager { get; private set; }
-		public QuestManager QuestManager { get; private set; }
 
 		// HACK
 		[field: SerializeField] public bool UseLocalData { get; private set; }
@@ -35,6 +34,16 @@ namespace Mascari4615
 			base.Awake();
 
 			SOManager = SOManager.Instance;
+			Debug.Log($"{SOManager.DataSOs}");
+			Debug.Log($"{SOManager.DataSOs.Count}");
+
+			foreach (KeyValuePair<Type, Dictionary<int, DataSO>> dataSO in SOManager.DataSOs)
+			{
+				Debug.Log($"{dataSO.Key}");
+				Debug.Log($"{dataSO.Value}");
+				Debug.Log($"{dataSO.Value.Count}");
+			}
+
 			PlayFabManager = GetComponent<PlayFabManager>();
 			WorkManager = new();
 			QuestManager = new();
@@ -71,18 +80,13 @@ namespace Mascari4615
 			}
 		}
 
-		private void Start()
-		{
-			TimeManager.Instance.AddCallback(WorkManager.TickEachWorks);
-			PlayerController.Instance.PlayerObject.Init(GetDoll(CurDollID));
-		}
-
 		public void CreateNewGameData()
 		{
 			GameData newGameData = new()
 			{
 				curDollIndex = 0,
 				dummyDollCount = 1,
+				nyang = 100,
 				itemInventoryItems = new(),
 				dollDataList = new()
 				{
@@ -108,7 +112,7 @@ namespace Mascari4615
 			foreach (EquipmentData equipmentData in defaultDoll.DefaultEquipments)
 			{
 				inventory.Add(equipmentData);
-				Guid? guid = inventory.GetItem(inventory.FindItemSlotIndex(equipmentData)).Guid;
+				Guid? guid = inventory.GetItem(inventory.FindItemIndex(equipmentData)).Guid;
 				newGameData.dollDataList[0].EquipmentGuids.Add(guid);
 				defaultDoll.EquipmentGuids.Add(guid);
 			}
@@ -131,6 +135,7 @@ namespace Mascari4615
 		{
 			CurDollID = saveData.curDollIndex;
 			DummyDollCount = saveData.dummyDollCount;
+			SOManager.Nyang.RuntimeValue = saveData.nyang;
 
 			// 통계 초기화
 			SOManager.Statistics.Load(saveData.statistics);
@@ -169,11 +174,12 @@ namespace Mascari4615
 			{
 				curDollIndex = CurDollID,
 				dummyDollCount = DummyDollCount,
+				nyang = SOManager.Nyang.RuntimeValue,
 				itemInventoryItems = SOManager.ItemInventory.Save(),
 				dollDataList = new(),
 				works = WorkManager.Works,
 				questDataList = new(),
-				quests = QuestManager.Quests.RuntimeItems,
+				quests = QuestManager.Quests.Datas,
 				statistics = SOManager.Statistics.Save()
 			};
 
@@ -214,14 +220,8 @@ namespace Mascari4615
 				return null;
 
 			return SOManager.ItemInventory
-			.GetItem(SOManager.ItemInventory.FindEquipmentByGuid(guids[equipmentIndex]))?
+			.GetItem(SOManager.ItemInventory.FindItemIndex(guids[equipmentIndex]))?
 			.Data as EquipmentData;
-		}
-
-		[ContextMenu(nameof(TestWork))]
-		public void TestWork()
-		{
-			WorkManager.AddWork(new(0, WorkType.QuestWork, new Guid(), 10));
 		}
 	}
 
@@ -234,8 +234,9 @@ namespace Mascari4615
 	[Serializable]
 	public class GameData
 	{
-		public int curDollIndex;
+		public int curDollIndex = 0;
 		public int dummyDollCount = 1;
+		public int nyang = 100;
 
 		public List<InventorySlotData> itemInventoryItems = new();
 		public List<DollData> dollDataList = new();

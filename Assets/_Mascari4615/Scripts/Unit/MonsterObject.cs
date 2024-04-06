@@ -17,16 +17,18 @@ namespace Mascari4615
 		[SerializeField] private GameObject expPrefab;
 		[SerializeField] private GameObject lootItemPrefab;
 
+		public new Monster UnitData => base.UnitData as Monster;
+
 		protected virtual void OnEnable()
 		{
 			SpriteRenderer.sharedMaterial = UnitData.Material;
-			SOManager.Instance.MonsterObjectBuffer.Add(gameObject);
+			GameManager.Instance.MonsterObjects.Add(gameObject);
 			hpBar.localScale = Vector3.one;
 		}
 
 		protected virtual void OnDisable()
 		{
-			SOManager.Instance.MonsterObjectBuffer.Remove(gameObject);
+			GameManager.Instance.MonsterObjects.Remove(gameObject);
 			StopAllCoroutines();
 		}
 
@@ -105,7 +107,7 @@ namespace Mascari4615
             }*/
 
 			// Animator.SetTrigger("COLLAPSE");
-			SOManager.Instance.MonsterObjectBuffer.Remove(gameObject);
+			GameManager.Instance.MonsterObjects.Remove(gameObject);
 
 			/*
             if (StageManager.Instance.CurrentRoom is NormalRoom)
@@ -133,22 +135,28 @@ namespace Mascari4615
 		protected virtual void DropLoot()
 		{
 			Probability<ItemData> probability = new(shouldFill100Percent: true);
-			foreach (var item in (UnitData as Monster).Loots)
+			foreach (DataSOWithPercentage item in UnitData.Loots)
+			{
+				if (item.DataSO == null)
+				{
+					Debug.LogError("DataSO is null");
+					continue;
+				}
 				probability.Add(item.DataSO as ItemData, item.Percentage);
+			}
 
 			ItemData dropItem = probability.Get();
 			if (dropItem != default)
 			{
 				GameObject lootItem = ObjectManager.Instance.PopObject(lootItemPrefab);
 				lootItem.transform.position = transform.position;
-				lootItem.gameObject.SetActive(true);
+				lootItem.SetActive(true);
 				lootItem.GetComponent<ItemObject>().Init(dropItem);
 			}
 
-			//
 			GameObject exp = ObjectManager.Instance.PopObject(expPrefab);
 			exp.transform.position = transform.position;
-			exp.gameObject.SetActive(true);
+			exp.SetActive(true);
 		}
 
 		private IEnumerator FlashRoutine()

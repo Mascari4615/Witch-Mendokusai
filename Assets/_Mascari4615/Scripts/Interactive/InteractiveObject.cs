@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace Mascari4615
 {
@@ -27,12 +29,18 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			SOManager.Instance.InteractiveObjectBuffer.Add(gameObject);
+			GameManager.Instance.InteractiveObjects.Add(gameObject);
 		}
 
 		private void OnDisable()
 		{
-			SOManager.Instance.InteractiveObjectBuffer.Remove(gameObject);
+			if (SceneManager.GetActiveScene().isLoaded == false || Application.isPlaying == false)
+			{
+				// Debug.LogWarning("Scene is not loaded");
+				return;
+			}
+
+			GameManager.Instance.InteractiveObjects.Remove(gameObject);
 		}
 	}
 }

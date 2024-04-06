@@ -10,7 +10,7 @@ namespace Mascari4615
 	{
 		[SerializeField] private GameObject selectNewEquipmentPanel;
 		private UIDollInventory dollInventoryUI;
-		private UIItemInventory selectNewEquipmentInventoryUI;
+		private UIItemGrid selectNewEquipmentInventoryUI;
 		[SerializeField] private GameObject selectDollButton;
 		[SerializeField] private UISlot[] curStuffsSlot;
 		private int targetEquipmentIndex;
@@ -37,7 +37,7 @@ namespace Mascari4615
 		public override void Init()
 		{
 			dollInventoryUI = GetComponentInChildren<UIDollInventory>(true);
-			selectNewEquipmentInventoryUI = selectNewEquipmentPanel.GetComponentInChildren<UIItemInventory>(true);
+			selectNewEquipmentInventoryUI = selectNewEquipmentPanel.GetComponentInChildren<UIItemGrid>(true);
 			
 			selectNewEquipmentPanel.SetActive(false);
 
@@ -114,7 +114,7 @@ namespace Mascari4615
 			else
 			{
 				// 이 장비를 이미 이 인형이나 다른 인형이 착용하고 있는지 확인
-				foreach (Doll doll in SOManager.Instance.DollBuffer.RuntimeItems)
+				foreach (Doll doll in SOManager.Instance.DollBuffer.Datas)
 				{
 					for (int ei = 0; ei < doll.EquipmentGuids.Count; ei++)
 					{

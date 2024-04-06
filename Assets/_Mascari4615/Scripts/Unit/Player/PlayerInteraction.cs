@@ -11,9 +11,9 @@ namespace Mascari4615
 		private GameObject GetNearestInteractiveObject()
 		{
 			const float maxDistance = 1.5f;
-			if (SOManager.Instance.InteractiveObjectBuffer.RuntimeItems.Count == 0)
+			if (GameManager.Instance.InteractiveObjects.Count == 0)
 				return null;
-			GameObject nearest = SOManager.Instance.InteractiveObjectBuffer.RuntimeItems
+			GameObject nearest = GameManager.Instance.InteractiveObjects
 				.OrderBy(item => Vector3.Distance(transform.position, item.transform.position))
 				.FirstOrDefault(item => Vector3.Distance(transform.position, item.transform.position) < maxDistance);
 			return nearest;
@@ -34,7 +34,7 @@ namespace Mascari4615
 
 		private void UpdateCanInteractVariable()
 		{
-			SOManager.Instance.CanInteract.RuntimeValue = SOManager.Instance.InteractiveObjectBuffer.RuntimeItems.Count > 0;
+			SOManager.Instance.CanInteract.RuntimeValue = GameManager.Instance.InteractiveObjects.Count > 0;
 		}
 
 		public void SetLayer(int layer)

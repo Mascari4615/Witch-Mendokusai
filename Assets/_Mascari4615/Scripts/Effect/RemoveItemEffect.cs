@@ -13,7 +13,7 @@ namespace Mascari4615
 
 		public override void Apply()
 		{
-			SOManager.Instance.ItemInventory.Remove(SOManager.Instance.ItemInventory.FindItemSlotIndex(targetItem), amount);
+			SOManager.Instance.ItemInventory.Remove(SOManager.Instance.ItemInventory.FindItemIndex(targetItem), amount);
 		}
 
 		public override void Cancle()

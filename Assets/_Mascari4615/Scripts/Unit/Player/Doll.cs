@@ -16,13 +16,16 @@ namespace Mascari4615
 
 		[field: NonSerialized] public int Level { get; private set; } = 0;
 		[field: NonSerialized] public int Exp { get; private set; } = 0;
-		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new() { null, null, null, null };
+		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new() { null, null, null };
 
 		public void Load(DollData dollData)
 		{
 			Level = dollData.Level;
 			Exp = dollData.Exp;
 			EquipmentGuids = dollData.EquipmentGuids.ToList();
+
+			if (EquipmentGuids.Count < 3)
+				EquipmentGuids.AddRange(new Guid?[3 - EquipmentGuids.Count]);
 		}
 
 		public DollData Save()

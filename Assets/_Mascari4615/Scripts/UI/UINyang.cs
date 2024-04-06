@@ -13,13 +13,14 @@ namespace Mascari4615
 		private int curValue;
 		private Coroutine coroutine;
 
-		private void Awake()
+		private void Start()
 		{
 			text.text = "0냥";
-			SOManager.Instance.Nyang.GameEvent.AddCallback(UpdateGold);
+			SOManager.Instance.Nyang.GameEvent.AddCallback(UpdateNyang);
+			UpdateNyang();
 		}
 
-		private void UpdateGold()
+		private void UpdateNyang()
 		{
 			if (coroutine != null)
 				StopCoroutine(coroutine);
@@ -32,6 +33,9 @@ namespace Mascari4615
 			while (curValue != targetValue)
 			{
 				curValue = (int)Mathf.Ceil(Mathf.SmoothStep(curValue, targetValue, .5f));
+				if (curValue - targetValue < 3)
+					curValue = targetValue;
+
 				text.text = curValue.ToString("N0") + "냥";
 				yield return null;
 			}

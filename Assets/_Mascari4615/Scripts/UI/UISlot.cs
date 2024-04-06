@@ -116,23 +116,16 @@ namespace Mascari4615
 		public void SetSlotIndex(int index) => Index = index;
 
 		public void SetSlot(DataSO dataSO, int amount = 1)
-		{
-			Init();
-
-			Data.SetData(dataSO);
-			Amount = amount;
-
-			if (ToolTipTrigger)
-				ToolTipTrigger.SetToolTipContent(Data);
-
-			UpdateUI();
-		}
+			=> SetSlot_(() => Data.SetData(dataSO), amount);
 
 		public void SetSlot(Sprite sprite, string name, string description, int amount = 1)
+			=> SetSlot_(() => Data.SetData(sprite, name, description), amount);
+
+		private void SetSlot_(Action action, int amount = 1)
 		{
 			Init();
 
-			Data.SetData(sprite, name, description);
+			action?.Invoke();
 			Amount = amount;
 
 			if (ToolTipTrigger)

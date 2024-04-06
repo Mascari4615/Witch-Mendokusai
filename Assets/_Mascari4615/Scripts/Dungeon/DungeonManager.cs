@@ -59,13 +59,15 @@ namespace Mascari4615
 				PlayerController.Instance.PlayerObject.Init(GetDoll(DataManager.Instance.CurDollID));
 				expChecker.Init();
 				cardManager.Init();
-				
-				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 0)?.Effects)
-					effect.Apply();
-				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 1)?.Effects)
-					effect.Apply();
-				foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, 2)?.Effects)
-					effect.Apply();
+
+				for (int i = 0; i < 3; i++)
+				{
+					if (DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i) != null)
+					{
+						foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i).Effects)
+							effect.Apply();
+					}
+				}
 
 				SOManager.Instance.OnDungeonStart.Raise();
 				StartCoroutine(DungeonLoop(dungeon));

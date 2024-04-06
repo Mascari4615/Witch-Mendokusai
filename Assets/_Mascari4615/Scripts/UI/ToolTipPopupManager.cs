@@ -6,6 +6,11 @@ namespace Mascari4615
 	public class ToolTipPopupManager : Singleton<ToolTipPopupManager>
 	{
 		[SerializeField] private ToolTip popupToolTip;
+		[SerializeField] private CanvasGroup canvasGroup;
+
+		private bool isShow;
+		private float disappearTimer;
+		
 		private float toolTipWidth;
 		private float toolTipHeight;
 		private const float ToolTipPadding = 30f;
@@ -23,13 +28,27 @@ namespace Mascari4615
 		{
 			popupToolTip.SetToolTipContent(slotData);
 			popupToolTip.transform.position = GetVec();
-			popupToolTip.gameObject.SetActive(true);
+			isShow = true;
 		}
 
 		private void Update()
 		{
-			if (popupToolTip.gameObject.activeSelf)
-				popupToolTip.transform.position = GetVec();
+			popupToolTip.transform.position = GetVec();
+
+			if (isShow)
+			{
+				canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1, Time.deltaTime * 30);
+			}
+			else
+			{
+				if (disappearTimer > 0)
+				{
+					disappearTimer -= Time.deltaTime;
+					return;
+				}
+				
+				canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 0, Time.deltaTime * 10);
+			}
 		}
 
 		private Vector3 GetVec()
@@ -42,7 +61,8 @@ namespace Mascari4615
 		public void Hide()
 		{
 			// Debug.Log("Hide");
-			popupToolTip.gameObject.SetActive(false);
+			isShow = false;
+			disappearTimer = .3f;
 		}
 	}
 }

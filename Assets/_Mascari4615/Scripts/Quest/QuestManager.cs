@@ -26,12 +26,12 @@ namespace Mascari4615
 
 		public Quest GetQuest(QuestData questData)
 		{
-			return Quests.RuntimeItems.Find(x => x.GetData() == questData);
+			return Quests.Datas.Find(x => x.GetData() == questData);
 		}
 
 		public Quest GetQuest(Guid? guid)
 		{
-			return Quests.RuntimeItems.Find(x => x.Guid == guid);
+			return Quests.Datas.Find(x => x.Guid == guid);
 		}
 
 		public void CompleteQuest(Guid? guid)
@@ -54,7 +54,7 @@ namespace Mascari4615
 		
 		public int GetQuestCount(QuestType questType)
 		{
-			return Quests.RuntimeItems.FindAll(x => x.GetData().Type == questType).Count;
+			return Quests.Datas.FindAll(x => x.GetData().Type == questType).Count;
 		}
 	}
 }

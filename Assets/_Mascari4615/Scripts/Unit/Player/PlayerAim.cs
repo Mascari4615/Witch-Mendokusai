@@ -36,7 +36,7 @@ namespace Mascari4615
 		{
 			while (true)
 			{
-				var target = SOManager.Instance.MonsterObjectBuffer.RuntimeItems.Count > 0 ? NearestTarget() : null;
+				GameObject target = GameManager.Instance.MonsterObjects.Count > 0 ? NearestTarget() : null;
 
 				if (target == null)
 				{
@@ -51,7 +51,7 @@ namespace Mascari4615
 				}
 				else
 				{
-					var targetChanged = false;
+					bool targetChanged = false;
 
 					if (curNearestAutoTarget != target)
 					{
@@ -92,15 +92,15 @@ namespace Mascari4615
 		{
 			GameObject nearest = null;
 
-			var playerPos = PlayerController.Instance.transform.position;
-			var minDistance = float.MaxValue;
+			Vector3 playerPos = PlayerController.Instance.transform.position;
+			float minDistance = float.MaxValue;
 
 			// TODO : 레이쏴서 벽 뒤에 있으면 Continue
 
-			foreach (var target in SOManager.Instance.MonsterObjectBuffer.RuntimeItems)
+			foreach (GameObject target in GameManager.Instance.MonsterObjects)
 			{
 				// Debug.Log(target.gameObject.name);
-				var distance = Vector3.Distance(playerPos, target.transform.position);
+				float distance = Vector3.Distance(playerPos, target.transform.position);
 
 				if (distance > maxDistance)
 					continue;

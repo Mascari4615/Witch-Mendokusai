@@ -33,9 +33,9 @@ namespace Mascari4615
 				if (DataManager.Instance.IsInited == false)
 					continue;
 
-				int workableDollCount = SOManager.Instance.DollBuffer.RuntimeItems.Count;
+				int workableDollCount = SOManager.Instance.DollBuffer.Datas.Count;
 				workableDollCount -= workManager.GetWorkCount(WorkListType.DollWork) + workManager.GetWorkCount(WorkListType.DummyWork);
-				text.text = $"{workableDollCount}/{SOManager.Instance.DollBuffer.RuntimeItems.Count} 인형";
+				text.text = $"{workableDollCount}/{SOManager.Instance.DollBuffer.Datas.Count} 인형";
 			}
 		}
 	}

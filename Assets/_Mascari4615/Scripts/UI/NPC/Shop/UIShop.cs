@@ -8,14 +8,13 @@ namespace Mascari4615
 {
 	public class UIShop : UINPCPanel
 	{
-		private UIItemInventory itemInventoryUI;
-		private UIItemInventory shopInventoryUI;
+		private UIItemDataGrid shopInventoryUI;
+		private UIItemGrid itemInventoryUI;
 
 		public override void Init()
 		{
-			UIItemInventory[] inventoryUIs = GetComponentsInChildren<UIItemInventory>(true);
-			shopInventoryUI = inventoryUIs[0];
-			itemInventoryUI = inventoryUIs[1];
+			shopInventoryUI = GetComponentInChildren<UIItemDataGrid>(true);
+			itemInventoryUI = GetComponentInChildren<UIItemGrid>(true);
 
 			shopInventoryUI.Init();
 			shopInventoryUI.SetPriceType(PriceType.Buy);
@@ -42,6 +41,7 @@ namespace Mascari4615
 
 		public override void SetNPC(NPCObject npc)
 		{
+			shopInventoryUI.SetDataBuffer(npc.Data.ItemDataBuffers[0]);
 		}
 
 		public override void UpdateUI()
@@ -56,7 +56,7 @@ namespace Mascari4615
 			if (itemData.PurchasePrice <= SOManager.Instance.Nyang.RuntimeValue)
 			{
 				SOManager.Instance.Nyang.RuntimeValue -= itemData.PurchasePrice;
-				SOManager.Instance.ItemDataBuffer.Add(itemData);
+				SOManager.Instance.ItemInventory.Add(itemData);
 				UpdateUI();
 			}
 		}

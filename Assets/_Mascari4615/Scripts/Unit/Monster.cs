@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -7,6 +8,6 @@ namespace Mascari4615
 	public class Monster : Unit
 	{
 		[field: Header("_" + nameof(Monster))]
-		[field: SerializeField] public DataSOWithPercentage[] Loots { get; set; }
+		[field: SerializeField] public List<DataSOWithPercentage> Loots { get; private set; }
 	}
 }

@@ -48,8 +48,8 @@ namespace Mascari4615
 			ChangeState(CardUIState.Wait);
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
 
-			while (selectedCardBuffer.RuntimeItems.Count > 0)
-				selectedCardBuffer.Remove(selectedCardBuffer.RuntimeItems[^1]);
+			while (selectedCardBuffer.Datas.Count > 0)
+				selectedCardBuffer.Remove(selectedCardBuffer.Datas[^1]);
 			selectedCardBuffer.Clear();
 
 			foreach (List<Card> cardDataBuffer in cardDataBuffers)
@@ -128,7 +128,7 @@ namespace Mascari4615
 			List<Card> curDeckBuffer = cardDataBuffers[curDeckIndex];
 			selectedCardBuffer.Add(card);
 
-			int sameCardCount = selectedCardBuffer.RuntimeItems.Select(m => m == card).Count();
+			int sameCardCount = selectedCardBuffer.Datas.Select(m => m == card).Count();
 			if (card.MaxStack == sameCardCount)
 			{
 				int cardIndex = curDeckBuffer.IndexOf(card);
@@ -141,8 +141,8 @@ namespace Mascari4615
 		public void ClearCardEffect()
 		{
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
-			while (selectedCardBuffer.RuntimeItems.Count > 0)
-				selectedCardBuffer.Remove(selectedCardBuffer.RuntimeItems[^1]);
+			while (selectedCardBuffer.Datas.Count > 0)
+				selectedCardBuffer.Remove(selectedCardBuffer.Datas[^1]);
 		}
 
 		private void ChangeState(CardUIState state)
