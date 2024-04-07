@@ -58,9 +58,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd1ebcf87f5d1c4ca5292ddda1175df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillComponents:
-  - {fileID: 4178804886228926650}
-  - {fileID: -5839758443830563335}
 --- !u!114 &5976393549530359583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,7 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9feb174bdf3d4954e90c7b218b7be244, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  duration: 40
+  duration: 3
 --- !u!114 &-8307012548642899130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,7 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a67f1bf8a811724eb89ed12bd5be10e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 4
+  moveSpeed: 3
 --- !u!1 &1548548422411458686
 GameObject:
   m_ObjectHideFlags: 0

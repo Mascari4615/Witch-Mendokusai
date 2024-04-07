@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 622202209388757171, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1512278065530053246, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Sprite
@@ -63,10 +63,6 @@ PrefabInstance:
     - target: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Name
       value: MonsterBase
-      objectReference: {fileID: 0}
-    - target: {fileID: 7714682292764009147, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7832280916129115842, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Controller
