@@ -91,7 +91,7 @@ namespace Mascari4615
 			GameObject spawnCircle = ObjectManager.Instance.PopObject(spawnCirclePrefab);
 			spawnCircle.transform.position = spawnPos;
 			spawnCircle.SetActive(true);
-			GameManager.Instance.SpawnCircleObjects.Add(spawnCircle);
+			GameManager.Instance.AddObject(ObjectBufferType.SpawnCircle, spawnCircle);
 
 			yield return new WaitForSeconds(spawnDelay);
 

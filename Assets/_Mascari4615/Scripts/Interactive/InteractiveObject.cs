@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
+using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
@@ -29,18 +30,13 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			GameManager.Instance.InteractiveObjects.Add(gameObject);
+			GameManager.Instance.AddObject(ObjectBufferType.Interactive, gameObject);
 		}
 
 		private void OnDisable()
 		{
-			if (SceneManager.GetActiveScene().isLoaded == false || Application.isPlaying == false)
-			{
-				// Debug.LogWarning("Scene is not loaded");
-				return;
-			}
-
-			GameManager.Instance.InteractiveObjects.Remove(gameObject);
+			if (IsPlaying)
+				GameManager.Instance.RemoveObject(ObjectBufferType.Interactive, gameObject);
 		}
 	}
 }

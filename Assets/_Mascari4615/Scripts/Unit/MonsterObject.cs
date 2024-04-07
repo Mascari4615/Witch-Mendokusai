@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
+using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
@@ -22,13 +23,14 @@ namespace Mascari4615
 		protected virtual void OnEnable()
 		{
 			SpriteRenderer.sharedMaterial = UnitData.Material;
-			GameManager.Instance.MonsterObjects.Add(gameObject);
+			GameManager.Instance.AddObject(ObjectBufferType.Monster, gameObject);
 			hpBar.localScale = Vector3.one;
 		}
 
 		protected virtual void OnDisable()
 		{
-			GameManager.Instance.MonsterObjects.Remove(gameObject);
+			if (IsPlaying)
+				GameManager.Instance.RemoveObject(ObjectBufferType.Monster, gameObject);
 			StopAllCoroutines();
 		}
 
@@ -107,7 +109,8 @@ namespace Mascari4615
             }*/
 
 			// Animator.SetTrigger("COLLAPSE");
-			GameManager.Instance.MonsterObjects.Remove(gameObject);
+			if (IsPlaying)
+				GameManager.Instance.RemoveObject(ObjectBufferType.Monster, gameObject);
 
 			/*
             if (StageManager.Instance.CurrentRoom is NormalRoom)

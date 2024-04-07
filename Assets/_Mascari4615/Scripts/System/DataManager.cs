@@ -34,16 +34,6 @@ namespace Mascari4615
 			base.Awake();
 
 			SOManager = SOManager.Instance;
-			Debug.Log($"{SOManager.DataSOs}");
-			Debug.Log($"{SOManager.DataSOs.Count}");
-
-			foreach (KeyValuePair<Type, Dictionary<int, DataSO>> dataSO in SOManager.DataSOs)
-			{
-				Debug.Log($"{dataSO.Key}");
-				Debug.Log($"{dataSO.Value}");
-				Debug.Log($"{dataSO.Value.Count}");
-			}
-
 			PlayFabManager = GetComponent<PlayFabManager>();
 			WorkManager = new();
 			QuestManager = new();

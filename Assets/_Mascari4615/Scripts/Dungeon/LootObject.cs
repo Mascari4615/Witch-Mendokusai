@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
@@ -17,7 +18,7 @@ namespace Mascari4615
 		{
 			StopAllCoroutines();
 			_moveLoop = null;
-			GameManager.Instance.DropObjects.Add(gameObject);
+			GameManager.Instance.AddObject(ObjectBufferType.Drop, gameObject);
 		}
 
 		public void OnTriggerEnter(Collider other)
@@ -54,7 +55,8 @@ namespace Mascari4615
 
 		private void OnDisable()
 		{
-			GameManager.Instance.DropObjects.Remove(gameObject);
+			if (IsPlaying)
+				GameManager.Instance.RemoveObject(ObjectBufferType.Drop, gameObject);
 		}
 	}
 }

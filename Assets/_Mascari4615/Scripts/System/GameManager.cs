@@ -5,13 +5,18 @@ using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
+	public enum ObjectBufferType
+	{
+		SpawnCircle,
+		Monster,
+		Drop,
+		Skill,
+		Interactive,
+	}
+
 	public class GameManager : Singleton<GameManager>
 	{
-		public List<GameObject> SpawnCircleObjects { get; private set; } = new();
-		public List<GameObject> MonsterObjects { get; private set; } = new();
-		public List<GameObject> DropObjects { get; private set; } = new();
-		public List<GameObject> SkillObjects { get; private set; } = new();
-		public List<GameObject> InteractiveObjects { get; private set; } = new();
+		public Dictionary<ObjectBufferType, List<GameObject>> ObjectBuffers { get; private set; } = new();
 
 		protected override void Awake()
 		{
@@ -30,10 +35,13 @@ namespace Mascari4615
 
 		public void ClearDungeonObjects()
 		{
-			ReturnObjects(SpawnCircleObjects);
-			ReturnObjects(MonsterObjects);
-			ReturnObjects(DropObjects);
-			ReturnObjects(SkillObjects);
+			foreach (var objectBuffer in ObjectBuffers)
+			{
+				if (objectBuffer.Key == ObjectBufferType.Interactive)
+					continue;
+
+				ReturnObjects(objectBuffer.Value);
+			}
 
 			static void ReturnObjects(List<GameObject> objects)
 			{
@@ -43,5 +51,71 @@ namespace Mascari4615
 			}
 		}
 
+		public void AddObject(ObjectBufferType type, GameObject obj)
+		{
+			if (!ObjectBuffers.ContainsKey(type))
+				ObjectBuffers.Add(type, new List<GameObject>());
+
+			ObjectBuffers[type].Add(obj);
+		}
+
+		public void RemoveObject(ObjectBufferType type, GameObject obj)
+		{
+			if (!ObjectBuffers.ContainsKey(type))
+				return;
+
+			ObjectBuffers[type].Remove(obj);
+		}
+
+		public GameObject GetNearestObject(ObjectBufferType type, Vector3 position, float maxDistance)
+		{
+			if (!ObjectBuffers.ContainsKey(type))
+				return null;
+
+			GameObject nearest = null;
+			float nearestDistance = float.MaxValue;
+
+			foreach (GameObject obj in ObjectBuffers[type])
+			{
+				float distance = Vector3.Distance(obj.transform.position, position);
+				if (distance < nearestDistance)
+				{
+					nearest = obj;
+					nearestDistance = distance;
+				}
+			}
+
+			return nearestDistance <= maxDistance ? nearest : null;
+		}
+
+		public GameObject GetNearestObjectRaycast(ObjectBufferType type, Vector3 position, float maxDistance)
+		{
+			if (!ObjectBuffers.ContainsKey(type))
+				return null;
+
+			GameObject nearest = null;
+			float nearestDistance = float.MaxValue;
+
+			foreach (GameObject obj in ObjectBuffers[type])
+			{
+				float distance = Vector3.Distance(obj.transform.position, position);
+				if (distance < nearestDistance)
+				{
+					nearest = obj;
+					nearestDistance = distance;
+				}
+			}
+
+			if (nearestDistance > maxDistance)
+				return null;
+
+			if (Physics.Raycast(position, nearest.transform.position - position, out RaycastHit hit, maxDistance))
+			{
+				if (hit.collider.gameObject == nearest)
+					return nearest;
+			}
+
+			return null;
+		}
 	}
 }

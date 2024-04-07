@@ -36,7 +36,7 @@ namespace Mascari4615
 		{
 			while (true)
 			{
-				GameObject target = GameManager.Instance.MonsterObjects.Count > 0 ? NearestTarget() : null;
+				GameObject target = GameManager.Instance.GetNearestObjectRaycast(ObjectBufferType.Monster, transform.position, maxDistance);
 
 				if (target == null)
 				{
@@ -86,33 +86,6 @@ namespace Mascari4615
 
 				yield return new WaitForSeconds(.3f);
 			}
-		}
-
-		private GameObject NearestTarget()
-		{
-			GameObject nearest = null;
-
-			Vector3 playerPos = PlayerController.Instance.transform.position;
-			float minDistance = float.MaxValue;
-
-			// TODO : 레이쏴서 벽 뒤에 있으면 Continue
-
-			foreach (GameObject target in GameManager.Instance.MonsterObjects)
-			{
-				// Debug.Log(target.gameObject.name);
-				float distance = Vector3.Distance(playerPos, target.transform.position);
-
-				if (distance > maxDistance)
-					continue;
-
-				if (distance < minDistance)
-				{
-					minDistance = distance;
-					nearest = target;
-				}
-			}
-
-			return nearest;
 		}
 
 		/*public IEnumerator ChangeTarget()

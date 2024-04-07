@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
@@ -19,12 +20,13 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			GameManager.Instance.SkillObjects.Add(gameObject);
+			GameManager.Instance.AddObject(ObjectBufferType.Skill, gameObject);
 		}
 
 		private void OnDisable()
 		{
-			GameManager.Instance.SkillObjects.Remove(gameObject);
+			if (IsPlaying)
+				GameManager.Instance.RemoveObject(ObjectBufferType.Skill, gameObject);
 		}
 
 		public void InitContext(UnitObject unitObject)
