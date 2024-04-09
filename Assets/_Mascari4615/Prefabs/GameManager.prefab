@@ -47,11 +47,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
-  cameraManager: {fileID: 0}
-  uiManager: {fileID: 0}
-  spawnCircleObjectBuffer: {fileID: 11400000, guid: 6dcc747bed18dc64fb970763cffdde18, type: 2}
-  monsterObjectBuffer: {fileID: 11400000, guid: 9759fc7f40fcd45498c9fd47e84483d0, type: 2}
-  skillObjectBuffer: {fileID: 11400000, guid: ebe67f52fa4bdc74ab31ba33c2f72b25, type: 2}
 --- !u!114 &3516109772054436278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,7 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ef3a9b7b71526d47bb48b903febee1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 0
+  inputActionAsset: {fileID: -944628639613478452, guid: b97fea678b082064aaa6db16db312b0e, type: 3}
 --- !u!1 &1764007026537530021
 GameObject:
   m_ObjectHideFlags: 0

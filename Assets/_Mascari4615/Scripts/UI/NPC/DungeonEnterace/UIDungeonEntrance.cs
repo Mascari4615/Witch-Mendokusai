@@ -21,6 +21,8 @@ namespace Mascari4615
 
 		public override void Init()
 		{
+			base.Init();
+
 			dungeonSelectButtons = dungeonSelectButtonParent.GetComponentsInChildren<UISlot>(true);
 
 			for (int i = 0; i < dungeonSelectButtons.Length; i++)

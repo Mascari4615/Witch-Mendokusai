@@ -700,8 +700,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -36.67}
-  m_SizeDelta: {x: 530, y: 53.34}
+  m_AnchoredPosition: {x: 315, y: -36.67}
+  m_SizeDelta: {x: 610, y: 53.34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2756034575524045498
 CanvasRenderer:
@@ -878,7 +878,7 @@ MonoBehaviour:
   m_HorizontalScrollbar: {fileID: 0}
   m_VerticalScrollbar: {fileID: 6160399404559428622}
   m_HorizontalScrollbarVisibility: 2
-  m_VerticalScrollbarVisibility: 0
+  m_VerticalScrollbarVisibility: 1
   m_HorizontalScrollbarSpacing: -3
   m_VerticalScrollbarSpacing: 0
   m_OnValueChanged:

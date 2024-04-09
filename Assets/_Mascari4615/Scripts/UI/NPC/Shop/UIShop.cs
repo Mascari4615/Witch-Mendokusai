@@ -13,6 +13,8 @@ namespace Mascari4615
 
 		public override void Init()
 		{
+			base.Init();
+			
 			shopInventoryUI = GetComponentInChildren<UIItemDataGrid>(true);
 			itemInventoryUI = GetComponentInChildren<UIItemGrid>(true);
 
