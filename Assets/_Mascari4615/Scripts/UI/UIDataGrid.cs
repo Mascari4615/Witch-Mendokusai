@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public abstract class UIDataGrid<T> : MonoBehaviour
+	public abstract class UIDataGrid<T> : MonoBehaviour, IUI
 	{
 		[field: SerializeField] public DataBufferSO<T> DataBufferSO { get; private set; }
 		public List<T> Datas { get; private set; }

@@ -11,9 +11,30 @@ namespace Mascari4615
 		[field: SerializeField] public List<T> InitItems { get; private set; }
 		[field: NonSerialized] public List<T> Datas { get; protected set; } = new();
 
-		public virtual void Add(T t) => Datas.Add(t);
-		public virtual bool Remove(T t) => Datas.Remove(t);
-		public virtual void Clear() => Datas.Clear();
+		[field: NonSerialized] public List<IUI> UIs { get; private set; } = new();
+
+		public virtual void Add(T t)
+		{
+			Datas.Add(t);
+			UpdateUI();
+		}
+
+		public virtual bool Remove(T t)
+		{
+			bool removeResult = Datas.Remove(t);
+			UpdateUI();
+			return removeResult;
+		}
+
+		public virtual void Clear()
+		{
+			Datas.Clear();
+			UpdateUI();
+		}
+
+		public void RegisterUI(IUI ui) => UIs.Add(ui);
+
+		public void UpdateUI() => UIs.ForEach(ui => ui.UpdateUI());
 
 		public virtual void OnAfterDeserialize()
 		{

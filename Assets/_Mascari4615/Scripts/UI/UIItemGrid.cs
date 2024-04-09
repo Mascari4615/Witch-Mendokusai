@@ -17,10 +17,10 @@ namespace Mascari4615
 				return false;
 
 			Inventory inventory = DataBufferSO as Inventory;
-			inventory.RegisterInventoryUI(this);
+			inventory.RegisterUI(this);
 
 			foreach (UIItemSlot slot in Slots.Cast<UIItemSlot>())
-				slot.SetInventory(inventory);
+				slot.SetUIItemGrid(this);
 
 			if (filtersParent != null)
 			{
@@ -41,6 +41,12 @@ namespace Mascari4615
 
 			for (int i = 0; i < Slots.Count; i++)
 			{
+				if (inventory.Capacity <= i)
+				{
+					Slots[i].gameObject.SetActive(false);
+					continue;
+				}
+
 				UIItemSlot slot = Slots[i] as UIItemSlot;
 				Item item = inventory.Datas.ElementAtOrDefault(i);
 
@@ -48,14 +54,16 @@ namespace Mascari4615
 				{
 					slot.SetSlot(null);
 					slot.gameObject.SetActive(dontShowEmptySlot == false);
+					slot.SetDisable(false);
 				}
 				else
 				{
 					ItemData itemData = item.Data;
-					bool slotActive = (filter == ItemType.None) || (itemData.Type == filter);
+					bool slotDisable = (filter != ItemType.None) && (itemData.Type != filter);
 
 					slot.SetSlot(itemData, item.Amount);
-					slot.gameObject.SetActive(slotActive);
+					slot.gameObject.SetActive(true);
+					slot.SetDisable(slotDisable);
 				}
 			}
 		}

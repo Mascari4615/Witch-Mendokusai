@@ -19,7 +19,8 @@ namespace Mascari4615
 	{
 		protected TextMeshProUGUI priceText;
 	
-		public Inventory Inventory { get; private set; }
+		public UIItemGrid UIItemGrid { get; private set; }
+		public Inventory Inventory => UIItemGrid.DataBufferSO as Inventory;
 
 		public bool onlyOneItem = false;
 		public bool canPlayerSetItem = true;
@@ -57,6 +58,9 @@ namespace Mascari4615
 				return;
 
 			if (DataSO == null)
+				return;
+
+			if (IsDisable)
 				return;
 
 			DragSlot.Instance.SetSlot(this);
@@ -99,6 +103,8 @@ namespace Mascari4615
 
 		private void SwapSlot()
 		{
+			Debug.Log(nameof(SwapSlot));
+
 			if (onlyOneItem)
 			{
 				if (DataSO == null)
@@ -128,13 +134,10 @@ namespace Mascari4615
 			Item itemA = slotA.Inventory.GetItem(slotA.Index);
 			Item itemB = slotB.Inventory.GetItem(slotB.Index);
 
-			// 1. 셀 수 있는 아이템이고, 동일한 아이템일 경우
-			//    indexA -> indexB로 개수 합치기
-			if (itemA != null && itemB != null &&
-				itemA.Data == itemB.Data &&
-				itemA.Data.IsCountable && itemB.Data.IsCountable)
+			// 1. 셀 수 있는 아이템이고, 동일한 아이템일 경우 indexA -> indexB로 개수 합치기
+			if (itemA != null && itemB != null && itemA.Data == itemB.Data)
 			{
-				int maxAmount = itemB.MaxAmount;
+				int maxAmount = itemA.MaxAmount;
 				int sum = itemA.Amount + itemB.Amount;
 
 				if (sum <= maxAmount)
@@ -158,9 +161,11 @@ namespace Mascari4615
 			// 두 슬롯 정보 갱신
 			slotA.Inventory.UpdateSlot(slotA.Index);
 			slotB.Inventory.UpdateSlot(slotB.Index);
+
+			slotA.Select();
 		}
 
-		public void SetInventory(Inventory inventory) => Inventory = inventory;
+		public void SetUIItemGrid(UIItemGrid itemGridUI) => UIItemGrid = itemGridUI;
 		public void SetPriceType(PriceType priceType)
 		{
 			this.priceType = priceType;

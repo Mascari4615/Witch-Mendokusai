@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public abstract class UIPanel : MonoBehaviour
+	public abstract class UIPanel : MonoBehaviour, IUI
 	{
 		// private CanvasGroup canvasGroup;
 		private bool active;

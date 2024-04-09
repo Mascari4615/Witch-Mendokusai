@@ -62,12 +62,13 @@ namespace Mascari4615
 		}
 	}
 
-	public class UISlot : MonoBehaviour, ISelectHandler
+	public class UISlot : MonoBehaviour, IUI, ISelectHandler
 	{
 		public int Index { get; private set; }
 		public ToolTipTrigger ToolTipTrigger { get; private set; }
 		public SlotData Data { get; private set; }
 		public int Amount { get; private set; }
+		public bool IsDisable { get; private set; } = false;
 
 		[SerializeField] protected DataSO defaultDataSO;
 
@@ -78,10 +79,10 @@ namespace Mascari4615
 		protected TextMeshProUGUI descriptionText;
 		protected Image disableImage;
 
+		private Action<UISlot> selectAction;
 		private Action<UISlot> clickAction;
 
 		private bool isInit = false;
-		private bool isDisable = false;
 
 		public DataSO DataSO => Data.DataSO;
 
@@ -93,7 +94,7 @@ namespace Mascari4615
 
 			button = GetComponent<Button>();
 			if (button)
-				button.onClick.AddListener(Click);
+				button.onClick.AddListener(OnClick);
 
 			iconImage = transform.Find("[Image] IconBackground").Find("[Image] Icon").GetComponent<Image>();
 			disableImage = transform.Find("[Image] Disable").GetComponent<Image>();
@@ -145,34 +146,37 @@ namespace Mascari4615
 
 		public void SetDisable(bool isDisable)
 		{
-			this.isDisable = isDisable;
+			this.IsDisable = isDisable;
 			disableImage.gameObject.SetActive(isDisable);
 		}
 
-		public void SetClickAction(Action<UISlot> action)
-		{
-			clickAction = action;
-		}
+		public void SetSelectAction(Action<UISlot> action) => selectAction = action;
+		public void SetClickAction(Action<UISlot> action) => clickAction = action;
 
 		public void Select()
 		{
-			Debug.Log($"{name} has button? {button != null}");
+			// Debug.Log($"{name} has button? {button != null}");
+
 			if (button)
 				button.Select();
+			else
+				OnSelect(null);
 		}
 
 		public void OnSelect(BaseEventData eventData)
 		{
-			Debug.Log($"{name} is selected");
+			// Debug.Log($"{name} is selected");
+			selectAction?.Invoke(this);
+			if (ToolTipTrigger)
+				ToolTipTrigger.Trigger();
 		}
 
-		public void Click()
+		public void OnClick()
 		{
-			Debug.Log($"{name} is clicked");
-
+			// Debug.Log($"{name} is clicked");
 			clickAction?.Invoke(this);
 			if (ToolTipTrigger)
-				ToolTipTrigger.Click();
+				ToolTipTrigger.Trigger();
 		}
 	}
 }

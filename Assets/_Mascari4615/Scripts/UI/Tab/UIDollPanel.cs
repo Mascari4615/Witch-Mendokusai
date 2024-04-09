@@ -9,7 +9,7 @@ namespace Mascari4615
 	public class UIDollPanel : UIPanel
 	{
 		[SerializeField] private GameObject selectNewEquipmentPanel;
-		private UIDollInventory dollInventoryUI;
+		private UIDollGrid dollGridUI;
 		private UIItemGrid selectNewEquipmentInventoryUI;
 		[SerializeField] private GameObject selectDollButton;
 		[SerializeField] private UISlot[] curStuffsSlot;
@@ -30,13 +30,13 @@ namespace Mascari4615
 
 		public void SetDoll()
 		{
-			DataManager.Instance.CurDollID = dollInventoryUI.CurSlotIndex;
+			DataManager.Instance.CurDollID = dollGridUI.CurSlotIndex;
 			UpdateUI();
 		}
 
 		public override void Init()
 		{
-			dollInventoryUI = GetComponentInChildren<UIDollInventory>(true);
+			dollGridUI = GetComponentInChildren<UIDollGrid>(true);
 			selectNewEquipmentInventoryUI = selectNewEquipmentPanel.GetComponentInChildren<UIItemGrid>(true);
 			
 			selectNewEquipmentPanel.SetActive(false);
@@ -44,17 +44,18 @@ namespace Mascari4615
 			for (int i = 0; i < curStuffsSlot.Length; i++)
 			{
 				curStuffsSlot[i].SetSlotIndex(i);
-				curStuffsSlot[i].SetClickAction((slot) =>{OpenChangeEuqipmentPanel(slot.Index);});
+				curStuffsSlot[i].SetClickAction((slot) => {OpenChangeEuqipmentPanel(slot.Index);});
 			}
 
-			dollInventoryUI.Init();
+			dollGridUI.Init();
 			selectNewEquipmentInventoryUI.Init();
 
-			foreach (UISlot slot in dollInventoryUI.Slots)
+			// 인형
+			foreach (UISlot slot in dollGridUI.Slots)
 			{
-				slot.SetClickAction((slot) =>
+				slot.SetSelectAction((slot) =>
 				{
-					dollInventoryUI.SelectSlot(slot.Index);
+					dollGridUI.SelectSlot(slot.Index);
 					UpdateUI();
 				});
 			}
@@ -71,7 +72,7 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			int curDollID = dollInventoryUI.CurSlot.DataSO.ID;
+			int curDollID = dollGridUI.CurSlot.DataSO.ID;
 
 			selectNewEquipmentPanel.SetActive(false);
 
@@ -103,35 +104,36 @@ namespace Mascari4615
 			Item newItem = SOManager.Instance.ItemInventory.GetItem(newItemSlotIndex);
 
 			// UI에서 선택한 인형
-			Doll curDoll = dollInventoryUI.CurSlot.DataSO as Doll;
+			Doll curDoll = dollGridUI.CurSlot.DataSO as Doll;
 
 			// 선택한 슬롯이 비어있는 경우
 			if (newItem == null)
 			{
 				curDoll.EquipmentGuids[targetEquipmentIndex] = null;
+				UpdateUI();
+				return;
 			}
+
 			// 선택한 슬롯이 비어있지 않은 경우
-			else
+			// 이 장비를 이미 이 인형이나 다른 인형이 착용하고 있는지 확인
+			foreach (Doll doll in SOManager.Instance.DollBuffer.Datas)
 			{
-				// 이 장비를 이미 이 인형이나 다른 인형이 착용하고 있는지 확인
-				foreach (Doll doll in SOManager.Instance.DollBuffer.Datas)
+				for (int ei = 0; ei < doll.EquipmentGuids.Count; ei++)
 				{
-					for (int ei = 0; ei < doll.EquipmentGuids.Count; ei++)
+					// 있다면 스왑
+					if (doll.EquipmentGuids[ei] == newItem.Guid)
 					{
-						// 있다면 스왑
-						if (doll.EquipmentGuids[ei] == newItem.Guid)
-						{
-							doll.EquipmentGuids[ei] = curDoll.EquipmentGuids[targetEquipmentIndex];
-							curDoll.EquipmentGuids[targetEquipmentIndex] = newItem.Guid;
-							UpdateUI();
-							return;
-						}
+						doll.EquipmentGuids[ei] = curDoll.EquipmentGuids[targetEquipmentIndex];
+						curDoll.EquipmentGuids[targetEquipmentIndex] = newItem.Guid;
+						UpdateUI();
+						return;
 					}
 				}
-
-				// 누구도 착용하고 있지 않다면, 단순히 착용
-				curDoll.EquipmentGuids[targetEquipmentIndex] = newItem.Guid;
 			}
+
+			// 누구도 착용하고 있지 않다면, 단순히 착용
+			curDoll.EquipmentGuids[targetEquipmentIndex] = newItem.Guid;
+			UpdateUI();
 		}
 	}
 }

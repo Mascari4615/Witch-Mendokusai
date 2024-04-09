@@ -13,12 +13,6 @@ namespace Mascari4615
 		private const int NONE = -1;
 		private const int DefaultCapacity = 30;
 		public int Capacity { get; private set; } = DefaultCapacity;
-		[NonSerialized] private readonly List<UIItemGrid> inventoryUIs = new();
-
-		public void RegisterInventoryUI(UIItemGrid uiItemInventory)
-		{
-			inventoryUIs.Add(uiItemInventory);
-		}
 
 		private int FindEmptySlotIndex(int startIndex = 0)
 		{
@@ -244,27 +238,25 @@ namespace Mascari4615
 		{
 			foreach (int i in indices)
 				UpdateSlot(i);
+			UpdateUI();
 		}
 
 		public void UpdateSlot(int index)
 		{
-			if (!IsValidIndex(index)) return;
+			// Debug.Log($"{name} : {nameof(UpdateSlot)}({index})");
+
+			if (IsValidIndex(index) == false)
+			{
+				Debug.Log($"{name} : Invalid index {index}");
+				return;
+			}
 
 			if (Datas[index] != null)
 				if (Datas[index].Data.IsCountable)
 					if (Datas[index].IsEmpty)
 						Datas[index] = null;
 
-			Item item = Datas[index];
-
-			foreach (UIItemGrid inventoryUI in inventoryUIs)
-			{
-				inventoryUI.UpdateSlotUI(index, item);
-
-				// 1. 아이템이 슬롯에 존재하는 경우
-				//if (item != null)
-				//  inventoryUI.UpdateSlotFilterState(index, item.Data);
-			}
+			UpdateUI();
 		}
 
 		public void Load(List<InventorySlotData> savedItems)

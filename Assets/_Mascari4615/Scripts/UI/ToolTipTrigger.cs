@@ -50,7 +50,7 @@ namespace Mascari4615
 				ToolTipPopupManager.Instance.Hide();
 		}
 
-		public void Click()
+		public void Trigger()
 		{
 			if (ClickToolTip == null)
 				return;
