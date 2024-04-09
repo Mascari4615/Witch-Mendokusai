@@ -20,7 +20,7 @@ namespace Mascari4615
 			for (int i = 0; i < cardSlots.Length; i++)
 			{
 				cardSlots[i].Init();
-				cardSlots[i].SetSelectAction(cardSelectAction);
+				cardSlots[i].SetClickAction(cardSelectAction);
 			}
 		}
 

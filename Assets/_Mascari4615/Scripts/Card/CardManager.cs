@@ -70,9 +70,9 @@ namespace Mascari4615
 
 				deckSelectButtons[i].SetSlotIndex(i);
 				deckSelectButtons[i].SetSlot(equipment);
-				deckSelectButtons[i].SetSelectAction((slot) => { SelectDeck(slot.Index); });
+				deckSelectButtons[i].SetClickAction((slot) => { SelectDeck(slot.Index); });
 
-				cardSelectButtons[i].SetSelectAction((slot) => { SelectCard(slot.DataSO as Card); });
+				cardSelectButtons[i].SetClickAction((slot) => { SelectCard(slot.DataSO as Card); });
 			}
 		}
 

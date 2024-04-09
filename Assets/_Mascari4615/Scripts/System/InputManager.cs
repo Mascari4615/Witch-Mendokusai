@@ -17,11 +17,11 @@ namespace Mascari4615
 			// UIManager
 			if (Input.GetKeyDown(KeyCode.Tab))
 				UIManager.Instance.ToggleOverlayUI_Tab();
-			if (Input.GetKeyDown(KeyCode.Escape))
+			if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.X))
 				UIManager.Instance.ToggleOverlayUI_Setting();
 
 			// Player
-			if (Input.GetKeyDown(KeyCode.F))
+			if (Input.GetKeyDown(KeyCode.Z))
 				PlayerController.Instance.TryInteract();
 			if (Input.GetKeyDown(KeyCode.Space))
 				PlayerController.Instance.TryUseSkill(0);

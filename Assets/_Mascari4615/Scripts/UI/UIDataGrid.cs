@@ -43,7 +43,7 @@ namespace Mascari4615
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				Slots[i].SetSlotIndex(i);
-				Slots[i].SetSelectAction((slot) => { SelectSlot(slot.Index); });
+				Slots[i].SetClickAction((slot) => { SelectSlot(slot.Index); });
 				Slots[i].Init();
 
 				if (clickToolTip != null)
@@ -94,8 +94,6 @@ namespace Mascari4615
 		public void SelectSlot(int index)
 		{
 			CurSlotIndex = index;
-			for (int i = 0; i < Slots.Count; i++)
-				Slots[i].SetSelected(i == index);
 			if (clickToolTip != null)
 				clickToolTip.SetToolTipContent(CurSlot.Data);
 		}

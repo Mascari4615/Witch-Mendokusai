@@ -20,7 +20,7 @@ namespace Mascari4615
 			shopInventoryUI.SetPriceType(PriceType.Buy);
 			foreach (UISlot slot in shopInventoryUI.Slots)
 			{
-				slot.SetSelectAction((slot) =>
+				slot.SetClickAction((slot) =>
 				{
 					shopInventoryUI.SelectSlot(slot.Index);
 					BuyItem(slot.DataSO.ID);
@@ -31,7 +31,7 @@ namespace Mascari4615
 			itemInventoryUI.SetPriceType(PriceType.Sell);
 			foreach (UISlot slot in itemInventoryUI.Slots)
 			{
-				slot.SetSelectAction((slot) =>
+				slot.SetClickAction((slot) =>
 				{
 					itemInventoryUI.SelectSlot(slot.Index);
 					SellItem(slot.Index);

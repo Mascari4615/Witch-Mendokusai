@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using TMPro;
 using UnityEditor;
+using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
@@ -61,7 +62,7 @@ namespace Mascari4615
 		}
 	}
 
-	public class UISlot : MonoBehaviour
+	public class UISlot : MonoBehaviour, ISelectHandler
 	{
 		public int Index { get; private set; }
 		public ToolTipTrigger ToolTipTrigger { get; private set; }
@@ -76,9 +77,8 @@ namespace Mascari4615
 		protected TextMeshProUGUI countText;
 		protected TextMeshProUGUI descriptionText;
 		protected Image disableImage;
-		protected GameObject selectedBlock;
 
-		private Action<UISlot> selectAction;
+		private Action<UISlot> clickAction;
 
 		private bool isInit = false;
 		private bool isDisable = false;
@@ -93,7 +93,7 @@ namespace Mascari4615
 
 			button = GetComponent<Button>();
 			if (button)
-				button.onClick.AddListener(Select);
+				button.onClick.AddListener(Click);
 
 			iconImage = transform.Find("[Image] IconBackground").Find("[Image] Icon").GetComponent<Image>();
 			disableImage = transform.Find("[Image] Disable").GetComponent<Image>();
@@ -101,7 +101,6 @@ namespace Mascari4615
 			nameText = transform.Find("[Text] Name").GetComponent<TextMeshProUGUI>();
 			countText = transform.Find("[Text] Count").GetComponent<TextMeshProUGUI>();
 			descriptionText = transform.Find("[Text] Description").GetComponent<TextMeshProUGUI>();
-			selectedBlock = transform.Find("[Block] Selected").gameObject;
 
 			ToolTipTrigger = GetComponent<ToolTipTrigger>();
 
@@ -150,24 +149,30 @@ namespace Mascari4615
 			disableImage.gameObject.SetActive(isDisable);
 		}
 
-		public void SetSelectAction(Action<UISlot> action)
+		public void SetClickAction(Action<UISlot> action)
 		{
-			selectAction = action;
+			clickAction = action;
 		}
 
 		public void Select()
 		{
-			// Debug.Log("Select");
-			selectAction?.Invoke(this);
-
-			if (ToolTipTrigger)
-				ToolTipTrigger.Click();
+			Debug.Log($"{name} has button? {button != null}");
+			if (button)
+				button.Select();
 		}
 
-		public void SetSelected(bool isSelect)
+		public void OnSelect(BaseEventData eventData)
 		{
-			if (selectedBlock)
-				selectedBlock.SetActive(isSelect);
+			Debug.Log($"{name} is selected");
+		}
+
+		public void Click()
+		{
+			Debug.Log($"{name} is clicked");
+
+			clickAction?.Invoke(this);
+			if (ToolTipTrigger)
+				ToolTipTrigger.Click();
 		}
 	}
 }

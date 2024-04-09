@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
@@ -66,21 +67,23 @@ namespace Mascari4615
 		{
 			canvasGroup = GetComponent<CanvasGroup>();
 
-			talkOption.SetSelectAction((slot) => { Talk(); });
-			exitOption.SetSelectAction((slot) => { Exit(); });
+			exitOption.Init();
+			exitOption.SetClickAction((slot) => { Exit(); });
+			talkOption.Init();
+			talkOption.SetClickAction((slot) => { Talk(); });
 
 			for (int i = 0; i < questOptions.Length; i++)
 			{
 				questOptions[i].SetSlotIndex(i);
 				questOptions[i].Init();
-				questOptions[i].SetSelectAction((slot) => { SelectQuest(slot.Index); });
+				questOptions[i].SetClickAction((slot) => { SelectQuest(slot.Index); });
 			}
 
 			for (int i = 0; i < options.Length; i++)
 			{
 				options[i].SetSlotIndex(i);
 				options[i].Init();
-				options[i].SetSelectAction((slot) => { SetPanel((NPCPanelType)(1 << slot.Index)); });
+				options[i].SetClickAction((slot) => { SetPanel((NPCPanelType)(1 << slot.Index)); });
 			}
 
 			panelUIs[NPCPanelType.Shop] = FindObjectOfType<UIShop>(true);
@@ -141,6 +144,8 @@ namespace Mascari4615
 
 		public void Talk()
 		{
+			Debug.Log("Talk");
+
 			buttonsParent.SetActive(false);
 			CameraManager.Instance.SetCamera(CameraType.Dialogue);
 			UIManager.Instance.Chat.StartChat(curNPC, () =>
@@ -158,11 +163,14 @@ namespace Mascari4615
 
 				SetPanel(NPCPanelType.None);
 				buttonsParent.SetActive(true);
+				exitOption.Select();
 			});
 		}
 
 		public void Exit()
 		{
+			Debug.Log("Talk");
+		
 			UIManager.Instance.SetOverlay(MPanelType.None);
 		}
 

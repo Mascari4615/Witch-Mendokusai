@@ -35,7 +35,8 @@ namespace Mascari4615
 				// SpawnPortalIndex가 -1이면, 포탈 타기 전 마지막 위치로 돌아간다는 뜻
 
 				// https://gall.dcinside.com/mgallery/board/view/?id=game_dev&no=99368
-				PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(NoCollision));
+				// 플레이어가 더 이상 충돌로 Interactive 오브젝트들을 찾지 않음
+				// PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(NoCollision));
 
 				// TimeScale 0이면 FixedUpdate가 호출되지 않기 때문에 임의로 조정
 				TimeManager.Instance.Resume();
@@ -68,7 +69,8 @@ namespace Mascari4615
 				yield return new WaitForFixedUpdate();
 				yield return new WaitForFixedUpdate();
 				yield return new WaitForFixedUpdate();
-				PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(Unit));
+				// 플레이어가 더 이상 충돌로 Interactive 오브젝트들을 찾지 않음
+				// PlayerController.Instance.SetInteractionColliderLayer(LayerMask.NameToLayer(Unit));
 				TimeManager.Instance.Pause();
 
 				action?.Invoke();

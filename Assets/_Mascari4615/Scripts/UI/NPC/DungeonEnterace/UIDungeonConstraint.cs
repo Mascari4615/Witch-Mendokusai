@@ -36,7 +36,7 @@ namespace Mascari4615
 				constraintSlots[i].SetSlot(GetDungeonConstraint(i));
 				constraintSlots[i].SetSlotIndex(i);
 				constraintSlots[i].Init();
-				constraintSlots[i].SetSelectAction((UISlot slot) => ToggleConstraint(slot.Index));
+				constraintSlots[i].SetClickAction((UISlot slot) => ToggleConstraint(slot.Index));
 			}
 		}
 

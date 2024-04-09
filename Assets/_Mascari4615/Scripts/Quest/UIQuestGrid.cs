@@ -33,7 +33,7 @@ namespace Mascari4615
 				for (int i = 0; i < fillerButtons.Length; i++)
 				{
 					fillerButtons[i].SetSlotIndex(i);
-					fillerButtons[i].SetSelectAction((slot) =>
+					fillerButtons[i].SetClickAction((slot) =>
 					{
 						QuestType newFilter = (QuestType)(slot.Index - 1);
 						SetFilter(newFilter);

@@ -27,7 +27,7 @@ namespace Mascari4615
 			{
 				dungeonSelectButtons[i].SetSlotIndex(i);
 				dungeonSelectButtons[i].Init();
-				dungeonSelectButtons[i].SetSelectAction((UISlot slot) => SelectDungeon(slot.Index));
+				dungeonSelectButtons[i].SetClickAction((UISlot slot) => SelectDungeon(slot.Index));
 			}
 
 			rewardUI = GetComponentInChildren<UIRewards>(true);

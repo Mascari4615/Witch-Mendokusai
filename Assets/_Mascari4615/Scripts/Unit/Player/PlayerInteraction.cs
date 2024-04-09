@@ -6,18 +6,13 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class PlayerInteraction : MonoBehaviour
+	public class PlayerInteraction
 	{
 		private GameObject GetNearestInteractiveObject()
 		{
 			const float maxDistance = 1.5f;
-			GameObject nearest = GameManager.Instance.GetNearestObject(ObjectBufferType.Interactive, transform.position, maxDistance);
+			GameObject nearest = GameManager.Instance.GetNearestObject(ObjectBufferType.Interactive, PlayerController.Instance.transform.position, maxDistance);
 			return nearest;
-		}
-
-		private void Start()
-		{
-			SOManager.Instance.CanInteract.RuntimeValue = true;
 		}
 
 		public void Interaction()
@@ -31,11 +26,6 @@ namespace Mascari4615
 		private void UpdateCanInteractVariable()
 		{
 			SOManager.Instance.CanInteract.RuntimeValue = GameManager.Instance.ObjectBuffers[ObjectBufferType.Interactive].Count > 0;
-		}
-
-		public void SetLayer(int layer)
-		{
-			gameObject.layer = layer;
 		}
 	}
 }

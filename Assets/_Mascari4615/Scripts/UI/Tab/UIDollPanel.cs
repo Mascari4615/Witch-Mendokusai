@@ -44,7 +44,7 @@ namespace Mascari4615
 			for (int i = 0; i < curStuffsSlot.Length; i++)
 			{
 				curStuffsSlot[i].SetSlotIndex(i);
-				curStuffsSlot[i].SetSelectAction((slot) =>{OpenChangeEuqipmentPanel(slot.Index);});
+				curStuffsSlot[i].SetClickAction((slot) =>{OpenChangeEuqipmentPanel(slot.Index);});
 			}
 
 			dollInventoryUI.Init();
@@ -52,7 +52,7 @@ namespace Mascari4615
 
 			foreach (UISlot slot in dollInventoryUI.Slots)
 			{
-				slot.SetSelectAction((slot) =>
+				slot.SetClickAction((slot) =>
 				{
 					dollInventoryUI.SelectSlot(slot.Index);
 					UpdateUI();
@@ -61,7 +61,7 @@ namespace Mascari4615
 
 			for (int i = 0; i < selectNewEquipmentInventoryUI.Slots.Count; i++)
 			{
-				selectNewEquipmentInventoryUI.Slots[i].SetSelectAction((slot) =>
+				selectNewEquipmentInventoryUI.Slots[i].SetClickAction((slot) =>
 				{
 					selectNewEquipmentInventoryUI.SelectSlot(slot.Index);
 					ChangeItem(slot.Index);
