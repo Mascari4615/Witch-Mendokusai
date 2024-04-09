@@ -53,10 +53,10 @@ namespace Mascari4615
 			{
 				UIManager.Instance.SetOverlay(MPanelType.None);
 				UIManager.Instance.SetCanvas(MCanvasType.Dungeon);
-				monsterSpawner.transform.position = PlayerController.Instance.transform.position;
+				monsterSpawner.transform.position = Player.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
 
-				PlayerController.Instance.PlayerObject.Init(GetDoll(DataManager.Instance.CurDollID));
+				Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
 				expChecker.Init();
 				cardManager.Init();
 
@@ -114,7 +114,7 @@ namespace Mascari4615
 
 				expChecker.Init();
 				cardManager.ClearCardEffect();
-				PlayerController.Instance.PlayerObject.Init(PlayerController.Instance.PlayerObject.UnitData);
+				Player.Instance.Object.Init(Player.Instance.Object.UnitData);
 
 				for (int i = 0; i < 3; i++)
 				{

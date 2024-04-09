@@ -47,12 +47,12 @@ namespace Mascari4615
 
 		private void SetDestinationPlayer()
 		{
-			moveDest = PlayerController.Instance.transform.position;
+			moveDest = Player.Instance.transform.position;
 		}
 
 		protected bool IsPlayerFar()
 		{
-			float distance = Vector3.Distance(PlayerController.Instance.transform.position, unitObject.transform.position);
+			float distance = Vector3.Distance(Player.Instance.transform.position, unitObject.transform.position);
 			bool isPlayerFar = distance > attackRange;
 
 			return isPlayerFar;
@@ -78,7 +78,7 @@ namespace Mascari4615
 		
 		protected bool IsSkill0Ready()
 		{
-			return unitObject.UnitSkillHandler.IsReady(0);
+			return unitObject.SkillHandler.SkillDic[0].IsReady;
 		}
 
 		protected void UseSkill0()

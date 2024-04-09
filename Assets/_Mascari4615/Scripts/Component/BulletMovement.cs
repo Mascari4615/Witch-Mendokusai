@@ -38,7 +38,7 @@ namespace Mascari4615
 			}
 			else
 			{
-				SetMoveDirection((PlayerController.Instance.transform.position - skillObject.User.transform.position).normalized);
+				SetMoveDirection((Player.Instance.transform.position - skillObject.User.transform.position).normalized);
 			}
 		}
 	}

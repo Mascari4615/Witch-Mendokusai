@@ -9,9 +9,10 @@ namespace Mascari4615
 	{
 		[SerializeField] private Image coolTimeImage;
 
-		public void UpdateCooltime(Skill skill, SkillCoolTime skillCoolTime)
+		public void UpdateCooltime(Skill skill)
 		{
-			coolTimeImage.fillAmount = skillCoolTime.CurCooltime / skillCoolTime.Cooltime;
+			// Debug.Log($"UpdateCooltime : {skill.Data.Name} : {skill.Cooldown.Remain} / {skill.Cooldown.Base}");
+			coolTimeImage.fillAmount = skill.Cooldown.Remain / skill.Cooldown.Base;
 		}
 	}
 }

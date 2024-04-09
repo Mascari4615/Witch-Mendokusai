@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -10,9 +11,9 @@ namespace Mascari4615
 		private Coroutine invincibleRoutine = null;
 		[SerializeField] private GameObject diedX;
 
-		private void Start()
+		public void SetDoll(int dollID)
 		{
-			Stat.AddListener(StatType.COOLTIME_BONUS, UpdateCoolTime);
+			Init(GetDoll(dollID));
 		}
 
 		public override void Init(Unit unitData)
@@ -52,9 +53,9 @@ namespace Mascari4615
 			}
 		}
 
-		protected override void OnDie()
+		protected override void OnDied()
 		{
-			base.OnDie();
+			base.OnDied();
 			SOManager.Instance.IsDied.RuntimeValue = true;
 			SOManager.Instance.OnPlayerDied.Raise();
 			TimeManager.Instance.DoSlowMotion();
@@ -78,11 +79,6 @@ namespace Mascari4615
 
 			SpriteRenderer.material.SetFloat("_Emission", 0);
 			invincibleRoutine = null;
-		}
-
-		public void UpdateCoolTime()
-		{
-			UnitSkillHandler.SetCoolTimeBonus(Stat[StatType.COOLTIME_BONUS]);
 		}
 	}
 }

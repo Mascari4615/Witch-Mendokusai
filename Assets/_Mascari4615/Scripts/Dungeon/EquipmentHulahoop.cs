@@ -9,11 +9,11 @@ namespace Mascari4615
 	{
 		[SerializeField] private float rotateSpeed = 3;
 
-		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+		private Stat PlayerStat => Player.Instance.Stat;
 
 		private void OnEnable()
 		{
-			Transform parent = PlayerController.Instance.transform;
+			Transform parent = Player.Instance.transform;
 			transform.SetParent(parent);
 			transform.localPosition = Vector3.zero;
 

@@ -1,43 +1,41 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mascari4615
 {
-	public abstract class Skill : DataSO
+	public class Skill
 	{
-		[field: SerializeField] public bool AutoUse { get; set; }
-		[field: SerializeField] public float Cooltime { get; set; }
-		[field: SerializeField] public float PrevDelay { get; set; } = 0;
-		[field: SerializeField] public float AfterDelay { get; set; } = 0;
+		public SkillData Data { get; private set; }
+		public Cooldown Cooldown { get; private set; }
+		public bool IsReady => Cooldown.IsReady;
+
+		public Skill(SkillData data)
+		{
+			Data = data;
+			Cooldown = new Cooldown();
+		}
+
+		public void UpdateCooltime(float coolTimeBonus = 0)
+		{
+			Cooldown.Set(Data.Cooltime * (1f - (coolTimeBonus / 100f)));
+		}
+
+		public void Tick() => Cooldown.Tick();
 
 		public void Use(UnitObject unitObject)
 		{
-			unitObject.StartCoroutine(SkillCoroutine(unitObject));
+			Data.Use(unitObject);
+			Cooldown.Reset();
 		}
+	}
 
-		public IEnumerator SkillCoroutine(UnitObject unitObject)
-		{
-			yield return null;
-			
-			if (PrevDelay > 0)
-			{
-				SOManager.Instance.IsCooling.RuntimeValue = true;
-				yield return new WaitForSeconds(PrevDelay);
-				SOManager.Instance.IsCooling.RuntimeValue = false;
-			}
+	public class Cooldown
+	{
+		public float Base { get; private set; }
+		public float Remain { get; private set; }
+		public bool IsReady => Remain == 0;
 
-			ActualUse(unitObject);
-
-			if (AfterDelay > 0)
-			{
-				SOManager.Instance.IsCooling.RuntimeValue = true;
-				yield return new WaitForSeconds(AfterDelay);
-				SOManager.Instance.IsCooling.RuntimeValue = false;
-			}
-		}
-
-		public abstract void ActualUse(UnitObject unitObject);
+		public void Set(float baseCooltime) => Base = baseCooltime;
+		public void Reset() => Remain = Base;
+		public void Tick() => Remain = Mathf.Clamp(Remain - TimeManager.TICK, 0, float.MaxValue);
 	}
 }

@@ -67,7 +67,7 @@ namespace Mascari4615
 
 		private void LateUpdate()
 		{
-			Vector3 direction = (PlayerController.Instance.transform.position - cinemachineBrain.transform.position).normalized;
+			Vector3 direction = (Player.Instance.transform.position - cinemachineBrain.transform.position).normalized;
 			// RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Mathf.Infinity, 1 << LayerMask.NameToLayer("EnvironmentObject"));
 			RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Mathf.Infinity);
 

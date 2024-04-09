@@ -11,7 +11,7 @@ namespace Mascari4615
 		
 		[SerializeField] private GameObject levelUpEffect;
 		
-		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+		private Stat PlayerStat => Player.Instance.Stat;
 
 		private void Start()
 		{
@@ -42,7 +42,7 @@ namespace Mascari4615
 				SOManager.Instance.OnLevelUp.Raise();
 
 				GameObject l = ObjectManager.Instance.PopObject(levelUpEffect);
-				l.transform.position = PlayerController.Instance.transform.position;
+				l.transform.position = Player.Instance.transform.position;
 				l.SetActive(true);
 			}
 		}

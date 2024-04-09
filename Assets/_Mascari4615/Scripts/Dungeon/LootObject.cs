@@ -38,9 +38,9 @@ namespace Mascari4615
 			while (true)
 			{
 				t += Time.deltaTime * moveSpeed;
-				transform.position = Vector3.Lerp(transform.position, PlayerController.Instance.transform.position, t);
+				transform.position = Vector3.Lerp(transform.position, Player.Instance.transform.position, t);
 
-				if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < .3f)
+				if (Vector3.Distance(transform.position, Player.Instance.transform.position) < .3f)
 				{
 					Effect();
 					gameObject.SetActive(false);

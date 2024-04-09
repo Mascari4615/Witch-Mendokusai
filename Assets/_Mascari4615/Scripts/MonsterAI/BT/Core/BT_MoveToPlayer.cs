@@ -31,7 +31,7 @@ namespace Mascari4615
 
 		private void SetDestinationPlayer()
 		{
-			moveDest = PlayerController.Instance.transform.position;
+			moveDest = Player.Instance.transform.position;
 		}
 
 		private void MoveToDestination()

@@ -19,7 +19,7 @@ namespace Mascari4615
 		[SerializeField] private bool isExpBar;
 		private Coroutine routine;
 
-		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+		private Stat PlayerStat => Player.Instance.Stat;
 		private int Text => PlayerStat[textType];
 		private int Cur => PlayerStat[curType];
 		private int Max => PlayerStat[maxType];

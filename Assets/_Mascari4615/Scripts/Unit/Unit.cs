@@ -8,7 +8,7 @@ namespace Mascari4615
 	{
 		[field: Header("_" + nameof(Unit))]
 		[field: SerializeField] public GameObject Prefab { get; set; }
-		[field: SerializeField] public Skill[] DefaultSkills { get; set; }
+		[field: SerializeField] public SkillData[] DefaultSkills { get; set; }
 		[field: SerializeField] public Material Material { get; set; }
 		[field: SerializeField] public StatSO InitStatSO { get; set; }
 	}

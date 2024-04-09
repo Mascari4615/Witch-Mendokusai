@@ -50,7 +50,7 @@ namespace Mascari4615
 			hpBar.localScale = new Vector3((float)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX], 1, 1);
 
 			GameObject hitEffect = ObjectManager.Instance.PopObject(hitEffectPrefab);
-			hitEffect.transform.position = transform.position + (Vector3.Normalize(PlayerController.Instance.transform.position - transform.position) * .5f);
+			hitEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
 
 			/*
             if (DataManager.Instance.wgItemInven.Items.Contains(DataManager.Instance.ItemDic[36]))
@@ -87,9 +87,9 @@ namespace Mascari4615
 			}
 		}
 
-		protected override void OnDie()
+		protected override void OnDied()
 		{
-			base.OnDie();
+			base.OnDied();
 			DropLoot();
 
 			SOManager.Instance.Statistics[StatisticsType.MONSTER_KILLED]++;
@@ -130,7 +130,7 @@ namespace Mascari4615
             }*/
 
 			GameObject dieEffect = ObjectManager.Instance.PopObject(dieEffectPrefab);
-			dieEffect.transform.position = transform.position + (Vector3.Normalize(PlayerController.Instance.transform.position - transform.position) * .5f);
+			dieEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
 
 			gameObject.SetActive(false);
 		}
@@ -173,18 +173,18 @@ namespace Mascari4615
 		protected Vector3 GetRot()
 		{
 			return new Vector3(0, 0,
-				(Mathf.Atan2(PlayerController.Instance.transform.position.y - (transform.position.y + 0.8f),
-					PlayerController.Instance.transform.position.x - transform.position.x) * Mathf.Rad2Deg) - 90);
+				(Mathf.Atan2(Player.Instance.transform.position.y - (transform.position.y + 0.8f),
+					Player.Instance.transform.position.x - transform.position.x) * Mathf.Rad2Deg) - 90);
 		}
 
 		protected Vector3 GetDirection()
 		{
-			return (PlayerController.Instance.transform.position - transform.position).normalized;
+			return (Player.Instance.transform.position - transform.position).normalized;
 		}
 
 		protected bool IsPlayerRight()
 		{
-			return PlayerController.Instance.transform.position.x > transform.position.x;
+			return Player.Instance.transform.position.x > transform.position.x;
 		}
 	}
 }

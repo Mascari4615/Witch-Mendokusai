@@ -9,7 +9,7 @@ namespace Mascari4615
 	{
 		[field: SerializeField] public StatType Type { get; private set; }
 
-		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+		private Stat PlayerStat => Player.Instance.Stat;
 
 		public override void Apply()
 		{

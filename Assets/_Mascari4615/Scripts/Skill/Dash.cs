@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(Dash), menuName = "Skill/" + nameof(Dash))]
-	public class Dash : Skill
+	public class Dash : SkillData
 	{
 		public override void ActualUse(UnitObject unitObject)
 		{

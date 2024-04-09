@@ -9,7 +9,8 @@ namespace Mascari4615
 	// Mathf.Epsilon
 	public class TimeManager : Singleton<TimeManager>
 	{
-		public const float Tick = 0.1f;
+		public const float TICK = 0.05f;
+
 		public float slowFactor = 0.05f;
 		public float slowTime = .5f;
 		public float returnSpeed = 4f;
@@ -30,7 +31,7 @@ namespace Mascari4615
 		
 		private IEnumerator UpdateTime()
 		{
-			WaitForSeconds wait = new(Tick);
+			WaitForSeconds wait = new(TICK);
 			while (true)
 			{
 				SOManager.Instance.OnTick.Raise();
@@ -39,7 +40,7 @@ namespace Mascari4615
 			}
 		}
 
-		public void AddCallback(Action callback)
+		public void RegisterCallback(Action callback)
 		{
 			if (this.callback != null)
 			{
@@ -53,7 +54,7 @@ namespace Mascari4615
 
 		public void RemoveCallback(Action callback)
 		{
-			this.callback += callback;
+			this.callback -= callback;
 		}
 
 		public void UpdateTimeScale()

@@ -10,7 +10,7 @@ namespace Mascari4615
 	{
 		[SerializeField] private int amount;
 
-		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+		private Stat PlayerStat => Player.Instance.Stat;
 
 		public override void Effect()
 		{

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(SummonSkill), menuName = "Skill/SummonSkill")]
-	public class SummonSkill : Skill
+	public class SummonSkill : SkillData
 	{
 		[SerializeField] private GameObject prefab;
 		[SerializeField] private bool setRotation;

@@ -21,7 +21,7 @@ namespace Mascari4615
 			{ typeof(Effect), "E" },
 			{ typeof(ItemData), "I" },
 			{ typeof(MonsterWave), "MW" },
-			{ typeof(Skill), "SKL" },
+			{ typeof(SkillData), "SKL" },
 			{ typeof(WorldStage), "WS" },
 			{ typeof(Dungeon), "D" },
 			{ typeof(DungeonStage), "DS" },
@@ -38,7 +38,7 @@ namespace Mascari4615
 			{ typeof(Effect), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Effect)}/" },
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
-			{ typeof(Skill), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Skill)}/" },
+			{ typeof(SkillData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(SkillData)}/" },
 			{ typeof(WorldStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(WorldStage)}/" },
 			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
 			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
@@ -218,7 +218,7 @@ namespace Mascari4615
 			Temp<Effect>();
 			Temp<ItemData>();
 			Temp<MonsterWave>();
-			Temp<Skill>();
+			Temp<SkillData>();
 			Temp<WorldStage>();
 			Temp<Dungeon>();
 			Temp<DungeonStage>();

@@ -29,7 +29,7 @@ namespace Mascari4615
 
 		public void Tick()
 		{
-			CurTime = Mathf.Clamp(CurTime + TimeManager.Tick, 0, Time);
+			CurTime = Mathf.Clamp(CurTime + TimeManager.TICK, 0, Time);
 		}
 		public float GetProgress()
 		{

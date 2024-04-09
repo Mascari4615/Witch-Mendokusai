@@ -25,15 +25,15 @@ namespace Mascari4615
 
 			// Player
 			if (inputActionAsset["UI/Submit"].triggered)
-				PlayerController.Instance.TryInteract();
+				Player.Instance.TryInteract();
 			if (Input.GetKeyDown(KeyCode.Space))
-				PlayerController.Instance.TryUseSkill(0);
+				Player.Instance.TryUseSkill(0);
 			if (SOManager.Instance.IsMouseOnUI.RuntimeValue || SOManager.Instance.IsPaused.RuntimeValue)
 				return;
 			if (Input.GetMouseButton(0))
-				PlayerController.Instance.TryUseSkill(1);
+				Player.Instance.TryUseSkill(1);
 			if (Input.GetMouseButton(1))
-				PlayerController.Instance.TryUseSkill(2);
+				Player.Instance.TryUseSkill(2);
 		}
 	}
 }

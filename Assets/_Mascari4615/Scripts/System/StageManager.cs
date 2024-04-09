@@ -45,7 +45,7 @@ namespace Mascari4615
 				yield return new WaitForFixedUpdate();
 
 				// 마지막 스테이지를 현재 스테이지로 갱신하고, 비활성화 
-				Vector3 newLastPosDiff = PlayerController.Instance.transform.position - CurStageObject.gameObject.transform.position;
+				Vector3 newLastPosDiff = Player.Instance.transform.position - CurStageObject.gameObject.transform.position;
 				// Debug.Log(newLastPosDiff);
 				CurStageObject.gameObject.SetActive(false);
 				LastStage = CurStage;
@@ -56,8 +56,8 @@ namespace Mascari4615
 
 				// 새로운 스테이지 위치 변환
 				Vector3 newStagePos = (spawnPortalIndex != -1)
-					? PlayerController.Instance.transform.position - stage.Prefab.Portals[spawnPortalIndex].TpPos.position
-					: PlayerController.Instance.transform.position - lastPosDiff;
+					? Player.Instance.transform.position - stage.Prefab.Portals[spawnPortalIndex].TpPos.position
+					: Player.Instance.transform.position - lastPosDiff;
 				CurStageObject.transform.position = newStagePos;
 
 				// 새로운 스테이지 활성화

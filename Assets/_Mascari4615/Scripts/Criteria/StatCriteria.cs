@@ -15,7 +15,7 @@ namespace Mascari4615
 			Type = type;
 		}
 
-		private Stat PlayerStat => PlayerController.Instance.PlayerObject.Stat;
+		private Stat PlayerStat => Player.Instance.Stat;
 
 		public override int GetCurValue()
 		{

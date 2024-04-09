@@ -36,7 +36,7 @@ namespace Mascari4615
 
 		private void CanSeePlayer()
 		{
-			if (Vector3.Distance(transform.position, PlayerController.Instance.transform.position) < attackRange)
+			if (Vector3.Distance(transform.position, Player.Instance.transform.position) < attackRange)
 			{
 				if (currentState != TempState.Attack)
 					ChangeState(TempState.Attack);
