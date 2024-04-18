@@ -266,11 +266,12 @@ namespace Mascari4615
 					{
 						dic.Add(asset.ID, asset);
 						
-						if (asset.name.StartsWith($"{assetPrefixes[typeof(T)]}_{asset.ID}") == false)
+						string goodName = $"{assetPrefixes[typeof(T)]}_{asset.ID}_{asset.Name}";
+						// if (asset.name.StartsWith($"{assetPrefixes[typeof(T)]}_{asset.ID}") == false)
+						if (asset.name.Equals(goodName) == false)
 						{
-							string newName = $"{assetPrefixes[typeof(T)]}_{asset.ID}_{asset.Name}";
-							Debug.Log($"에셋 이름을 변경합니다. {asset.name} -> {newName}");
-							AssetDatabase.RenameAsset(filePath, newName);
+							Debug.Log($"에셋 이름을 변경합니다. {asset.name} -> {goodName}");
+							AssetDatabase.RenameAsset(filePath, goodName);
 						}
 					}
 				}
