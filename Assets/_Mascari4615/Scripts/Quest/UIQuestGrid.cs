@@ -90,7 +90,7 @@ namespace Mascari4615
 				clickToolTip.SetToolTipContent(CurSlot.Data);
 
 			if (rewardUI != null)
-				rewardUI.UpdateUI(CurQuest.Rewards);
+				rewardUI.UpdateUI(CurQuest?.Rewards);
 
 			if (questCriteriaUI != null)
 				questCriteriaUI.SetCriteria(CurQuest);

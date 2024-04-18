@@ -79,13 +79,6 @@ namespace Mascari4615
 				questOptions[i].SetClickAction((slot) => { SelectQuest(slot.Index); });
 			}
 
-			for (int i = 0; i < options.Length; i++)
-			{
-				options[i].SetSlotIndex(i);
-				options[i].Init();
-				options[i].SetClickAction((slot) => { SetPanel((NPCPanelType)(1 << slot.Index)); });
-			}
-
 			panelUIs[NPCPanelType.Shop] = FindObjectOfType<UIShop>(true);
 			panelUIs[NPCPanelType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
 			panelUIs[NPCPanelType.Pot] = FindObjectOfType<UIPot>(true);
@@ -94,6 +87,17 @@ namespace Mascari4615
 			{
 				uiPanel.Init();
 				uiPanel.SetActive(false);
+			}
+
+			for (int slotIndex = 0; slotIndex < options.Length; slotIndex++)
+			{
+				NPCPanelType p = (NPCPanelType)(1 << slotIndex);
+				UIPanel panel = panelUIs[p];
+
+				options[slotIndex].SetSlotIndex(slotIndex);
+				options[slotIndex].SetSlot(panel.PanelIcon, panel.Name, string.Empty);
+				options[slotIndex].Init();
+				options[slotIndex].SetClickAction((slot) => { SetPanel((NPCPanelType)(1 << slot.Index)); });
 			}
 
 			SetPanel(NPCPanelType.None);
