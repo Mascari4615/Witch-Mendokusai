@@ -22,15 +22,8 @@ namespace Mascari4615
 		{
 			base.Awake();
 
-			SceneManager.sceneLoaded += OnSceneLoaded;
-			ClearDungeonObjects();
-		}
-
-		private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-		{
 			ClearDungeonObjects();
 			TimeManager.Instance.RegisterCallback(DataManager.Instance.WorkManager.TickEachWorks);
-			Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
 		}
 
 		public void ClearDungeonObjects()

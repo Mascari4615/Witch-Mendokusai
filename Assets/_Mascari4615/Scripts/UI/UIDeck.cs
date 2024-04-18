@@ -24,7 +24,7 @@ namespace Mascari4615
 			}
 		}
 
-		public void UpdateUI(List<Card> cards)
+		public void UpdateUI(List<CardData> cards)
 		{
 			// HashSet : 고유한 값만 저장하는 자료구조
 			// Convert masteries to a HashSet for faster lookup

@@ -56,6 +56,7 @@ namespace Mascari4615
 
 		public void PushObject(GameObject targetObject)
 		{
+			Debug.Log($"PushObject: {targetObject.name}");
 			var objectName = targetObject.name.Contains("(Clone)")
 				? targetObject.name.Remove(targetObject.name.IndexOf("(", StringComparison.Ordinal), 7)
 				: targetObject.name;
@@ -73,6 +74,7 @@ namespace Mascari4615
 
 		public GameObject PopObject(GameObject targetObject)
 		{
+			Debug.Log($"PopObject: {targetObject.name}");
 			var objectName = targetObject.name.Contains("(Clone)")
 				? targetObject.name.Remove(targetObject.name.IndexOf("(", StringComparison.Ordinal), 7)
 				: targetObject.name;

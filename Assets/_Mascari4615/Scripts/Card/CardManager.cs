@@ -19,7 +19,7 @@ namespace Mascari4615
 			SelectCard,
 		}
 
-		private readonly List<List<Card>> cardDataBuffers = new(3) { new(), new(), new() };
+		private readonly List<List<CardData>> cardDataBuffers = new(3) { new(), new(), new() };
 		private int curDeckIndex;
 
 		[SerializeField] private GameObject selectDeckPanel;
@@ -52,7 +52,7 @@ namespace Mascari4615
 				selectedCardBuffer.Remove(selectedCardBuffer.Datas[^1]);
 			selectedCardBuffer.Clear();
 
-			foreach (List<Card> cardDataBuffer in cardDataBuffers)
+			foreach (List<CardData> cardDataBuffer in cardDataBuffers)
 				cardDataBuffer.Clear();
 
 			for (int i = 0; i < 3; i++)
@@ -66,13 +66,13 @@ namespace Mascari4615
 				// cardSelectAction: (slot) => { SelectCard(cardSlots[i].Atrifact as Card); }
 				// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈
 
-				deckUIDic[equipment.ID].Init(cardSelectAction: (slot) => { SelectCard(slot.DataSO as Card); });
+				deckUIDic[equipment.ID].Init(cardSelectAction: (slot) => { SelectCard(slot.DataSO as CardData); });
 
 				deckSelectButtons[i].SetSlotIndex(i);
 				deckSelectButtons[i].SetSlot(equipment);
 				deckSelectButtons[i].SetClickAction((slot) => { SelectDeck(slot.Index); });
 
-				cardSelectButtons[i].SetClickAction((slot) => { SelectCard(slot.DataSO as Card); });
+				cardSelectButtons[i].SetClickAction((slot) => { SelectCard(slot.DataSO as CardData); });
 			}
 		}
 
@@ -91,7 +91,7 @@ namespace Mascari4615
 		public void SelectDeck(int deckIndex)
 		{
 			curDeckIndex = deckIndex;
-			List<Card> curDeckBuffer = cardDataBuffers[deckIndex];
+			List<CardData> curDeckBuffer = cardDataBuffers[deckIndex];
 
 			if (curDeckBuffer.Count < 3)
 			{
@@ -99,11 +99,11 @@ namespace Mascari4615
 				return;
 			}
 
-			List<Card> randomCards = new();
+			List<CardData> randomCards = new();
 			while (randomCards.Count < 3)
 			{
 				int randomIndex = Random.Range(0, curDeckBuffer.Count);
-				Card randomCard = curDeckBuffer[randomIndex];
+				CardData randomCard = curDeckBuffer[randomIndex];
 
 				if (randomCards.Contains(randomCard))
 					continue;
@@ -119,13 +119,13 @@ namespace Mascari4615
 			deckUIDic[equipmentID].gameObject.SetActive(true);
 		}
 
-		public void SelectCard(Card card)
+		public void SelectCard(CardData card)
 		{
 			RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
 
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
 
-			List<Card> curDeckBuffer = cardDataBuffers[curDeckIndex];
+			List<CardData> curDeckBuffer = cardDataBuffers[curDeckIndex];
 			selectedCardBuffer.Add(card);
 
 			int sameCardCount = selectedCardBuffer.Datas.Select(m => m == card).Count();

@@ -9,7 +9,7 @@ namespace Mascari4615
 	public class AddCardEffect : Effect
 	{
 		[SerializeField] private CardBuffer deck;
-		[SerializeField] private Card targetCard;
+		[SerializeField] private CardData targetCard;
 
 		public override void Apply()
 		{

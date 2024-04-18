@@ -4,19 +4,19 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(CardBuffer), menuName = "DataBuffer/" + nameof(Card))]
-	public class CardBuffer : DataBufferSO<Card>
+	[CreateAssetMenu(fileName = nameof(CardBuffer), menuName = "DataBuffer/" + nameof(CardData))]
+	public class CardBuffer : DataBufferSO<CardData>
 	{
 		[SerializeField] private bool applyEffect;
 
-		public override void Add(Card card)
+		public override void Add(CardData card)
 		{
 			base.Add(card);
 			if (applyEffect)
 				card.OnEquip();
 		}
 
-		public override bool Remove(Card card)
+		public override bool Remove(CardData card)
 		{
 			if (applyEffect)
 				if (Datas.Contains(card))

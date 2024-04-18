@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -18,6 +19,11 @@ namespace Mascari4615
 			base.Awake();
 			Interaction = new();
 			Object = GetComponent<PlayerObject>();
+		}
+
+		private void Start()
+		{
+			Object.Init(GetDoll(DataManager.Instance.CurDollID));
 		}
 
 		public void TryInteract()

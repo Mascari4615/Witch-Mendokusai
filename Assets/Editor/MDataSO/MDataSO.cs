@@ -18,7 +18,7 @@ namespace Mascari4615
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
 			{ typeof(QuestData), "Q" },
-			{ typeof(Card), "C" },
+			{ typeof(CardData), "C" },
 			{ typeof(Effect), "E" },
 			{ typeof(ItemData), "I" },
 			{ typeof(MonsterWave), "MW" },
@@ -35,7 +35,7 @@ namespace Mascari4615
 		private readonly Dictionary<Type, string> assetPaths = new()
 		{
 			{ typeof(QuestData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestData)}/" },
-			{ typeof(Card), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Card)}/" },
+			{ typeof(CardData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(CardData)}/" },
 			{ typeof(Effect), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Effect)}/" },
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
@@ -73,9 +73,7 @@ namespace Mascari4615
 			Debug.Log("OnEnable is executed.");
 			Instance = this;
 
-			SOManager soManager = Resources.Load(typeof(SOManager).Name) as SOManager;
-			dataSOs = soManager.DataSOs;
-			dataSOs.Clear();
+			dataSOs = new();
 
 			InitList();
 			InitDic();
@@ -215,7 +213,7 @@ namespace Mascari4615
 			badIDDataSOs = new();
 
 			Temp<QuestData>();
-			Temp<Card>();
+			Temp<CardData>();
 			Temp<Effect>();
 			Temp<ItemData>();
 			Temp<MonsterWave>();

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Mascari4615
@@ -13,8 +14,7 @@ namespace Mascari4615
 		{
 			get => instance
 				? instance
-				: FindObjectOfType<T>() ??
-				  File.Exists($"Assets/Resources/{nameof(T)}") ? Instantiate(Resources.Load<T>(nameof(T))) : null;
+				: instance = Instantiate(Resources.Load(typeof(T).Name)).GetComponent<T>();
 			private set => instance = value;
 		}
 

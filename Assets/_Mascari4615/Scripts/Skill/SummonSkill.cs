@@ -7,15 +7,15 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = nameof(SummonSkill), menuName = "Skill/SummonSkill")]
 	public class SummonSkill : SkillData
 	{
-		[SerializeField] private GameObject prefab;
-		[SerializeField] private bool setRotation;
+		[field: SerializeField] public GameObject Prefab { get; private set; }
+		[field: SerializeField] public bool SetRotation { get; private set; }
 
 		public override void ActualUse(UnitObject unitObject)
 		{
-			GameObject o = ObjectManager.Instance.PopObject(prefab);
+			GameObject o = ObjectManager.Instance.PopObject(Prefab);
 			o.transform.position = unitObject.transform.position;
 
-			if (setRotation)
+			if (SetRotation)
 			{
 				// 공격 위치를 향하도록 회전
 				o.transform.rotation = Quaternion.LookRotation(SOManager.Instance.PlayerAimDirection.RuntimeValue);

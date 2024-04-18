@@ -4,10 +4,10 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = "C_", menuName = "Variable/" + nameof(Card))]
-	public class Card : DataSO
+	[CreateAssetMenu(fileName = "C_", menuName = "Variable/" + nameof(CardData))]
+	public class CardData : DataSO
 	{
-		[field: Header("_" + nameof(Card))]
+		[field: Header("_" + nameof(CardData))]
 		[field: SerializeField] public Effect[] Effects { get; private set; }
 		[field: SerializeField] public int MaxStack { get; private set; }
 

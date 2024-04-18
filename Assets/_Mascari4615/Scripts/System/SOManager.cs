@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -23,8 +24,8 @@ namespace Mascari4615
 		}
 
 		[field: Header("_" + nameof(SOManager))]
-		[field: SerializeField] public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; } = new();
-	
+		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; } = new();
+
 		[field: Space(10), Header("PlayerData")]
 		[field: SerializeField] public Statistics Statistics { get; private set; }
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }

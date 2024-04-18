@@ -32,6 +32,12 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
+			StartCoroutine(Init());
+		}
+
+		private IEnumerator Init()
+		{
+			yield return StartCoroutine(UILoading.Instance.Loading());
 
 			SOManager = SOManager.Instance;
 			PlayFabManager = GetComponent<PlayFabManager>();
