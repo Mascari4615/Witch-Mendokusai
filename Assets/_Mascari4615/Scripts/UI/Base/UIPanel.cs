@@ -6,6 +6,9 @@ namespace Mascari4615
 {
 	public abstract class UIPanel : MonoBehaviour, IUI
 	{
+		[field: SerializeField] public string Name { get; private set; } = "UIPanel";
+		[field: SerializeField] public Sprite PanelIcon { get; private set; }
+
 		public virtual void Init() {}
 		public abstract void UpdateUI();
 		public virtual void OnOpen() {}

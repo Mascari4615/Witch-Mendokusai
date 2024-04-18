@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ namespace Mascari4615
 	public abstract class UIPanels : UIPanel
 	{
 		[SerializeField] private Transform panelSelectButtonsParent;
+		protected UISlot[] panelSelectButtons;
 		[SerializeField] private Transform panelsParent;
 		protected int curPanelIndex = 0;
 		protected UIPanel[] panels;
@@ -29,7 +31,7 @@ namespace Mascari4615
 				panels[i].Init();
 			}
 
-			UISlot[] panelSelectButtons = panelSelectButtonsParent.GetComponentsInChildren<UISlot>(true);
+			panelSelectButtons = panelSelectButtonsParent.GetComponentsInChildren<UISlot>(true);
 			for (int i = 0; i < panelSelectButtons.Length; i++)
 			{
 				if (i >= panels.Length)
@@ -39,6 +41,7 @@ namespace Mascari4615
 				}
 
 				panelSelectButtons[i].SetSlotIndex(i);
+				panelSelectButtons[i].SetSlot(panels[i].PanelIcon, panels[i].Name, string.Empty);
 				panelSelectButtons[i].Init();
 				panelSelectButtons[i].SetClickAction((slot) => { OpenPanel(slot.Index); });
 			}

@@ -3647,6 +3647,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 361e3dc249de63a448d683ea2608f2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: MagicBook
+  <PanelIcon>k__BackingField: {fileID: 21300000, guid: 8841b20b44163384286632d7c5686063, type: 3}
   panelSelectButtonsParent: {fileID: 1770390970}
   panelsParent: {fileID: 135368689}
 --- !u!1001 &139190665
@@ -26956,6 +26958,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 346a7688d9b9bde41996abff85d7808b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: Doll
+  <PanelIcon>k__BackingField: {fileID: 21300000, guid: 824b9eac07ee3e340b3a148cbd1b11d5, type: 3}
   selectNewEquipmentPanel: {fileID: 1802901173}
   selectDollButton: {fileID: 1813189800}
   curStuffsSlot:
@@ -28294,6 +28298,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24e2cbfd5ae54d14eaaa098c9220fdae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   panelSelectButtonsParent: {fileID: 918889399}
   panelsParent: {fileID: 918889398}
   dungeonSelectButtonParent: {fileID: 1234572190}
@@ -32624,6 +32630,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 562c1d3df7bb32d418aefcef242c2249, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: Inventory
+  <PanelIcon>k__BackingField: {fileID: 21300000, guid: 0af7373749ea1724c9edd76a089aabb9, type: 3}
 --- !u!1 &1045926704
 GameObject:
   m_ObjectHideFlags: 0
@@ -34278,6 +34286,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94849ce1e3667d645a617b1e6de58ade, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: Quest
+  <PanelIcon>k__BackingField: {fileID: 21300000, guid: 8841b20b44163384286632d7c5686063, type: 3}
 --- !u!1 &1099597011
 GameObject:
   m_ObjectHideFlags: 0
@@ -35167,6 +35177,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb6c895b1051a9b4eb3fc5b24c4a2418, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   panelSelectButtonsParent: {fileID: 1115269374}
   panelsParent: {fileID: 1115269373}
 --- !u!1 &1116463073
@@ -49899,6 +49911,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e94df559dff038049a5502da7a9fe674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   slots:
   - {fileID: 294980460}
   - {fileID: 2108467756}
@@ -50348,6 +50362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ced92efda6e71834e82cb0cbd3ba1d00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
 --- !u!1 &1496128281
 GameObject:
   m_ObjectHideFlags: 0
@@ -51032,6 +51048,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61ce719faf82f0446a59f8990a9082aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
 --- !u!1001 &1526509981
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58758,6 +58776,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ef812b606f35304ca941802a2c59d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   panelSelectButtonsParent: {fileID: 1664850894}
   panelsParent: {fileID: 1664850893}
 --- !u!1 &1667212212
@@ -59755,6 +59775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5729bc63ac0ff3c4cadbb6713576d86a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
 --- !u!1001 &1710594817
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61722,6 +61744,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eff6f87d1311eb4d8349f3c5eb7bd28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   framerateToggle: {fileID: 182417722}
   masterVolumeSlider: {fileID: 651132769}
   bgmVolumeSlider: {fileID: 1732902118}
@@ -81216,6 +81240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 771acca63a7ff5e4b8c164c10b7f1240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   timeText: {fileID: 1995715548}
   difficultyText: {fileID: 1753603207}
   difficultyCircle: {fileID: 789312708}
@@ -81627,6 +81653,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a2bb6834d480024aa18520597eb1ca5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   buttonsParent: {fileID: 1397212503}
   exitOption: {fileID: 75663366}
   talkOption: {fileID: 110301410}
@@ -96142,6 +96170,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394f16068c79ba745b32f1d838494dbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Name>k__BackingField: UIPanel
+  <PanelIcon>k__BackingField: {fileID: 0}
   panelSelectButtonsParent: {fileID: 7626278262293296671}
   panelsParent: {fileID: 7626278262293296670}
 --- !u!114 &7677635112339380080
