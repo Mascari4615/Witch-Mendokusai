@@ -8,14 +8,26 @@ namespace Mascari4615
 	public abstract class UIPanels : UIPanel
 	{
 		[SerializeField] private Transform panelSelectButtonsParent;
+		[SerializeField] private Transform panelsParent;
 		protected int curPanelIndex = 0;
 		protected UIPanel[] panels;
 
 		public override void Init()
 		{
-			panels = GetComponentsInChildren<UIPanel>(true).Where(panel => panel != this).ToArray();
-			foreach (UIPanel panel in panels)
-				panel.Init();
+			panels = new UIPanel[panelsParent.childCount];
+			for (int i = 0; i < panels.Length; i++)
+			{
+				GameObject p = panelsParent.GetChild(i).gameObject;
+				p.SetActive(i == 0);
+
+				panels[i] = p.GetComponent<UIPanel>();
+				if (panels[i] == null)
+				{
+					panels = new UIPanel[0];
+					break;
+				}
+				panels[i].Init();
+			}
 
 			UISlot[] panelSelectButtons = panelSelectButtonsParent.GetComponentsInChildren<UISlot>(true);
 			for (int i = 0; i < panelSelectButtons.Length; i++)
@@ -46,7 +58,7 @@ namespace Mascari4615
 			// Debug.Log($"{nameof(OpenTabMenu)}, {menuType}");
 			curPanelIndex = newPanelIndex;
 
-			if (panels != null && panels.Length > 0)
+			if (panels.Length > 0)
 			{
 				for (int i = 0; i < panels.Length; i++)
 					panels[i].gameObject.SetActive(i == curPanelIndex);
