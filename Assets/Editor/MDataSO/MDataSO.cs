@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Unity.Properties;
 using UnityEditor;
 using UnityEngine;
@@ -268,6 +269,11 @@ namespace Mascari4615
 						
 						string goodName = $"{assetPrefixes[typeof(T)]}_{asset.ID}_{asset.Name}";
 						// if (asset.name.StartsWith($"{assetPrefixes[typeof(T)]}_{asset.ID}") == false)
+
+						// 파일 이름에 사용할 수 없는 문자를 제거
+						Regex regex = new(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()))));
+						goodName = regex.Replace(goodName, string.Empty);
+
 						if (asset.name.Equals(goodName) == false)
 						{
 							Debug.Log($"에셋 이름을 변경합니다. {asset.name} -> {goodName}");
