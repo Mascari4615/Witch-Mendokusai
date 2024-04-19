@@ -18,16 +18,16 @@ MonoBehaviour:
     m_Value: 1
   gaussianStart:
     m_OverrideState: 1
-    m_Value: 15
+    m_Value: 25
   gaussianEnd:
     m_OverrideState: 1
-    m_Value: 30
+    m_Value: 50
   gaussianMaxRadius:
     m_OverrideState: 1
     m_Value: 1.5
   highQualitySampling:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 1
   focusDistance:
     m_OverrideState: 1
     m_Value: 10
@@ -114,10 +114,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.325
+    m_Value: 0.3
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.804
+    m_Value: 0.3
   rounded:
     m_OverrideState: 1
     m_Value: 0

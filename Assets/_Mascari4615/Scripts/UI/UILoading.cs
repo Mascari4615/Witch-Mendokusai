@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
