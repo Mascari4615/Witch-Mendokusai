@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
@@ -9,7 +10,8 @@ namespace Mascari4615
 	{
 		private void OnDisable()
 		{
-			ObjectManager.Instance?.PushObject(gameObject);
+			if (IsPlaying)
+				ObjectManager.Instance?.PushObject(gameObject);
 		}
 	}
 }
