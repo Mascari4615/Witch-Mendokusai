@@ -5,12 +5,12 @@ namespace Mascari4615
 {
 	public static class SOHelper
 	{
-		public static ItemData GetItemData(int id) => GetDataSO<ItemData>(id);
-		public static Doll GetDoll(int id) => GetDataSO<Doll>(id);
-		public static QuestData GetQuest(int id) => GetDataSO<QuestData>(id);
-		public static DungeonConstraint GetDungeonConstraint(int id) => GetDataSO<DungeonConstraint>(id);
-		public static Dungeon GetDungeon(int id) => GetDataSO<Dungeon>(id);
-		public static NPC GetNPC(int id) => GetDataSO<NPC>(id);
+		public static ItemData GetItemData(int id) => Get<ItemData>(id);
+		public static Doll GetDoll(int id) => Get<Doll>(id);
+		public static QuestData GetQuest(int id) => Get<QuestData>(id);
+		public static DungeonConstraint GetDungeonConstraint(int id) => Get<DungeonConstraint>(id);
+		public static Dungeon GetDungeon(int id) => Get<Dungeon>(id);
+		public static NPC GetNPC(int id) => Get<NPC>(id);
 
 		// 아래 코드는 불가능
 		// 왜 WHY : 제네릭 타입의 변환에 제한, C#의 타입 안전성을 보장하기 위한.
@@ -30,7 +30,6 @@ namespace Mascari4615
 		/// <summary>
 		/// 주어진 타입의 DataSO 스크립터블 오브젝트를 가져옵니다
 		/// </summary>
-		public static T GetDataSO<T>(int id) where T : DataSO =>
-			SOManager.Instance.DataSOs[typeof(T)][id] as T;
+		public static T Get<T>(int id) where T : DataSO => SOManager.Instance.DataSOs[typeof(T)][id] as T;
 	}
 }

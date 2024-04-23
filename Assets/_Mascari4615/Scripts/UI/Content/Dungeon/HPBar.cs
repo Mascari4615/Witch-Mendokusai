@@ -17,7 +17,7 @@ namespace Mascari4615
 
 		[SerializeField] private bool disableOnDied = false;
 
-		[SerializeField] private EnemyObjectVariable lastHitEnemyObject;
+		[SerializeField] private MonsterObjectVariable lastHitEnemyObject;
 
 		private UnitObject targetUnit;
 

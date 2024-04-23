@@ -46,7 +46,7 @@ namespace Mascari4615
 			base.ReceiveDamage(damage);
 			UIManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damage);
 
-			SOManager.Instance.LastHitEnemyObject.RuntimeValue = this;
+			SOManager.Instance.LastHitMonsterObject.RuntimeValue = this;
 			hpBar.localScale = new Vector3((float)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX], 1, 1);
 
 			GameObject hitEffect = ObjectManager.Instance.PopObject(hitEffectPrefab);

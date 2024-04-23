@@ -2,6 +2,6 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(EnemyObjectVariable), menuName = "Variable/EnemyObject")]
-	public class EnemyObjectVariable : CustomVariable<MonsterObject> { }
+	[CreateAssetMenu(fileName = nameof(MonsterObjectVariable), menuName = "Variable/MonsterObject")]
+	public class MonsterObjectVariable : CustomVariable<MonsterObject> { }
 }
