@@ -5,6 +5,6 @@ namespace Mascari4615
 {
 	public abstract class CriteriaSO : ScriptableObject
 	{
-		public abstract Criteria CreateCriteria();
+		public abstract Criteria CreateCriteria(CriteriaInfo criteriaInfo);
 	}
 }

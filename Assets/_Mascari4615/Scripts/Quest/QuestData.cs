@@ -20,13 +20,6 @@ namespace Mascari4615
 		Completed
 	}
 
-	[Serializable]
-	public struct CriteriaInfo
-	{
-		public CriteriaSO CriteriaSO;
-		public bool JustOnce;
-	}
-
 	[CreateAssetMenu(fileName = "Q_", menuName = "Variable/" + nameof(QuestData))]
 	public class QuestData : DataSO, ISavable<QuestDataSave>
 	{

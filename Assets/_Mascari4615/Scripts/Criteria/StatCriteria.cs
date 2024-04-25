@@ -10,7 +10,7 @@ namespace Mascari4615
 	{
 		public StatType Type { get; private set; }
 
-		public StatCriteria(ComparisonOperator comparisonOperator, int targetValue, StatType type) : base(comparisonOperator, targetValue)
+		public StatCriteria(CriteriaInfo criteriaInfo, StatType type) : base(criteriaInfo)
 		{
 			Type = type;
 		}

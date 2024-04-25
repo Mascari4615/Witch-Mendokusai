@@ -7,13 +7,13 @@ using UnityEngine;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(StatCriteriaSO), menuName = "Criteria/" + nameof(StatCriteriaSO))]
-	public class StatCriteriaSO : NumCriteriaSO
+	public class StatCriteriaSO : CriteriaSO
 	{
 		[SerializeField] private StatType statType;
 
-		public override Criteria CreateCriteria()
+		public override Criteria CreateCriteria(CriteriaInfo criteriaInfo)
 		{
-			return new StatCriteria(comparisonOperator, targetValue, statType);
+			return new StatCriteria(criteriaInfo, statType);
 		}
 	}
 }

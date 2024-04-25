@@ -1,19 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Mascari4615;
 using UnityEngine;
 
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(StatisticsCriteriaSO), menuName = "Criteria/" + nameof(StatisticsCriteriaSO))]
-	public class StatisticsCriteriaSO : NumCriteriaSO
+	public class StatisticsCriteriaSO : CriteriaSO
 	{
 		[SerializeField] private StatisticsType statisticsType;
 
-		public override Criteria CreateCriteria()
+		public override Criteria CreateCriteria(CriteriaInfo criteriaInfo)
 		{
-			return new StatisticsCriteria(comparisonOperator, targetValue, statisticsType);
+			return new StatisticsCriteria(criteriaInfo, statisticsType);
 		}
 	}
 }

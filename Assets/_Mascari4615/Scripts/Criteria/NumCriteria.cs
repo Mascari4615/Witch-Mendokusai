@@ -10,10 +10,10 @@ namespace Mascari4615
 		public ComparisonOperator ComparisonOperator { get; private set; }
 		public int TargetValue { get; private set; }
 
-		public NumCriteria(ComparisonOperator comparisonOperator, int targetValue)
+		public NumCriteria(CriteriaInfo criteriaInfo)
 		{
-			ComparisonOperator = comparisonOperator;
-			TargetValue = targetValue;
+			ComparisonOperator = criteriaInfo.ComparisonOperator;
+			TargetValue = criteriaInfo.TargetValue;
 		}
 
 		public override bool Evaluate()

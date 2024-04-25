@@ -10,7 +10,7 @@ namespace Mascari4615
 	{
 		public IntVariable IntVariable { get; private set; }
 
-		public IntCriteria(ComparisonOperator comparisonOperator, int targetValue, IntVariable intVariable) : base(comparisonOperator, targetValue)
+		public IntCriteria(CriteriaInfo criteriaInfo, IntVariable intVariable) : base(criteriaInfo)
 		{
 			IntVariable = intVariable;
 		}

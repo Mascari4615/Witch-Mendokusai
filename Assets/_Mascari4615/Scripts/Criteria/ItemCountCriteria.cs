@@ -10,7 +10,7 @@ namespace Mascari4615
 	{
 		public int ItemID { get; private set; } = DataSO.NONE_ID;
 
-		public ItemCountCriteria(ComparisonOperator comparisonOperator, int targetValue, int itemID) : base(comparisonOperator, targetValue)
+		public ItemCountCriteria(CriteriaInfo criteriaInfo, int itemID) : base(criteriaInfo)
 		{
 			ItemID = itemID;
 		}
