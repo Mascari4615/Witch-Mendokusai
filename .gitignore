@@ -93,6 +93,11 @@ fmod_editor.log
 
 # ---- ---- ---- ----
 
+/Assets/StreamingAssets/build_info*
+
+Assets/PlayFabEditorExtensions/Editor/Resources/PlayFabEditorPrefsSO*
+Assets/PlayFabSDK/Shared/Public/Resources/PlayFabSharedSettings*
+
 /Assets/Feel*
 # Translucent Image - Fast UI Background Blur
 /Assets/Le Tai's Asset*
@@ -107,15 +112,12 @@ fmod_editor.log
 
 Bakery
 bakery_times.log
+*.hdr*
 
 # ---- ---- ---- ----
 
 /Assets/_Mascari4615/Sprite/game-icons.net*
 /Assets/_Mascari4615/Sprite/Tileable Grass Textures - Set 1*
 /Assets/_Mascari4615/Sprite/Tiling Bark*
-
-*.hdr*
-
-/Assets/StreamingAssets/build_info*
 
 WM.json*
