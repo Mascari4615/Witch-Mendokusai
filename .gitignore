@@ -93,51 +93,29 @@ fmod_editor.log
 
 # ---- ---- ---- ----
 
-# Stuffs
-/[Aa]ssets/Feel
-/[Aa]ssets/Feel.meta
-
+/Assets/Feel*
 # Translucent Image - Fast UI Background Blur
-/[Aa]ssets/Le Tai's Asset
-/[Aa]ssets/Le Tai's Asset.meta
-
+/Assets/Le Tai's Asset*
 # Rainbow Folders 2, Rainbow Hierachy 2
-/[Aa]ssets/Plugins/Borodar
-/[Aa]ssets/Plugins/Borodar.meta
-
-/[Aa]ssets/Plugins/FMOD
-/[Aa]ssets/Plugins/FMOD.meta
-
-/[Aa]ssets/Unity-Logs-Viewer
-/[Aa]ssets/Unity-Logs-Viewer.meta
-
-/[Aa]ssets/AssetInventory
-/[Aa]ssets/AssetInventory.meta
-
-/[Aa]ssets/SelectionUtility
-/[Aa]ssets/SelectionUtility.meta
-
-/[Aa]ssets/SpecialSkillsEffectsPack
-/[Aa]ssets/SpecialSkillsEffectsPack.meta
-
-/[Aa]ssets/AssetKits
-/[Aa]ssets/AssetKits.meta
-
-/[Aa]ssets/_Mascari4615/Sprite/Tileable Grass Textures - Set 1
-/[Aa]ssets/_Mascari4615/Sprite/Tileable Grass Textures - Set 1.meta
-
-/[Aa]ssets/_Mascari4615/Sprite/Tiling Bark
-/[Aa]ssets/_Mascari4615/Sprite/Tiling Bark.meta
+/Assets/Plugins/Borodar*
+/Assets/Plugins/FMOD*
+/Assets/Unity-Logs-Viewer*
+/Assets/AssetInventory*
+/Assets/SelectionUtility*
+/Assets/SpecialSkillsEffectsPack*
+/Assets/AssetKits*
 
 Bakery
 bakery_times.log
 
-*.hdr
-*.hdr.meta
+# ---- ---- ---- ----
 
-/[Aa]ssets/_Mascari4615/Sprite/potion
-/[Aa]ssets/_Mascari4615/Sprite/potion.meta
+/Assets/_Mascari4615/Sprite/game-icons.net*
+/Assets/_Mascari4615/Sprite/Tileable Grass Textures - Set 1*
+/Assets/_Mascari4615/Sprite/Tiling Bark*
 
-Assets\StreamingAssets\build_info
-WM.json
-WM.json.meta
+*.hdr*
+
+/Assets/StreamingAssets/build_info*
+
+WM.json*
