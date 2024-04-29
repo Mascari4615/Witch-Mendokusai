@@ -26,9 +26,6 @@ namespace Mascari4615
 
 		public PlayFabManager PlayFabManager { get; private set; }
 
-		// HACK
-		[field: SerializeField] public bool UseLocalData { get; private set; }
-
 		protected override void Awake()
 		{
 			base.Awake();
@@ -57,7 +54,7 @@ namespace Mascari4615
 				}
 			});
 
-			if (UseLocalData)
+			if (GameSetting.UseLocalData)
 			{
 				string path = Path.Combine(Application.dataPath, "WM.json");
 
@@ -182,7 +179,7 @@ namespace Mascari4615
 			ForEach<Doll>(doll => gameData.dollDataList.Add(doll.Save()));
 			ForEach<QuestData>(questData => gameData.questDataList.Add(questData.Save()));
 
-			if (UseLocalData)
+			if (GameSetting.UseLocalData)
 			{
 				string json = JsonConvert.SerializeObject(gameData, Formatting.Indented, new JsonSerializerSettings
 				{

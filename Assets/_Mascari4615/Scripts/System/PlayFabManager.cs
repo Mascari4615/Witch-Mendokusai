@@ -37,6 +37,9 @@ namespace Mascari4615
 
 		public void Login()
 		{
+			if (GameSetting.UseLocalData)
+				return;
+
 			/*#if !UNITY_EDITOR
 					Social.localUser.Authenticate((bool success) => {
 
@@ -124,9 +127,6 @@ namespace Mascari4615
 					// TODO : MainMenuManager.Instance.OpenNicknamePanel();
 					SubmitNickname($"Temp_{SystemInfo.deviceUniqueIdentifier}"[0..10]);
 				}
-
-				if (DataManager.Instance.UseLocalData)
-					return;
 
 				LoadPlayerData();
 				GetAppearance();
