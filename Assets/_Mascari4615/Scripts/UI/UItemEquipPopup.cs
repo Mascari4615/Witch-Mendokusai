@@ -5,15 +5,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using FMODUnity;
-using MoreMountains.Feedbacks;
+using DG.Tweening;
 
 namespace Mascari4615
 {
 	public class UItemEquipPopup : MonoBehaviour
 	{
-		private UISlot[] uiSlots;
-		private MMF_Player[] mmfPlayers;
+		private UISlot[] slots;
+		private CanvasGroup[] slotCanvasGroups;
 
+		private Coroutine showToolTipLoop;
 		private int curElementIndex = 0;
 
 		private readonly WaitForSecondsRealtime ws01 = new(.1f);
@@ -21,8 +22,8 @@ namespace Mascari4615
 	
 		private void Awake()
 		{
-			uiSlots = GetComponentsInChildren<UISlot>(true);
-			mmfPlayers = GetComponentsInChildren<MMF_Player>(true);
+			slots = GetComponentsInChildren<UISlot>(true);
+			slotCanvasGroups = GetComponentsInChildren<CanvasGroup>(true);
 
 			SOManager.Instance.LastEquipedItem.GameEvent.AddCallback(EquipItem);
 		}
@@ -30,24 +31,37 @@ namespace Mascari4615
 		public void EquipItem()
 		{
 			toolTipStacks.Enqueue(SOManager.Instance.LastEquipedItem.RuntimeValue);
-			StartCoroutine(ShowToolTip());
+
+			if (showToolTipLoop == null)
+				showToolTipLoop = StartCoroutine(ShowToolTips());
 		}
 
-		private IEnumerator ShowToolTip()
+		private IEnumerator ShowToolTips()
 		{
 			while (toolTipStacks.Count > 0)
 			{
-				ItemData itemData = toolTipStacks.Dequeue();
-				
-				uiSlots[curElementIndex].SetSlot(itemData);
-				uiSlots[curElementIndex].transform.SetAsFirstSibling();
-				mmfPlayers[curElementIndex].StopFeedbacks();
-				mmfPlayers[curElementIndex].PlayFeedbacks();
-				
-				curElementIndex = (curElementIndex + 1) % uiSlots.Length;
-				RuntimeManager.PlayOneShot($"event:/SFX/Equip");
+				ItemData targetItemData = toolTipStacks.Dequeue();
+
+				int targetSlotIndex = curElementIndex;
+				curElementIndex = (curElementIndex + 1) % slots.Length;
+
+				ShowToolTip(targetItemData, targetSlotIndex);
 				yield return ws01;
 			}
+
+			showToolTipLoop = null;
+		}
+
+		private void ShowToolTip(ItemData itemData, int slotIndex)
+		{
+			RuntimeManager.PlayOneShot($"event:/SFX/Equip");
+		
+			UISlot targetSlot = slots[slotIndex];
+			targetSlot.SetSlot(itemData);
+			targetSlot.transform.SetAsFirstSibling();
+
+			CanvasGroup targetCanvasGroup = slotCanvasGroups[slotIndex];
+			targetCanvasGroup.DOFade(1, .2f).OnComplete(() => targetCanvasGroup.DOFade(0, .5f).SetDelay(1f));
 		}
 
 		public void StopToolTip()

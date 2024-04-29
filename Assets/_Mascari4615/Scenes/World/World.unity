@@ -9224,7 +9224,7 @@ Transform:
   m_GameObject: {fileID: 343276348}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5000002, y: -0.000000029802322, z: -0, w: 0.8660253}
-  m_LocalPosition: {x: 0.00000067104855, y: 11.25833, z: -21.709995}
+  m_LocalPosition: {x: 0.0000006710486, y: 11.25833, z: -21.709995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11676,7 +11676,7 @@ SpriteRenderer:
   m_Size: {x: 0.27, y: 0.31}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 1
 --- !u!1001 &443630967
@@ -12713,7 +12713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 530532686691932306, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -24.99997
+      value: -25
       objectReference: {fileID: 0}
     - target: {fileID: 530532686691932306, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -25718,7 +25718,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 530532686691932306, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -9.9999695
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 530532686691932306, guid: eb7d9806c209e6a4494634dd8260a47f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -35690,7 +35690,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 122.26, y: 0}
+  m_AnchoredPosition: {x: 35, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1174246477
@@ -59052,7 +59052,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UnitData>k__BackingField: {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
   <SpriteRenderer>k__BackingField: {fileID: 970128168}
-  mmfPlayer: {fileID: 0}
   animator: {fileID: 0}
   stoppingDistance: 0.1
   updateRotation: 0

@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using MoreMountains.Feedbacks;
 using UnityEngine;
 using UnityEngine.AI;
+using DG.Tweening;
 
 namespace Mascari4615
 {
@@ -18,7 +18,6 @@ namespace Mascari4615
 
 		public bool IsAlive => Stat[StatType.HP_CUR] > 0;
 
-		[SerializeField] private MMF_Player mmfPlayer;
 		[SerializeField] protected Animator animator;
 
 		public float stoppingDistance = 0.1f;
@@ -29,7 +28,6 @@ namespace Mascari4615
 		protected virtual void Awake()
 		{
 			originScale = SpriteRenderer.transform.localScale;
-			mmfPlayer?.StopFeedbacks();
 			SpriteRenderer.material.SetFloat("_Emission", 0);
 			NavMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -83,7 +81,10 @@ namespace Mascari4615
 				return;
 
 			SetHp(Mathf.Clamp(Stat[StatType.HP_CUR] - damage, 0, int.MaxValue));
-			mmfPlayer?.PlayFeedbacks();
+
+			// SpriteRenderer 스케일 잠깐 키웠다가 줄이기
+			SpriteRenderer.transform.DOScale(originScale * 1.2f, .1f).OnComplete(() =>
+				SpriteRenderer.transform.DOScale(originScale, .1f));
 		}
 
 		protected virtual void Die()
