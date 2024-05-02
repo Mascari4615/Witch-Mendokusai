@@ -19,7 +19,7 @@ namespace Mascari4615
 
 		public override void Effect()
 		{
-			RuntimeManager.PlayOneShot("event:/SFX/Loot", transform.position);
+			RuntimeManager.PlayOneShot("event:/SFX/Equip", transform.position);
 			SOManager.Instance.ItemInventory.Add(itemData);
 		}
 	}

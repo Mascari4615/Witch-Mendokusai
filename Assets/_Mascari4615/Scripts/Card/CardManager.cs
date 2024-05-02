@@ -121,7 +121,7 @@ namespace Mascari4615
 
 		public void SelectCard(CardData card)
 		{
-			RuntimeManager.PlayOneShot("event:/SFX/UI/Test", transform.position);
+			RuntimeManager.PlayOneShot("event:/SFX/UI/Click", transform.position);
 
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
 
