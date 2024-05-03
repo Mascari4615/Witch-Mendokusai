@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 namespace Mascari4615
 {
@@ -15,6 +16,10 @@ namespace Mascari4615
 
 		public IEnumerator Loading()
 		{
+			// 로딩 시 강제로 로비로 이동
+			// 인게임 씬에서 에디터 플레이 시 Awake, Start 등이 호출 될 때 로드가 안된 상태로 데이터에 접근해서 오류가 생기는 문제 방지
+			SceneManager.LoadScene("Lobby");
+
 			gameObject.SetActive(true);
 			progressBar.fillAmount = 0f;
 

@@ -10,6 +10,7 @@ using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
+	[DefaultExecutionOrder(-100)]
 	public class DataManager : Singleton<DataManager>
 	{
 		public WorkManager WorkManager { get; private set; }
@@ -34,12 +35,12 @@ namespace Mascari4615
 
 		private IEnumerator Init()
 		{
-			yield return StartCoroutine(UILoading.Instance.Loading());
-
 			SOManager = SOManager.Instance;
 			PlayFabManager = GetComponent<PlayFabManager>();
 			WorkManager = new();
 			QuestManager = new();
+
+			yield return StartCoroutine(UILoading.Instance.Loading());
 
 			ForEach<ItemData>(itemData => 
 			{
