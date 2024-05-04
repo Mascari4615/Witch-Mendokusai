@@ -63,7 +63,7 @@ namespace Mascari4615
 			if (IsDisable)
 				return;
 
-			DragSlot.Instance.SetSlot(this);
+			UIDragSlot.Instance.SetSlot(this);
 		}
 
 		public void OnDrag(PointerEventData eventData)
@@ -74,7 +74,7 @@ namespace Mascari4615
 			if (DataSO == null)
 				return;
 
-			DragSlot.Instance.transform.position = eventData.position;
+			UIDragSlot.Instance.transform.position = eventData.position;
 		}
 
 		public void OnEndDrag(PointerEventData eventData)
@@ -82,8 +82,8 @@ namespace Mascari4615
 			if (!canDrag)
 				return;
 
-			DragSlot.Instance.SetActive(false);
-			DragSlot.Instance.SetSlot(null);
+			UIDragSlot.Instance.SetActive(false);
+			UIDragSlot.Instance.SetSlot(null);
 		}
 
 		// DragSlot이 위에 떨어졌을 때
@@ -92,7 +92,7 @@ namespace Mascari4615
 			if (!canDrag)
 				return;
 
-			if (!DragSlot.Instance.IsHolding)
+			if (!UIDragSlot.Instance.IsHolding)
 				return;
 
 			if (!canPlayerSetItem)
@@ -123,7 +123,7 @@ namespace Mascari4615
 			}
 
 			UIItemSlot slotA = this;
-			UIItemSlot slotB = DragSlot.Instance.HoldingSlot;
+			UIItemSlot slotB = UIDragSlot.Instance.HoldingSlot;
 
 			if (slotA == slotB)
 			{

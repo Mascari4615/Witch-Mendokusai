@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class DragSlot : Singleton<DragSlot>
+	public class UIDragSlot : Singleton<UIDragSlot>
 	{
 		private UIItemSlot holdingSlot;
 
