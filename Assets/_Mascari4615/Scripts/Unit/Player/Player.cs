@@ -28,6 +28,9 @@ namespace Mascari4615
 
 		public void TryInteract()
 		{
+			if (UIManager.Instance.CurOverlay != MPanelType.None)
+				return;
+
 			Interaction.TryInteraction();
 		}
 

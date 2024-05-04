@@ -22,7 +22,6 @@ namespace Mascari4615
 	{
 		private CanvasGroup canvasGroup;
 		[SerializeField] private GameObject buttonsParent;
-		[SerializeField] private UISlot exitOption;
 		[SerializeField] private UISlot talkOption;
 		[SerializeField] private UISlot[] options;
 		[SerializeField] private UISlot[] questOptions;
@@ -67,8 +66,6 @@ namespace Mascari4615
 		{
 			canvasGroup = GetComponent<CanvasGroup>();
 
-			exitOption.Init();
-			exitOption.SetClickAction((slot) => { Exit(); });
 			talkOption.Init();
 			talkOption.SetClickAction((slot) => { Talk(); });
 
@@ -148,8 +145,6 @@ namespace Mascari4615
 
 		public void Talk()
 		{
-			// Debug.Log("Talk");
-
 			buttonsParent.SetActive(false);
 			CameraManager.Instance.SetCamera(CameraType.Dialogue);
 			UIManager.Instance.Chat.StartChat(curNPC, () =>
@@ -167,15 +162,8 @@ namespace Mascari4615
 
 				SetPanel(NPCPanelType.None);
 				buttonsParent.SetActive(true);
-				exitOption.Select();
+				talkOption.Select();
 			});
-		}
-
-		public void Exit()
-		{
-			Debug.Log("Talk");
-		
-			UIManager.Instance.SetOverlay(MPanelType.None);
 		}
 
 		private void SelectQuest(int index)
