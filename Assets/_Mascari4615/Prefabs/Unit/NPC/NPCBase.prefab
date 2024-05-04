@@ -62,6 +62,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1273246012047982629}
+    - targetCorrespondingSourceObject: {fileID: 4552526690297205425, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6120728245295325875}
   m_SourcePrefab: {fileID: 100100000, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
 --- !u!1 &1827634288136616747 stripped
 GameObject:
@@ -82,7 +85,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UnitData>k__BackingField: {fileID: 0}
   <SpriteRenderer>k__BackingField: {fileID: 3642406832583609316}
-  mmfPlayer: {fileID: 0}
   animator: {fileID: 0}
   stoppingDistance: 0.1
   updateRotation: 0
@@ -98,6 +100,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ed192138a06dd474484573115553a37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6120728245295325875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827634288136616747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50b947c6c8b9732498b09cb0ccb40df4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!212 &3642406832583609316 stripped
