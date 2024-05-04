@@ -12,7 +12,7 @@ namespace Mascari4615
 
 		public override void ActualUse(UnitObject unitObject)
 		{
-			GameObject o = ObjectManager.Instance.PopObject(Prefab);
+			GameObject o = ObjectPoolManager.Instance.Spawn(Prefab);
 			o.transform.position = unitObject.transform.position;
 
 			if (SetRotation)

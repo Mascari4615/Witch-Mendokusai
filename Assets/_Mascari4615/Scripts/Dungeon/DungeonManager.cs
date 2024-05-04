@@ -110,7 +110,11 @@ namespace Mascari4615
 			{
 				UIManager.Instance.SetOverlay(MPanelType.None);
 				UIManager.Instance.SetCanvas(MCanvasType.None);
-				GameManager.Instance.ClearDungeonObjects();
+
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.Drop);
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.Monster);
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.Skill);
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.SpawnCircle);
 
 				expChecker.Init();
 				cardManager.ClearCardEffect();

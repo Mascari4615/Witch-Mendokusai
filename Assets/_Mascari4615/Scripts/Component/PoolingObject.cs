@@ -11,7 +11,7 @@ namespace Mascari4615
 		private void OnDisable()
 		{
 			if (IsPlaying)
-				ObjectManager.Instance?.PushObject(gameObject);
+				ObjectPoolManager.Instance?.Despawn(gameObject);
 		}
 	}
 }

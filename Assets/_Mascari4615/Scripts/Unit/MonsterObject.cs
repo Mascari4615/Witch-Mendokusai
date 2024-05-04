@@ -23,14 +23,14 @@ namespace Mascari4615
 		protected virtual void OnEnable()
 		{
 			SpriteRenderer.sharedMaterial = UnitData.Material;
-			GameManager.Instance.AddObject(ObjectBufferType.Monster, gameObject);
+			ObjectBufferManager.Instance.AddObject(ObjectType.Monster, gameObject);
 			hpBar.localScale = Vector3.one;
 		}
 
 		protected virtual void OnDisable()
 		{
 			if (IsPlaying)
-				GameManager.Instance.RemoveObject(ObjectBufferType.Monster, gameObject);
+				ObjectBufferManager.Instance.RemoveObject(ObjectType.Monster, gameObject);
 			StopAllCoroutines();
 		}
 
@@ -49,7 +49,7 @@ namespace Mascari4615
 			SOManager.Instance.LastHitMonsterObject.RuntimeValue = this;
 			hpBar.localScale = new Vector3((float)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX], 1, 1);
 
-			GameObject hitEffect = ObjectManager.Instance.PopObject(hitEffectPrefab);
+			GameObject hitEffect = ObjectPoolManager.Instance.Spawn(hitEffectPrefab);
 			hitEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
 
 			/*
@@ -110,7 +110,7 @@ namespace Mascari4615
 
 			// Animator.SetTrigger("COLLAPSE");
 			if (IsPlaying)
-				GameManager.Instance.RemoveObject(ObjectBufferType.Monster, gameObject);
+				ObjectBufferManager.Instance.RemoveObject(ObjectType.Monster, gameObject);
 
 			/*
             if (StageManager.Instance.CurrentRoom is NormalRoom)
@@ -129,7 +129,7 @@ namespace Mascari4615
                 }
             }*/
 
-			GameObject dieEffect = ObjectManager.Instance.PopObject(dieEffectPrefab);
+			GameObject dieEffect = ObjectPoolManager.Instance.Spawn(dieEffectPrefab);
 			dieEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
 
 			gameObject.SetActive(false);
@@ -151,13 +151,13 @@ namespace Mascari4615
 			ItemData dropItem = probability.Get();
 			if (dropItem != default)
 			{
-				GameObject lootItem = ObjectManager.Instance.PopObject(lootItemPrefab);
+				GameObject lootItem = ObjectPoolManager.Instance.Spawn(lootItemPrefab);
 				lootItem.transform.position = transform.position;
 				lootItem.SetActive(true);
 				lootItem.GetComponent<ItemObject>().Init(dropItem);
 			}
 
-			GameObject exp = ObjectManager.Instance.PopObject(expPrefab);
+			GameObject exp = ObjectPoolManager.Instance.Spawn(expPrefab);
 			exp.transform.position = transform.position;
 			exp.SetActive(true);
 		}

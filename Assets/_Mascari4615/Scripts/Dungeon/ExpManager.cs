@@ -41,7 +41,7 @@ namespace Mascari4615
 				
 				SOManager.Instance.OnLevelUp.Raise();
 
-				GameObject l = ObjectManager.Instance.PopObject(levelUpEffect);
+				GameObject l = ObjectPoolManager.Instance.Spawn(levelUpEffect);
 				l.transform.position = Player.Instance.transform.position;
 				l.SetActive(true);
 			}

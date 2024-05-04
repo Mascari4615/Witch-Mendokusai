@@ -19,7 +19,7 @@ namespace Mascari4615
 				instance = null;
 			}
 
-			instance = ObjectManager.Instance.PopObject(targetObject);
+			instance = ObjectPoolManager.Instance.Spawn(targetObject);
 			instance.SetActive(true);
 		}
 

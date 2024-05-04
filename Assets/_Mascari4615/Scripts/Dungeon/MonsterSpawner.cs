@@ -88,14 +88,14 @@ namespace Mascari4615
 
 			Vector3 spawnPos = transform.position + randomOffset;
 
-			GameObject spawnCircle = ObjectManager.Instance.PopObject(spawnCirclePrefab);
+			GameObject spawnCircle = ObjectPoolManager.Instance.Spawn(spawnCirclePrefab);
 			spawnCircle.transform.position = spawnPos;
 			spawnCircle.SetActive(true);
-			GameManager.Instance.AddObject(ObjectBufferType.SpawnCircle, spawnCircle);
+			ObjectBufferManager.Instance.AddObject(ObjectType.SpawnCircle, spawnCircle);
 
 			yield return new WaitForSeconds(spawnDelay);
 
-			GameObject monsterObject = ObjectManager.Instance.PopObject(monster.Prefab);
+			GameObject monsterObject = ObjectPoolManager.Instance.Spawn(monster.Prefab);
 			monsterObject.transform.position = spawnPos;
 			monsterObject.GetComponent<MonsterObject>().Init(monster);
 			monsterObject.GetComponent<MonsterObject>().UpdateStatByDifficulty(curDifficulty);

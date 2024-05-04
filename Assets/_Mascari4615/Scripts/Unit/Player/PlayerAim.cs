@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
@@ -36,9 +37,22 @@ namespace Mascari4615
 		{
 			while (true)
 			{
-				GameObject target = GameManager.Instance.GetNearestObjectRaycast(ObjectBufferType.Monster, transform.position, maxDistance);
+				GameObject aimTarget = null;
+			
+				List<GameObject> targets = ObjectBufferManager.Instance.GetObjectsWithDistance(ObjectType.Monster, transform.position, maxDistance);
+				if (targets != null)
+				{
+					foreach (GameObject target in targets)
+					{
+						if (Physics.Raycast(transform.position, target.transform.position - transform.position, out RaycastHit hit, maxDistance))
+						{
+							if (hit.collider.gameObject == target)
+								aimTarget = target;
+						}
+					}
+				}
 
-				if (target == null)
+				if (aimTarget == null)
 				{
 					curNearestAutoTarget = null;
 					// targetGroup.m_Targets[1].target = null;
@@ -53,10 +67,10 @@ namespace Mascari4615
 				{
 					bool targetChanged = false;
 
-					if (curNearestAutoTarget != target)
+					if (curNearestAutoTarget != aimTarget)
 					{
 						targetChanged = true;
-						curNearestAutoTarget = target;
+						curNearestAutoTarget = aimTarget;
 
 						if (changeTarget != null)
 						{

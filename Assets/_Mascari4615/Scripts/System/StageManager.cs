@@ -52,7 +52,7 @@ namespace Mascari4615
 
 				// 새로운 스테이지 생성 (비활성화 상태)
 				GameObject targetStage = stage.Prefab.gameObject;
-				CurStageObject = ObjectManager.Instance.PopObject(targetStage).GetComponent<StageObject>();
+				CurStageObject = ObjectPoolManager.Instance.Spawn(targetStage).GetComponent<StageObject>();
 
 				// 새로운 스테이지 위치 변환
 				Vector3 newStagePos = (spawnPortalIndex != -1)
