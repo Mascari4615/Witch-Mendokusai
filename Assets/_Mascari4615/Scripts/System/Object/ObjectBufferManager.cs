@@ -63,7 +63,7 @@ namespace Mascari4615
 
 		public List<GameObject> GetObjectsWithDistance(ObjectType type, Vector3 position, float maxDistance)
 		{
-			List<GameObject> targetObjects = null;
+			List<GameObject> targetObjects = new();
 
 			foreach (GameObject obj in bufferDic[type])
 			{
