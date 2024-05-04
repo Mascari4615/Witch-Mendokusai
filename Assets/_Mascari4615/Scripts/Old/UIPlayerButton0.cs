@@ -13,7 +13,7 @@ namespace Mascari4615
 
 		public void UpdateIcon()
 		{
-			animator.SetInteger(State, SOManager.Instance.CanInteract.RuntimeValue ? 1 : 0);
+			// animator.SetInteger(State, SOManager.Instance.CanInteract.RuntimeValue ? 1 : 0);
 			animator.SetTrigger(Update);
 		}
 

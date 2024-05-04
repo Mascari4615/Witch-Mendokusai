@@ -8,10 +8,11 @@ namespace Mascari4615
 {
 	public class PlayerInteraction
 	{
+		public const float InteractionDistance = 1.5f;
+
 		private GameObject GetNearestInteractiveObject()
 		{
-			const float maxDistance = 1.5f;
-			GameObject nearest = ObjectBufferManager.Instance.GetNearestObject(ObjectType.Interactive, Player.Instance.transform.position, maxDistance);
+			GameObject nearest = ObjectBufferManager.Instance.GetNearestObject(ObjectType.Interactive, Player.Instance.transform.position, InteractionDistance);
 			return nearest;
 		}
 

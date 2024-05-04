@@ -28,10 +28,7 @@ namespace Mascari4615
 
 		public void TryInteract()
 		{
-			if (SOManager.Instance.CanInteract.RuntimeValue)
-			{
-				Interaction.TryInteraction();
-			}
+			Interaction.TryInteraction();
 		}
 
 		public void TryUseSkill(int skillIndex)

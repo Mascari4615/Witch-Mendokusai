@@ -37,7 +37,6 @@ namespace Mascari4615
 		[field: SerializeField] public Vector3Variable PlayerLookDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerAimDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerAutoAimDirection { get; private set; }
-		[field: SerializeField] public BoolVariable CanInteract { get; private set; }
 		[field: SerializeField] public BoolVariable IsChatting { get; private set; }
 		[field: SerializeField] public BoolVariable IsDashing { get; private set; }
 		[field: SerializeField] public BoolVariable IsGround { get; private set; }
