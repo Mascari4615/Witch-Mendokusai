@@ -24,7 +24,10 @@ namespace Mascari4615
 		{
 			slots = GetComponentsInChildren<UISlot>(true);
 			slotCanvasGroups = GetComponentsInChildren<CanvasGroup>(true);
+		}
 
+		private void Start()
+		{
 			SOManager.Instance.LastEquipedItem.GameEvent.AddCallback(EquipItem);
 		}
 		
