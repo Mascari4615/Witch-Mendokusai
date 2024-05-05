@@ -10,9 +10,15 @@ namespace Mascari4615
 	public class BT_MoveToPlayer : BTRunner
 	{
 		private Vector3 moveDest = Vector3.zero;
+		private bool isSpriteLookLeft;
 
 		public BT_MoveToPlayer(UnitObject unitObject) : base(unitObject)
 		{
+		}
+
+		public void Init(bool isSpriteLookLeft = true)
+		{
+			this.isSpriteLookLeft = isSpriteLookLeft;
 		}
 
 		protected override Node MakeNode()
@@ -44,7 +50,7 @@ namespace Mascari4615
 
 		private void UpdateSpriteFlip()
 		{
-			unitObject.SpriteRenderer.flipX = IsPlayerOnLeft();
+			unitObject.SpriteRenderer.flipX = isSpriteLookLeft ? !IsPlayerOnLeft() : IsPlayerOnLeft();
 		}
 
 		protected bool IsPlayerOnLeft()

@@ -5,6 +5,7 @@ namespace Mascari4615
 	public class SlimeFSM : StateMachine<TempState>
 	{
 		[SerializeField] private float attackRange = 10f;
+		[SerializeField] private bool isSpriteLookLeft = false;
 	
 		private BT_Idle idle;
 		private BT_MoveToPlayer moveToPlayer;
@@ -24,13 +25,15 @@ namespace Mascari4615
 
 			SetStateEvent(TempState.Attack, StateEvent.Update, () =>
 			{
+				CanSeePlayer();
 				moveToPlayer.Update();
 			});
 		}
 
 		protected override void Init()
 		{
-			idle.Init();
+			idle.Init(isSpriteLookLeft: isSpriteLookLeft);
+			moveToPlayer.Init(isSpriteLookLeft: isSpriteLookLeft);
 		}
 
 		private void CanSeePlayer()

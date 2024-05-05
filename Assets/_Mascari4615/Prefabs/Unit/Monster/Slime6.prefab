@@ -50,26 +50,46 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1848531686881178565, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
       propertyPath: m_Name
-      value: Robot
+      value: Slime6
       objectReference: {fileID: 0}
     - target: {fileID: 2785671053450697428, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
       propertyPath: <UnitData>k__BackingField
       value: 
       objectReference: {fileID: 11400000, guid: 473eb54ca0151684ca8411fd1914123f, type: 2}
+    - target: {fileID: 3636146261913355018, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+      propertyPath: m_Size.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3636146261913355018, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3636146261913355018, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: -1494680652, guid: 885dbe964ca2c0541a96474bd66b37b3, type: 3}
+    - target: {fileID: 3636146261913355018, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5348946906289475510, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: ad5d1a68c296a6642b31fde1e8734335, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1848531686881178565, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6047096294672847667}
+      addedObject: {fileID: -5005956827480997153}
   m_SourcePrefab: {fileID: 100100000, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
 --- !u!1 &6534569428800909803 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1848531686881178565, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
   m_PrefabInstance: {fileID: 4830173823939969582}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6047096294672847667
+--- !u!114 &-5005956827480997153
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -78,7 +98,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 6534569428800909803}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91d91bd0024491244812f3830cc06b19, type: 3}
+  m_Script: {fileID: 11500000, guid: 59d11d69be8920f43af4d3caacbdccab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 100
+  attackRange: 50
+  isSpriteLookLeft: 1

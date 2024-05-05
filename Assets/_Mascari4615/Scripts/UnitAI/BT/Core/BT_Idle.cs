@@ -11,6 +11,7 @@ namespace Mascari4615
 	{
 		private float randomMoveDistance;
 		private bool usePivot;
+		private bool isSpriteLookLeft;
 		
 		private Vector3 pivot = Vector3.zero;
 		private Vector3 moveDest = Vector3.zero;
@@ -19,10 +20,11 @@ namespace Mascari4615
 		{
 		}
 
-		public void Init(float randomMoveDistance = 10, bool usePivot = false)
+		public void Init(float randomMoveDistance = 10, bool usePivot = false, bool isSpriteLookLeft = true)
 		{
 			this.randomMoveDistance = randomMoveDistance;
 			this.usePivot = usePivot;
+			this.isSpriteLookLeft = isSpriteLookLeft;
 		}
 
 		protected override Node MakeNode()
@@ -59,7 +61,7 @@ namespace Mascari4615
 
 		private void UpdateSpriteFlip()
 		{
-			unitObject.SpriteRenderer.flipX = IsPlayerOnLeft();
+			unitObject.SpriteRenderer.flipX = isSpriteLookLeft ? !IsPlayerOnLeft() : IsPlayerOnLeft();
 		}
 
 		protected bool IsPlayerOnLeft()

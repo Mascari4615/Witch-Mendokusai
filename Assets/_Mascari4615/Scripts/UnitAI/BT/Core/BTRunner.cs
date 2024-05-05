@@ -17,12 +17,6 @@ namespace Mascari4615
 			this.unitObject = unitObject;
 		}
 
-		// public virtual void Init(UnitObject unitObject)
-		// {
-		// 	rootNode = MakeNode();
-		// 	this.unitObject = unitObject;
-		// }
-
 		protected abstract Node MakeNode();
 		
 		public void Update()
