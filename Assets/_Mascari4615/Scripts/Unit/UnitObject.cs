@@ -47,8 +47,7 @@ namespace Mascari4615
 			SkillHandler = new(this);
 			TimeManager.Instance.RegisterCallback(SkillHandler.Tick);
 
-			Stat.Init(UnitData.InitStatSO.Stats);
-			Stat[StatType.HP_MAX] = unitData.InitStatSO.Stats[StatType.HP_MAX];
+			Stat.Init(UnitData.InitStatInfos.GetStat());
 			SetHp(Stat[StatType.HP_MAX]);
 
 			SpriteRenderer.transform.localScale = originScale;
