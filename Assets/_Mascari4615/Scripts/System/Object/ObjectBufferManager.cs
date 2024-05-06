@@ -37,8 +37,11 @@ namespace Mascari4615
 
 		public void ClearObjects(ObjectType type)
 		{
-			foreach (GameObject obj in bufferDic[type])
+			for (int i = bufferDic[type].Count - 1; i >= 0; i--)
+			{
+				GameObject obj = bufferDic[type][i];
 				obj.SetActive(false);
+			}
 
 			bufferDic[type].Clear();
 		}
