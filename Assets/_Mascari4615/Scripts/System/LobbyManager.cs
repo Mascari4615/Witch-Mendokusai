@@ -19,7 +19,7 @@ namespace Mascari4615
 
 		public void ForDebug()
 		{
-			SceneManager.LoadScene(1);
+			UISceneLoading.LoadScene("World");
 		}
 	}
 }

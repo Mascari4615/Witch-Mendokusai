@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 4082412491034306783}
   - component: {fileID: 1671697928129206814}
   - component: {fileID: 2081742994475414570}
-  - component: {fileID: 6657057443545127617}
+  - component: {fileID: 4697853745898465876}
   m_Layer: 5
-  m_Name: UILoading
+  m_Name: UISceneLoading
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6657057443545127617
+--- !u!114 &4697853745898465876
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -114,11 +114,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 292400191776106765}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4938412cc32ccf04e933e14b1a8734a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 6306d26a8a559d843b0f5311cd66b776, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dontDestroyOnLoad: 1
-  progressBar: {fileID: 8128043123550158697}
+  image: {fileID: 8128043123550158697}
+  text: {fileID: 6973584461257374162}
 --- !u!1 &5401346491924168016
 GameObject:
   m_ObjectHideFlags: 0

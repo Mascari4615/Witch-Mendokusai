@@ -40,7 +40,7 @@ namespace Mascari4615
 			WorkManager = new();
 			QuestManager = new();
 
-			yield return StartCoroutine(UILoading.Instance.Loading());
+			yield return StartCoroutine(UIDataLoading.Instance.DataLoading());
 
 			ForEach<ItemData>(itemData => 
 			{
