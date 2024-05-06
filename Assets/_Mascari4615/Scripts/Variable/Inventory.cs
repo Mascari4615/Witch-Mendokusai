@@ -68,31 +68,36 @@ namespace Mascari4615
 		/// </summary>
 		public int Add(ItemData itemData, int amount = 1)
 		{
-			int index;
-
 			// 1. 수량이 있는 아이템
 			if (itemData.IsCountable)
 			{
 				bool findNextCountable = true;
-				index = NONE;
+				int index = -1;
 
 				while (amount > 0)
 				{
-					// 1-1. 이미 해당 아이템이 인벤토리 내에 존재하고, 개수 여유 있는지 검사
+					// 1-1. 추가할 아이템을 이미 가지고 있는지 확인, 개수 여유 있는지 검사
 					if (findNextCountable)
 					{
 						index = FindItemIndex(itemData, index + 1);
 
-						// 개수 여유있는 기존재 슬롯이 더이상 없다고 판단될 경우, 빈 슬롯부터 탐색 시작
-						if (index == NONE || Datas[index].IsMax)
+						// 기존 아이템 슬롯을 찾은 경우, 양 증가시키고 초과량 존재 시 amount에 초기화
+						if (index != NONE)
 						{
-							findNextCountable = false;
+							if (Datas[index].IsMax)
+							{
+								continue;
+							}
+							else
+							{
+								amount = Datas[index].AddAmountAndGetExcess(amount);
+								UpdateSlot(index);
+							}
 						}
-						// 기존재 슬롯을 찾은 경우, 양 증가시키고 초과량 존재 시 amount에 초기화
+						// 개수 여유있는 기존 아이템 슬롯이 더이상 없다고 판단될 경우, 빈 슬롯부터 탐색 시작
 						else
 						{
-							amount = Datas[index].AddAmountAndGetExcess(amount);
-							UpdateSlot(index);
+							findNextCountable = false;
 						}
 					}
 					// 1-2. 빈 슬롯 탐색
@@ -126,6 +131,8 @@ namespace Mascari4615
 			// 2. 수량이 없는 아이템
 			else
 			{
+				int index;
+
 				// 2-1. 1개만 넣는 경우, 간단히 수행
 				if (amount == 1)
 				{
@@ -141,7 +148,7 @@ namespace Mascari4615
 				}
 
 				// 2-2. 2개 이상의 수량 없는 아이템을 동시에 추가하는 경우
-				index = NONE;
+				index = -1;
 				for (; amount > 0; amount--)
 				{
 					// 아이템 넣은 인덱스의 다음 인덱스부터 슬롯 탐색
@@ -262,7 +269,7 @@ namespace Mascari4615
 		public void Load(List<InventorySlotData> savedItems)
 		{
 			Datas = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
-			
+
 			foreach (InventorySlotData itemData in savedItems)
 			{
 				Datas[itemData.slotIndex] = new Item(
