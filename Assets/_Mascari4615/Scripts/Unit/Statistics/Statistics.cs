@@ -5,18 +5,6 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public enum StatisticsType
-	{
-		MONSTER_KILLED,
-	}
-
-	[Serializable]
-	public struct StatisticsInfo
-	{
-		public StatisticsType type;
-		public int value;
-	}
-
 	[CreateAssetMenu(fileName = nameof(Statistics), menuName = nameof(Statistics))]
 	public class Statistics : ScriptableObject, ISerializationCallbackReceiver
 	{
