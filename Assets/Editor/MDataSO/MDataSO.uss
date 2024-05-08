@@ -1,14 +1,13 @@
 .m-text {
     font-size: 43px;
     -unity-font: url("project://database/Assets/_Mascari4615/Fonts/%EA%B0%88%EB%AC%B4%EB%A6%AC/Galmuri11-Bold.ttf?fileID=12800000&guid=bd8884ab213bad048ababd46b67d534a&type=3#Galmuri11-Bold");
-    -unity-font-definition: initial;
+    -unity-font-definition: url("project://database/Assets/_Mascari4615/Fonts/%EA%B0%88%EB%AC%B4%EB%A6%AC/Galmuri11-Bold%20SDF.asset?fileID=11400000&guid=f9687fba80090c9479c8493176ac8365&type=2#Galmuri11-Bold SDF");
 }
 
 .btn-main {
     flex-grow: 1;
     height: 30px;
     font-size: 20px;
-    -unity-font-style: bold;
     border-left-color: rgb(16, 16, 51);
     border-right-color: rgb(16, 16, 51);
     border-top-color: rgb(16, 16, 51);

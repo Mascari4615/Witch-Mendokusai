@@ -13,9 +13,9 @@
                     <ui:VisualElement name="DataSOContent" style="flex-grow: 1;" />
                 </ui:ScrollView>
                 <ui:VisualElement name="Container_Buttons" style="flex-direction: row; min-height: 5%; border-top-width: 1px; border-left-color: rgba(255, 255, 255, 0.39); border-right-color: rgba(255, 255, 255, 0.39); border-top-color: rgba(255, 255, 255, 0.39); border-bottom-color: rgba(255, 255, 255, 0.39); padding-top: 15px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
-                    <ui:Button text="DUP" name="BTN_Dup" class="btn-main" />
-                    <ui:Button text="DEL" name="BTN_Del" class="btn-main" />
-                    <ui:Button text="ADD" name="BTN_Add" class="btn-main" />
+                    <ui:Button text="DUP" name="BTN_Dup" class="btn-main m-text" />
+                    <ui:Button text="DEL" name="BTN_Del" class="btn-main m-text" />
+                    <ui:Button text="ADD" name="BTN_Add" class="btn-main m-text" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="DataSOs" style="flex-grow: 1; justify-content: center; align-items: center; border-left-color: rgba(255, 255, 255, 0.39); border-right-color: rgba(255, 255, 255, 0.39); border-top-color: rgba(255, 255, 255, 0.39); border-bottom-color: rgba(255, 255, 255, 0.39); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">

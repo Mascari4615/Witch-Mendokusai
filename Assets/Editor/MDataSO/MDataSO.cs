@@ -317,6 +317,15 @@ namespace Mascari4615
 		public DataSO DuplicateDataSO(DataSO dataSO)
 		{
 			Type type = dataSO.GetType();
+			while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
+				type = type.BaseType;
+			
+			if (type == typeof(DataSO) || dataSOs[type].ContainsKey(dataSO.ID) == false)
+			{
+				Debug.LogError("복사할 수 없는 데이터입니다.");
+				return null;
+			}
+
 			Dictionary<int, DataSO> dic = dataSOs[type];
 
 			string nName = dataSO.Name + " Copy";
@@ -343,6 +352,15 @@ namespace Mascari4615
 		public void DeleteDataSO(DataSO dataSO)
 		{
 			Type type = dataSO.GetType();
+			while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
+				type = type.BaseType;
+		
+			if (type == typeof(DataSO) || dataSOs[type].ContainsKey(dataSO.ID) == false)
+			{
+				Debug.LogError("삭제할 수 없는 데이터입니다.");
+				return;
+			}
+
 			Dictionary<int, DataSO> dic = dataSOs[type];
 
 			int id = dataSO.ID;
