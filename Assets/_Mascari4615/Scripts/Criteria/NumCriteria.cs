@@ -13,7 +13,7 @@ namespace Mascari4615
 		public NumCriteria(CriteriaInfo criteriaInfo)
 		{
 			ComparisonOperator = criteriaInfo.ComparisonOperator;
-			TargetValue = criteriaInfo.TargetValue;
+			TargetValue = criteriaInfo.Value;
 		}
 
 		public override bool Evaluate()

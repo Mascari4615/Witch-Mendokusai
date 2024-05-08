@@ -5,17 +5,15 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = "FloatVariableEffect", menuName = "Effect/FloatVariableEffect")]
-	public class FloatVariableEffect : NumVariableEffect<float>
+	public class FloatVariableEffect : IEffect
 	{
-		public override void Apply()
+		public void Apply(EffectInfo effectInfo)
 		{
-			TargetStat.RuntimeValue = Calc(TargetStat.RuntimeValue, Value, ArithmeticOperator);
-		}
+			FloatVariable targetStat = effectInfo.Data as FloatVariable;
+			int value = effectInfo.Value;
+			ArithmeticOperator arithmeticOperator = effectInfo.ArithmeticOperator;
 
-		public override void Cancle()
-		{
-			TargetStat.RuntimeValue = Return(TargetStat.RuntimeValue, Value, ArithmeticOperator);
+			targetStat.RuntimeValue = Arithmetic.Calc(targetStat.RuntimeValue, value, arithmeticOperator);
 		}
 	}
 }

@@ -21,6 +21,17 @@ namespace Mascari4615
 		{
 			return (float)GetCurValue() / GetTargetValue();
 		}
+
+		public static Criteria CreateCriteria(CriteriaInfo criteriaInfo)
+		{
+			return criteriaInfo.Type switch
+			{
+				CriteriaType.ItemCount => new ItemCountCriteria(criteriaInfo),
+				CriteriaType.Stat => new StatCriteria(criteriaInfo),
+				CriteriaType.Statistics => new StatisticsCriteria(criteriaInfo),
+				_ => throw new ArgumentOutOfRangeException(),
+			};
+		}
 	}
 
 	public class RuntimeCriteria : ICriteria
@@ -54,7 +65,7 @@ namespace Mascari4615
 
 		public RuntimeCriteria(CriteriaInfo criteriaInfo)
 		{
-			Criteria = criteriaInfo.CriteriaSO.CreateCriteria(criteriaInfo);
+			Criteria = Criteria.CreateCriteria(criteriaInfo);
 			JustOnce = criteriaInfo.JustOnce;
 		}
 	}

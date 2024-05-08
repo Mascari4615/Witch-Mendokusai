@@ -54,7 +54,6 @@ namespace Mascari4615
 
 			LoadAsset<QuestData>("QUEST_DATA");
 			LoadAsset<CardData>("CARD_DATA");
-			LoadAsset<Effect>("EFFECT");
 			LoadAsset<ItemData>("ITEM_DATA");
 			LoadAsset<MonsterWave>("MONSTER_WAVE");
 			LoadAsset<SkillData>("SKILL_DATA");

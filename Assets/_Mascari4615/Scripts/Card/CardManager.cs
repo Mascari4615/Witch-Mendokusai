@@ -61,7 +61,7 @@ namespace Mascari4615
 
 				if (equipment == null)
 					continue;
-				cardDataBuffers[i].AddRange(equipment.Masteries);
+				cardDataBuffers[i].AddRange(equipment.EffectCards);
 
 				// cardSelectAction: (slot) => { SelectCard(cardSlots[i].Atrifact as Card); }
 				// 원래 위 코드를 썼는데, 클로저 문제로 인해 아래처럼 바꿈

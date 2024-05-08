@@ -27,8 +27,8 @@ namespace Mascari4615
 		[PropertyOrder(0)] [field: SerializeField] public QuestType Type { get; private set; }
 		[PropertyOrder(1)] [field: SerializeField] public List<GameEvent> GameEvents { get; private set; }
 		[PropertyOrder(2)] [field: SerializeField] public List<CriteriaInfo> Criterias { get; private set; }
-		[PropertyOrder(3)] [field: SerializeField] public List<Effect> CompleteEffects { get; private set; }
-		[PropertyOrder(4)] [field: SerializeField] public List<Effect> RewardEffects { get; private set; }
+		[PropertyOrder(3)] [field: SerializeField] public List<EffectInfo> CompleteEffects { get; private set; }
+		[PropertyOrder(4)] [field: SerializeField] public List<EffectInfo> RewardEffects { get; private set; }
 		[PropertyOrder(5)] [field: SerializeField] public List<RewardInfo> Rewards { get; private set; }
 
 		[PropertyOrder(6)] [field: SerializeField] public float WorkTime { get; private set; }

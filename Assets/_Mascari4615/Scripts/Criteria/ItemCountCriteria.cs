@@ -10,9 +10,9 @@ namespace Mascari4615
 	{
 		public int ItemID { get; private set; } = DataSO.NONE_ID;
 
-		public ItemCountCriteria(CriteriaInfo criteriaInfo, int itemID) : base(criteriaInfo)
+		public ItemCountCriteria(CriteriaInfo criteriaInfo) : base(criteriaInfo)
 		{
-			ItemID = itemID;
+			ItemID = criteriaInfo.Data.ID;
 		}
 
 		public override int GetCurValue()

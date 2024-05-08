@@ -8,19 +8,16 @@ namespace Mascari4615
 	public class CardData : DataSO
 	{
 		[field: Header("_" + nameof(CardData))]
-		[field: SerializeField] public Effect[] Effects { get; private set; }
+		[field: SerializeField] public List<EffectInfo> Effects { get; private set; }
 		[field: SerializeField] public int MaxStack { get; private set; }
 
 		public void OnEquip()
 		{
-			foreach (Effect effect in Effects)
-				effect.Apply();
+			Effect.ApplyEffects(Effects);
 		}
 
 		public void OnRemove()
 		{
-			foreach (Effect effect in Effects)
-				effect.Cancle();
 		}
 	}
 }

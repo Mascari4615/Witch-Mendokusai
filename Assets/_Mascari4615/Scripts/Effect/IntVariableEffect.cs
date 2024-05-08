@@ -5,17 +5,15 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = "IntVariableEffect", menuName = "Effect/IntVariableEffect")]
-	public class IntVariableEffect : NumVariableEffect<int>
+	public class IntVariableEffect : IEffect
 	{
-		public override void Apply()
+		public void Apply(EffectInfo effectInfo)
 		{
-			TargetStat.RuntimeValue = (int)Calc(TargetStat.RuntimeValue, Value, ArithmeticOperator);
-		}
+			IntVariable targetStat = effectInfo.Data as IntVariable;
+			int value = effectInfo.Value;
+			ArithmeticOperator arithmeticOperator = effectInfo.ArithmeticOperator;
 
-		public override void Cancle()
-		{
-			TargetStat.RuntimeValue = (int)Return(TargetStat.RuntimeValue, Value, ArithmeticOperator);
+			targetStat.RuntimeValue = (int)Arithmetic.Calc(targetStat.RuntimeValue, value, arithmeticOperator);
 		}
 	}
 }

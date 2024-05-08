@@ -10,14 +10,14 @@ namespace Mascari4615
 
 		private void Start()
 		{
-			PlayerStat.AddListener(StatType.PLAYER_EXP_COLLIDER_SCALE, UpdateEquipment);
+			PlayerStat.AddListener(StatType.EXP_COLLIDER_SCALE, UpdateEquipment);
 			UpdateEquipment();
 		}
 
 		public void UpdateEquipment()
 		{
 			Player.Instance.ExpCollider.transform.localScale =
-				Vector3.one * (1 + (PlayerStat[StatType.PLAYER_EXP_COLLIDER_SCALE] * .5f));
+				Vector3.one * (1 + (PlayerStat[StatType.EXP_COLLIDER_SCALE] * .5f));
 		}
 	}
 }

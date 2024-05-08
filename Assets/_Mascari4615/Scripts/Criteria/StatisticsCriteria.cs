@@ -4,9 +4,9 @@ namespace Mascari4615
 	{
 		public StatisticsType Type { get; private set; }
 
-		public StatisticsCriteria(CriteriaInfo criteriaInfo, StatisticsType type) : base(criteriaInfo)
+		public StatisticsCriteria(CriteriaInfo criteriaInfo) : base(criteriaInfo)
 		{
-			Type = type;
+			Type = (criteriaInfo.Data as StatisticsData).Type;
 		}
 
 		public override int GetCurValue()

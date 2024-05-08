@@ -23,6 +23,7 @@ namespace Mascari4615
 		{
 			Amount = Mathf.Clamp(amount, 0, MaxAmount);
 		}
+
 		/// <summary> 개수 추가 및 최대치 초과량 반환(초과량 없을 경우 0) </summary>
 		public int AddAmountAndGetExcess(int amount)
 		{
@@ -31,6 +32,7 @@ namespace Mascari4615
 
 			return (nextAmount > MaxAmount) ? (nextAmount - MaxAmount) : 0;
 		}
+		
 		public bool IsMax => Amount >= Data.MaxAmount;
 		public bool IsEmpty => Amount <= 0;
 	}

@@ -10,9 +10,9 @@ namespace Mascari4615
 	{
 		public StatType Type { get; private set; }
 
-		public StatCriteria(CriteriaInfo criteriaInfo, StatType type) : base(criteriaInfo)
+		public StatCriteria(CriteriaInfo criteriaInfo) : base(criteriaInfo)
 		{
-			Type = type;
+			Type = (criteriaInfo.Data as StatData).Type;
 		}
 
 		private Stat PlayerStat => Player.Instance.Stat;

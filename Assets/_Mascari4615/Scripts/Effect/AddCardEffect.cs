@@ -2,22 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(AddCardEffect), menuName = "Effect/" + nameof(AddCardEffect))]
-	public class AddCardEffect : Effect
+	public class AddCardEffect : IEffect
 	{
-		[SerializeField] private CardBuffer deck;
-		[SerializeField] private CardData targetCard;
-
-		public override void Apply()
+		public void Apply(EffectInfo effectInfo)
 		{
-			deck.Add(targetCard);
-		}
-
-		public override void Cancle()
-		{
+			CardData targetCard = effectInfo.Data as CardData;
+			SOManager.Instance.SelectedCardBuffer.Add(targetCard);
 		}
 	}
 }

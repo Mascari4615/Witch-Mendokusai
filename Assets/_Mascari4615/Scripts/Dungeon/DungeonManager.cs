@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using Cinemachine;
 using TMPro;
 using UnityEngine;
@@ -62,10 +63,14 @@ namespace Mascari4615
 
 				for (int i = 0; i < 3; i++)
 				{
-					if (DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i) != null)
+					EquipmentData equipment = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i);
+
+					if (equipment != null)
 					{
-						foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i).Effects)
-							effect.Apply();
+						Effect.ApplyEffects(equipment.Effects);
+
+						if (equipment.Object != null)
+							ObjectPoolManager.Instance.Spawn(equipment.Object);
 					}
 				}
 
@@ -122,8 +127,10 @@ namespace Mascari4615
 
 				for (int i = 0; i < 3; i++)
 				{
-					foreach (Effect effect in DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i)!.Effects)
-						effect.Apply();
+					EquipmentData equipment = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i);
+
+					if (equipment != null)
+						Effect.ApplyEffects(equipment.Effects);
 				}
 			}
 		}

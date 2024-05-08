@@ -2,22 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = "E_" + nameof(AddRandomQuestEffect), menuName = "Effect/" + nameof(AddRandomQuestEffect))]
-	public class AddRandomQuestEffect : Effect
+	public class AddRandomQuestEffect : IEffect
 	{
-		[SerializeField] private DataBufferSO<QuestData> questDataBuffer;
-
-		public override void Apply()
+		public void Apply(EffectInfo effectInfo)
 		{
+			DataBufferSO<QuestData> questDataBuffer = effectInfo.Data as DataBufferSO<QuestData>;
 			QuestData randomQuest = questDataBuffer.Datas[Random.Range(0, questDataBuffer.Datas.Count)];
 			DataManager.Instance.QuestManager.AddQuest(new(randomQuest));
-		}
-
-		public override void Cancle()
-		{
 		}
 	}
 }

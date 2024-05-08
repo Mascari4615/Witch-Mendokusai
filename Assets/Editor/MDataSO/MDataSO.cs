@@ -19,10 +19,12 @@ namespace Mascari4615
 		{
 			{ typeof(QuestData), "Q" },
 			{ typeof(CardData), "C" },
-			{ typeof(Effect), "E" },
 			{ typeof(ItemData), "I" },
 			{ typeof(MonsterWave), "MW" },
+			{ typeof(ObjectData), "O"},
 			{ typeof(SkillData), "SKL" },
+			{ typeof(StatData), "ST"},
+			{ typeof(StatisticsData), "STS"},
 			{ typeof(WorldStage), "WS" },
 			{ typeof(Dungeon), "D" },
 			{ typeof(DungeonStage), "DS" },
@@ -36,10 +38,12 @@ namespace Mascari4615
 		{
 			{ typeof(QuestData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestData)}/" },
 			{ typeof(CardData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(CardData)}/" },
-			{ typeof(Effect), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Effect)}/" },
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
+			{ typeof(ObjectData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ObjectData)}/" },
 			{ typeof(SkillData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(SkillData)}/" },
+			{ typeof(StatData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(StatData)}/"},
+			{ typeof(StatisticsData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(StatisticsData)}/"},
 			{ typeof(WorldStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(WorldStage)}/" },
 			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
 			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
@@ -128,7 +132,7 @@ namespace Mascari4615
 			Selection.selectionChanged += () =>
 			{
 				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
-				
+
 				if (Selection.activeObject is DataSO dataSO)
 				{
 					Type type = dataSO.GetType();
@@ -212,28 +216,16 @@ namespace Mascari4615
 		{
 			badIDDataSOs = new();
 
-			Temp<QuestData>();
-			Temp<CardData>();
-			Temp<Effect>();
-			Temp<ItemData>();
-			Temp<MonsterWave>();
-			Temp<SkillData>();
-			Temp<WorldStage>();
-			Temp<Dungeon>();
-			Temp<DungeonStage>();
-			Temp<DungeonConstraint>();
-			Temp<Doll>();
-			Temp<NPC>();
-			Temp<Monster>();
-
-			void Temp<T>() where T : DataSO
+			foreach (var (type, dir) in assetPaths)
 			{
 				Dictionary<int, DataSO> dic = new();
-				InitDic<T>(ref dic, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
-				dataSOs.Add(typeof(T), dic);
+				InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
+				dataSOs.Add(type, dic);
 			}
 
-			void InitDic<T>(ref Dictionary<int, DataSO> dic, string dirPath, bool searchSubDir = true, List<DataSO> badDataSOList = null) where T : DataSO
+			// TODO: badIDDataSOs 처리
+
+			void InitDic(ref Dictionary<int, DataSO> dic, Type type, string dirPath, bool searchSubDir = true, List<DataSO> badDataSOList = null)
 			{
 				const string extension = ".asset";
 
@@ -244,16 +236,16 @@ namespace Mascari4615
 						continue;
 
 					string filePath = $"{dirPath}/{file.Name}";
-					Type type = AssetDatabase.GetMainAssetTypeAtPath(filePath);
+					Type fileType = AssetDatabase.GetMainAssetTypeAtPath(filePath);
 
-					if (type == null)
+					if (fileType == null)
 						continue;
 
 					// 만약 type이 T이거나 T의 하위 클래스가 아니면 Continue
-					if (type != typeof(T) && !type.IsSubclassOf(typeof(T)))
+					if (fileType != type && !fileType.IsSubclassOf(type))
 						continue;
 
-					T asset = AssetDatabase.LoadAssetAtPath<T>(filePath);
+					DataSO asset = AssetDatabase.LoadAssetAtPath<DataSO>(filePath);
 					if (dic.ContainsKey(asset.ID))
 					{
 						Debug.LogError($"이미 존재하는 키입니다. {file.Name}");
@@ -264,9 +256,9 @@ namespace Mascari4615
 					else
 					{
 						dic.Add(asset.ID, asset);
-						
-						string goodName = $"{assetPrefixes[typeof(T)]}_{asset.ID}_{asset.Name}";
-						// if (asset.name.StartsWith($"{assetPrefixes[typeof(T)]}_{asset.ID}") == false)
+
+						string goodName = $"{assetPrefixes[type]}_{asset.ID}_{asset.Name}";
+						// if (asset.name.StartsWith($"{assetPrefixes[type]}_{asset.ID}") == false)
 
 						// 파일 이름에 사용할 수 없는 문자를 제거
 						Regex regex = new(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()))));
@@ -284,7 +276,7 @@ namespace Mascari4615
 				{
 					// dir 아래 모든 폴더 안에 있는 파일을 탐색
 					foreach (DirectoryInfo subDir in dir.GetDirectories())
-						InitDic<T>(ref dic, $"{dirPath}/{subDir.Name}/");
+						InitDic(ref dic, type, $"{dirPath}/{subDir.Name}/");
 				}
 			}
 		}
@@ -319,7 +311,7 @@ namespace Mascari4615
 			Type type = dataSO.GetType();
 			while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
 				type = type.BaseType;
-			
+
 			if (type == typeof(DataSO) || dataSOs[type].ContainsKey(dataSO.ID) == false)
 			{
 				Debug.LogError("복사할 수 없는 데이터입니다.");
@@ -354,7 +346,7 @@ namespace Mascari4615
 			Type type = dataSO.GetType();
 			while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
 				type = type.BaseType;
-		
+
 			if (type == typeof(DataSO) || dataSOs[type].ContainsKey(dataSO.ID) == false)
 			{
 				Debug.LogError("삭제할 수 없는 데이터입니다.");

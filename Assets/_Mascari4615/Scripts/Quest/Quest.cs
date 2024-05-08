@@ -119,8 +119,7 @@ namespace Mascari4615
 			foreach (GameEvent gameEvent in Data.GameEvents)
 				gameEvent.RemoveCallback(Evaluate);
 
-			foreach (Effect completeEffect in Data.CompleteEffects)
-				completeEffect.Apply();
+			Effect.ApplyEffects(Data.CompleteEffects);
 
 			if (Data.Type == QuestType.Achievement)
 			{
@@ -132,8 +131,7 @@ namespace Mascari4615
 
 		private void GetReward()
 		{
-			foreach (Effect reward in Data.RewardEffects)
-				reward.Apply();
+			Effect.ApplyEffects(Data.RewardEffects);
 
 			foreach (RewardData rewardData in Rewards)
 				Reward.GetReward(rewardData);
