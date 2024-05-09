@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using Unity.Properties;
 using UnityEditor;
@@ -229,7 +230,8 @@ namespace Mascari4615
 				dataSOs.Add(type, dic);
 			}
 
-			UpdateStatData();
+			UpdateData<StatData, StatType>();
+			UpdateData<StatisticsData, StatisticsType>();
 			SaveAssets();
 
 			// TODO: badIDDataSOs 처리
@@ -416,46 +418,48 @@ namespace Mascari4615
 			MDataSODetail.UpdateCurDataSO(slot.DataSO);
 		}
 
-		public void UpdateStatData()
+	public void UpdateData<TData, TEnum>() where TData : DataSO
+	{
+		const string PropertyName = "Type";
+
+		var dic = dataSOs[typeof(TData)];
+		foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
 		{
-			// 모든 StatType에 대해 각 DataSO의 StatData를 업데이트한다.
-
-			var dic = dataSOs[typeof(StatData)];
-			foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+			if (dic.TryGetValue(Convert.ToInt32(enumValue), out DataSO dataSO))
 			{
-				if (dic.TryGetValue((int)statType, out DataSO dataSO))
+				TData typedData = dataSO as TData;
+
+				string goodName = Enum.GetName(typeof(TEnum), enumValue);
+				if (typedData.Name != goodName)
 				{
-					StatData statData = dataSO as StatData;
-
-					string goodName = Enum.GetName(typeof(StatType), statType);
-					if (statData.Name != goodName)
-					{
-						Debug.Log($"{statData.name}의 이름을 업데이트합니다. {statData.Name} -> {goodName}");
-						statData.Name = goodName;
-						EditorUtility.SetDirty(statData);
-					}
-
-					if (statData.Type != statType)
-					{
-						Debug.Log($"{statData.name}의 Type을 업데이트합니다. {statData.Type} -> {statType}");
-						statData.Type = statType;
-						EditorUtility.SetDirty(statData);
-					}
+					Debug.Log($"{typedData.name}의 이름을 업데이트합니다. {typedData.Name} -> {goodName}");
+					typedData.Name = goodName;
+					EditorUtility.SetDirty(typedData);
 				}
-				else
+
+				PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
+				if (enumValue.ToString() != typeProperty.GetValue(typedData).ToString())
 				{
-					Debug.Log($"StatData를 추가합니다.");
-					Type type = typeof(StatData);
-					int nID = (int)statType;
-					string nName = Enum.GetName(typeof(StatType), statType);
-
-					StatData statData = AddDataSO(type, nID, nName) as StatData;
-					statData.Type = statType;
-
-					EditorUtility.SetDirty(statData);
+					Debug.Log($"{typedData.name}의 Type을 업데이트합니다. {typeProperty.GetValue(typedData)} -> {enumValue}");
+					typeProperty.SetValue(typedData, (int)Enum.Parse(typeof(TEnum), enumValue.ToString()));
+					EditorUtility.SetDirty(typedData);
 				}
 			}
+			else
+			{
+				Debug.Log($"Data를 추가합니다.");
+				Type type = typeof(TData);
+				int nID = Convert.ToInt32(enumValue);
+				string nName = Enum.GetName(typeof(TEnum), enumValue);
+
+				TData typedData = AddDataSO(type, nID, nName) as TData;
+				PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
+				typeProperty.SetValue(typedData, nID);
+
+				EditorUtility.SetDirty(typedData);
+			}
 		}
+	}
 
 		private void SaveAssets()
 		{
