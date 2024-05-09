@@ -74,7 +74,7 @@ namespace Mascari4615
 					}
 				}
 
-				SOManager.Instance.OnDungeonStart.Raise();
+				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
 				StartCoroutine(DungeonLoop(dungeon));
 				DungeonCurTime = InitialDungeonTime;
 			}

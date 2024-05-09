@@ -37,13 +37,6 @@ namespace Mascari4615
 		[field: SerializeField] public Vector3Variable PlayerLookDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerAimDirection { get; private set; }
 		[field: SerializeField] public Vector3Variable PlayerAutoAimDirection { get; private set; }
-		[field: SerializeField] public BoolVariable IsChatting { get; private set; }
-		[field: SerializeField] public BoolVariable IsDashing { get; private set; }
-		[field: SerializeField] public BoolVariable IsGround { get; private set; }
-		[field: SerializeField] public BoolVariable IsCooling { get; private set; }
-		[field: SerializeField] public BoolVariable IsPaused { get; private set; }
-		[field: SerializeField] public BoolVariable IsDied { get; private set; }
-		[field: SerializeField] public BoolVariable IsMouseOnUI { get; private set; }
 		[field: SerializeField] public MonsterObjectVariable LastHitMonsterObject { get; private set; }
 		[field: SerializeField] public IntVariable Nyang { get; private set; }
 		[field: SerializeField] public IntVariable VQExp { get; private set; }
@@ -57,12 +50,5 @@ namespace Mascari4615
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
 		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
-
-		[field: Space(10), Header(nameof(GameEvent))]
-		[field: SerializeField] public GameEvent OnPlayerHit { get; private set; }
-		[field: SerializeField] public GameEvent OnPlayerDied { get; private set; }
-		[field: SerializeField] public GameEvent OnDungeonStart { get; private set; }
-		[field: SerializeField] public GameEvent OnTick { get; private set; }
-		[field: SerializeField] public GameEvent OnLevelUp { get; private set; }
 	}
 }

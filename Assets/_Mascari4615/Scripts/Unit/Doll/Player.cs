@@ -36,7 +36,7 @@ namespace Mascari4615
 
 		public void TryUseSkill(int skillIndex)
 		{
-			if (SOManager.Instance.IsCooling.RuntimeValue)
+			if (GameManager.Instance.IsCooling)
 				return;
 			Object.UseSkill(skillIndex);
 		}

@@ -30,6 +30,8 @@ namespace Mascari4615
 			PlayerStat.AddListener(curType, UpdateUI);
 			PlayerStat.AddListener(maxType, UpdateUI);
 
+			GameEventManager.Instance.RegisterCallback(GameEventType.OnDungeonStart, UpdateUI);
+
 			UpdateUI();
 		}
 

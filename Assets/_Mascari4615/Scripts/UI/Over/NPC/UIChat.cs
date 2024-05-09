@@ -30,7 +30,7 @@ namespace Mascari4615
 			chatTargetGroup.m_Targets[1].target = npc.transform;
 			endAction = action;
 
-			SOManager.Instance.IsChatting.RuntimeValue = true;
+			GameManager.Instance.IsChatting = true;
 
 			StartCoroutine(ChatLoop(curChatDatas));
 		}
@@ -63,7 +63,7 @@ namespace Mascari4615
 				while (Input.anyKeyDown == false);
 			}
 
-			SOManager.Instance.IsChatting.RuntimeValue = false;
+			GameManager.Instance.IsChatting = false;
 			bubbleCanvasGroup.alpha = 0;
 			StopAllCoroutines();
 

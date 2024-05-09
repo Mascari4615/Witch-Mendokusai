@@ -23,18 +23,18 @@ namespace Mascari4615
 			
 			if (PrevDelay > 0)
 			{
-				SOManager.Instance.IsCooling.RuntimeValue = true;
+				GameManager.Instance.IsCooling = true;
 				yield return new WaitForSeconds(PrevDelay);
-				SOManager.Instance.IsCooling.RuntimeValue = false;
+				GameManager.Instance.IsCooling = false;
 			}
 
 			ActualUse(unitObject);
 
 			if (AfterDelay > 0)
 			{
-				SOManager.Instance.IsCooling.RuntimeValue = true;
+				GameManager.Instance.IsCooling = true;
 				yield return new WaitForSeconds(AfterDelay);
-				SOManager.Instance.IsCooling.RuntimeValue = false;
+				GameManager.Instance.IsCooling = false;
 			}
 		}
 

@@ -28,7 +28,7 @@ namespace Mascari4615
 
 		private void Start()
 		{
-			SOManager.Instance.LastEquipedItem.GameEvent.AddCallback(EquipItem);
+			SOManager.Instance.LastEquipedItem.OnValueChanged += EquipItem;
 		}
 		
 		public void EquipItem()

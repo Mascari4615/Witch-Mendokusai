@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -13,11 +14,13 @@ namespace Mascari4615
 			set
 			{
 				_runtimeValue = value;
-				GameEvent?.Raise();
+				// GameEvent?.Raise();
+				OnValueChanged?.Invoke();
 			}
 		}
 		[System.NonSerialized] private T _runtimeValue;
-		[field: SerializeField] public GameEvent GameEvent { get; private set; }
+		// [field: SerializeField] public GameEvent GameEvent { get; private set; }
+		public Action OnValueChanged { get; set; }
 
 		public void OnAfterDeserialize() { RuntimeValue = InitialValue; }
 		public void OnBeforeSerialize() { }

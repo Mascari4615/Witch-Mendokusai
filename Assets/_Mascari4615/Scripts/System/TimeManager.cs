@@ -9,6 +9,17 @@ namespace Mascari4615
 	// Mathf.Epsilon
 	public class TimeManager : Singleton<TimeManager>
 	{
+		private bool isPaused;
+		public bool IsPaused
+		{
+			get => isPaused;
+			set
+			{
+				isPaused = value;
+				UpdateTimeScale();
+			}
+		}
+
 		public const float TICK = 0.05f;
 
 		public float slowFactor = 0.05f;
@@ -18,23 +29,19 @@ namespace Mascari4615
 		private Action callback;
 		private Coroutine timeLoop;
 
-		protected override void Awake()
-		{
-			base.Awake();
-			SOManager.Instance.IsPaused.GameEvent.AddCallback(UpdateTimeScale);
-		}
-		
 		private void OnEnable()
 		{
+			RegisterCallback(UpdateTimeScale);
 			timeLoop = StartCoroutine(UpdateTime());
 		}
-		
+
 		private IEnumerator UpdateTime()
 		{
 			WaitForSeconds wait = new(TICK);
+
 			while (true)
 			{
-				SOManager.Instance.OnTick.Raise();
+				GameEventManager.Instance.Raise(GameEventType.OnTick);
 				callback?.Invoke();
 				yield return wait;
 			}
@@ -59,17 +66,17 @@ namespace Mascari4615
 
 		public void UpdateTimeScale()
 		{
-			Time.timeScale = SOManager.Instance.IsPaused.RuntimeValue ? Mathf.Epsilon : 1;
+			Time.timeScale = IsPaused ? Mathf.Epsilon : 1;
 		}
 
 		public void Pause()
 		{
-			SOManager.Instance.IsPaused.RuntimeValue = true;
+			IsPaused = true;
 		}
 
 		public void Resume()
 		{
-			SOManager.Instance.IsPaused.RuntimeValue = false;
+			IsPaused = false;
 		}
 
 		[ContextMenu(nameof(DoSlowMotion))]
@@ -86,7 +93,7 @@ namespace Mascari4615
 		private IEnumerator SlowMotion()
 		{
 			yield return new WaitForSecondsRealtime(.05f);
-			
+
 			Time.timeScale = slowFactor;
 			// Time.fixedDeltaTime = Time.timeScale * 0.02f;
 

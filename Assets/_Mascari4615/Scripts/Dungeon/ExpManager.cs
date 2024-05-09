@@ -39,7 +39,7 @@ namespace Mascari4615
 				PlayerStat[StatType.EXP_MAX] += REQUIRE_EXP_INCREASEMENT;
 				PlayerStat[StatType.LEVEL_CUR]++;
 				
-				SOManager.Instance.OnLevelUp.Raise();
+				GameEventManager.Instance.Raise(GameEventType.OnLevelUp);
 
 				GameObject l = ObjectPoolManager.Instance.Spawn(levelUpEffect);
 				l.transform.position = Player.Instance.transform.position;

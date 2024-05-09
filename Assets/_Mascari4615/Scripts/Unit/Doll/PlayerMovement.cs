@@ -30,7 +30,7 @@ namespace Mascari4615
 
 		private void Update()
 		{
-			if (SOManager.Instance.IsDashing.RuntimeValue)
+			if (GameManager.Instance.IsDashing)
 				return;
 
 			Rotate();
@@ -55,10 +55,10 @@ namespace Mascari4615
 
 		private void FixedUpdate()
 		{
-			if (SOManager.Instance.IsChatting.RuntimeValue || UIManager.Instance.CurOverlay != MPanelType.None)
+			if (GameManager.Instance.IsChatting || UIManager.Instance.CurOverlay != MPanelType.None)
 				return;
 
-			if (SOManager.Instance.IsCooling.RuntimeValue)
+			if (GameManager.Instance.IsCooling)
 			{
 				playerRigidBody.velocity = Vector3.zero;
 				return;
@@ -67,9 +67,9 @@ namespace Mascari4615
 			Vector3 moveDirection = SOManager.Instance.PlayerMoveDirection.RuntimeValue;
 			Vector3 finalVelocity;
 
-			if (SOManager.Instance.IsDied.RuntimeValue)
+			if (GameManager.Instance.IsDied)
 				finalVelocity = Vector3.zero;
-			else if (SOManager.Instance.IsDashing.RuntimeValue)
+			else if (GameManager.Instance.IsDashing)
 				finalVelocity = moveDirection * SOManager.Instance.DashSpeed.RuntimeValue;
 			else
 				finalVelocity = moveDirection * playerObject.Stat[StatType.MOVEMENT_SPEED];

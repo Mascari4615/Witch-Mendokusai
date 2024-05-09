@@ -16,7 +16,7 @@ namespace Mascari4615
 		private void Start()
 		{
 			text.text = "0냥";
-			SOManager.Instance.Nyang.GameEvent.AddCallback(UpdateNyang);
+			SOManager.Instance.Nyang.OnValueChanged += UpdateNyang;
 			UpdateNyang();
 		}
 

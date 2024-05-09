@@ -19,7 +19,7 @@ namespace Mascari4615
 		public override void Init(Unit unitData)
 		{
 			base.Init(unitData);
-			SOManager.Instance.IsDied.RuntimeValue = false;
+			GameManager.Instance.IsDied = false;
 			diedX.SetActive(false);
 		}
 
@@ -34,7 +34,7 @@ namespace Mascari4615
 			base.ReceiveDamage(damage);
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Hit", transform.position);
-			SOManager.Instance.OnPlayerHit.Raise();
+			GameEventManager.Instance.Raise(GameEventType.OnPlayerHit);
 			CameraManager.Instance.뽀삐뽀삐뽀();
 
 			if (invincibleRoutine != null)
@@ -56,8 +56,8 @@ namespace Mascari4615
 		protected override void OnDied()
 		{
 			base.OnDied();
-			SOManager.Instance.IsDied.RuntimeValue = true;
-			SOManager.Instance.OnPlayerDied.Raise();
+			GameManager.Instance.IsDied = true;
+			GameEventManager.Instance.Raise(GameEventType.OnPlayerDied);
 			TimeManager.Instance.DoSlowMotion();
 			diedX.SetActive(true);
 		}

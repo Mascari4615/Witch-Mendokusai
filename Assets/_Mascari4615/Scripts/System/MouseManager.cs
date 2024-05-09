@@ -16,7 +16,7 @@ namespace Mascari4615
 
 		private void Update()
 		{
-			if (SOManager.Instance.IsMouseOnUI.RuntimeValue)
+			if (GameManager.Instance.IsMouseOnUI)
 			{
 				if (mouseType == MouseType.Attack)
 				{

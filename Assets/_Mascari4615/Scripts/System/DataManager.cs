@@ -38,6 +38,7 @@ namespace Mascari4615
 			SOManager = SOManager.Instance;
 			PlayFabManager = GetComponent<PlayFabManager>();
 			WorkManager = new();
+			TimeManager.Instance.RegisterCallback(WorkManager.TickEachWorks);
 			QuestManager = new();
 
 			yield return StartCoroutine(UIDataLoading.Instance.DataLoading());

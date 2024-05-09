@@ -17,7 +17,7 @@ namespace Mascari4615
 
 		private void Update()
 		{
-			if (SOManager.Instance.IsChatting.RuntimeValue)
+			if (GameManager.Instance.IsChatting)
 				return;
 
 			// UIManager
@@ -31,7 +31,7 @@ namespace Mascari4615
 				Player.Instance.TryInteract();
 			if (Input.GetKeyDown(KeyCode.Space))
 				Player.Instance.TryUseSkill(0);
-			if (SOManager.Instance.IsMouseOnUI.RuntimeValue || SOManager.Instance.IsPaused.RuntimeValue)
+			if (GameManager.Instance.IsMouseOnUI || TimeManager.Instance.IsPaused)
 				return;
 			if (Input.GetMouseButton(0))
 				Player.Instance.TryUseSkill(1);

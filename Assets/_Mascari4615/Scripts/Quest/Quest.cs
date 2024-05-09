@@ -54,9 +54,9 @@ namespace Mascari4615
 		public void StartQuest()
 		{
 			if (Data.AutoComplete)
-				Data.GameEvents.Add(SOManager.Instance.OnTick);
-			foreach (GameEvent gameEvent in Data.GameEvents)
-				gameEvent.AddCallback(Evaluate);
+				Data.GameEvents.Add(GameEventType.OnTick);
+			foreach (GameEventType gameEventType in Data.GameEvents)
+				GameEventManager.Instance.RegisterCallback(gameEventType, Evaluate);
 			Evaluate();
 		}
 
@@ -94,9 +94,8 @@ namespace Mascari4615
 		{
 			State = QuestState.Working;
 			
-			foreach (GameEvent gameEvent in Data.GameEvents)
-				gameEvent.RemoveCallback(Evaluate);
-
+			foreach (GameEventType gameEventType in Data.GameEvents)
+				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
 			Work work = new(workerID, WorkType.QuestWork, Guid, Data.WorkTime);
 			DataManager.Instance.WorkManager.AddWork(work);
 		}
@@ -116,9 +115,8 @@ namespace Mascari4615
 			DataManager.Instance.QuestManager.RemoveQuest(this);
 			Data.Complete();
 
-			foreach (GameEvent gameEvent in Data.GameEvents)
-				gameEvent.RemoveCallback(Evaluate);
-
+			foreach (GameEventType gameEventType in Data.GameEvents)
+				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
 			Effect.ApplyEffects(Data.CompleteEffects);
 
 			if (Data.Type == QuestType.Achievement)

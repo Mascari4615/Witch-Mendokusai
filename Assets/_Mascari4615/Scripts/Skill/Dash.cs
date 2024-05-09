@@ -14,9 +14,9 @@ namespace Mascari4615
 
 		private IEnumerator DashLoop()
 		{
-			SOManager.Instance.IsDashing.RuntimeValue = true;
+			GameManager.Instance.IsDashing = true;
 			yield return new WaitForSeconds(SOManager.Instance.DashDuration.RuntimeValue);
-			SOManager.Instance.IsDashing.RuntimeValue = false;
+			GameManager.Instance.IsDashing = false;
 		}
 	}
 }

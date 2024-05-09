@@ -5,14 +5,21 @@ namespace Mascari4615
 {
 	public class GameEventListener : MonoBehaviour
 	{
-		public GameEvent Event;
+		// public GameEvent Event;
+		public GameEventType EventType;
 		public UnityEvent Response;
 
 		private void OnEnable()
-		{ Event.RegisterListener(this); }
+		{
+			// Event.RegisterListener(this);
+			GameEventManager.Instance.RegisterCallback(EventType, OnEventRaised);
+		}
 
 		private void OnDisable()
-		{ Event.UnregisterListener(this); }
+		{
+			// Event.UnregisterListener(this);
+			GameEventManager.Instance.UnregisterCallback(EventType, OnEventRaised);
+		}
 
 		public void OnEventRaised()
 		{

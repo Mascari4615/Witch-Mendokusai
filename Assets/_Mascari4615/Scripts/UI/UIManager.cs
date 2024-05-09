@@ -86,7 +86,7 @@ namespace Mascari4615
 
 		private void Update()
 		{
-			SOManager.Instance.IsMouseOnUI.RuntimeValue = EventSystem.current.IsPointerOverGameObject();
+			GameManager.Instance.IsMouseOnUI = EventSystem.current.IsPointerOverGameObject();
 		}
 
 		public void PopDamage(Vector3 pos, int damge)
