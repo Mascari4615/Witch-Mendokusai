@@ -21,6 +21,7 @@ namespace Mascari4615
 
 		// 스킬
 		COOLTIME_BONUS = 400,
+		ATTACK_SPEED_BONUS = 401,
 
 		// 데미지
 		DAMAGE_BONUS = 500,

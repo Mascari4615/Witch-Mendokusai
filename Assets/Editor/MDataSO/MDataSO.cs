@@ -64,6 +64,8 @@ namespace Mascari4615
 
 		private Type CurType { get; set; } = typeof(QuestData);
 
+		private bool isInit = false;
+
 
 		[MenuItem("Mascari4615/MDataSO")]
 		public static void ShowMDataSO()
@@ -81,6 +83,8 @@ namespace Mascari4615
 
 			InitList();
 			InitDic();
+
+			isInit = true;
 		}
 
 		public void CreateGUI()
@@ -218,10 +222,14 @@ namespace Mascari4615
 
 			foreach (var (type, dir) in assetPaths)
 			{
+				Debug.Log($"InitDic: {type.Name} {dir}");
+
 				Dictionary<int, DataSO> dic = new();
 				InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
 				dataSOs.Add(type, dic);
 			}
+
+			UpdateStatData();
 
 			// TODO: badIDDataSOs 처리
 
@@ -281,28 +289,42 @@ namespace Mascari4615
 			}
 		}
 
-		public DataSO AddDataSO(Type type)
+		public DataSO AddDataSO(Type type, int nID = -1, string nName = null)
 		{
 			Dictionary<int, DataSO> dic = dataSOs[type];
 
-			string nName = type.Name;
 			// 사용되지 않은 ID를 찾는다.
-			int nID = 0;
-			while (dic.ContainsKey(nID))
-				nID++;
+			if (nID == -1)
+			{
+				nID = 0;
+				while (dic.ContainsKey(nID))
+					nID++;
+			}
+
+			if (nName == null)
+				nName = $"New_{type.Name}";
 
 			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
+
+			Debug.Log($"AddDataSO: {type.Name} {nID} {nName} {path}");
 
 			DataSO newDataSO = CreateInstance(type) as DataSO;
 			AssetDatabase.CreateAsset(newDataSO, path);
 			newDataSO.ID = nID;
 			newDataSO.Name = nName;
 
+			EditorUtility.SetDirty(newDataSO);
+			AssetDatabase.SaveAssets();
+
 			dic.Add(nID, newDataSO);
 
-			UpdateGrid();
-			SelectDataSOSlot(DataSOSlots[nID]);
+			if (isInit)
+			{
+				UpdateGrid();
+				SelectDataSOSlot(DataSOSlots[nID]);
+			}
+
 			return newDataSO;
 		}
 
@@ -391,6 +413,47 @@ namespace Mascari4615
 			CurSlot.UpdateUI();
 
 			MDataSODetail.UpdateCurDataSO(slot.DataSO);
+		}
+
+		public void UpdateStatData()
+		{
+			// 모든 StatType에 대해 각 DataSO의 StatData를 업데이트한다.
+
+			var dic = dataSOs[typeof(StatData)];
+			foreach (StatType statType in Enum.GetValues(typeof(StatType)))
+			{
+				if (dic.TryGetValue((int)statType, out DataSO dataSO))
+				{
+					StatData statData = dataSO as StatData;
+
+					string goodName = Enum.GetName(typeof(StatType), statType);
+					if (statData.Name != goodName)
+					{
+						Debug.Log($"{statData.name}의 이름을 업데이트합니다. {statData.Name} -> {goodName}");
+						statData.Name = goodName;
+						EditorUtility.SetDirty(statData);
+					}
+
+					if (statData.Type != statType)
+					{
+						Debug.Log($"{statData.name}의 Type을 업데이트합니다. {statData.Type} -> {statType}");
+						statData.Type = statType;
+						EditorUtility.SetDirty(statData);
+					}
+				}
+				else
+				{
+					Debug.Log($"StatData를 추가합니다.");
+					Type type = typeof(StatData);
+					int nID = (int)statType;
+					string nName = Enum.GetName(typeof(StatType), statType);
+
+					StatData statData = AddDataSO(type, nID, nName) as StatData;
+					statData.Type = statType;
+
+					EditorUtility.SetDirty(statData);
+				}
+			}
 		}
 	}
 }

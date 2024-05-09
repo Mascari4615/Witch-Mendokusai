@@ -5,6 +5,6 @@ namespace Mascari4615
 	[CreateAssetMenu(fileName = "ST_", menuName = "Variable/" + nameof(StatData))]
 	public class StatData : DataSO
 	{
-		public StatType Type;
+		[field: SerializeField] public StatType Type { get; set; }
 	}
 }
