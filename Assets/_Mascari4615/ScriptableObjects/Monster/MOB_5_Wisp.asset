@@ -20,7 +20,12 @@ MonoBehaviour:
   <DefaultSkills>k__BackingField:
   - {fileID: 11400000, guid: f6a29f2c960129f45894db4732554d4b, type: 2}
   <Material>k__BackingField: {fileID: 2100000, guid: 498f73d56bb87ab4cb040563514df458, type: 2}
-  <InitStatSO>k__BackingField: {fileID: 11400000, guid: d683d1dc8d5f6344791cdf9a6122e182, type: 2}
+  <InitStatInfos>k__BackingField:
+    initStats:
+    - stat: 1
+      value: 20
+    - stat: 300
+      value: 2
   <Loots>k__BackingField:
   - <DataSO>k__BackingField: {fileID: 11400000, guid: eeed87409dcb3054ba7b5e21d0b93da6, type: 2}
     <Percentage>k__BackingField: 30

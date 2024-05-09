@@ -230,6 +230,7 @@ namespace Mascari4615
 			}
 
 			UpdateStatData();
+			SaveAssets();
 
 			// TODO: badIDDataSOs 처리
 
@@ -454,6 +455,16 @@ namespace Mascari4615
 					EditorUtility.SetDirty(statData);
 				}
 			}
+		}
+
+		private void SaveAssets()
+		{
+			foreach (var dic in dataSOs.Values)
+				foreach (DataSO dataSO in dic.Values)
+					EditorUtility.SetDirty(dataSO);
+
+			AssetDatabase.SaveAssets();
+			AssetDatabase.Refresh();
 		}
 	}
 }

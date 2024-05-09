@@ -19,7 +19,12 @@ MonoBehaviour:
   <Prefab>k__BackingField: {fileID: 6534569428800909803, guid: 250ed6639234e6240acc32d50840e52b, type: 3}
   <DefaultSkills>k__BackingField: []
   <Material>k__BackingField: {fileID: 2100000, guid: 498f73d56bb87ab4cb040563514df458, type: 2}
-  <InitStatSO>k__BackingField: {fileID: 11400000, guid: d683d1dc8d5f6344791cdf9a6122e182, type: 2}
+  <InitStatInfos>k__BackingField:
+    initStats:
+    - stat: 1
+      value: 20
+    - stat: 300
+      value: 2
   <Loots>k__BackingField:
   - <DataSO>k__BackingField: {fileID: 11400000, guid: bd6cc0cf2793af24bad256b5b6a1598e, type: 2}
     <Percentage>k__BackingField: 30
