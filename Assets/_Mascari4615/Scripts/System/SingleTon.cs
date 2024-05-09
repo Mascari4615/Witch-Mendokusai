@@ -14,7 +14,7 @@ namespace Mascari4615
 		{
 			get => instance
 				? instance
-				: instance = Instantiate(Resources.Load(typeof(T).Name)).GetComponent<T>();
+				: instance = Instantiate(Resources.Load($"Singleton/{typeof(T).Name}")).GetComponent<T>();
 			private set => instance = value;
 		}
 
