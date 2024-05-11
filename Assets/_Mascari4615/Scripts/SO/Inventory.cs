@@ -40,28 +40,6 @@ namespace Mascari4615
 			return NONE;
 		}
 
-		public int FindItemIndex(Guid? guid)
-		{
-			if (guid == null)
-			{
-				Debug.LogWarning("Guid is null");
-				return NONE;
-			}
-
-			for (int i = 0; i < Capacity; i++)
-			{
-				Item current = Datas[i];
-				if (current == null)
-					continue;
-
-				if (current.Guid == guid)
-					return i;
-			}
-
-			Debug.LogWarning("Guid not found");
-			return NONE;
-		}
-
 		/// <summary> 인벤토리에 아이템 추가
 		/// <para/> 넣는 데 실패한 잉여 아이템 개수 리턴
 		/// <para/> 리턴이 0이면 넣는데 모두 성공했다는 의미
@@ -203,6 +181,23 @@ namespace Mascari4615
 		{
 			if (!IsValidIndex(index)) return null;
 			return Datas[index]?.Data;
+		}
+
+		public Item GetItem(Guid? guid)
+		{
+			if (guid == null)
+				return null;
+
+			foreach (Item item in Datas)
+			{
+				if (item == null)
+					continue;
+
+				if (item.Guid == guid)
+					return item;
+			}
+
+			return null;
 		}
 
 		public Item GetItem(int index)

@@ -12,10 +12,15 @@ namespace Mascari4615
 		public const int DUMMY_ID = 4444;
 
 		[field: Header("_" + nameof(Doll))]
+		// 고유 장비 : 인형이 고정적으로 장착하고 있는 장비
+		[field: SerializeField] public EquipmentData SignatureEquipment { get; private set; }
+		// 기본 장비 : 인형을 얻을 때 기본적으로 장착되어 있는 장비들
 		[field: SerializeField] public List<EquipmentData> DefaultEquipments { get; private set; }
 
+		// 인형의 레벨과 경험치 (던전 내 일시적 레벨과 경험치와는 별개)
 		[field: NonSerialized] public int Level { get; private set; } = 0;
 		[field: NonSerialized] public int Exp { get; private set; } = 0;
+		// 현재 장착하고 있는 장비들의 Guid
 		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new() { null, null, null };
 
 		public void Load(DollData dollData)

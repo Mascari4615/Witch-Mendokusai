@@ -20,7 +20,8 @@ namespace Mascari4615
 		private SOManager SOManager;
 
 		public bool IsInited { get; private set; }
-		public int CurDollID;
+
+		public int CurDollID { get; private set; }
 		public int DummyDollCount;
 
 		public string localDisplayName = "";
@@ -207,16 +208,30 @@ namespace Mascari4615
 
 		private void OnApplicationQuit() => SaveData();
 
-		public EquipmentData GetEquipment(int dollID, int equipmentIndex)
+		public List<EquipmentData> GetEquipmentDatas(int dollID)
 		{
-			List<Guid?> guids = GetDoll(dollID).EquipmentGuids;
+			Doll doll = GetDoll(dollID);
+			List<EquipmentData> equipmentDatas = new()
+			{
+				doll.SignatureEquipment
+			};
 
-			if (guids.Count <= equipmentIndex)
-				return null;
+			List<Guid?> guids = doll.EquipmentGuids;
+			foreach (Guid? guid in guids)
+			{
+				if (guid == null)
+					equipmentDatas.Add(null);
+				else
+					equipmentDatas.Add(SOManager.ItemInventory.GetItem(guid)?.Data as EquipmentData);
+			}
 
-			return SOManager.ItemInventory
-			.GetItem(SOManager.ItemInventory.FindItemIndex(guids[equipmentIndex]))?
-			.Data as EquipmentData;
+			return equipmentDatas;
+		}
+
+		public void SetCurDoll(int dollID)
+		{
+			CurDollID = dollID;
+			SaveData();
 		}
 	}
 

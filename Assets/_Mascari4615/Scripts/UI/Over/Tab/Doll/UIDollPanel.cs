@@ -12,7 +12,7 @@ namespace Mascari4615
 		private UIDollGrid dollGridUI;
 		private UIItemGrid selectNewEquipmentInventoryUI;
 		[SerializeField] private GameObject selectDollButton;
-		[SerializeField] private UISlot[] curStuffsSlot;
+		[SerializeField] private List<UISlot> equipmentSlots;
 		private int targetEquipmentIndex;
 
 		// public void PrevDoll() => SetDoll(DataManager.Instance.CurGameData.curDollIndex - 1);
@@ -30,7 +30,7 @@ namespace Mascari4615
 
 		public void SetDoll()
 		{
-			DataManager.Instance.CurDollID = dollGridUI.CurSlotIndex;
+			DataManager.Instance.SetCurDoll(dollGridUI.CurSlotIndex);
 			Player.Instance.Object.SetDoll(DataManager.Instance.CurDollID);
 			UpdateUI();
 		}
@@ -39,13 +39,13 @@ namespace Mascari4615
 		{
 			dollGridUI = GetComponentInChildren<UIDollGrid>(true);
 			selectNewEquipmentInventoryUI = selectNewEquipmentPanel.GetComponentInChildren<UIItemGrid>(true);
-			
+
 			selectNewEquipmentPanel.SetActive(false);
 
-			for (int i = 0; i < curStuffsSlot.Length; i++)
+			for (int i = 0; i < equipmentSlots.Count; i++)
 			{
-				curStuffsSlot[i].SetSlotIndex(i);
-				curStuffsSlot[i].SetClickAction((slot) => {OpenChangeEuqipmentPanel(slot.Index);});
+				equipmentSlots[i].SetSlotIndex(i);
+				equipmentSlots[i].SetClickAction((slot) => { OpenChangeEuqipmentPanel(slot.Index); });
 			}
 
 			dollGridUI.Init();
@@ -79,17 +79,17 @@ namespace Mascari4615
 
 			if (curDollID == Doll.DUMMY_ID)
 			{
-				curStuffsSlot[0].transform.parent.gameObject.SetActive(false);
+				equipmentSlots[0].transform.parent.gameObject.SetActive(false);
 				selectDollButton.SetActive(false);
 			}
 			else
 			{
-				curStuffsSlot[0].transform.parent.gameObject.SetActive(true);
+				equipmentSlots[0].transform.parent.gameObject.SetActive(true);
 				selectDollButton.SetActive(true);
-				for (int i = 0; i < curStuffsSlot.Length; i++)
-				{
-					curStuffsSlot[i].SetSlot(DataManager.Instance.GetEquipment(curDollID, i));
-				}
+
+				List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(curDollID);
+				for (int i = 0; i < equipments.Count; i++)
+					equipmentSlots[i].SetSlot(equipments[i]);
 			}
 		}
 

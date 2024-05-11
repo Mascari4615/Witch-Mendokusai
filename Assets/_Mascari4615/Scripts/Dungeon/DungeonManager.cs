@@ -59,19 +59,18 @@ namespace Mascari4615
 
 				Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
 				expChecker.Init();
-				cardManager.Init();
+				cardManager.Start_();
 
-				for (int i = 0; i < 3; i++)
+				List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
+				foreach (EquipmentData equipment in equipments)
 				{
-					EquipmentData equipment = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i);
+					if (equipment == null)
+						continue;
 
-					if (equipment != null)
-					{
-						Effect.ApplyEffects(equipment.Effects);
+					Effect.ApplyEffects(equipment.Effects);
 
-						if (equipment.Object != null)
-							ObjectPoolManager.Instance.Spawn(equipment.Object);
-					}
+					if (equipment.Object != null)
+						ObjectPoolManager.Instance.Spawn(equipment.Object).SetActive(true);
 				}
 
 				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
@@ -125,12 +124,16 @@ namespace Mascari4615
 				cardManager.ClearCardEffect();
 				Player.Instance.Object.Init(Player.Instance.Object.UnitData);
 
-				for (int i = 0; i < 3; i++)
+				List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
+				foreach (EquipmentData equipment in equipments)
 				{
-					EquipmentData equipment = DataManager.Instance.GetEquipment(DataManager.Instance.CurDollID, i);
+					if (equipment == null)
+						continue;
 
-					if (equipment != null)
-						Effect.ApplyEffects(equipment.Effects);
+					Effect.ApplyEffects(equipment.Effects);
+
+					if (equipment.Object != null)
+						ObjectPoolManager.Instance.Spawn(equipment.Object).SetActive(true);
 				}
 			}
 		}

@@ -8,26 +8,28 @@ using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class UIDeck : MonoBehaviour
+	public class UIDeck : MonoBehaviour, IUI
 	{
 		[field: SerializeField] public EquipmentData EquipmentData { get; private set; }
-		private UICardSlot[] cardSlots;
+		private List<UICardSlot> cardSlots;
+		private List<CardData> cards;
 
 		public void Init(Action<UISlot> cardSelectAction)
 		{
-			cardSlots = GetComponentsInChildren<UICardSlot>(true);
+			cardSlots = GetComponentsInChildren<UICardSlot>(true).ToList();
 
-			for (int i = 0; i < cardSlots.Length; i++)
+			for (int i = 0; i < cardSlots.Count; i++)
 			{
 				cardSlots[i].Init();
 				cardSlots[i].SetClickAction(cardSelectAction);
 			}
 		}
 
-		public void UpdateUI(List<CardData> cards)
+		public void SetCards(List<CardData> cards) => this.cards = cards;
+		public void UpdateUI()
 		{
 			// HashSet : 고유한 값만 저장하는 자료구조
-			// Convert masteries to a HashSet for faster lookup
+			// Convert cards to a HashSet for faster lookup
 			HashSet<int> cardIds = new(cards.Select(m => m.ID));
 
 			foreach (UICardSlot cardSlot in cardSlots)
