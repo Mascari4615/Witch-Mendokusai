@@ -64,6 +64,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -1225876615, guid: 050d103a09fcd5e46a88776ad78dfb28, type: 3}
+    - target: {fileID: 3636146261913355018, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5348946906289475510, guid: 6eb3e2a012ddb864ab9e88e453c405ea, type: 3}
       propertyPath: m_Controller
       value: 
@@ -94,4 +98,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59d11d69be8920f43af4d3caacbdccab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 50
+  attackRange: 15
+  isSpriteLookLeft: 0

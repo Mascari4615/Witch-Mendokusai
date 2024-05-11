@@ -9,11 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 360940fe8b127d94bb50c7d708cd2c24, type: 3}
-  m_Name: ST_1_HP_MAX
+  m_Script: {fileID: 11500000, guid: fef6d2281070d344d9cdc494d9a13c92, type: 3}
+  m_Name: "C_15_\uCD5C\uB300 \uCCB4\uB825"
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 1
-  <Name>k__BackingField: HP_MAX
+  <ID>k__BackingField: 15
+  <Name>k__BackingField: "\uCD5C\uB300 \uCCB4\uB825"
   <Description>k__BackingField: 
   <Sprite>k__BackingField: {fileID: 21300000, guid: ebbccf1f431dfc645a4154311ec92805, type: 3}
-  <Type>k__BackingField: 1
+  <Effects>k__BackingField:
+  - Type: 7
+    Data: {fileID: 11400000, guid: f6ba3be9e1cef7e4a944507a08a14591, type: 2}
+    ArithmeticOperator: 1
+    Value: 5
+  <MaxStack>k__BackingField: 0
