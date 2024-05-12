@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -10,7 +11,7 @@ namespace Mascari4615
 		[SerializeField] private Transform dungeonSelectButtonParent;
 		[SerializeField] private UISlot dungeonSlot;
 
-		private UISlot[] dungeonSelectButtons;
+		private List<UISlot> dungeonSelectButtons;
 		private UIRewards rewardUI;
 		private UIDungeonConstraint constraintUI;
 
@@ -23,9 +24,9 @@ namespace Mascari4615
 		{
 			base.Init();
 
-			dungeonSelectButtons = dungeonSelectButtonParent.GetComponentsInChildren<UISlot>(true);
+			dungeonSelectButtons = dungeonSelectButtonParent.GetComponentsInChildren<UISlot>(true).ToList();
 
-			for (int i = 0; i < dungeonSelectButtons.Length; i++)
+			for (int i = 0; i < dungeonSelectButtons.Count; i++)
 			{
 				dungeonSelectButtons[i].SetSlotIndex(i);
 				dungeonSelectButtons[i].Init();
@@ -49,8 +50,18 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			for (int i = 0; i < dungeonSelectButtons.Length; i++)
-				dungeonSelectButtons[i].gameObject.SetActive(dungeons.Count > i);
+			for (int i = 0; i < dungeonSelectButtons.Count; i++)
+			{
+				if (i < dungeons.Count)
+				{
+					dungeonSelectButtons[i].SetSlot(dungeons[i]);
+					dungeonSelectButtons[i].gameObject.SetActive(true);
+				}
+				else
+				{
+					dungeonSelectButtons[i].gameObject.SetActive(false);
+				}
+			}
 
 			SelectDungeon(0);
 		}
