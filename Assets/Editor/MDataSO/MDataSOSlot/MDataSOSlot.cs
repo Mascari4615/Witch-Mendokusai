@@ -1,3 +1,4 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -13,18 +14,20 @@ namespace Mascari4615
 		private readonly Label nameLabel;
 		private readonly Label idLabel;
 
-		public MDataSOSlot(DataSO dataSO)
+		public MDataSOSlot(Action<MDataSOSlot> clickAction)
 		{
 			VisualTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MDataSO/MDataSOSlot/MDataSOSlot.uxml");
 			VisualElement = treeAsset.Instantiate();
-
-			DataSO = dataSO;
 
 			button = VisualElement.Q<Button>();
 			nameLabel = VisualElement.Q<Label>(name: "Name");
 			idLabel = VisualElement.Q<Label>(name: "ID");
 
-			button.RegisterCallback<ClickEvent>(ShowDataSO);
+			button.RegisterCallback<ClickEvent>((_) =>
+			{
+				if (DataSO != null)
+					clickAction?.Invoke(this);
+			});
 			UpdateUI();
 		}
 
@@ -41,7 +44,7 @@ namespace Mascari4615
 				nameLabel.text = string.Empty;
 				idLabel.text = string.Empty;
 				button.style.backgroundImage = null;
-				
+
 				button.style.borderTopColor = Color.black;
 				button.style.borderBottomColor = Color.black;
 				button.style.borderLeftColor = Color.black;
@@ -61,15 +64,6 @@ namespace Mascari4615
 				button.style.borderLeftColor = borderColor;
 				button.style.borderRightColor = borderColor;
 			}
-		}
-
-		private void ShowDataSO(ClickEvent evt) => UpdateTooltip();
-		private void UpdateTooltip()
-		{
-			if (DataSO == null)
-				return;
-
-			MDataSO.Instance.SelectDataSOSlot(this);
 		}
 	}
 }

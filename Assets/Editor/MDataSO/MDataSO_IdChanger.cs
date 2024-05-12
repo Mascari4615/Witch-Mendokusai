@@ -11,16 +11,22 @@ namespace Mascari4615
 {
 	public class MDataSO_IdChanger
 	{
+		private bool processBadIdDataSOs = false;
+
 		public DataSO CurDataSO { get; private set; }
 
 		private VisualElement root;
 		private VisualElement thisRoot;
-		private VisualElement body;
+		private VisualElement badIdDataSOsTitle;
+		private VisualElement badIdDataSOsRoot;
+		private VisualElement targetDataSOsRoot;
 
 		private MDataSOSlot origin;
 		private MDataSOSlot target;
 
 		private Button changeButton;
+		private Button deleteButton;
+		private Button closeButton;
 
 		public MDataSO_IdChanger()
 		{
@@ -32,17 +38,22 @@ namespace Mascari4615
 			root = MDataSO.Instance.rootVisualElement;
 
 			thisRoot = root.Q<VisualElement>(name: "IDChanger");
-			body = thisRoot.Q<VisualElement>(name: "Body");
+			badIdDataSOsTitle = thisRoot.Q<VisualElement>(name: "BadIdDataSOsTitle");
+			badIdDataSOsRoot = thisRoot.Q<VisualElement>(name: "BadIdDataSOs");
+			targetDataSOsRoot = thisRoot.Q<VisualElement>(name: "TargetDataSOs");
 
 			origin = new MDataSOSlot(null);
 			target = new MDataSOSlot(null);
-			body.Add(origin.VisualElement);
-			body.Add(target.VisualElement);
+			targetDataSOsRoot.Add(origin.VisualElement);
+			targetDataSOsRoot.Add(target.VisualElement);
 
 			changeButton = thisRoot.Q<Button>(name: "BTN_ChangeID");
 			changeButton.clicked += ChangeID;
 
-			Button closeButton = thisRoot.Q<Button>(name: "BTN_Close");
+			deleteButton = thisRoot.Q<Button>(name: "BTN_Del");
+			deleteButton.clicked += Delete;
+
+			closeButton = thisRoot.Q<Button>(name: "BTN_Close");
 			closeButton.clicked += Close;
 
 			IntegerField integerField = thisRoot.Q<IntegerField>(name: "IdField");
@@ -58,14 +69,46 @@ namespace Mascari4615
 			UpdateUI();
 		}
 
+		public void StartProcessBadIdDataSOs()
+		{
+			Debug.Log(nameof(StartProcessBadIdDataSOs));
+
+			if (MDataSO.Instance.BadIDDataSOs.Count == 0)
+			{
+				Debug.Log("No bad ID DataSOs");
+				processBadIdDataSOs = false;
+				UpdateUI();
+				return;
+			}
+
+			processBadIdDataSOs = true;
+
+			List<DataSO> curBadIdDataSOs = MDataSO.Instance.BadIDDataSOs.Values.First();
+			badIdDataSOsRoot.Clear();
+			foreach (DataSO badIdData in curBadIdDataSOs)
+			{
+				MDataSOSlot target = new((slot) => SelectDataSO(slot.DataSO));
+				target.SetDataSO(badIdData);
+				badIdDataSOsRoot.Add(target.VisualElement);
+			}
+
+			MDataSO.Instance.Repaint();
+
+			SelectDataSO(curBadIdDataSOs[0]);
+		}
+
 		private void UpdateUI()
 		{
 			Debug.Log("UpdateUI");
 
 			origin.SetDataSO(CurDataSO);
 			target.SetDataSO(null);
-			
+
+			badIdDataSOsTitle.style.display = processBadIdDataSOs ? DisplayStyle.Flex : DisplayStyle.None;
+			badIdDataSOsRoot.style.display = processBadIdDataSOs ? DisplayStyle.Flex : DisplayStyle.None;
 			thisRoot.style.display = CurDataSO == null ? DisplayStyle.None : DisplayStyle.Flex;
+			deleteButton.SetEnabled(processBadIdDataSOs == false);
+			closeButton.SetEnabled(processBadIdDataSOs == false);
 		}
 
 		private void CheckID(ChangeEvent<int> evt)
@@ -96,7 +139,7 @@ namespace Mascari4615
 		private void ChangeID()
 		{
 			Debug.Log(nameof(ChangeID));
-		
+
 			if (CurDataSO == null)
 				return;
 
@@ -111,16 +154,65 @@ namespace Mascari4615
 				return;
 			}
 
-			MDataSO.Instance.DataSOs[type].Remove(CurDataSO.ID);
-			CurDataSO.ID = newID;
-			MDataSO.Instance.DataSOs[type].Add(newID, CurDataSO);
-			MDataSO.Instance.SaveAssets();
+			MDataSO.Instance.DataSOs[type].TryGetValue(CurDataSO.ID, out DataSO temp);
 
-			MDataSO.Instance.UpdateGrid();
-			MDataSO.Instance.SelectDataSOSlot(MDataSO.Instance.DataSOSlots[CurDataSO.ID]);
+			if (processBadIdDataSOs && CurDataSO != temp)
+			{
+				// processBadIdDataSOs
 
-			CurDataSO = null;
-			UpdateUI();
+				CurDataSO.ID = newID;
+
+				List<DataSO> curBadIdDataSOs = MDataSO.Instance.BadIDDataSOs.Values.First();
+				int id = curBadIdDataSOs[0].ID;
+				MDataSO.Instance.DataSOs[type].Add(newID, CurDataSO);
+				curBadIdDataSOs.Remove(CurDataSO);
+				if (curBadIdDataSOs.Count == 1)
+					MDataSO.Instance.BadIDDataSOs.Remove(id);
+
+				CurDataSO = null;
+				StartProcessBadIdDataSOs();
+			}
+			else
+			{
+				// (단순 ID 변경) 혹은 (processBadIdDataSOs이지만, DataSOs에 등록된 DataSO의 ID 변경)
+
+				MDataSO.Instance.DataSOs[type].Remove(CurDataSO.ID);
+				CurDataSO.ID = newID;
+				MDataSO.Instance.DataSOs[type].Add(newID, CurDataSO);
+				MDataSO.Instance.SaveAssets();
+
+				MDataSO.Instance.UpdateGrid();
+				MDataSO.Instance.SelectDataSOSlot(MDataSO.Instance.DataSOSlots[CurDataSO.ID]);
+
+				CurDataSO = null;
+				UpdateUI();
+			}
+		}
+
+		private void Delete()
+		{
+			Debug.Log(nameof(Delete));
+
+			if (CurDataSO == null)
+				return;
+
+			MDataSO.Instance.DeleteDataSO(CurDataSO);
+
+			if (processBadIdDataSOs)
+			{
+				List<DataSO> curBadIdDataSOs = MDataSO.Instance.BadIDDataSOs.Values.First();
+				int id = curBadIdDataSOs[0].ID;
+				curBadIdDataSOs.Remove(CurDataSO);
+				if (curBadIdDataSOs.Count == 1)
+					MDataSO.Instance.BadIDDataSOs.Remove(id);
+
+				StartProcessBadIdDataSOs();
+			}
+			else
+			{
+				CurDataSO = null;
+				UpdateUI();
+			}
 		}
 
 		private void Close()

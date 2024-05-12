@@ -23,11 +23,15 @@
                 <ui:ScrollView style="flex-grow: 1;">
                     <ui:VisualElement name="Grid" style="flex-direction: row; flex-wrap: wrap; height: 100%; justify-content: center;" />
                 </ui:ScrollView>
-                <ui:VisualElement name="IDChanger" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(38, 38, 41, 0.9); display: none;">
+                <ui:VisualElement name="IDChanger" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(38, 38, 41, 0.9); display: flex;">
                     <ui:Label tabindex="-1" text="ID-Changer" parse-escape-sequences="true" display-tooltip-when-elided="true" name="b_Header" class="m-text" style="-unity-text-align: middle-left;" />
-                    <ui:VisualElement name="Body" style="flex-direction: row; align-self: center;" />
-                    <ui:IntegerField label="Integer Field" value="42" name="IdField" style="height: 47px; width: 322px;" />
+                    <ui:Label tabindex="-1" text="BadIdDataSOs" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BadIdDataSOsTitle" class="m-text" style="-unity-text-align: middle-left; font-size: 20px;" />
+                    <ui:VisualElement name="BadIdDataSOs" style="flex-direction: row; align-self: center;" />
+                    <ui:Label tabindex="-1" text="TargetIdDataSOs" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TargetIdDataSOsTitle" class="m-text" style="-unity-text-align: middle-left; font-size: 20px;" />
+                    <ui:VisualElement name="TargetDataSOs" style="flex-direction: row; align-self: center;" />
+                    <ui:IntegerField label="NewID" value="42" name="IdField" style="height: 47px; width: 322px; -unity-font: url(&quot;project://database/Assets/_Mascari4615/Fonts/%EA%B0%88%EB%AC%B4%EB%A6%AC/Galmuri11-Bold.ttf?fileID=12800000&amp;guid=bd8884ab213bad048ababd46b67d534a&amp;type=3#Galmuri11-Bold&quot;); -unity-font-definition: url(&quot;project://database/Assets/_Mascari4615/Fonts/%EA%B0%88%EB%AC%B4%EB%A6%AC/Galmuri11-Bold%20SDF.asset?fileID=11400000&amp;guid=f9687fba80090c9479c8493176ac8365&amp;type=2#Galmuri11-Bold SDF&quot;); justify-content: center; align-items: center; align-self: center;" />
                     <ui:Button text="ChangeID" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_ChangeID" />
+                    <ui:Button text="Del" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Del" />
                     <ui:Button text="X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Close" />
                 </ui:VisualElement>
             </ui:VisualElement>

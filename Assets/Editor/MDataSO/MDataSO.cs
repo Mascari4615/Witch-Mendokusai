@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Unity.Properties;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -62,7 +61,7 @@ namespace Mascari4615
 		public MDataSOSlot CurSlot { get; private set; }
 
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; }
-		private List<DataSO> badIDDataSOs = new();
+		public Dictionary<int, List<DataSO>> BadIDDataSOs { get; private set; } = new();
 
 		public Type CurType { get; private set; } = typeof(QuestData);
 
@@ -142,7 +141,7 @@ namespace Mascari4615
 
 			Selection.selectionChanged += () =>
 			{
-				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
+				Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
 
 				if (Selection.activeObject is DataSO dataSO)
 				{
@@ -178,7 +177,8 @@ namespace Mascari4615
 			{
 				if (dataSOs.TryGetValue(i, out DataSO dataSO))
 				{
-					MDataSOSlot slot = new(dataSO);
+					MDataSOSlot slot = new((slot) => SelectDataSOSlot(slot));
+					slot.SetDataSO(dataSO);
 					DataSOSlots.Add(i, slot);
 					grid.Add(slot.VisualElement);
 				}
@@ -233,15 +233,16 @@ namespace Mascari4615
 			Debug.Log($"{nameof(InitDic)} <{type.Name}>");
 
 			Dictionary<int, DataSO> dic = DataSOs[type] = new();
-			badIDDataSOs = new();
-
-			InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
-
+			InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR);
 			SaveAssets();
 
-			// TODO: badIDDataSOs 처리
+			if (BadIDDataSOs.Count > 0)
+			{
+				if (isInit)
+					IdChanger.StartProcessBadIdDataSOs();
+			}
 
-			void InitDic(ref Dictionary<int, DataSO> dic, Type type, string dirPath, bool searchSubDir = true, List<DataSO> badDataSOList = null)
+			void InitDic(ref Dictionary<int, DataSO> dic, Type type, string dirPath, bool searchSubDir = true)
 			{
 				const string extension = ".asset";
 
@@ -264,10 +265,17 @@ namespace Mascari4615
 					DataSO asset = AssetDatabase.LoadAssetAtPath<DataSO>(filePath);
 					if (dic.ContainsKey(asset.ID))
 					{
-						Debug.LogError($"이미 존재하는 키입니다. {file.Name}");
+						Debug.LogWarning($"이미 존재하는 키입니다. {file.Name}");
 
-						if (badDataSOList != null)
-							badDataSOList.Add(asset);
+						if (BadIDDataSOs.ContainsKey(asset.ID) == false)
+						{
+							BadIDDataSOs.Add(asset.ID, new());
+							if (BadIDDataSOs[asset.ID].Contains(dic[asset.ID]) == false)
+								BadIDDataSOs[asset.ID].Add(dic[asset.ID]);
+						}
+						
+						if (BadIDDataSOs[asset.ID].Contains(asset) == false)
+							BadIDDataSOs[asset.ID].Add(asset);
 					}
 					else
 					{
@@ -397,7 +405,9 @@ namespace Mascari4615
 			Dictionary<int, DataSO> dic = DataSOs[type];
 
 			int id = dataSO.ID;
-			dic.Remove(dataSO.ID);
+
+			if (dic.ContainsKey(id))
+				dic.Remove(dataSO.ID);
 			AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(dataSO));
 
 			UpdateGrid();
@@ -488,12 +498,16 @@ namespace Mascari4615
 
 		public void SaveAssets()
 		{
+			Debug.Log(nameof(SaveAssets));
+
 			foreach (var dic in DataSOs.Values)
 				foreach (DataSO dataSO in dic.Values)
 					EditorUtility.SetDirty(dataSO);
 
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
+
+			Debug.Log($"{nameof(SaveAssets)} is executed.");
 		}
 	}
 }
