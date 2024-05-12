@@ -16,12 +16,20 @@
                     <ui:Button text="DUP" name="BTN_Dup" class="btn-main m-text" />
                     <ui:Button text="DEL" name="BTN_Del" class="btn-main m-text" />
                     <ui:Button text="ADD" name="BTN_Add" class="btn-main m-text" />
+                    <ui:Button text="ChangeID" name="BTN_ChangeID" class="btn-main m-text" />
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="DataSOs" style="flex-grow: 1; justify-content: center; align-items: center; border-left-color: rgba(255, 255, 255, 0.39); border-right-color: rgba(255, 255, 255, 0.39); border-top-color: rgba(255, 255, 255, 0.39); border-bottom-color: rgba(255, 255, 255, 0.39); border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-left-radius: 5px; border-top-right-radius: 5px; border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px;">
                 <ui:ScrollView style="flex-grow: 1;">
                     <ui:VisualElement name="Grid" style="flex-direction: row; flex-wrap: wrap; height: 100%; justify-content: center;" />
                 </ui:ScrollView>
+                <ui:VisualElement name="IDChanger" style="position: absolute; width: 100%; height: 100%; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(38, 38, 41, 0.9); display: none;">
+                    <ui:Label tabindex="-1" text="ID-Changer" parse-escape-sequences="true" display-tooltip-when-elided="true" name="b_Header" class="m-text" style="-unity-text-align: middle-left;" />
+                    <ui:VisualElement name="Body" style="flex-direction: row; align-self: center;" />
+                    <ui:IntegerField label="Integer Field" value="42" name="IdField" style="height: 47px; width: 322px;" />
+                    <ui:Button text="ChangeID" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_ChangeID" />
+                    <ui:Button text="X" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BTN_Close" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

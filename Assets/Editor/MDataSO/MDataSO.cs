@@ -11,7 +11,7 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MDataSO : EditorWindow
+	public partial class MDataSO : EditorWindow
 	{
 		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
 		private const int ID_MAX = 10_000_000;
@@ -56,14 +56,15 @@ namespace Mascari4615
 
 		public static MDataSO Instance { get; private set; }
 
-		public MDataSODetail MDataSODetail { get; private set; }
+		public MDataSODetail Detail { get; private set; }
+		public MDataSO_IdChanger IdChanger { get; private set; }
 		public Dictionary<int, MDataSOSlot> DataSOSlots { get; private set; } = new();
 		public MDataSOSlot CurSlot { get; private set; }
 
-		private Dictionary<Type, Dictionary<int, DataSO>> dataSOs;
+		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; }
 		private List<DataSO> badIDDataSOs = new();
 
-		private Type CurType { get; set; } = typeof(QuestData);
+		public Type CurType { get; private set; } = typeof(QuestData);
 
 		private bool isInit = false;
 
@@ -77,20 +78,24 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			Debug.Log("OnEnable is executed.");
-			Instance = this;
+			Debug.Log(nameof(OnEnable));
 
-			dataSOs = new();
+			Instance = this;
+			DataSOs = new();
 
 			InitList();
-			InitDic();
+
+			InitEnumData<StatData, StatType>();
+			InitEnumData<StatisticsData, StatisticsType>();
+
+			SaveAssets();
 
 			isInit = true;
 		}
 
 		public void CreateGUI()
 		{
-			Debug.Log("CreateGUI is executed.");
+			Debug.Log(nameof(CreateGUI));
 
 			VisualElement root = rootVisualElement;
 			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MDataSO/MDataSO.uxml");
@@ -99,18 +104,19 @@ namespace Mascari4615
 			VisualElement labelFromUXML = visualTree.Instantiate();
 			root.Add(labelFromUXML);
 
-			MDataSODetail = new();
+			Detail = new();
+			IdChanger = new();
 
 			UpdateGrid();
 
 			Button addButton = rootVisualElement.Q<Button>(name: "BTN_Add");
 			addButton.RegisterCallback<ClickEvent>(ev =>
 			{
-				AddDataSO(MDataSODetail.CurDataSO.GetType());
+				AddDataSO(Detail.CurDataSO.GetType());
 			});
 
 			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
-			foreach (Type type in dataSOs.Keys)
+			foreach (Type type in assetPaths.Keys)
 			{
 				Button button = new() { text = type.Name, };
 				button.clicked += () => SetType(type);
@@ -142,13 +148,10 @@ namespace Mascari4615
 				{
 					Type type = dataSO.GetType();
 
-					while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
+					while (type != typeof(DataSO) && assetPaths.ContainsKey(type) == false)
 						type = type.BaseType;
 
 					if (type == typeof(DataSO))
-						return;
-
-					if (dataSOs[type].ContainsKey(dataSO.ID) == false)
 						return;
 
 					SetType(type);
@@ -156,17 +159,24 @@ namespace Mascari4615
 					SelectDataSOSlot(slot);
 				}
 			};
+
+			Debug.Log("OnEnable is executed.");
 		}
 
-		private void UpdateGrid()
+		public void UpdateGrid()
 		{
-			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-			DataSOSlots = new();
+			Debug.Log(nameof(UpdateGrid));
 
+			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
 			grid.Clear();
+
+			InitDic(CurType);
+			Dictionary<int, DataSO> dataSOs = DataSOs[CurType];
+
+			DataSOSlots.Clear();
 			for (int i = 0; i < ID_MAX; i++)
 			{
-				if (dataSOs[CurType].TryGetValue(i, out DataSO dataSO))
+				if (dataSOs.TryGetValue(i, out DataSO dataSO))
 				{
 					MDataSOSlot slot = new(dataSO);
 					DataSOSlots.Add(i, slot);
@@ -174,12 +184,13 @@ namespace Mascari4615
 				}
 			}
 
+			SelectDataSOSlot(DataSOSlots.Values.First());
 			Repaint();
 		}
 
 		private void OnValidate()
 		{
-			// Debug.Log("OnValidate is executed.");
+			Debug.Log("OnValidate is executed.");
 		}
 
 		private void SetType(Type type)
@@ -217,21 +228,15 @@ namespace Mascari4615
 			}
 		}
 
-		private void InitDic()
+		private void InitDic(Type type)
 		{
+			Debug.Log($"{nameof(InitDic)} <{type.Name}>");
+
+			Dictionary<int, DataSO> dic = DataSOs[type] = new();
 			badIDDataSOs = new();
 
-			foreach (var (type, dir) in assetPaths)
-			{
-				Debug.Log($"InitDic: {type.Name} {dir}");
+			InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
 
-				Dictionary<int, DataSO> dic = new();
-				InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR, badDataSOList: badIDDataSOs);
-				dataSOs.Add(type, dic);
-			}
-
-			UpdateData<StatData, StatType>();
-			UpdateData<StatisticsData, StatisticsType>();
 			SaveAssets();
 
 			// TODO: badIDDataSOs 처리
@@ -294,7 +299,9 @@ namespace Mascari4615
 
 		public DataSO AddDataSO(Type type, int nID = -1, string nName = null)
 		{
-			Dictionary<int, DataSO> dic = dataSOs[type];
+			Debug.Log(nameof(AddDataSO));
+
+			Dictionary<int, DataSO> dic = DataSOs[type];
 
 			// 사용되지 않은 ID를 찾는다.
 			if (nID == -1)
@@ -333,17 +340,17 @@ namespace Mascari4615
 
 		public DataSO DuplicateDataSO(DataSO dataSO)
 		{
-			Type type = dataSO.GetType();
-			while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
-				type = type.BaseType;
+			Debug.Log(nameof(DuplicateDataSO));
 
-			if (type == typeof(DataSO) || dataSOs[type].ContainsKey(dataSO.ID) == false)
+			Type type = GetTypeFromDataSO(dataSO);
+
+			if (type == typeof(DataSO) || DataSOs[type].ContainsKey(dataSO.ID) == false)
 			{
 				Debug.LogError("복사할 수 없는 데이터입니다.");
 				return null;
 			}
 
-			Dictionary<int, DataSO> dic = dataSOs[type];
+			Dictionary<int, DataSO> dic = DataSOs[type];
 
 			string nName = dataSO.Name + " Copy";
 			// 사용되지 않은 ID를 찾는다.
@@ -366,19 +373,28 @@ namespace Mascari4615
 			return newDataSO;
 		}
 
-		public void DeleteDataSO(DataSO dataSO)
+		public Type GetTypeFromDataSO(DataSO dataSO)
 		{
 			Type type = dataSO.GetType();
-			while (type != typeof(DataSO) && dataSOs.ContainsKey(type) == false)
+			while (type != typeof(DataSO) && DataSOs.ContainsKey(type) == false)
 				type = type.BaseType;
 
-			if (type == typeof(DataSO) || dataSOs[type].ContainsKey(dataSO.ID) == false)
+			return type;
+		}
+
+		public void DeleteDataSO(DataSO dataSO)
+		{
+			Debug.Log(nameof(DeleteDataSO));
+
+			Type type = GetTypeFromDataSO(dataSO);
+
+			if (type == typeof(DataSO) || DataSOs[type].ContainsKey(dataSO.ID) == false)
 			{
 				Debug.LogError("삭제할 수 없는 데이터입니다.");
 				return;
 			}
 
-			Dictionary<int, DataSO> dic = dataSOs[type];
+			Dictionary<int, DataSO> dic = DataSOs[type];
 
 			int id = dataSO.ID;
 			dic.Remove(dataSO.ID);
@@ -410,60 +426,69 @@ namespace Mascari4615
 
 		public void SelectDataSOSlot(MDataSOSlot slot)
 		{
+			Type type = GetTypeFromDataSO(slot.DataSO);
+
+			if (CurType != type)
+				SetType(type);
+
 			MDataSOSlot oldSlot = CurSlot;
 			CurSlot = slot;
 			oldSlot?.UpdateUI();
 			CurSlot.UpdateUI();
 
-			MDataSODetail.UpdateCurDataSO(slot.DataSO);
+			Detail.UpdateCurDataSO(slot.DataSO);
 		}
 
-	public void UpdateData<TData, TEnum>() where TData : DataSO
-	{
-		const string PropertyName = "Type";
-
-		var dic = dataSOs[typeof(TData)];
-		foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
+		public void InitEnumData<TData, TEnum>() where TData : DataSO
 		{
-			if (dic.TryGetValue(Convert.ToInt32(enumValue), out DataSO dataSO))
+			Debug.Log($"{nameof(InitEnumData)} <{typeof(TData).Name}, {typeof(TEnum).Name}>");
+
+			InitDic(typeof(TData));
+
+			const string PropertyName = "Type";
+
+			var dic = DataSOs[typeof(TData)];
+			foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
 			{
-				TData typedData = dataSO as TData;
-
-				string goodName = Enum.GetName(typeof(TEnum), enumValue);
-				if (typedData.Name != goodName)
+				if (dic.TryGetValue(Convert.ToInt32(enumValue), out DataSO dataSO))
 				{
-					Debug.Log($"{typedData.name}의 이름을 업데이트합니다. {typedData.Name} -> {goodName}");
-					typedData.Name = goodName;
-					EditorUtility.SetDirty(typedData);
+					TData typedData = dataSO as TData;
+
+					string goodName = Enum.GetName(typeof(TEnum), enumValue);
+					if (typedData.Name != goodName)
+					{
+						Debug.Log($"{typedData.name}의 이름을 업데이트합니다. {typedData.Name} -> {goodName}");
+						typedData.Name = goodName;
+						EditorUtility.SetDirty(typedData);
+					}
+
+					PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
+					if (enumValue.ToString() != typeProperty.GetValue(typedData).ToString())
+					{
+						Debug.Log($"{typedData.name}의 Type을 업데이트합니다. {typeProperty.GetValue(typedData)} -> {enumValue}");
+						typeProperty.SetValue(typedData, (int)Enum.Parse(typeof(TEnum), enumValue.ToString()));
+						EditorUtility.SetDirty(typedData);
+					}
 				}
-
-				PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
-				if (enumValue.ToString() != typeProperty.GetValue(typedData).ToString())
+				else
 				{
-					Debug.Log($"{typedData.name}의 Type을 업데이트합니다. {typeProperty.GetValue(typedData)} -> {enumValue}");
-					typeProperty.SetValue(typedData, (int)Enum.Parse(typeof(TEnum), enumValue.ToString()));
+					Debug.Log($"Data를 추가합니다.");
+					Type type = typeof(TData);
+					int nID = Convert.ToInt32(enumValue);
+					string nName = Enum.GetName(typeof(TEnum), enumValue);
+
+					TData typedData = AddDataSO(type, nID, nName) as TData;
+					PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
+					typeProperty.SetValue(typedData, nID);
+
 					EditorUtility.SetDirty(typedData);
 				}
 			}
-			else
-			{
-				Debug.Log($"Data를 추가합니다.");
-				Type type = typeof(TData);
-				int nID = Convert.ToInt32(enumValue);
-				string nName = Enum.GetName(typeof(TEnum), enumValue);
-
-				TData typedData = AddDataSO(type, nID, nName) as TData;
-				PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
-				typeProperty.SetValue(typedData, nID);
-
-				EditorUtility.SetDirty(typedData);
-			}
 		}
-	}
 
-		private void SaveAssets()
+		public void SaveAssets()
 		{
-			foreach (var dic in dataSOs.Values)
+			foreach (var dic in DataSOs.Values)
 				foreach (DataSO dataSO in dic.Values)
 					EditorUtility.SetDirty(dataSO);
 

@@ -35,6 +35,9 @@ namespace Mascari4615
 
 			Button deleteButton = root.Q<Button>(name: "BTN_Del");
 			deleteButton.clicked += DeleteCurDataSO;
+
+			Button changeIDButton = root.Q<Button>(name: "BTN_ChangeID");
+			changeIDButton.clicked += () => MDataSO.Instance.IdChanger.SelectDataSO(CurDataSO);
 		}
 
 		public void UpdateCurDataSO(DataSO dataSO)
