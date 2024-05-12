@@ -36,9 +36,8 @@ namespace Mascari4615
 
 			while ((operation.progress < .9f) || (minTime >= time))
 			{
-				image.fillAmount = operation.progress;
+				image.fillAmount = operation.progress / .9f;
 				text.text = $"Loading... {image.fillAmount * 100}%";
-
 				time += Time.deltaTime;
 				yield return null;
 			}
