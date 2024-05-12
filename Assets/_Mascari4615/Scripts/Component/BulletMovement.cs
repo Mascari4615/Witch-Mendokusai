@@ -8,6 +8,7 @@ namespace Mascari4615
 	{
 		private Vector3 moveDirection;
 		[SerializeField] private float moveSpeed;
+		[SerializeField] private bool useAutoAim;
 
 		public void SetMoveDirection(Vector3 newDirection)
 		{
@@ -24,15 +25,15 @@ namespace Mascari4615
 		{
 			if (skillObject.UsedByPlayer)
 			{
-				if (SOManager.Instance.PlayerAimDirection)
+				if (useAutoAim == false)
 				{
 					moveDirection = SOManager.Instance.PlayerAimDirection.RuntimeValue;
 					moveDirection.y = 0;
 				}
-				// TODO, Setting, UseAutoAim Option
-				else if (SOManager.Instance.PlayerAutoAimDirection && SOManager.Instance.PlayerAutoAimDirection.RuntimeValue != Vector3.zero)
+				// TODO: Setting, UseAutoAim Option
+				else
 				{
-					moveDirection = SOManager.Instance.PlayerAutoAimDirection.RuntimeValue;
+					moveDirection = (SOManager.Instance.PlayerAutoAimPosition.RuntimeValue - transform.position).normalized;
 					moveDirection.y = 0;
 				}
 			}

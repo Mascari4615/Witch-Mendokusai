@@ -56,7 +56,7 @@ namespace Mascari4615
 				{
 					curNearestAutoTarget = null;
 					// targetGroup.m_Targets[1].target = null;
-					SOManager.Instance.PlayerAutoAimDirection.RuntimeValue = Vector3.zero;
+					// SOManager.Instance.PlayerAutoAimPosition.RuntimeValue = Vector3.zero;
 
 					if (targetMarker.activeSelf)
 						targetMarker.SetActive(false);
@@ -90,7 +90,7 @@ namespace Mascari4615
 						targetMarkerAnimator.SetTrigger("ON");
 
 					// targetMarker.transform.position = curNearestTarget.transform.position;
-					SOManager.Instance.PlayerAutoAimDirection.RuntimeValue = (curNearestAutoTarget.transform.position - transform.position).normalized;
+					SOManager.Instance.PlayerAutoAimPosition.RuntimeValue = curNearestAutoTarget.transform.position;
 				}
 
 				targetGroup.m_Targets[1].target = null;

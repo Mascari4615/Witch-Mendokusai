@@ -56,6 +56,7 @@ namespace Mascari4615
 			usedByPlayer = skillObject.UsedByPlayer;
 			vaild = true;
 			curHitCount = hitCount;
+			damageBonus = 0;
 		}
 
 		private void TurnOff()
@@ -78,11 +79,6 @@ namespace Mascari4615
 			}
 
 			return calcDamage;
-		}
-
-		public void SetDamage(int damage)
-		{
-			this.damage = damage;
 		}
 
 		public void SetDamageBonus(int damageBonus)

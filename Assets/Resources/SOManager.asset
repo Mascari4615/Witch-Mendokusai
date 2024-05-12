@@ -21,15 +21,7 @@ MonoBehaviour:
   <PlayerMoveDirection>k__BackingField: {fileID: 11400000, guid: 3d85bdf8d67ec4e4cadfd19e12ec8a22, type: 2}
   <PlayerLookDirection>k__BackingField: {fileID: 11400000, guid: a4bca88b221e11f43a05fb4d6ffd2fda, type: 2}
   <PlayerAimDirection>k__BackingField: {fileID: 11400000, guid: 1c678395060d7744f81c93703fdf31ce, type: 2}
-  <PlayerAutoAimDirection>k__BackingField: {fileID: 11400000, guid: 7c5d20dff5b99ab4dad6744002b3dcef, type: 2}
-  <CanInteract>k__BackingField: {fileID: 11400000, guid: e87d7471d3956d045af650ff560e9da9, type: 2}
-  <IsChatting>k__BackingField: {fileID: 11400000, guid: e3d50d44e99f55241a4419f3028b38da, type: 2}
-  <IsDashing>k__BackingField: {fileID: 11400000, guid: b00496828438e7f45a2b804392e1e66f, type: 2}
-  <IsGround>k__BackingField: {fileID: 11400000, guid: da02191afb1c6184b8e5892f3a8e299c, type: 2}
-  <IsCooling>k__BackingField: {fileID: 11400000, guid: 9b0b32ea7bba5e3498bc220ff9d21fa9, type: 2}
-  <IsPaused>k__BackingField: {fileID: 11400000, guid: 7f9aa6174506c4343b5a72a2df031565, type: 2}
-  <IsDied>k__BackingField: {fileID: 11400000, guid: 3b39814c763708346a0bf164c41e2b7c, type: 2}
-  <IsMouseOnUI>k__BackingField: {fileID: 11400000, guid: 53ab47b25e693b34daad647f70e33964, type: 2}
+  <PlayerAutoAimPosition>k__BackingField: {fileID: 11400000, guid: 7c5d20dff5b99ab4dad6744002b3dcef, type: 2}
   <LastHitMonsterObject>k__BackingField: {fileID: 11400000, guid: 02651b9ff301b0e4fac2091ae8860410, type: 2}
   <Nyang>k__BackingField: {fileID: 11400000, guid: 714fbe6124e7b924287a4483e7c27394, type: 2}
   <VQExp>k__BackingField: {fileID: 11400000, guid: 9019d3cd648bf3543b8819b272e86e5f, type: 2}
@@ -41,8 +33,3 @@ MonoBehaviour:
   <ItemInventory>k__BackingField: {fileID: 11400000, guid: 4c6d863b03b576e41857bac9c948fd2e, type: 2}
   <SelectedCardBuffer>k__BackingField: {fileID: 11400000, guid: f13c31923217cf246898171312ed6c19, type: 2}
   <VQuestLoadQuest>k__BackingField: {fileID: 11400000, guid: d8833ad6264114a4a9063683bb2db8bc, type: 2}
-  <OnPlayerHit>k__BackingField: {fileID: 11400000, guid: f76e99a695cb99b4daa6689fb44455db, type: 2}
-  <OnPlayerDied>k__BackingField: {fileID: 11400000, guid: 5d18fed6aac604a479af521c42c711c7, type: 2}
-  <OnDungeonStart>k__BackingField: {fileID: 11400000, guid: fc00031ad31f90a408acc1412869de03, type: 2}
-  <OnTick>k__BackingField: {fileID: 11400000, guid: bc2038669bdb2c440ba131c24117d9ec, type: 2}
-  <OnLevelUp>k__BackingField: {fileID: 11400000, guid: 5acfef2183c17374abf8eb51a80df7f3, type: 2}

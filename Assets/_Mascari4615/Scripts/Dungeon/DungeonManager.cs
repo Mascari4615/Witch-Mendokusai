@@ -76,7 +76,14 @@ namespace Mascari4615
 					Effect.ApplyEffects(equipment.Effects);
 
 					if (equipment.Object != null)
-						ObjectPoolManager.Instance.Spawn(equipment.Object).SetActive(true);
+					{
+						GameObject g = ObjectPoolManager.Instance.Spawn(equipment.Object);
+
+						if (g.TryGetComponent(out SkillObject skillObject))
+							skillObject.InitContext(Player.Instance.Object);
+
+						g.SetActive(true);
+					}
 				}
 
 				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);

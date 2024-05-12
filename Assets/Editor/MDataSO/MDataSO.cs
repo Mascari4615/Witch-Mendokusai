@@ -141,7 +141,7 @@ namespace Mascari4615
 
 			Selection.selectionChanged += () =>
 			{
-				Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
+				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
 
 				if (Selection.activeObject is DataSO dataSO)
 				{

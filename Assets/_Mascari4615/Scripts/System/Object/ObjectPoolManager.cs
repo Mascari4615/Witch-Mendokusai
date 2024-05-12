@@ -18,7 +18,6 @@ namespace Mascari4615
 			if (poolDic.ContainsKey(objectName) == false)
 				poolDic[objectName] = new ObjectPool(targetObject);
 
-			targetObject.transform.SetParent(objectParent);
 			poolDic[objectName].Push(targetObject);
 		}
 

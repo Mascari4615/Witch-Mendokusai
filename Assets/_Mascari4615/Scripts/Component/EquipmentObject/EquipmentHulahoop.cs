@@ -45,7 +45,6 @@ namespace Mascari4615
 		private void UpdateSatellite()
 		{
 			int satelliteCount = 1 + PlayerStat[StatType.SATELLITE_COUNT];
-			float delta = 360f / satelliteCount;
 
 			if (transform.childCount < satelliteCount)
 			{
@@ -63,9 +62,9 @@ namespace Mascari4615
 				}
 			}
 
+			float delta = 360f / satelliteCount;
 			for (int i = 0; i < transform.childCount; i++)
 			{
-				transform.GetChild(i).gameObject.SetActive(satelliteCount > i);
 				transform.GetChild(i).transform.localRotation = Quaternion.Euler(Vector3.up * (delta * i));
 			}
 
