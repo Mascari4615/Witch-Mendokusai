@@ -19,14 +19,17 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI lineText;
 		[SerializeField] private CanvasGroup bubbleCanvasGroup;
 
+		private NPCObject curNPC;
 		private int unitID;
 		private Action endAction;
 
 		public void StartChat(NPCObject npc, Action action)
 		{
+			// TODO: CSV가 아니라 스크립터블 오브젝트로 관리 가능하게
 			if (TryGetChatData("테스트", out List<LineData> curChatDatas) == false)
 				return;
 
+			curNPC = npc;
 			chatTargetGroup.m_Targets[1].target = npc.transform;
 			endAction = action;
 
@@ -39,14 +42,19 @@ namespace Mascari4615
 		{
 			StartCoroutine(BubbleLoop());
 			bubbleCanvasGroup.alpha = 1;
-			
+
 			yield return null;
-		
+
 			foreach (LineData lineData in curChatDatas)
 			{
-				// HACK: 현재 플레이어가 플레이하고 있는 인형
 				// TODO: 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
-				Unit unit = lineData.unitID == -1 ? GetDoll(0) : GetNPC(lineData.unitID);
+				Unit unit = null;
+
+				if (lineData.unitID == 0)
+					unit = Get<Doll>(DataManager.Instance.CurDollID);
+				else if (lineData.unitID == -1)
+					unit = curNPC.Data;
+
 				unitID = lineData.unitID;
 				unitImage.sprite = unit.Sprite;
 				unitName.text = unit.Name;
@@ -73,7 +81,7 @@ namespace Mascari4615
 		// 바로 null로 만드니 블렌드 전에 뚝 끊김
 		// 어차피 새로 Chat 시작하면 target을 그 때 설정하니까
 		// chatTargetGroup.m_Targets[1].target = null;
-	
+
 		private IEnumerator PrintLine(LineData lineData)
 		{
 			const float waitTime = 0.05f;
@@ -117,7 +125,7 @@ namespace Mascari4615
 			{
 				float bubbleHeight = bubbleRectTransform.sizeDelta.y;
 				Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-				
+
 				return new Vector3(
 					Mathf.Clamp(screenPos.x, bubbleWidth / 2 + BubblePadding, Screen.width - bubbleWidth / 2 - BubblePadding),
 					Mathf.Clamp(screenPos.y + 40, BubblePadding, Screen.height - bubbleHeight - BubblePadding), 0);

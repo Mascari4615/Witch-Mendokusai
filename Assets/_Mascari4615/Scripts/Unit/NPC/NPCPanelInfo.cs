@@ -7,7 +7,7 @@ namespace Mascari4615
 	[Serializable]
 	public struct NPCPanelInfo
 	{
-		public NPCPanelType Type;
+		public NPCType Type;
 		public List<DataSO> DataSOs;
 	}
 }

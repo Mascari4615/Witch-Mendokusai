@@ -1,9 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using UnityEngine;
-
 namespace Mascari4615
 {
 	public class NPCObject : UnitObject, IInteractable

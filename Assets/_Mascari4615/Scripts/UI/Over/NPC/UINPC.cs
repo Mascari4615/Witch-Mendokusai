@@ -1,23 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
-	// [Flags]
-	public enum NPCPanelType
-	{
-		None = 0,
-		Shop = 1 << 0,
-		DungeonEntrance = 1 << 1,
-		Pot = 1 << 2,
-		Upgrade = 1 << 3,
-		Quest = 1 << 4,
-	}
-
 	public class UINPC : UIPanel
 	{
 		private CanvasGroup canvasGroup;
@@ -29,26 +14,26 @@ namespace Mascari4615
 		// [SerializeField] private RectTransform panelParent;
 		// [SerializeField] private float panelMove = 300;
 
-		public NPCPanelType CurPanel { get; private set; }
-		private readonly Dictionary<NPCPanelType, UINPCPanel> panelUIs = new();
+		public NPCType CurPanelType { get; private set; }
+		private readonly Dictionary<NPCType, UINPCPanel> panelUIs = new();
 		private NPCObject curNPC;
 
-		private void SetPanel(NPCPanelType newPanel)
+		private void SetPanel(NPCType newPanelType)
 		{
-			if (CurPanel == newPanel)
+			if (CurPanelType == newPanelType)
 				return;
 
-			if (CurPanel == NPCPanelType.None)
+			if (CurPanelType == NPCType.None)
 			{
 				buttonsParent.SetActive(false);
 			}
 			else
 			{
-				panelUIs[CurPanel].SetActive(false);
+				panelUIs[CurPanelType].SetActive(false);
 			}
 
-			CurPanel = newPanel;
-			if (CurPanel == NPCPanelType.None)
+			CurPanelType = newPanelType;
+			if (CurPanelType == NPCType.None)
 			{
 				CameraManager.Instance.SetCamera(CameraType.Dialogue);
 				buttonsParent.SetActive(true);
@@ -56,9 +41,9 @@ namespace Mascari4615
 			else
 			{
 				CameraManager.Instance.SetChatCamera();
-				panelUIs[CurPanel].SetActive(true);
-				panelUIs[CurPanel].SetNPC(curNPC);
-				panelUIs[CurPanel].UpdateUI();
+				panelUIs[CurPanelType].SetActive(true);
+				panelUIs[CurPanelType].SetNPC(curNPC);
+				panelUIs[CurPanelType].UpdateUI();
 			}
 		}
 
@@ -76,9 +61,9 @@ namespace Mascari4615
 				questOptions[i].SetClickAction((slot) => { SelectQuest(slot.Index); });
 			}
 
-			panelUIs[NPCPanelType.Shop] = FindObjectOfType<UIShop>(true);
-			panelUIs[NPCPanelType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
-			panelUIs[NPCPanelType.Pot] = FindObjectOfType<UIPot>(true);
+			panelUIs[NPCType.Shop] = FindObjectOfType<UIShop>(true);
+			panelUIs[NPCType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
+			panelUIs[NPCType.Pot] = FindObjectOfType<UIPot>(true);
 
 			foreach (UIPanel uiPanel in panelUIs.Values)
 			{
@@ -88,16 +73,16 @@ namespace Mascari4615
 
 			for (int slotIndex = 0; slotIndex < options.Length; slotIndex++)
 			{
-				NPCPanelType p = (NPCPanelType)(1 << slotIndex);
+				NPCType p = (NPCType)(1 << slotIndex);
 				UIPanel panel = panelUIs[p];
 
 				options[slotIndex].SetSlotIndex(slotIndex);
 				options[slotIndex].SetSlot(panel.PanelIcon, panel.Name, string.Empty);
 				options[slotIndex].Init();
-				options[slotIndex].SetClickAction((slot) => { SetPanel((NPCPanelType)(1 << slot.Index)); });
+				options[slotIndex].SetClickAction((slot) => { SetPanel((NPCType)(1 << slot.Index)); });
 			}
 
-			SetPanel(NPCPanelType.None);
+			SetPanel(NPCType.None);
 		}
 
 		public override void OnOpen()
@@ -107,11 +92,17 @@ namespace Mascari4615
 			canvasGroup.blocksRaycasts = false;
 
 			NPC curNPCData = curNPC.UnitData as NPC;
-			List<QuestData> questDatas = curNPCData.QuestData;
+			List<Quest> questDatas = curNPCData.QuestData;
 			for (int i = 0; i < questOptions.Length; i++)
 			{
 				if (i < questDatas.Count)
 				{
+					if (questDatas[i].State == QuestState.Completed)
+					{
+						questOptions[i].gameObject.SetActive(false);
+						continue;
+					}
+
 					questOptions[i].SetSlot(questDatas[i]);
 					questOptions[i].gameObject.SetActive(true);
 				}
@@ -121,10 +112,10 @@ namespace Mascari4615
 				}
 			}
 
-			NPCPanelType npcPanelType = curNPCData.AllPanelTypes;
-			options[0].gameObject.SetActive(npcPanelType.HasFlag(NPCPanelType.Shop));
-			options[1].gameObject.SetActive(npcPanelType.HasFlag(NPCPanelType.DungeonEntrance));
-			options[2].gameObject.SetActive(npcPanelType.HasFlag(NPCPanelType.Pot));
+			NPCType npcType = curNPCData.AllTypes;
+			options[0].gameObject.SetActive(npcType.HasFlag(NPCType.Shop));
+			options[1].gameObject.SetActive(npcType.HasFlag(NPCType.DungeonEntrance));
+			options[2].gameObject.SetActive(npcType.HasFlag(NPCType.Pot));
 
 			Talk();
 		}
@@ -160,7 +151,7 @@ namespace Mascari4615
 				canvasGroup.interactable = true;
 				canvasGroup.blocksRaycasts = true;
 
-				SetPanel(NPCPanelType.None);
+				SetPanel(NPCType.None);
 				buttonsParent.SetActive(true);
 				talkOption.Select();
 			});
@@ -169,17 +160,21 @@ namespace Mascari4615
 		private void SelectQuest(int index)
 		{
 			NPC curNPCData = curNPC.UnitData as NPC;
-			List<QuestData> questDatas = curNPCData.QuestData;
-			QuestData questData = questDatas[index];
+			List<Quest> questDatas = curNPCData.QuestData;
+			Quest questData = questDatas[index];
 
 			switch (questData.State)
 			{
-				case QuestDataState.Locked:
+				case QuestState.Locked:
 					questData.Unlock();
-					DataManager.Instance.QuestManager.AddQuest(new Quest(questData));
+					DataManager.Instance.QuestManager.AddQuest(new RuntimeQuest(questData));
 					break;
+				case QuestState.Unlocked:
+					// TODO: 퀘스트 진행 중 대사 출력
+					break;
+				case QuestState.Completed:
 				default:
-					Debug.Log("Invalid Quest State");
+					Debug.LogError($"Invalid Quest State : {questData.State}");
 					break;
 			}
 
