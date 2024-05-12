@@ -30,7 +30,7 @@ namespace Mascari4615
 			{
 				yield return wait;
 				
-				if (DataManager.Instance.IsInited == false)
+				if (DataManager.Instance.IsDataLoaded == false)
 					continue;
 
 				int workableDollCount = SOManager.Instance.DollBuffer.Datas.Count;

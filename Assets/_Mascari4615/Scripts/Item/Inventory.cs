@@ -8,7 +8,7 @@ using static Mascari4615.SOHelper;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(Inventory), menuName = "DataBuffer/" + nameof(Item))]
-	public class Inventory : DataBufferSO<Item>, ISavable<List<InventorySlotData>>, ISerializationCallbackReceiver
+	public class Inventory : DataBufferSO<Item>, ISavable<List<InventorySlotSaveData>>, ISerializationCallbackReceiver
 	{
 		private const int NONE = -1;
 		private const int DefaultCapacity = 30;
@@ -261,11 +261,11 @@ namespace Mascari4615
 			UpdateUI();
 		}
 
-		public void Load(List<InventorySlotData> savedItems)
+		public void Load(List<InventorySlotSaveData> savedItems)
 		{
 			Datas = Enumerable.Repeat<Item>(null, Capacity = DefaultCapacity).ToList();
 
-			foreach (InventorySlotData itemData in savedItems)
+			foreach (InventorySlotSaveData itemData in savedItems)
 			{
 				Datas[itemData.slotIndex] = new Item(
 					itemData.Guid,
@@ -274,14 +274,14 @@ namespace Mascari4615
 			}
 		}
 
-		public List<InventorySlotData> Save()
+		public List<InventorySlotSaveData> Save()
 		{
-			List<InventorySlotData> InventoryData = new(Capacity);
+			List<InventorySlotSaveData> InventoryData = new(Capacity);
 			for (int i = 0; i < Datas.Count; i++)
 			{
 				if (Datas[i] == null)
 					continue;
-				InventoryData.Add(new InventorySlotData(i, Datas[i]));
+				InventoryData.Add(new InventorySlotSaveData(i, Datas[i]));
 			}
 			// Debug.Log($"InventoryData.Count: {InventoryData.Count}");
 			return InventoryData;

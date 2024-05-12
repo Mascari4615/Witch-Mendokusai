@@ -52,7 +52,7 @@ namespace Mascari4615
 		{
 			SOManager.Instance.DataSOs.Clear();
 
-			LoadAsset<QuestData>("QUEST_DATA");
+			LoadAsset<Quest>("QUEST_DATA");
 			LoadAsset<CardData>("CARD_DATA");
 			LoadAsset<ItemData>("ITEM_DATA");
 			LoadAsset<MonsterWave>("MONSTER_WAVE");
@@ -64,6 +64,8 @@ namespace Mascari4615
 			LoadAsset<Doll>("DOLL");
 			LoadAsset<NPC>("NPC");
 			LoadAsset<Monster>("MONSTER");
+			LoadAsset<StatData>("STAT_DATA");
+			LoadAsset<StatisticsData>("STATISTICS_DATA");
 
 			void LoadAsset<T>(string label) where T : DataSO
 			{

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Mascari4615
 {
 	public class StatisticsCriteria : NumCriteria
@@ -6,6 +8,9 @@ namespace Mascari4615
 
 		public StatisticsCriteria(CriteriaInfo criteriaInfo) : base(criteriaInfo)
 		{
+			Debug.Log(criteriaInfo);
+			Debug.Log(criteriaInfo.Data);
+			Debug.Log((criteriaInfo.Data as StatisticsData).Type);
 			Type = (criteriaInfo.Data as StatisticsData).Type;
 		}
 

@@ -5,18 +5,19 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class EquipmentHulahoop : MonoBehaviour
+	public class EquipmentHulahoop : SkillComponent
 	{
-		[SerializeField] private float rotateSpeed = 3;
+		[SerializeField] private GameObject satellitePrefab;
+		[SerializeField] private float defaultRotateSpeed = 3;
 
 		private Stat PlayerStat => Player.Instance.Stat;
 
+		public override void InitContext(SkillObject skillObject)
+		{
+		}
+
 		private void OnEnable()
 		{
-			Transform parent = Player.Instance.transform;
-			transform.SetParent(parent);
-			transform.localPosition = Vector3.zero;
-
 			UpdateEquipment();
 		}
 
@@ -31,6 +32,18 @@ namespace Mascari4615
 			int satelliteCount = 1 + PlayerStat[StatType.SATELLITE_COUNT];
 			float delta = 360f / satelliteCount;
 
+			if (transform.childCount < satelliteCount)
+			{
+				int diff = satelliteCount - transform.childCount;
+				for (int i = 0; i < diff; i++)
+				{
+					GameObject g = ObjectPoolManager.Instance.Spawn(satellitePrefab);
+					g.transform.SetParent(transform);
+					g.transform.localPosition = Vector3.zero;
+					g.SetActive(true);
+				}
+			}
+
 			for (int i = 0; i < transform.childCount; i++)
 			{
 				transform.GetChild(i).gameObject.SetActive(satelliteCount > i);
@@ -44,7 +57,10 @@ namespace Mascari4615
 
 		private void Update()
 		{
-			transform.Rotate(0, rotateSpeed * Time.deltaTime, 0);
+			transform.position = Player.Instance.transform.position;
+
+			float speedBonus = 1 + (PlayerStat[StatType.SATELLITE_ROTATE_SPEED_BONUS] * .3f);
+			transform.Rotate(0, defaultRotateSpeed * speedBonus * Time.deltaTime, 0);
 		}
 	}
 }

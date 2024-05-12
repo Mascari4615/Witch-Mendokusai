@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIQuestGrid : UIDataGrid<Quest>
+	public class UIQuestGrid : UIDataGrid<RuntimeQuest>
 	{
 		[SerializeField] private Transform filtersParent;
 		private QuestType curFilter = QuestType.None;
@@ -18,7 +18,7 @@ namespace Mascari4615
 		[SerializeField] private UIQuestTooltipCriteria questCriteriaUI;
 
 		private QuestBuffer QuestBuffer => DataBufferSO as QuestBuffer;
-		private Quest CurQuest => QuestBuffer.Datas.Count > 0 ? QuestBuffer.Datas[CurSlotIndex] : null;
+		private RuntimeQuest CurQuest => QuestBuffer.Datas.Count > 0 ? QuestBuffer.Datas[CurSlotIndex] : null;
 
 		public override bool Init()
 		{
@@ -54,7 +54,7 @@ namespace Mascari4615
 		{
 			foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
 			{
-				Quest quest = QuestBuffer.Datas.ElementAtOrDefault(slot.Index);
+				RuntimeQuest quest = QuestBuffer.Datas.ElementAtOrDefault(slot.Index);
 
 				if (quest == null)
 				{
@@ -63,7 +63,7 @@ namespace Mascari4615
 				}
 				else
 				{
-					QuestData questData = quest.GetData();
+					Quest questData = quest.GetData();
 					bool slotActive = (curFilter == QuestType.None) || (questData.Type == curFilter);
 
 					slot.SetQuestState(quest.State);
@@ -77,8 +77,8 @@ namespace Mascari4615
 
 			if (CurSlot.DataSO)
 			{
-				workButton.SetActive(CurQuest.State == QuestState.CanWork);
-				rewardButton.SetActive(CurQuest.State == QuestState.CanComplete);
+				workButton.SetActive(CurQuest.State == RuntimeQuestState.CanWork);
+				rewardButton.SetActive(CurQuest.State == RuntimeQuestState.CanComplete);
 			}
 			else
 			{
@@ -104,7 +104,7 @@ namespace Mascari4615
 
 		public void CompleteQuest()
 		{
-			if (CurQuest.State != QuestState.CanComplete)
+			if (CurQuest.State != RuntimeQuestState.CanComplete)
 				return;
 
 			CurQuest.Complete();
@@ -114,7 +114,7 @@ namespace Mascari4615
 		public void StartQuestWork()
 		{
 			// TODO: 어떤 인형이 일을 할지
-			if (CurQuest.State != QuestState.CanWork)
+			if (CurQuest.State != RuntimeQuestState.CanWork)
 				return;
 
 			CurQuest.StartWork(0);

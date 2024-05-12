@@ -17,7 +17,7 @@ namespace Mascari4615
 
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
-			{ typeof(QuestData), "Q" },
+			{ typeof(Quest), "Q" },
 			{ typeof(CardData), "C" },
 			{ typeof(ItemData), "I" },
 			{ typeof(MonsterWave), "MW" },
@@ -36,7 +36,7 @@ namespace Mascari4615
 
 		private readonly Dictionary<Type, string> assetPaths = new()
 		{
-			{ typeof(QuestData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestData)}/" },
+			{ typeof(Quest), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Quest)}/" },
 			{ typeof(CardData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(CardData)}/" },
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
@@ -63,7 +63,7 @@ namespace Mascari4615
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; }
 		public Dictionary<int, List<DataSO>> BadIDDataSOs { get; private set; } = new();
 
-		public Type CurType { get; private set; } = typeof(QuestData);
+		public Type CurType { get; private set; } = typeof(Quest);
 
 		private bool isInit = false;
 
@@ -239,7 +239,10 @@ namespace Mascari4615
 			if (BadIDDataSOs.Count > 0)
 			{
 				if (isInit)
+				{
+					Debug.Log(IdChanger);
 					IdChanger.StartProcessBadIdDataSOs();
+				}
 			}
 
 			void InitDic(ref Dictionary<int, DataSO> dic, Type type, string dirPath, bool searchSubDir = true)

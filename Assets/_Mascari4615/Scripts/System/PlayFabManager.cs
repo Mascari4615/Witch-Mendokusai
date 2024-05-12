@@ -153,7 +153,7 @@ namespace Mascari4615
 						CreateAndSavePlayerData();
 						return;
 					}
-					DataManager.Instance.LoadData(gameData);
+					DataManager.Instance.SaveManager.LoadData(gameData);
 				}
 				{
 					CreateAndSavePlayerData();
@@ -336,7 +336,7 @@ namespace Mascari4615
 
 		public void CreateAndSavePlayerData()
 		{
-			DataManager.Instance.CreateNewGameData();
+			DataManager.Instance.SaveManager.CreateNewGameData();
 		}
 
 		private void OnDataSend(UpdateUserDataResult result)

@@ -8,28 +8,28 @@ namespace Mascari4615
 	{
 		public QuestBuffer Quests => SOManager.Instance.QuestBuffer;
 
-		public void Init(List<Quest> quests)
+		public void Init(List<RuntimeQuest> quests)
 		{
 			Quests.Clear();
 
-			foreach (Quest quest in quests)
+			foreach (RuntimeQuest quest in quests)
 			{
 				Quests.Add(quest);
 				quest.StartQuest();
 			}
 		}
 
-		public void AddQuest(Quest quest)
+		public void AddQuest(RuntimeQuest quest)
 		{
 			Quests.Add(quest);
 		}
 
-		public Quest GetQuest(QuestData questData)
+		public RuntimeQuest GetQuest(Quest questData)
 		{
 			return Quests.Datas.Find(x => x.GetData() == questData);
 		}
 
-		public Quest GetQuest(Guid? guid)
+		public RuntimeQuest GetQuest(Guid? guid)
 		{
 			return Quests.Datas.Find(x => x.Guid == guid);
 		}
@@ -44,7 +44,7 @@ namespace Mascari4615
 			GetQuest(guid).EndWork();
 		}
 
-		public void RemoveQuest(Quest quest)
+		public void RemoveQuest(RuntimeQuest quest)
 		{
 			if (Quests.Remove(quest) == false)
 			{

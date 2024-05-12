@@ -20,7 +20,7 @@ namespace Mascari4615
 			}
 		}
 
-		public void SetCriteria(Quest quest)
+		public void SetCriteria(RuntimeQuest quest)
 		{
 			if (quest == null || quest.Criterias == null)
 			{

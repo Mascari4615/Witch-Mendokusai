@@ -49,6 +49,6 @@ namespace Mascari4615
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
-		[field: SerializeField] public QuestData VQuestLoadQuest { get; private set; }
+		[field: SerializeField] public Quest VQuestLoadQuest { get; private set; }
 	}
 }

@@ -7,10 +7,12 @@ namespace Mascari4615
 	{
 		public static ItemData GetItemData(int id) => Get<ItemData>(id);
 		public static Doll GetDoll(int id) => Get<Doll>(id);
-		public static QuestData GetQuest(int id) => Get<QuestData>(id);
+		public static Quest GetQuest(int id) => Get<Quest>(id);
 		public static DungeonConstraint GetDungeonConstraint(int id) => Get<DungeonConstraint>(id);
 		public static Dungeon GetDungeon(int id) => Get<Dungeon>(id);
 		public static NPC GetNPC(int id) => Get<NPC>(id);
+		public static StatData GetStatData(int id) => Get<StatData>(id);
+		public static StatisticsData GetStatisticsData(int id) => Get<StatisticsData>(id);
 
 		// 아래 코드는 불가능
 		// 왜 WHY : 제네릭 타입의 변환에 제한, C#의 타입 안전성을 보장하기 위한.

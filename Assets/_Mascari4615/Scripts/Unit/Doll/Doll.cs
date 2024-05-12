@@ -7,7 +7,7 @@ using UnityEngine.Serialization;
 namespace Mascari4615
 {
 	[CreateAssetMenu(fileName = nameof(Doll), menuName = "Variable/" + nameof(Unit) +"/"+ nameof(Doll))]
-	public class Doll : Unit, ISavable<DollData>
+	public class Doll : Unit, ISavable<DollSaveData>
 	{
 		public const int DUMMY_ID = 4444;
 
@@ -23,7 +23,7 @@ namespace Mascari4615
 		// 현재 장착하고 있는 장비들의 Guid
 		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new() { null, null, null };
 
-		public void Load(DollData dollData)
+		public void Load(DollSaveData dollData)
 		{
 			Level = dollData.Level;
 			Exp = dollData.Exp;
@@ -33,9 +33,9 @@ namespace Mascari4615
 				EquipmentGuids.AddRange(new Guid?[3 - EquipmentGuids.Count]);
 		}
 
-		public DollData Save()
+		public DollSaveData Save()
 		{
-			return new DollData
+			return new DollSaveData
 			{
 				DollID = ID,
 				Level = Level,

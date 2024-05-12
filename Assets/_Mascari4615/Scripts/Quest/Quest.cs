@@ -1,158 +1,45 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 using UnityEngine;
-using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	public enum QuestState
+	[CreateAssetMenu(fileName = "Q_", menuName = "Variable/" + nameof(Quest))]
+	public class Quest : DataSO, ISavable<QuestSaveData>
 	{
-		InProgress,
-		CanWork,
-		Working,
-		CanComplete,
-		Completed,
-	}
+		[field: Header("_" + nameof(Quest))]
+		[PropertyOrder(0)][field: SerializeField] public QuestType Type { get; private set; }
+		[PropertyOrder(1)][field: SerializeField] public List<GameEventType> GameEvents { get; private set; }
+		[PropertyOrder(2)][field: SerializeField] public List<CriteriaInfo> Criterias { get; private set; }
+		[PropertyOrder(3)][field: SerializeField] public List<EffectInfo> CompleteEffects { get; private set; }
+		[PropertyOrder(4)][field: SerializeField] public List<EffectInfo> RewardEffects { get; private set; }
+		[PropertyOrder(5)][field: SerializeField] public List<RewardInfo> Rewards { get; private set; }
 
-	public class Quest
-	{
-		public Guid? Guid { get; private set; }
-		public int DataID { get; private set; }
-		public QuestState State { get; private set; }
-		public List<RuntimeCriteria> Criterias { get; private set; }
-		public List<RewardData> Rewards { get; private set; }
+		[PropertyOrder(6)][field: SerializeField] public float WorkTime { get; private set; }
+		[PropertyOrder(7)][field: SerializeField] public bool AutoWork { get; private set; }
+		[PropertyOrder(8)][field: SerializeField] public bool AutoComplete { get; private set; }
 
-		public QuestData GetData()
+		[field: NonSerialized] public QuestState State { get; private set; }
+
+		public void Unlock()
 		{
-			return GetQuest(DataID);
-		}
-		private QuestData Data => GetData();
-
-		[JsonConstructor]
-		public Quest(Guid? guid, int dataID, QuestState state, List<RuntimeCriteria> criterias, List<RewardData> rewards)
-		{
-			Guid = guid;
-			DataID = dataID;
-			State = state;
-			Criterias = criterias;
-			Rewards = rewards;
-
-			StartQuest();
-		}
-
-		public Quest(QuestData questData)
-		{
-			Guid = System.Guid.NewGuid();
-			DataID = questData.ID;
-			Criterias = Data.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
-			Rewards = Data.Rewards.ConvertAll(rewardData => new RewardData(rewardData));
-
-			StartQuest();
-		}
-
-		public void StartQuest()
-		{
-			if (Data.AutoComplete)
-				Data.GameEvents.Add(GameEventType.OnTick);
-			foreach (GameEventType gameEventType in Data.GameEvents)
-				GameEventManager.Instance.RegisterCallback(gameEventType, Evaluate);
-			Evaluate();
-		}
-
-		public void Evaluate()
-		{
-			if (Data.Type == QuestType.VillageRequest)
-			{
-				if (State >= QuestState.Working)
-					return;
-			}
-
-			foreach (RuntimeCriteria criteria in Criterias)
-			{
-				criteria.Evaluate();
-				if (criteria.IsCompleted == false)
-				{
-					State = QuestState.InProgress;
-					return;
-				}
-			}
-
-			if (Data.Type == QuestType.VillageRequest)
-			{
-				State = QuestState.CanWork;
-				if (Data.AutoWork)
-					StartWork();
-			}
-			else
-			{
-				State = QuestState.CanComplete;
-			}
-		}
-
-		public void StartWork(int workerID = WorkManager.NONE_WORKER_ID)
-		{
-			State = QuestState.Working;
-			
-			foreach (GameEventType gameEventType in Data.GameEvents)
-				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
-			Work work = new(workerID, WorkType.QuestWork, Guid, Data.WorkTime);
-			DataManager.Instance.WorkManager.AddWork(work);
-		}
-
-		public void EndWork()
-		{
-			State = QuestState.CanComplete;
-
-			if (Data.AutoComplete)
-				Complete();
+			State = QuestState.Unlocked;
 		}
 
 		public void Complete()
 		{
 			State = QuestState.Completed;
-		
-			DataManager.Instance.QuestManager.RemoveQuest(this);
-			Data.Complete();
-
-			foreach (GameEventType gameEventType in Data.GameEvents)
-				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
-			Effect.ApplyEffects(Data.CompleteEffects);
-
-			if (Data.Type == QuestType.Achievement)
-			{
-				UIManager.Instance.Popup(Data);
-			}
-
-			GetReward();
 		}
 
-		private void GetReward()
+		public QuestSaveData Save()
 		{
-			Effect.ApplyEffects(Data.RewardEffects);
-
-			foreach (RewardData rewardData in Rewards)
-				Reward.GetReward(rewardData);
+			return new QuestSaveData(ID, State);
 		}
 
-		public float GetProgress()
+		public void Load(QuestSaveData questSaveData)
 		{
-			if (State == QuestState.Working)
-			{
-				if (DataManager.Instance.WorkManager.TryGetWorkByQuestGuid(Guid, out Work work))
-				{
-					return work.GetProgress();
-				}
-				return 0;
-			}
-
-			if (Criterias.Count == 0)
-				return 1;
-
-			float progress = 0;
-			foreach (RuntimeCriteria runtimeCriteria in Criterias)
-				progress += runtimeCriteria.GetProgress();
-			return progress /= Criterias.Count;
+			State = questSaveData.State;
 		}
 	}
 }

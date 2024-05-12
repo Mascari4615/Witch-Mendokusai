@@ -18,13 +18,13 @@ namespace Mascari4615
 
 			if (DataSO)
 			{
-				QuestData questData = DataSO as QuestData;
+				Quest questData = DataSO as Quest;
 				for (int i = 0; i < questDataStateObjects.Length; i++)
 					questDataStateObjects[i].SetActive((int)questData.State == i);
 			}
 		}
 
-		public void SetQuestState(QuestState state)
+		public void SetQuestState(RuntimeQuestState state)
 		{
 			for (int i = 0; i < questStateObjects.Length; i++)
 				questStateObjects[i].SetActive((int)state == i);
@@ -35,7 +35,7 @@ namespace Mascari4615
 			progress.fillAmount = value;
 		}
 
-		public void SetQuest(Quest quest)
+		public void SetQuest(RuntimeQuest quest)
 		{
 			for (int i = 0; i < criteriaObjects.Length; i++)
 			{
