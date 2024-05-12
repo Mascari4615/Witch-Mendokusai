@@ -54,6 +54,12 @@ namespace Mascari4615
 			{
 				UIManager.Instance.SetOverlay(MPanelType.None);
 				UIManager.Instance.SetCanvas(MCanvasType.Dungeon);
+
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.Drop);
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.Monster);
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.Skill);
+				ObjectBufferManager.Instance.ClearObjects(ObjectType.SpawnCircle);
+
 				monsterSpawner.transform.position = Player.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
 

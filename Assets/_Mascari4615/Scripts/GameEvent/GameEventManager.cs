@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
@@ -9,6 +10,9 @@ namespace Mascari4615
 
 		public void Raise(GameEventType gameEventType)
 		{
+			if (IsPlaying == false)
+				return;
+
 			if (Callback.TryGetValue(gameEventType, out var action))
 			{
 				action?.Invoke();

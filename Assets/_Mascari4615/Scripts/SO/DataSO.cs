@@ -14,20 +14,20 @@ namespace Mascari4615
 			Order = order;
 		}
 	}
-	
+
 	public abstract class DataSO : ScriptableObject
 	{
 		public const int NONE_ID = -1;
 
 		[field: Header("_" + nameof(DataSO))]
-		
-		[PropertyOrder(-100)] [field: SerializeField] public int ID { get; set; }
-		[PropertyOrder(-99)] [field: SerializeField] public string Name { get; set; }
-		[PropertyOrder(-98)] [field: SerializeField, TextArea] public string Description { get; set; }
-		[PropertyOrder(-97)] [field: SerializeField] public Sprite Sprite { get; set; }
+
+		[PropertyOrder(0)][field: SerializeField] public int ID { get; set; }
+		[PropertyOrder(1)][field: SerializeField] public string Name { get; set; }
+		[PropertyOrder(2)][field: SerializeField, TextArea] public string Description { get; set; }
+		[PropertyOrder(3)][field: SerializeField] public Sprite Sprite { get; set; }
 	}
 
-	[System.Serializable]
+	[Serializable]
 	public struct DataSOWithPercentage
 	{
 		[field: Header("_" + nameof(DataSOWithPercentage))]

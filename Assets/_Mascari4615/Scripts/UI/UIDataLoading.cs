@@ -84,7 +84,7 @@ namespace Mascari4615
 
 				foreach (T asset in assets)
 				{
-					Debug.Log($"Loaded {asset.name}");
+					// Debug.Log($"Loaded {asset.name}");
 					SOManager.Instance.DataSOs[typeof(T)].Add(asset.ID, asset);
 				}
 			}
