@@ -5,15 +5,11 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public interface IHitable
-	{
-		public void ReceiveDamage(int damage);
-	}
-
 	public class DamagingObject : SkillComponent
 	{
 		[field: Header("_" + nameof(DamagingObject))]
 		[SerializeField] private int damage;
+		private int damageBonus = 0;
 
 		[SerializeField] private bool useHitCount;
 		[SerializeField] private int hitCount = 1;
@@ -70,7 +66,7 @@ namespace Mascari4615
 
 		private int CalcDamage()
 		{
-			int calcDamage = damage;
+			int calcDamage = damage + damageBonus;
 
 			if (usedByPlayer)
 			{
@@ -82,6 +78,16 @@ namespace Mascari4615
 			}
 
 			return calcDamage;
+		}
+
+		public void SetDamage(int damage)
+		{
+			this.damage = damage;
+		}
+
+		public void SetDamageBonus(int damageBonus)
+		{
+			this.damageBonus = damageBonus;
 		}
 	}
 }

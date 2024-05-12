@@ -8,26 +8,41 @@ namespace Mascari4615
 	public class EquipmentHulahoop : SkillComponent
 	{
 		[SerializeField] private GameObject satellitePrefab;
-		[SerializeField] private float defaultRotateSpeed = 3;
+		[SerializeField] private float originRotateSpeed = 3;
+
+		private readonly List<DamagingObject> satellites = new();
+		private float rotateSpeed;
 
 		private Stat PlayerStat => Player.Instance.Stat;
 
-		public override void InitContext(SkillObject skillObject)
-		{
-		}
-
 		private void OnEnable()
 		{
-			UpdateEquipment();
+			UpdateSatellite();
+			UpdateRotationSpeed();
+			UpdateDamageBonus();
+			UpdateSatelliteScale();
 		}
 
 		private void Start()
 		{
-			PlayerStat.AddListener(StatType.SATELLITE_COUNT, UpdateEquipment);
-			UpdateEquipment();
+			PlayerStat.AddListener(StatType.SATELLITE_COUNT, UpdateSatellite);
+			PlayerStat.AddListener(StatType.SATELLITE_ROTATE_SPEED_BONUS, UpdateRotationSpeed);
+			PlayerStat.AddListener(StatType.SATELLITE_DAMAGE_BONUS, UpdateDamageBonus);
+			PlayerStat.AddListener(StatType.SATELLITE_SCALE_BONUS, UpdateSatelliteScale);
 		}
 
-		public void UpdateEquipment()
+		private void Update()
+		{
+			transform.position = Player.Instance.transform.position;
+			transform.Rotate(0, rotateSpeed * Time.deltaTime, 0);
+		}
+
+		public override void InitContext(SkillObject skillObject)
+		{
+			satellites.Clear();
+		}
+
+		private void UpdateSatellite()
 		{
 			int satelliteCount = 1 + PlayerStat[StatType.SATELLITE_COUNT];
 			float delta = 360f / satelliteCount;
@@ -41,6 +56,10 @@ namespace Mascari4615
 					g.transform.SetParent(transform);
 					g.transform.localPosition = Vector3.zero;
 					g.SetActive(true);
+
+					DamagingObject damagingObject = g.GetComponentInChildren<DamagingObject>(true);
+					if (damagingObject != null)
+						satellites.Add(damagingObject);
 				}
 			}
 
@@ -55,12 +74,21 @@ namespace Mascari4615
 				trail.Clear();
 		}
 
-		private void Update()
+		private void UpdateRotationSpeed()
 		{
-			transform.position = Player.Instance.transform.position;
+			rotateSpeed = originRotateSpeed * (1 + PlayerStat[StatType.SATELLITE_ROTATE_SPEED_BONUS] * .3f);
+		}
 
-			float speedBonus = 1 + (PlayerStat[StatType.SATELLITE_ROTATE_SPEED_BONUS] * .3f);
-			transform.Rotate(0, defaultRotateSpeed * speedBonus * Time.deltaTime, 0);
+		private void UpdateDamageBonus()
+		{
+			foreach (DamagingObject satellite in satellites)
+				satellite.SetDamageBonus(PlayerStat[StatType.SATELLITE_DAMAGE_BONUS]);
+		}
+
+		private void UpdateSatelliteScale()
+		{
+			foreach (DamagingObject satellite in satellites)
+				satellite.transform.localScale = Vector3.one * (1 + PlayerStat[StatType.SATELLITE_SCALE_BONUS] * .2f);
 		}
 	}
 }
