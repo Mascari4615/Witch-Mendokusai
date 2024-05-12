@@ -9,6 +9,7 @@ namespace Mascari4615
 {
 	public class UIDungeon : UIPanel
 	{
+		[SerializeField] private Image progressBar;
 		[SerializeField] private TextMeshProUGUI timeText;
 		[SerializeField] private TextMeshProUGUI difficultyText;
 		[SerializeField] private Image difficultyCircle;
@@ -47,12 +48,13 @@ namespace Mascari4615
 
 		private void UpdateTime(TimeSpan timeSpan)
 		{
+			progressBar.fillAmount = 1 - (float)(timeSpan.TotalSeconds / DungeonManager.Instance.InitialDungeonTime.TotalSeconds);
 			timeText.text = timeSpan.ToString(@"mm\:ss");
 		}
 
-		private void UpdateDifficulty(Difficulty curDifficulty)
+		private void UpdateDifficulty(DungeonDifficulty curDifficulty)
 		{
-			if (curDifficulty == Difficulty.Hard)
+			if (curDifficulty == DungeonDifficulty.Hard)
 			{
 				difficultyCircle.fillAmount = 1;
 			}
@@ -63,13 +65,13 @@ namespace Mascari4615
 			
 			switch (curDifficulty)
 			{
-				case Difficulty.Easy:
+				case DungeonDifficulty.Easy:
 					difficultyText.text = "쉬움";
 					break;
-				case Difficulty.Normal:
+				case DungeonDifficulty.Normal:
 					difficultyText.text = "보통";
 					break;
-				case Difficulty.Hard:
+				case DungeonDifficulty.Hard:
 					difficultyText.text = "어려움";
 					break;
 				default:

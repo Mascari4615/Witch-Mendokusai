@@ -84,7 +84,7 @@ namespace Mascari4615
 				deckUI.gameObject.SetActive(false);
 		}
 
-		public void Start_()
+		public void Init()
 		{
 			SetState(CardUIState.Wait);
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;

@@ -34,7 +34,7 @@ namespace Mascari4615
 			StopAllCoroutines();
 		}
 
-		public void UpdateStatByDifficulty(Difficulty newDifficulty)
+		public void UpdateStatByDifficulty(DungeonDifficulty newDifficulty)
 		{
 			double persentage = (double)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX];
 			Stat[StatType.HP_MAX] = (int)(Stat[StatType.HP_MAX] * (1 + .7f * (int)newDifficulty));

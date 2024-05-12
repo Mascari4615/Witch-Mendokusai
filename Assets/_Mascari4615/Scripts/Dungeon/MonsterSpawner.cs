@@ -58,7 +58,7 @@ namespace Mascari4615
 			MonsterWaveInstance waveInstance = waves[waveIndex];
 			
 			TimeSpan dungeonTime = DungeonManager.Instance.DungeonCurTime;
-			Difficulty curDifficulty = DungeonManager.Instance.CurDifficulty;
+			DungeonDifficulty curDifficulty = DungeonManager.Instance.CurDifficulty;
 
 			if (dungeonTime < TimeSpan.FromSeconds(waveInstance.Data.StartTime))
 				return;
@@ -80,7 +80,7 @@ namespace Mascari4615
 			}
 		}
 
-		private IEnumerator SpawnMonster(Monster monster, float spawnDelay, Difficulty curDifficulty)
+		private IEnumerator SpawnMonster(Monster monster, float spawnDelay, DungeonDifficulty curDifficulty)
 		{
 			Vector3 randomOffset = Random.insideUnitCircle * spawnRange;
 			randomOffset.z = randomOffset.y;

@@ -83,7 +83,7 @@ namespace Mascari4615
 		public void SetDataBuffer(DataBufferSO<T> newDataBuffer)
 		{
 			DataBufferSO = newDataBuffer;
-			SetDatas(DataBufferSO.Datas.ToList());
+			SetDatas(DataBufferSO.Datas);
 		}
 
 		public void SetDatas(List<T> newDatas)

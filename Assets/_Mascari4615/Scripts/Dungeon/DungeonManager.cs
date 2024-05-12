@@ -6,28 +6,23 @@ using Cinemachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
-using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	public enum Difficulty
-	{
-		Easy,
-		Normal,
-		Hard
-	}
-
 	public class DungeonManager : Singleton<DungeonManager>
 	{
 		public static readonly TimeSpan TimeUpdateInterval = new(0, 0, 0, 0, 100);
-		private static readonly TimeSpan InitialDungeonTime = new(0, 0, 15, 0, 0);
 
+		public Dungeon CurDungeon { get; private set; }
+		public TimeSpan InitialDungeonTime { get; private set; } = new(0, 0, 15, 0, 0);
 		public TimeSpan DungeonCurTime { get; private set; }
-		public Difficulty CurDifficulty { get; private set; }
+		public DungeonDifficulty CurDifficulty { get; private set; }
+		public DungeonRecord Result { get; private set; }
 
 		private CardManager cardManager;
 		private MonsterSpawner monsterSpawner;
 		private ExpManager expChecker;
+		private DungeonRecorder dungeonRecorder;
 
 		protected override void Awake()
 		{
@@ -39,14 +34,17 @@ namespace Mascari4615
 			expChecker = FindObjectOfType<ExpManager>(true);
 		}
 
+		// TODO: 던전 인트로
 		public void CombatIntro()
 		{
 		}
 
-		[ContextMenu(nameof(StartDungeon))]
 		public void StartDungeon(Dungeon dungeon)
 		{
 			Debug.Log($"{nameof(StartDungeon)}");
+
+			CurDungeon = dungeon;
+
 			// TODO: 던전
 			StageManager.Instance.LoadStage(dungeon.Stages[0], 0, InitDungeonAndPlayer);
 
@@ -55,44 +53,24 @@ namespace Mascari4615
 				UIManager.Instance.SetOverlay(MPanelType.None);
 				UIManager.Instance.SetCanvas(MCanvasType.Dungeon);
 
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.Drop);
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.Monster);
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.Skill);
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.SpawnCircle);
-
 				monsterSpawner.transform.position = Player.Instance.transform.position;
 				monsterSpawner.InitWaves(dungeon);
 
-				Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
+				GameManager.Instance.Init();
 				expChecker.Init();
-				cardManager.Start_();
+				cardManager.Init();
 
-				List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
-				foreach (EquipmentData equipment in equipments)
-				{
-					if (equipment == null)
-						continue;
-
-					Effect.ApplyEffects(equipment.Effects);
-
-					if (equipment.Object != null)
-					{
-						GameObject g = ObjectPoolManager.Instance.Spawn(equipment.Object);
-
-						if (g.TryGetComponent(out SkillObject skillObject))
-							skillObject.InitContext(Player.Instance.Object);
-
-						g.SetActive(true);
-					}
-				}
-
-				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
-				StartCoroutine(DungeonLoop(dungeon));
+				InitialDungeonTime = new TimeSpan(0, dungeon.TimeByMinute, 0);
 				DungeonCurTime = InitialDungeonTime;
+
+				dungeonRecorder = new DungeonRecorder();
+
+				StartCoroutine(DungeonLoop());
+				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
 			}
 		}
 
-		private IEnumerator DungeonLoop(Dungeon dungeon)
+		private IEnumerator DungeonLoop()
 		{
 			// Debug.Log(nameof(DungeonLoop));
 			WaitForSeconds ws01 = new(.1f);
@@ -108,6 +86,38 @@ namespace Mascari4615
 			}
 		}
 
+		private void UpdateTime()
+		{
+			DungeonCurTime -= TimeUpdateInterval;
+		}
+
+		private void UpdateDifficulty()
+		{
+			CurDifficulty = (DungeonDifficulty)((InitialDungeonTime - DungeonCurTime).TotalMinutes / 3);
+		}
+
+		private void CheckClear()
+		{
+			DungeonType dungeonType = CurDungeon.Type;
+
+			switch (dungeonType)
+			{
+				case DungeonType.TimeSurvival:
+					if (DungeonCurTime <= TimeSpan.Zero)
+						EndDungeon();
+					break;
+				case DungeonType.Domination:
+					break;
+				case DungeonType.KillCount:
+					break;
+				case DungeonType.Boss:
+
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+		}
+
 		public void EndDungeon()
 		{
 			Debug.Log($"{nameof(EndDungeon)}");
@@ -115,6 +125,9 @@ namespace Mascari4615
 			// Stop DungeonLoop
 			StopAllCoroutines();
 			monsterSpawner.StopWave();
+
+			Result = dungeonRecorder.GetResultRecord();
+
 			UIManager.Instance.SetOverlay(MPanelType.DungeonResult);
 		}
 
@@ -128,37 +141,10 @@ namespace Mascari4615
 				UIManager.Instance.SetOverlay(MPanelType.None);
 				UIManager.Instance.SetCanvas(MCanvasType.None);
 
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.Drop);
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.Monster);
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.Skill);
-				ObjectBufferManager.Instance.ClearObjects(ObjectType.SpawnCircle);
-
+				GameManager.Instance.Init();
 				expChecker.Init();
 				cardManager.ClearCardEffect();
-				Player.Instance.Object.Init(Player.Instance.Object.UnitData);
-
-				List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
-				foreach (EquipmentData equipment in equipments)
-				{
-					if (equipment == null)
-						continue;
-
-					Effect.ApplyEffects(equipment.Effects);
-
-					if (equipment.Object != null)
-						ObjectPoolManager.Instance.Spawn(equipment.Object).SetActive(true);
-				}
 			}
-		}
-
-		private void UpdateTime()
-		{
-			DungeonCurTime -= TimeUpdateInterval;
-		}
-
-		private void UpdateDifficulty()
-		{
-			CurDifficulty = (Difficulty)((InitialDungeonTime - DungeonCurTime).TotalMinutes / 3);
 		}
 	}
 }

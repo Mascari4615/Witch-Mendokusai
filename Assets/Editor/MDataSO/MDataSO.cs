@@ -88,8 +88,6 @@ namespace Mascari4615
 			InitEnumData<StatisticsData, StatisticsType>();
 
 			SaveAssets();
-
-			isInit = true;
 		}
 
 		public void CreateGUI()
@@ -159,6 +157,7 @@ namespace Mascari4615
 				}
 			};
 
+			isInit = true;
 			Debug.Log("OnEnable is executed.");
 		}
 
@@ -493,8 +492,6 @@ namespace Mascari4615
 					TData typedData = AddDataSO(type, nID, nName) as TData;
 					PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
 					typeProperty.SetValue(typedData, nID);
-
-					EditorUtility.SetDirty(typedData);
 				}
 			}
 		}

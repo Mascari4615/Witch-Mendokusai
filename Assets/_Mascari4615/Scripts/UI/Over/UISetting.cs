@@ -20,7 +20,9 @@ namespace Mascari4615
 
 			dungeonExitButton.onClick.AddListener(() =>
 			{
-				DungeonManager.Instance.EndDungeon();
+				// HACK:
+				Player.Instance.Object.ReceiveDamage(9999);
+				// DungeonManager.Instance.EndDungeon();
 			});
 		}
 
