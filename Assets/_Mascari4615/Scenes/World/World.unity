@@ -4979,7 +4979,7 @@ Transform:
   m_GameObject: {fileID: 343276348}
   serializedVersion: 2
   m_LocalRotation: {x: 0.42261827, y: -0, z: -0, w: 0.9063079}
-  m_LocalPosition: {x: 0, y: 9.958579, z: -23.566242}
+  m_LocalPosition: {x: 0, y: 9.95858, z: -23.566244}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -29474,6 +29474,10 @@ PrefabInstance:
       propertyPath: m_text
       value: "\uC778\uD615"
       objectReference: {fileID: 0}
+    - target: {fileID: 1994258243976233320, guid: 925e0a3d50e07194eb2fff5f885cdc66, type: 3}
+      propertyPath: m_ActiveFontFeatures.Array.data[0]
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 2566479013535423735, guid: 925e0a3d50e07194eb2fff5f885cdc66, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -39685,6 +39689,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1326361787}
     m_Modifications:
+    - target: {fileID: 1994258243976233320, guid: 925e0a3d50e07194eb2fff5f885cdc66, type: 3}
+      propertyPath: m_ActiveFontFeatures.Array.data[0]
+      value: 1801810542
+      objectReference: {fileID: 0}
     - target: {fileID: 2566479013535423735, guid: 925e0a3d50e07194eb2fff5f885cdc66, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

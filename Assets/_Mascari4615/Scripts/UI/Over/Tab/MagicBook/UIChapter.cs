@@ -34,16 +34,35 @@ namespace Mascari4615
 			}
 		}
 
-		public override void UpdateUI()
-		{
-			foreach (UIQuestSlot slot in questSlots)
-				slot.UpdateUI();
-		}
-
 		public override void OnOpen()
 		{
 			// 스크롤 위치 초기화
 			content.anchoredPosition = Vector2.zero;
+		}
+
+		public override void UpdateUI()
+		{
+			foreach (UIQuestSlot slot in questSlots)
+			{
+				RuntimeQuest runtimeQuest = DataManager.Instance.QuestManager.GetQuest(slot.DataSO as QuestSO);
+
+				// HACK:
+				slot.SetDisable(false);
+
+				// 진행 중
+				if (runtimeQuest != null)
+				{
+					slot.SetRuntimeQuestState(runtimeQuest.State);
+					slot.SetQuest(runtimeQuest);
+				}
+				else
+				{
+					QuestSO questData = slot.DataSO as QuestSO;
+					slot.SetDisable(questData.State == QuestState.Locked);
+				}
+
+				slot.UpdateUI();
+			}
 		}
 	}
 }

@@ -28,6 +28,7 @@ namespace Mascari4615
 						return;
 
 					curQuest.StartWork(0);
+					UpdateUI();
 				});
 
 			if (rewardButton != null)
@@ -37,6 +38,7 @@ namespace Mascari4615
 						return;
 
 					curQuest.Complete();
+					UpdateUI();
 				});
 		}
 

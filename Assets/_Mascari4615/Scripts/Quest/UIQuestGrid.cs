@@ -67,7 +67,7 @@ namespace Mascari4615
 				{
 					bool slotActive = (curFilter == QuestType.None) || (quest.Type == curFilter);
 
-					slot.SetQuestState(quest.State);
+					slot.SetRuntimeQuestState(quest.State);
 					slot.SetQuest(quest);
 					slot.UpdateUI();
 
@@ -101,21 +101,7 @@ namespace Mascari4615
 			UpdateUI();
 		}
 
-		private void OnEnable()
-		{
-			if (resetFilterOnEnable)
-				SetFilter(QuestType.None);
-			StartCoroutine(UpdateLoop());
-		}
-		private void OnDisable() => StopAllCoroutines();
-		public IEnumerator UpdateLoop()
-		{
-			WaitForSeconds wait = new(.1f);
-			while (true)
-			{
-				UpdateUI();
-				yield return wait;
-			}
-		}
+		private void OnEnable() => TimeManager.Instance.RegisterCallback(UpdateUI);
+		private void OnDisable() => TimeManager.Instance.RemoveCallback(UpdateUI);
 	}
 }

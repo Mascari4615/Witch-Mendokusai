@@ -61,8 +61,30 @@ namespace Mascari4615
 			});
 			ForEach<QuestSO>(questData => newGameData.quests.Add(questData.Save()));
 
+			// 초기 퀘스트 추가
+			// DataManager.QuestManager.AddQuest(new RuntimeQuest(GetQuestSO(0)));
+			new RuntimeQuest(GetQuestSO(0));
+
 			SaveData();
-			LoadData(newGameData);
+			LoadLocalData();
+		}
+
+		public void LoadLocalData()
+		{
+			string path = Path.Combine(Application.dataPath, "WM.json");
+
+			if (File.Exists(path))
+			{
+				string json = File.ReadAllText(path);
+				LoadData(JsonConvert.DeserializeObject<GameData>(json, new JsonSerializerSettings
+				{
+					TypeNameHandling = TypeNameHandling.Auto
+				}));
+			}
+			else
+			{
+				CreateNewGameData();
+			}
 		}
 
 		public void LoadData(GameData saveData)

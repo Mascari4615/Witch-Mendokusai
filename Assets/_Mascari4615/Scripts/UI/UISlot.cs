@@ -71,6 +71,7 @@ namespace Mascari4615
 		public bool IsDisable { get; private set; } = false;
 
 		[SerializeField] protected DataSO defaultDataSO;
+		[SerializeField] private bool blockClickWhenDisable = false;
 
 		protected Button button;
 		protected Image iconImage;
@@ -146,8 +147,14 @@ namespace Mascari4615
 
 		public void SetDisable(bool isDisable)
 		{
-			this.IsDisable = isDisable;
+			IsDisable = isDisable;
 			disableImage.gameObject.SetActive(isDisable);
+
+			if (blockClickWhenDisable)
+			{
+				if (button)
+					button.interactable = !isDisable;
+			}
 		}
 
 		public void SetSelectAction(Action<UISlot> action) => selectAction = action;

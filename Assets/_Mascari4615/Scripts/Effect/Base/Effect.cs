@@ -43,6 +43,9 @@ namespace Mascari4615
 					case EffectType.Statistics:
 						dataSO = GetStatisticsData(id);
 						break;
+					case EffectType.UnlockQuest:
+						dataSO = GetQuestSO(id);
+						break;
 					default:
 						break;
 				}
@@ -95,6 +98,9 @@ namespace Mascari4615
 					break;
 				case EffectType.Statistics:
 					effect = new StatisticsEffect();
+					break;
+				case EffectType.UnlockQuest:
+					effect = new UnlockQuestEffect();
 					break;
 			}
 

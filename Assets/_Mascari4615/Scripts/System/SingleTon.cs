@@ -12,9 +12,20 @@ namespace Mascari4615
 		private static T instance;
 		public static T Instance
 		{
-			get => instance
-				? instance
-				: instance = Instantiate(Resources.Load($"Singleton/{typeof(T).Name}")).GetComponent<T>();
+			get
+			{
+				if (instance)
+					return instance;
+
+				Object t = Resources.Load($"Singleton/{typeof(T).Name}");
+				if (t != null)
+				{
+					instance = Instantiate(t).GetComponent<T>();
+					return instance;
+				}
+
+				return null;
+			}
 			private set => instance = value;
 		}
 

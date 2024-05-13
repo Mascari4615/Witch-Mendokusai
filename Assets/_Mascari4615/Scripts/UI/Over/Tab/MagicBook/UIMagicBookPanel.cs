@@ -15,7 +15,7 @@ namespace Mascari4615
 			base.Init();
 
 			toolTip = GetComponentInChildren<ToolTip>(true);
-			
+
 			questToolTip = GetComponentInChildren<UIQuestToolTip>(true);
 			questToolTip.Init();
 
@@ -37,5 +37,8 @@ namespace Mascari4615
 				toolTip.gameObject.SetActive(false);
 			base.OpenPanel(newPanelIndex);
 		}
+
+		private void OnEnable() => TimeManager.Instance.RegisterCallback(UpdateUI);
+		private void OnDisable() => TimeManager.Instance.RemoveCallback(UpdateUI);
 	}
 }

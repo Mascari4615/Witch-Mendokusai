@@ -58,20 +58,7 @@ namespace Mascari4615
 
 			if (GameSetting.UseLocalData)
 			{
-				string path = Path.Combine(Application.dataPath, "WM.json");
-
-				if (File.Exists(path))
-				{
-					string json = File.ReadAllText(path);
-					SaveManager.LoadData(JsonConvert.DeserializeObject<GameData>(json, new JsonSerializerSettings
-					{
-						TypeNameHandling = TypeNameHandling.Auto
-					}));
-				}
-				else
-				{
-					SaveManager.CreateNewGameData();
-				}
+				SaveManager.LoadLocalData();
 			}
 		}
 

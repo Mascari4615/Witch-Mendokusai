@@ -2,14 +2,19 @@ namespace Mascari4615
 {
 	public enum EffectType
 	{
-		AddCard,
-		AddQuest,
-		AddRandomQuest,
-		FloatVariable,
-		IntVariable,
-		Item,
-		SpawnObject,
-		Stat,
-		Statistics,
+		Stat = 0,
+		Statistics = 1,
+
+		IntVariable = 50,
+		FloatVariable = 51,
+
+		UnlockQuest = 100,
+		AddQuest = 101,
+		AddRandomQuest = 102,
+
+		AddCard = 200,
+		Item = 201,
+
+		SpawnObject = 300,
 	}
 }

@@ -20,16 +20,20 @@ namespace Mascari4615
 
 		public void Complete()
 		{
+			// Debug.Log("Complete Quest: " + name);
 			State = QuestState.Completed;
 		}
 
 		public QuestSOSaveData Save()
 		{
-			return new QuestSOSaveData(ID, State);
+			// Debug.Log($"Save Quest : {name} - {State}");
+			QuestSOSaveData questSaveData = new(ID, State);
+			return questSaveData;
 		}
 
 		public void Load(QuestSOSaveData questSaveData)
 		{
+			// Debug.Log($"Load Quest: {name} - {questSaveData.State}");
 			State = questSaveData.State;
 		}
 	}

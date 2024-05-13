@@ -9,8 +9,8 @@ namespace Mascari4615
 	public class UIQuestSlot : UISlot
 	{
 		[SerializeField] private Image[] criteriaObjects;
-		[SerializeField] private GameObject[] questDataStateObjects;
 		[SerializeField] private GameObject[] questStateObjects;
+		[SerializeField] private GameObject[] runtimeQuestStateObjects;
 		[SerializeField] private Image progress;
 		[SerializeField] private TextMeshProUGUI progressText;
 
@@ -21,15 +21,20 @@ namespace Mascari4615
 			if (DataSO)
 			{
 				QuestSO questData = DataSO as QuestSO;
-				for (int i = 0; i < questDataStateObjects.Length; i++)
-					questDataStateObjects[i].SetActive((int)questData.State == i);
+				SetQuestState(questData.State);
 			}
 		}
 
-		public void SetQuestState(RuntimeQuestState state)
+		public void SetQuestState(QuestState state)
 		{
 			for (int i = 0; i < questStateObjects.Length; i++)
 				questStateObjects[i].SetActive((int)state == i);
+		}
+
+		public void SetRuntimeQuestState(RuntimeQuestState state)
+		{
+			for (int i = 0; i < runtimeQuestStateObjects.Length; i++)
+				runtimeQuestStateObjects[i].SetActive((int)state == i);
 		}
 
 		public void SetQuest(RuntimeQuest quest)

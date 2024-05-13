@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 using static Mascari4615.SOHelper;
 
 namespace Mascari4615
@@ -32,12 +33,20 @@ namespace Mascari4615
 			StartQuest();
 		}
 
-		public RuntimeQuest(QuestSO questSO) : this(questSO.Data, questSO.Name, questSO.Description)
+		public RuntimeQuest(QuestSO questSO)
 		{
 			SO = questSO;
+			Initialize(questSO.Data, questSO.Name, questSO.Description);
+			StartQuest();
 		}
 
 		public RuntimeQuest(QuestInfo questInfo, string name = null, string description = null)
+		{
+			Initialize(questInfo, name, description);
+			StartQuest();
+		}
+
+		private void Initialize(QuestInfo questInfo, string name = null, string description = null)
 		{
 			Guid = System.Guid.NewGuid();
 
@@ -54,8 +63,6 @@ namespace Mascari4615
 			WorkTime = questInfo.WorkTime;
 			AutoWork = questInfo.AutoWork;
 			AutoComplete = questInfo.AutoComplete;
-
-			StartQuest();
 		}
 
 		public void StartQuest()
@@ -128,7 +135,7 @@ namespace Mascari4615
 			{
 				SO.Complete();
 				if (Type == QuestType.Achievement)
-					UIManager.Instance.Popup(SO);
+					UIManager.Instance?.Popup(SO);
 			}
 
 			foreach (GameEventType gameEventType in GameEvents)
