@@ -276,7 +276,7 @@ namespace Mascari4615
 							if (BadIDDataSOs[asset.ID].Contains(dic[asset.ID]) == false)
 								BadIDDataSOs[asset.ID].Add(dic[asset.ID]);
 						}
-						
+
 						if (BadIDDataSOs[asset.ID].Contains(asset) == false)
 							BadIDDataSOs[asset.ID].Add(asset);
 					}
@@ -319,7 +319,7 @@ namespace Mascari4615
 			if (nName == null)
 				nName = $"New_{type.Name}";
 
-			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
+			string assetName = ConvertToGoodName($"{assetPrefixes[type]}_{nID}_{nName}");
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
 			Debug.Log($"AddDataSO: {type.Name} {nID} {nName} {path}");
@@ -358,7 +358,7 @@ namespace Mascari4615
 			Dictionary<int, DataSO> dic = DataSOs[type];
 
 			string nName = dataSO.Name;
-			
+
 			// 기존 데이터가 숫자로 끝나면, 해당 숫자에 1을 더한 값을 붙인다.
 			Match match = Regex.Match(nName, @"\d+$");
 			if (match.Success)
@@ -377,7 +377,7 @@ namespace Mascari4615
 			while (dic.ContainsKey(nID))
 				nID++;
 
-			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
+			string assetName = ConvertToGoodName($"{assetPrefixes[type]}_{nID}_{nName}");
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
 			if (AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(dataSO), path))
