@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Mascari4615
 {
 	public class UIChapter : UIPanel
 	{
 		private UIQuestSlot[] questSlots;
+		[SerializeField] private RectTransform content;
 
 		public override void Init()
 		{
@@ -29,6 +31,12 @@ namespace Mascari4615
 		{
 			foreach (UIQuestSlot slot in questSlots)
 				slot.UpdateUI();
+		}
+
+		public override void OnOpen()
+		{
+			// 스크롤 위치 초기화
+			content.anchoredPosition = Vector2.zero;
 		}
 	}
 }

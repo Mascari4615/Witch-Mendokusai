@@ -56,7 +56,7 @@ namespace Mascari4615
 		{
 		}
 
-		public void OpenPanel(int newPanelIndex)
+		public virtual void OpenPanel(int newPanelIndex)
 		{
 			// Debug.Log($"{nameof(OpenTabMenu)}, {menuType}");
 			curPanelIndex = newPanelIndex;
@@ -65,6 +65,7 @@ namespace Mascari4615
 			{
 				for (int i = 0; i < panels.Length; i++)
 					panels[i].gameObject.SetActive(i == curPanelIndex);
+				panels[curPanelIndex].OnOpen();
 				panels[curPanelIndex].UpdateUI();
 			}
 		}

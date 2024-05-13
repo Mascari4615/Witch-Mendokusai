@@ -1,49 +1,37 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mascari4615
 {
 	public class UIMagicBookPanel : UIPanels
 	{
-		private UIChapter[] chapters;
 		private ToolTip toolTip;
-		private int curChapterIndex = 0;
 
 		public override void Init()
 		{
 			base.Init();
 
-			chapters = GetComponentsInChildren<UIChapter>(true);
 			toolTip = GetComponentInChildren<ToolTip>(true);
 
-			foreach (UIChapter chapter in chapters)
-			{
-				chapter.Init();
+			foreach (UIChapter chapter in panels.Cast<UIChapter>())
 				chapter.SetToolTip(toolTip);
-			}
 		}
 
 		public override void UpdateUI()
 		{
 			base.UpdateUI();
-			
-			foreach (UIChapter chapter in chapters)
-				chapter.UpdateUI();
 
-			SelectChapter(curChapterIndex);
+			foreach (UIChapter chapter in panels.Cast<UIChapter>())
+				chapter.UpdateUI();
 		}
 
-		public void SelectChapter(int index)
+		public override void OpenPanel(int newPanelIndex)
 		{
-			curChapterIndex = index;
-
-			for (int i = 0; i < chapters.Length; i++)
-				chapters[i].gameObject.SetActive(i == curChapterIndex);
-
-			chapters[index].UpdateUI();
-
-			toolTip.gameObject.SetActive(false);
+			if (toolTip != null)
+				toolTip.gameObject.SetActive(false);
+			base.OpenPanel(newPanelIndex);
 		}
 	}
 }
