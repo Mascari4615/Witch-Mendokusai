@@ -107,7 +107,7 @@ namespace Mascari4615
 			badIdDataSOsTitle.style.display = processBadIdDataSOs ? DisplayStyle.Flex : DisplayStyle.None;
 			badIdDataSOsRoot.style.display = processBadIdDataSOs ? DisplayStyle.Flex : DisplayStyle.None;
 			thisRoot.style.display = CurDataSO == null ? DisplayStyle.None : DisplayStyle.Flex;
-			deleteButton.SetEnabled(processBadIdDataSOs == false);
+			deleteButton.SetEnabled(processBadIdDataSOs);
 			closeButton.SetEnabled(processBadIdDataSOs == false);
 		}
 
