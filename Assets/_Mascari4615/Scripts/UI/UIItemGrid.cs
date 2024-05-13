@@ -27,8 +27,9 @@ namespace Mascari4615
 				UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
 				for (int i = 0; i < fillerButtons.Length; i++)
 				{
+					fillerButtons[i].Init();
 					fillerButtons[i].SetSlotIndex(i);
-					fillerButtons[i].SetClickAction((slot) => {SetFilter((ItemType)(slot.Index - 1));});
+					fillerButtons[i].SetClickAction((slot) => { SetFilter((ItemType)(slot.Index - 1)); });
 				}
 			}
 
@@ -50,10 +51,12 @@ namespace Mascari4615
 				UIItemSlot slot = Slots[i] as UIItemSlot;
 				Item item = inventory.Datas.ElementAtOrDefault(i);
 
+				slot.canDrag = filter == ItemType.None;
+
 				if (item == null)
 				{
 					slot.SetSlot(null);
-					slot.gameObject.SetActive(dontShowEmptySlot == false);
+					slot.gameObject.SetActive((dontShowEmptySlot == false) && (filter == ItemType.None));
 					slot.SetDisable(false);
 				}
 				else
@@ -62,8 +65,8 @@ namespace Mascari4615
 					bool slotDisable = (filter != ItemType.None) && (itemData.Type != filter);
 
 					slot.SetSlot(itemData, item.Amount);
-					slot.gameObject.SetActive(true);
-					slot.SetDisable(slotDisable);
+					slot.gameObject.SetActive(slotDisable == false);
+					// slot.SetDisable(slotDisable);
 				}
 			}
 		}

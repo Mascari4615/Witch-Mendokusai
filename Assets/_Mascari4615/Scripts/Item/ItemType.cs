@@ -3,8 +3,8 @@ namespace Mascari4615
 	public enum ItemType
 	{
 		None = -1,
-		Loot,
-		Equipment,
-		Potion,
+		Loot = 0,
+		Potion = 1,
+		Equipment = 2,
 	}
 }
