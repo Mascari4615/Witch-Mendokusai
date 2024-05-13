@@ -21,7 +21,15 @@ MonoBehaviour:
     Type: 2
     GameEvents: 
     Criterias: []
-    CompleteEffects: []
+    CompleteEffects:
+    - Type: 100
+      Data: {fileID: 11400000, guid: 04a784f3ad9f0f742b7c07eaf3ba5fe8, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 101
+      Data: {fileID: 11400000, guid: 04a784f3ad9f0f742b7c07eaf3ba5fe8, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
     RewardEffects: []
     Rewards: []
     WorkTime: 0

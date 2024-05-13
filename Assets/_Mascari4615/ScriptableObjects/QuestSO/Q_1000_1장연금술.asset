@@ -14,13 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ID>k__BackingField: 1000
   <Name>k__BackingField: "1\uC7A5 : \uC5F0\uAE08\uC220"
-  <Description>k__BackingField: "\uC5F0\uAE08\uC220\uC744 \uBC30\uC6C1\uB2C8\uB2E4."
+  <Description>k__BackingField: "\uC5F0\uAE08\uC220\uC744 \uBC30\uC6C1\uB2C8\uB2E4.\n\n<'\uC81C
+    1\uC7A5 : \uC5F0\uAE08\uC220' \uC774 \uD574\uAE08\uB429\uB2C8\uB2E4.>"
   <Sprite>k__BackingField: {fileID: 21300000, guid: f04aac02dfd85f342bff514fc25d74b8, type: 3}
   <Data>k__BackingField:
     Type: 2
     GameEvents: 
     Criterias: []
-    CompleteEffects: []
+    CompleteEffects:
+    - Type: 100
+      Data: {fileID: 11400000, guid: 64c16ac9ae8454b4380659cdf5efc6ab, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 101
+      Data: {fileID: 11400000, guid: 64c16ac9ae8454b4380659cdf5efc6ab, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
     RewardEffects: []
     Rewards: []
     WorkTime: 0
