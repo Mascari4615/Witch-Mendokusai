@@ -11,11 +11,7 @@ namespace Mascari4615
 		[SerializeField] private Transform filtersParent;
 		private QuestType curFilter = QuestType.None;
 
-		[SerializeField] private GameObject workButton;
-		[SerializeField] private GameObject rewardButton;
-
-		[SerializeField] private UIRewards rewardUI;
-		[SerializeField] private UIQuestTooltipCriteria questCriteriaUI;
+		private UIQuestToolTip questToolTip;
 
 		[SerializeField] private GameObject noQuestInfo;
 
@@ -45,19 +41,19 @@ namespace Mascari4615
 				}
 			}
 
-			if (rewardUI != null)
-				rewardUI.Init();
+			questToolTip = GetComponentInChildren<UIQuestToolTip>(true);
 
-			if (questCriteriaUI != null)
-				questCriteriaUI.Init();
+			if (questToolTip != null)
+				questToolTip.Init();
 
 			return true;
 		}
 
 		public override void UpdateUI()
 		{
-			int activeSlotCount = 0;
+			Init();
 
+			int activeSlotCount = 0;
 			foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
 			{
 				RuntimeQuest quest = Datas.ElementAtOrDefault(slot.Index);
@@ -78,7 +74,7 @@ namespace Mascari4615
 					if (quest.SO == null)
 						slot.SetSlot(null, quest.Name, quest.Description);
 					else
-						slot.SetSlot(quest.SO.Sprite, quest.SO.Name, quest.SO.Description);
+						slot.SetSlot(quest.SO);
 
 					slot.gameObject.SetActive(slotActive);
 				}
@@ -89,53 +85,20 @@ namespace Mascari4615
 			if (noQuestInfo != null)
 				noQuestInfo.SetActive(activeSlotCount == 0);
 
-			if (CurSlot.DataSO)
-			{
-				if (workButton != null)
-					workButton.SetActive(CurQuest.State == RuntimeQuestState.CanWork);
-				if (rewardButton != null)
-					rewardButton.SetActive(CurQuest.State == RuntimeQuestState.CanComplete);
-			}
-			else
-			{
-				if (workButton != null)
-					workButton.SetActive(false);
-				if (rewardButton != null)
-					rewardButton.SetActive(false);
-			}
-
 			if (clickToolTip != null)
 				clickToolTip.SetToolTipContent(CurSlot.Data);
 
-			if (rewardUI != null)
-				rewardUI.UpdateUI(CurQuest?.Rewards);
-
-			if (questCriteriaUI != null)
-				questCriteriaUI.SetCriteria(CurQuest);
+			if (questToolTip != null)
+			{
+				questToolTip.SetQuest(CurQuest);
+				questToolTip.UpdateUI();
+			}
 		}
 
 		public void SetFilter(QuestType filter)
 		{
 			curFilter = filter;
 			UpdateUI();
-		}
-
-		public void CompleteQuest()
-		{
-			if (CurQuest.State != RuntimeQuestState.CanComplete)
-				return;
-
-			CurQuest.Complete();
-			SelectSlot(0);
-		}
-
-		public void StartQuestWork()
-		{
-			// TODO: 어떤 인형이 일을 할지
-			if (CurQuest.State != RuntimeQuestState.CanWork)
-				return;
-
-			CurQuest.StartWork(0);
 		}
 
 		private void OnEnable()

@@ -18,12 +18,19 @@ namespace Mascari4615
 				slot.Init();
 		}
 
-		public void SetToolTip(ToolTip toolTip)
+		public void SetToolTip(ToolTip toolTip, UIQuestToolTip questToolTip)
 		{
 			foreach (UIQuestSlot slot in questSlots)
 			{
 				slot.ToolTipTrigger.SetClickToolTip(toolTip);
-				slot.SetClickAction((slot) => slot.ToolTipTrigger.ClickToolTip.gameObject.SetActive(true));
+				slot.SetClickAction((slot) =>
+				{
+					slot.ToolTipTrigger.ClickToolTip.gameObject.SetActive(true);
+
+					RuntimeQuest quest = DataManager.Instance.QuestManager.GetQuest((slot as UIQuestSlot).DataSO as QuestSO);
+					questToolTip.SetQuest(quest);
+					questToolTip.UpdateUI();
+				});
 			}
 		}
 
