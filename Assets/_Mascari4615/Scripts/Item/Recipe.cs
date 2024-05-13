@@ -1,11 +1,13 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mascari4615
 {
-	[CreateAssetMenu(fileName = nameof(Recipe), menuName = "Variable/Recipe")]
-	public class Recipe : ScriptableObject
+	[Serializable]
+	public struct Recipe
 	{
-		[field: SerializeField] public ItemData[] Ingredients { get; private set; }
-		[field: SerializeField] public float Percentage { get; private set; }
+		public List<ItemData> Ingredients;
+		public float Percentage;
 	}
 }
