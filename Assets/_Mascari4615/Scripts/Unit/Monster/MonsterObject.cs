@@ -93,7 +93,7 @@ namespace Mascari4615
 			DropLoot();
 
 			if (UnitData.Tag == MonsterTag.Boss)
-				SOManager.Instance.Statistics[StatisticsType.TOTAL_BOSS_KILL]++;
+				SOManager.Instance.Statistics[StatisticsType.BOSS_KILL]++;
 			SOManager.Instance.Statistics[StatisticsType.MONSTER_KILL]++;
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Die", transform.position);
