@@ -13,7 +13,7 @@ namespace Mascari4615
 	public partial class MDataSO : EditorWindow
 	{
 		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
-		private const int ID_MAX = 10_000_000;
+		private const int ID_MAX = 100_000_000;
 
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
@@ -363,7 +363,21 @@ namespace Mascari4615
 
 			Dictionary<int, DataSO> dic = DataSOs[type];
 
-			string nName = dataSO.Name + " Copy";
+			string nName = dataSO.Name;
+			
+			// 기존 데이터가 숫자로 끝나면, 해당 숫자에 1을 더한 값을 붙인다.
+			Match match = Regex.Match(nName, @"\d+$");
+			if (match.Success)
+			{
+				string number = match.Value;
+				nName = nName.Substring(0, nName.Length - number.Length) + (int.Parse(number) + 1);
+			}
+			// 아니라면 "_Copy"를 붙인다.
+			else
+			{
+				nName += "_Copy";
+			}
+
 			// 사용되지 않은 ID를 찾는다.
 			int nID = dataSO.ID + 1;
 			while (dic.ContainsKey(nID))
