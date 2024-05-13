@@ -50,7 +50,6 @@ namespace Mascari4615
 				newGameData.dolls[0].EquipmentGuids.Add(guid);
 				defaultDoll.EquipmentGuids.Add(guid);
 			}
-			defaultDoll.EquipmentGuids.Add(null);
 			newGameData.inventoryItems = inventory.Save();
 
 			// 장비 초기화 이후 저장

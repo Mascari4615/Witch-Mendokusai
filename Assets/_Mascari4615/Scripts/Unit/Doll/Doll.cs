@@ -31,6 +31,8 @@ namespace Mascari4615
 
 			if (EquipmentGuids.Count < 3)
 				EquipmentGuids.AddRange(new Guid?[3 - EquipmentGuids.Count]);
+			else if (EquipmentGuids.Count > 3)
+				Debug.LogWarning("인형의 장비 개수가 3개를 초과했습니다.");
 		}
 
 		public DollSaveData Save()
