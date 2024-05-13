@@ -22,9 +22,9 @@ namespace Mascari4615
 		}
 
 		public void UpdateUI(List<RewardInfo> infos) =>
-			UpdateUI(Reward.InfoToData(infos));
+			UpdateUI(infos.ConvertAll(x => new RewardInfoData(x)));
 
-		public void UpdateUI(List<RewardData> datas)
+		public void UpdateUI(List<RewardInfoData> datas)
 		{
 			if (datas == null || datas.Count == 0)
 			{

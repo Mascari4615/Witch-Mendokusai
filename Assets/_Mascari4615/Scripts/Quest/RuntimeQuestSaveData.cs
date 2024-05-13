@@ -7,9 +7,19 @@ namespace Mascari4615
 	public struct RuntimeQuestSaveData
 	{
 		public Guid? Guid;
-		public int DataID;
 		public RuntimeQuestState State;
+
+		public int SO_ID;
+
+		public QuestType Type;
+		public List<GameEventType> GameEvents;
 		public List<RuntimeCriteriaSaveData> Criterias;
-		public List<RewardData> Rewards;
+		public List<EffectInfoData> CompleteEffects;
+		public List<EffectInfoData> RewardEffects;
+		public List<RewardInfoData> Rewards;
+
+		public float WorkTime;
+		public bool AutoWork;
+		public bool AutoComplete;
 	}
 }

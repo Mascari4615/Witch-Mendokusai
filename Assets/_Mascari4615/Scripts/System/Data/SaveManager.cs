@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json;
 using UnityEngine;
 using static Mascari4615.SOHelper;
@@ -58,7 +59,7 @@ namespace Mascari4615
 				if (doll.ID != 0)
 					newGameData.dolls.Add(doll.Save());
 			});
-			ForEach<Quest>(questData => newGameData.quests.Add(questData.Save()));
+			ForEach<QuestSO>(questData => newGameData.quests.Add(questData.Save()));
 
 			SaveData();
 			LoadData(newGameData);
@@ -87,11 +88,11 @@ namespace Mascari4615
 				SOManager.DollBuffer.Add(GetDoll(Doll.DUMMY_ID));
 
 			// 퀘스트 초기화
-			foreach (QuestSaveData questData in saveData.quests)
+			foreach (QuestSOSaveData questData in saveData.quests)
 			{
-				GetQuest(questData.QuestID).Load(questData);
+				GetQuestSO(questData.QuestID).Load(questData);
 				if (questData.State >= QuestState.Unlocked)
-					SOManager.QuestDataBuffer.Add(GetQuest(questData.QuestID));
+					SOManager.QuestDataBuffer.Add(GetQuestSO(questData.QuestID));
 			}
 
 			// 작업 초기화
@@ -112,12 +113,12 @@ namespace Mascari4615
 				dolls = new(),
 				works = DataManager.WorkManager.Works,
 				quests = new(),
-				runtimeQuests = DataManager.QuestManager.Quests.Datas.ConvertAll(quest => quest.Save()),
+				runtimeQuests = DataManager.QuestManager.Quests.Datas.Where(quest => quest.Type != QuestType.Dungeon).ToList().ConvertAll(quest => quest.Save()),
 				statistics = SOManager.Statistics.Save()
 			};
 
 			ForEach<Doll>(doll => gameData.dolls.Add(doll.Save()));
-			ForEach<Quest>(questData => gameData.quests.Add(questData.Save()));
+			ForEach<QuestSO>(questData => gameData.quests.Add(questData.Save()));
 
 			if (GameSetting.UseLocalData)
 			{

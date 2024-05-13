@@ -5,12 +5,12 @@ using System.Linq;
 namespace Mascari4615
 {
 	[Serializable]
-	public struct QuestSaveData
+	public struct QuestSOSaveData
 	{
 		public int QuestID;
 		public QuestState State;
 
-		public QuestSaveData(int questID, QuestState state)
+		public QuestSOSaveData(int questID, QuestState state)
 		{
 			QuestID = questID;
 			State = state;

@@ -19,7 +19,7 @@ namespace Mascari4615
 			{ WorkListType.DummyWork, new() },
 			{ WorkListType.VQuestWork, new() }
 		};
-		public List<QuestSaveData> quests = new();
+		public List<QuestSOSaveData> quests = new();
 		public List<RuntimeQuestSaveData> runtimeQuests = new();
 		public Dictionary<StatisticsType, int> statistics = new();
 	}

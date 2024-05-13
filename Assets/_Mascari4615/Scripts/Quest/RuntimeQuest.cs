@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using UnityEngine;
 using static Mascari4615.SOHelper;
 
 namespace Mascari4615
@@ -9,45 +7,63 @@ namespace Mascari4615
 	public class RuntimeQuest : ISavable<RuntimeQuestSaveData>
 	{
 		public Guid? Guid { get; private set; }
-		public int DataID { get; private set; }
 		public RuntimeQuestState State { get; private set; }
-		public List<RuntimeCriteria> Criterias { get; private set; }
-		public List<RewardData> Rewards { get; private set; }
 
-		public Quest GetData()
-		{
-			return GetQuest(DataID);
-		}
-		private Quest Data => GetData();
+		public QuestSO SO { get; private set; }
+
+		public QuestType Type { get; private set; }
+		public List<GameEventType> GameEvents { get; private set; }
+		public List<RuntimeCriteria> Criterias { get; private set; }
+		public List<EffectInfoData> CompleteEffects { get; private set; }
+		public List<EffectInfoData> RewardEffects { get; private set; }
+		public List<RewardInfoData> Rewards { get; private set; }
+
+		public float WorkTime { get; private set; }
+		public bool AutoWork { get; private set; }
+		public bool AutoComplete { get; private set; }
 
 		public RuntimeQuest(RuntimeQuestSaveData saveData)
 		{
 			Load(saveData);
+
 			StartQuest();
 		}
 
-		public RuntimeQuest(Quest questData)
+		public RuntimeQuest(QuestSO questSO) : this(questSO.Data)
+		{
+			SO = questSO;
+		}
+
+		public RuntimeQuest(QuestInfo questInfo)
 		{
 			Guid = System.Guid.NewGuid();
-			DataID = questData.ID;
-			Criterias = Data.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
-			Rewards = Data.Rewards.ConvertAll(rewardData => new RewardData(rewardData));
+
+			Type = questInfo.Type;
+			GameEvents = questInfo.GameEvents;
+			Criterias = questInfo.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
+			CompleteEffects = questInfo.CompleteEffects.ConvertAll(effectData => new EffectInfoData(effectData));
+			RewardEffects = questInfo.RewardEffects.ConvertAll(effectData => new EffectInfoData(effectData));
+			Rewards = questInfo.Rewards.ConvertAll(rewardData => new RewardInfoData(rewardData));
+
+			WorkTime = questInfo.WorkTime;
+			AutoWork = questInfo.AutoWork;
+			AutoComplete = questInfo.AutoComplete;
 
 			StartQuest();
 		}
 
 		public void StartQuest()
 		{
-			if (Data.AutoComplete)
-				Data.GameEvents.Add(GameEventType.OnTick);
-			foreach (GameEventType gameEventType in Data.GameEvents)
+			if (AutoComplete)
+				GameEvents.Add(GameEventType.OnTick);
+			foreach (GameEventType gameEventType in GameEvents)
 				GameEventManager.Instance.RegisterCallback(gameEventType, Evaluate);
 			Evaluate();
 		}
 
 		public void Evaluate()
 		{
-			if (Data.Type == QuestType.VillageRequest)
+			if (Type == QuestType.VillageRequest)
 			{
 				if (State >= RuntimeQuestState.Working)
 					return;
@@ -63,10 +79,10 @@ namespace Mascari4615
 				}
 			}
 
-			if (Data.Type == QuestType.VillageRequest)
+			if (Type == QuestType.VillageRequest)
 			{
 				State = RuntimeQuestState.CanWork;
-				if (Data.AutoWork)
+				if (AutoWork)
 					StartWork();
 			}
 			else
@@ -78,10 +94,10 @@ namespace Mascari4615
 		public void StartWork(int workerID = WorkManager.NONE_WORKER_ID)
 		{
 			State = RuntimeQuestState.Working;
-			
-			foreach (GameEventType gameEventType in Data.GameEvents)
+
+			foreach (GameEventType gameEventType in GameEvents)
 				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
-			Work work = new(workerID, WorkType.QuestWork, Guid, Data.WorkTime);
+			Work work = new(workerID, WorkType.QuestWork, Guid, WorkTime);
 			DataManager.Instance.WorkManager.AddWork(work);
 		}
 
@@ -89,34 +105,35 @@ namespace Mascari4615
 		{
 			State = RuntimeQuestState.CanComplete;
 
-			if (Data.AutoComplete)
+			if (AutoComplete)
 				Complete();
 		}
 
 		public void Complete()
 		{
 			State = RuntimeQuestState.Completed;
-		
+
 			DataManager.Instance.QuestManager.RemoveQuest(this);
-			Data.Complete();
 
-			foreach (GameEventType gameEventType in Data.GameEvents)
-				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
-			Effect.ApplyEffects(Data.CompleteEffects);
-
-			if (Data.Type == QuestType.Achievement)
+			if (SO != null)
 			{
-				UIManager.Instance.Popup(Data);
+				SO.Complete();
+				if (Type == QuestType.Achievement)
+					UIManager.Instance.Popup(SO);
 			}
+
+			foreach (GameEventType gameEventType in GameEvents)
+				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
+			Effect.ApplyEffects(CompleteEffects);
 
 			GetReward();
 		}
 
 		private void GetReward()
 		{
-			Effect.ApplyEffects(Data.RewardEffects);
+			Effect.ApplyEffects(RewardEffects);
 
-			foreach (RewardData rewardData in Rewards)
+			foreach (RewardInfoData rewardData in Rewards)
 				Reward.GetReward(rewardData);
 		}
 
@@ -143,10 +160,20 @@ namespace Mascari4615
 		public void Load(RuntimeQuestSaveData saveData)
 		{
 			Guid = saveData.Guid;
-			DataID = saveData.DataID;
 			State = saveData.State;
+
+			SO = saveData.SO_ID != -1 ? GetQuestSO(saveData.SO_ID) : null;
+
+			Type = saveData.Type;
+			GameEvents = saveData.GameEvents;
 			Criterias = saveData.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
+			CompleteEffects = saveData.CompleteEffects;
+			RewardEffects = saveData.RewardEffects;
 			Rewards = saveData.Rewards;
+
+			WorkTime = saveData.WorkTime;
+			AutoWork = saveData.AutoWork;
+			AutoComplete = saveData.AutoComplete;
 		}
 
 		public RuntimeQuestSaveData Save()
@@ -154,10 +181,20 @@ namespace Mascari4615
 			return new RuntimeQuestSaveData
 			{
 				Guid = Guid,
-				DataID = DataID,
 				State = State,
+
+				SO_ID = SO != null ? SO.ID : -1,
+
+				Type = Type,
+				GameEvents = GameEvents,
 				Criterias = Criterias.ConvertAll(criteria => criteria.Save()),
-				Rewards = Rewards
+				CompleteEffects = CompleteEffects,
+				RewardEffects = RewardEffects,
+				Rewards = Rewards,
+
+				WorkTime = WorkTime,
+				AutoWork = AutoWork,
+				AutoComplete = AutoComplete
 			};
 		}
 	}

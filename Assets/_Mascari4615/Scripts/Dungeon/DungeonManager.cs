@@ -6,6 +6,7 @@ using Cinemachine;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -67,6 +68,32 @@ namespace Mascari4615
 
 				StartCoroutine(DungeonLoop());
 				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
+
+				// TEST:
+				RuntimeQuest runtimeQuest = new(new QuestInfo()
+				{
+					Type = QuestType.Dungeon,
+					GameEvents = new(),
+					Criterias = new()
+				{
+					new CriteriaInfo()
+					{
+						Type = CriteriaType.Statistics,
+						Data = GetStatisticsData((int)StatisticsType.MONSTER_KILL),
+						ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
+						Value = CurDungeon.ClearValue,
+						JustOnce = true,
+					}
+				},
+					CompleteEffects = new(),
+					RewardEffects = new(),
+					Rewards = new(),
+
+					WorkTime = 0,
+					AutoWork = false,
+					AutoComplete = true,
+				});
+				DataManager.Instance.QuestManager.AddQuest(runtimeQuest);
 			}
 		}
 
@@ -79,8 +106,9 @@ namespace Mascari4615
 			{
 				UpdateTime();
 				UpdateDifficulty();
-
 				monsterSpawner.UpdateWaves();
+
+				CheckClear();
 
 				yield return ws01;
 			}
@@ -98,6 +126,7 @@ namespace Mascari4615
 
 		private void CheckClear()
 		{
+			DungeonRecord curRecord = dungeonRecorder.GetResultRecord();
 			DungeonType dungeonType = CurDungeon.Type;
 
 			switch (dungeonType)
@@ -107,11 +136,15 @@ namespace Mascari4615
 						EndDungeon();
 					break;
 				case DungeonType.Domination:
+					// TODO:
 					break;
 				case DungeonType.KillCount:
+					//if (curRecord.KillCount >= CurDungeon.ClearValue)
+					//	EndDungeon();
 					break;
 				case DungeonType.Boss:
-
+					if (curRecord.BossKillCount >= CurDungeon.ClearValue)
+						EndDungeon();
 					break;
 				default:
 					throw new ArgumentOutOfRangeException();

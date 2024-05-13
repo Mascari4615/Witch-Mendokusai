@@ -17,7 +17,7 @@ namespace Mascari4615
 
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
-			{ typeof(Quest), "Q" },
+			{ typeof(QuestSO), "Q" },
 			{ typeof(CardData), "C" },
 			{ typeof(ItemData), "I" },
 			{ typeof(MonsterWave), "MW" },
@@ -36,7 +36,7 @@ namespace Mascari4615
 
 		private readonly Dictionary<Type, string> assetPaths = new()
 		{
-			{ typeof(Quest), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Quest)}/" },
+			{ typeof(QuestSO), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestSO)}/" },
 			{ typeof(CardData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(CardData)}/" },
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
@@ -63,7 +63,7 @@ namespace Mascari4615
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; }
 		public Dictionary<int, List<DataSO>> BadIDDataSOs { get; private set; } = new();
 
-		public Type CurType { get; private set; } = typeof(Quest);
+		public Type CurType { get; private set; } = typeof(QuestSO);
 
 		private bool isInit = false;
 

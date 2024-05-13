@@ -9,16 +9,26 @@ namespace Mascari4615
 {
 	public class UIDungeon : UIPanel
 	{
+		[field: Header("_" + nameof(UIDungeon))]
 		[SerializeField] private Image progressBar;
 		[SerializeField] private TextMeshProUGUI timeText;
 		[SerializeField] private TextMeshProUGUI difficultyText;
 		[SerializeField] private Image difficultyCircle;
+		private UIQuestGrid questGrid;
 		private Coroutine loop;
+
+		public override void Init()
+		{
+			questGrid = GetComponentInChildren<UIQuestGrid>(true);
+			questGrid.Init();
+			questGrid.SetFilter(QuestType.Dungeon);
+		}
 
 		public override void UpdateUI()
 		{
 			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
 			UpdateTime(DungeonManager.Instance.DungeonCurTime);
+			questGrid.UpdateUI();
 		}
 
 		public override void OnOpen()

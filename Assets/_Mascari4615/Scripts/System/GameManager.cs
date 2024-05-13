@@ -40,6 +40,9 @@ namespace Mascari4615
 					g.SetActive(true);
 				}
 			}
+
+			DataManager.Instance.QuestManager.RemoveQuests(QuestType.Dungeon);
+			SOManager.Instance.Statistics.UpdateData();
 		}
 	}
 }

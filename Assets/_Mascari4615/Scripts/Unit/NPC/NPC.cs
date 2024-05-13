@@ -13,7 +13,7 @@ namespace Mascari4615
 		[field: SerializeField] public List<NPCPanelInfo> PanelInfos { get; private set; }
 
 		public List<ItemDataBuffer> ItemDataBuffers => GetAllDataSOs(NPCType.Shop).Cast<ItemDataBuffer>().ToList();
-		public List<Quest> QuestData => GetAllDataSOs(NPCType.Quest).Cast<Quest>().ToList();
+		public List<QuestSO> QuestData => GetAllDataSOs(NPCType.Quest).Cast<QuestSO>().ToList();
 		public List<Dungeon> Dungeons => GetAllDataSOs(NPCType.DungeonEntrance).Cast<Dungeon>().ToList();
 
 		private List<DataSO> GetAllDataSOs(NPCType npcType)

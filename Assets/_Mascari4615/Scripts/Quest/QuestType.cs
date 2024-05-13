@@ -5,6 +5,7 @@ namespace Mascari4615
 		None = -1,
 		Normal,
 		VillageRequest,
-		Achievement
+		Achievement,
+		Dungeon
 	}
 }

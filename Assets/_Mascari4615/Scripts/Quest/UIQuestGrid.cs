@@ -17,8 +17,9 @@ namespace Mascari4615
 		[SerializeField] private UIRewards rewardUI;
 		[SerializeField] private UIQuestTooltipCriteria questCriteriaUI;
 
-		private QuestBuffer QuestBuffer => DataBufferSO as QuestBuffer;
-		private RuntimeQuest CurQuest => QuestBuffer.Datas.Count > 0 ? QuestBuffer.Datas[CurSlotIndex] : null;
+		[SerializeField] private bool resetFilterOnEnable = true;
+
+		private RuntimeQuest CurQuest => Datas.Count > 0 ? Datas[CurSlotIndex] : null;
 
 		public override bool Init()
 		{
@@ -54,7 +55,7 @@ namespace Mascari4615
 		{
 			foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
 			{
-				RuntimeQuest quest = QuestBuffer.Datas.ElementAtOrDefault(slot.Index);
+				RuntimeQuest quest = Datas.ElementAtOrDefault(slot.Index);
 
 				if (quest == null)
 				{
@@ -63,27 +64,30 @@ namespace Mascari4615
 				}
 				else
 				{
-					Quest questData = quest.GetData();
-					bool slotActive = (curFilter == QuestType.None) || (questData.Type == curFilter);
+					bool slotActive = (curFilter == QuestType.None) || (quest.Type == curFilter);
 
 					slot.SetQuestState(quest.State);
 					slot.SetProgress(quest.GetProgress());
 					slot.SetQuest(quest);
 
-					slot.SetSlot(questData);
+					slot.SetSlot(quest.SO?.Sprite, quest.SO?.Name, quest.SO?.Description);
 					slot.gameObject.SetActive(slotActive);
 				}
 			}
 
 			if (CurSlot.DataSO)
 			{
-				workButton.SetActive(CurQuest.State == RuntimeQuestState.CanWork);
-				rewardButton.SetActive(CurQuest.State == RuntimeQuestState.CanComplete);
+				if (workButton != null)
+					workButton.SetActive(CurQuest.State == RuntimeQuestState.CanWork);
+				if (rewardButton != null)
+					rewardButton.SetActive(CurQuest.State == RuntimeQuestState.CanComplete);
 			}
 			else
 			{
-				workButton.SetActive(false);
-				rewardButton.SetActive(false);
+				if (workButton != null)
+					workButton.SetActive(false);
+				if (rewardButton != null)
+					rewardButton.SetActive(false);
 			}
 
 			if (clickToolTip != null)
@@ -122,7 +126,8 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			SetFilter(QuestType.None);
+			if (resetFilterOnEnable)
+				SetFilter(QuestType.None);
 			StartCoroutine(UpdateLoop());
 		}
 		private void OnDisable() => StopAllCoroutines();

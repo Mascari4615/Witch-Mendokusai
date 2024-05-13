@@ -92,7 +92,7 @@ namespace Mascari4615
 			base.OnDied();
 			DropLoot();
 
-			SOManager.Instance.Statistics[StatisticsType.MONSTER_KILLED]++;
+			SOManager.Instance.Statistics[StatisticsType.MONSTER_KILL]++;
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Die", transform.position);
 			StopAllCoroutines();

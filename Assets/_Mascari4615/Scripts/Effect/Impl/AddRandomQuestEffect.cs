@@ -8,8 +8,8 @@ namespace Mascari4615
 	{
 		public void Apply(EffectInfo effectInfo)
 		{
-			DataBufferSO<Quest> questDataBuffer = effectInfo.Data as DataBufferSO<Quest>;
-			Quest randomQuest = questDataBuffer.Datas[Random.Range(0, questDataBuffer.Datas.Count)];
+			DataBufferSO<QuestSO> questDataBuffer = effectInfo.Data as DataBufferSO<QuestSO>;
+			QuestSO randomQuest = questDataBuffer.Datas[Random.Range(0, questDataBuffer.Datas.Count)];
 			DataManager.Instance.QuestManager.AddQuest(new(randomQuest));
 		}
 	}

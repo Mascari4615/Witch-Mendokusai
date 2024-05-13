@@ -24,9 +24,9 @@ namespace Mascari4615
 			Quests.Add(quest);
 		}
 
-		public RuntimeQuest GetQuest(Quest questData)
+		public RuntimeQuest GetQuest(QuestSO questData)
 		{
-			return Quests.Datas.Find(x => x.GetData() == questData);
+			return Quests.Datas.Find(x => x.SO == questData);
 		}
 
 		public RuntimeQuest GetQuest(Guid? guid)
@@ -51,10 +51,15 @@ namespace Mascari4615
 				Debug.Log("Quest not found");
 			}
 		}
-		
+
+		public void RemoveQuests(QuestType questType)
+		{
+			Quests.Datas.RemoveAll(x => x.Type == questType);
+		}
+
 		public int GetQuestCount(QuestType questType)
 		{
-			return Quests.Datas.FindAll(x => x.GetData().Type == questType).Count;
+			return Quests.Datas.FindAll(x => x.Type == questType).Count;
 		}
 	}
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -10,21 +11,50 @@ namespace Mascari4615
 
 	public class Effect
 	{
-		public static IEffect GetEffect(EffectType effectType)
+		public static void ApplyEffects(List<EffectInfoData> effectInfoDatas)
 		{
-			return effectType switch
+			foreach (EffectInfoData effectInfoData in effectInfoDatas)
 			{
-				EffectType.AddCard => new AddCardEffect(),
-				EffectType.AddQuest => new AddQuestEffect(),
-				EffectType.AddRandomQuest => new AddRandomQuestEffect(),
-				EffectType.FloatVariable => new FloatVariableEffect(),
-				EffectType.IntVariable => new IntVariableEffect(),
-				EffectType.Item => new ItemEffect(),
-				EffectType.SpawnObject => new SpawnObjectEffect(),
-				EffectType.Stat => new StatEffect(),
-				EffectType.Statistics => new StatisticsEffect(),
-				_ => null,
-			};
+				int id = effectInfoData.DataSOID;
+				DataSO dataSO = null;
+
+				switch (effectInfoData.Type)
+				{
+					case EffectType.AddCard:
+						dataSO = GetCardData(id);
+						break;
+					case EffectType.AddQuest:
+						dataSO = GetQuestSO(id);
+						break;
+					case EffectType.AddRandomQuest:
+						break;
+					case EffectType.FloatVariable:
+						break;
+					case EffectType.IntVariable:
+						break;
+					case EffectType.Item:
+						dataSO = GetItemData(id);
+						break;
+					case EffectType.SpawnObject:
+						break;
+					case EffectType.Stat:
+						dataSO = GetStatData(id);
+						break;
+					case EffectType.Statistics:
+						dataSO = GetStatisticsData(id);
+						break;
+					default:
+						break;
+				}
+
+				ApplyEffect(new EffectInfo()
+				{
+					Type = effectInfoData.Type,
+					Data = dataSO,
+					ArithmeticOperator = effectInfoData.ArithmeticOperator,
+					Value = effectInfoData.Value
+				});
+			}
 		}
 
 		public static void ApplyEffects(List<EffectInfo> effectInfos)
@@ -35,7 +65,41 @@ namespace Mascari4615
 
 		public static void ApplyEffect(EffectInfo effectInfo)
 		{
-			GetEffect(effectInfo.Type).Apply(effectInfo);
+			IEffect effect = null;
+
+			switch (effectInfo.Type)
+			{
+				case EffectType.AddCard:
+					effect = new AddCardEffect();
+					break;
+				case EffectType.AddQuest:
+					effect = new AddQuestEffect();
+					break;
+				case EffectType.AddRandomQuest:
+					effect = new AddRandomQuestEffect();
+					break;
+				case EffectType.FloatVariable:
+					effect = new FloatVariableEffect();
+					break;
+				case EffectType.IntVariable:
+					effect = new IntVariableEffect();
+					break;
+				case EffectType.Item:
+					effect = new ItemEffect();
+					break;
+				case EffectType.SpawnObject:
+					effect = new SpawnObjectEffect();
+					break;
+				case EffectType.Stat:
+					effect = new StatEffect();
+					break;
+				case EffectType.Statistics:
+					effect = new StatisticsEffect();
+					break;
+			}
+
+			if (effect != null)
+				effect.Apply(effectInfo);
 		}
 	}
 }

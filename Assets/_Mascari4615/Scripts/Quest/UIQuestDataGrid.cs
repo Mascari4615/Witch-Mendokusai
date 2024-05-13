@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UIQuestDataGrid : UIDataGrid<Quest>
+	public class UIQuestDataGrid : UIDataGrid<QuestSO>
 	{
 
 		public override void UpdateUI()
@@ -13,7 +13,7 @@ namespace Mascari4615
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				UIQuestSlot slot = Slots[i] as UIQuestSlot;
-				Quest quest = DataBufferSO.Datas.ElementAtOrDefault(i);
+				QuestSO quest = DataBufferSO.Datas.ElementAtOrDefault(i);
 
 				if (quest == null)
 				{

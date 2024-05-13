@@ -17,17 +17,13 @@ MonoBehaviour:
   <Description>k__BackingField: "\uD638\uAE30\uC2EC, \uADF8 \uC704\uB300\uD55C \uD798\uC774
     \uC0DD\uBA85\uC744 \uC6C0\uC9C1\uC600\uB2E4."
   <Sprite>k__BackingField: {fileID: 21300000, guid: 74ac16302f2994b898e17f225c303437, type: 3}
-  <Type>k__BackingField: 0
-  <GameEvents>k__BackingField: 
-  <Criterias>k__BackingField:
-  - Type: 0
-    Data: {fileID: 0}
-    ComparisonOperator: 0
-    Value: 0
-    JustOnce: 0
-  <CompleteEffects>k__BackingField: []
-  <RewardEffects>k__BackingField: []
-  <Rewards>k__BackingField: []
-  <WorkTime>k__BackingField: 15
-  <AutoWork>k__BackingField: 0
-  <AutoComplete>k__BackingField: 0
+  <Data>k__BackingField:
+    Type: 0
+    GameEvents: 
+    Criterias: []
+    CompleteEffects: []
+    RewardEffects: []
+    Rewards: []
+    WorkTime: 15
+    AutoWork: 0
+    AutoComplete: 1

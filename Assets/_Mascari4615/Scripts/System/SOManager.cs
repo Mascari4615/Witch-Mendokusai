@@ -43,12 +43,12 @@ namespace Mascari4615
 		[field: SerializeField] public ItemVariable LastEquipedItem { get; private set; }
 
 		[field: Space(10), Header("Buffer")]
-		[field: SerializeField] public QuestDataBuffer QuestDataBuffer { get; private set; }
+		[field: SerializeField] public QuestSOBuffer QuestDataBuffer { get; private set; }
 		[field: SerializeField] public QuestBuffer QuestBuffer { get; private set; }
 		[field: SerializeField] public DollBuffer DollBuffer { get; private set; }
 		[field: SerializeField] public ItemDataBuffer ItemDataBuffer { get; private set; }
 		[field: SerializeField] public Inventory ItemInventory { get; private set; }
 		[field: SerializeField] public CardBuffer SelectedCardBuffer { get; private set; }
-		[field: SerializeField] public Quest VQuestLoadQuest { get; private set; }
+		[field: SerializeField] public QuestSO VQuestLoadQuest { get; private set; }
 	}
 }

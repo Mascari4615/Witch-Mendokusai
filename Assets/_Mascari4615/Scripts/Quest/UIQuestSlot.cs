@@ -18,7 +18,7 @@ namespace Mascari4615
 
 			if (DataSO)
 			{
-				Quest questData = DataSO as Quest;
+				QuestSO questData = DataSO as QuestSO;
 				for (int i = 0; i < questDataStateObjects.Length; i++)
 					questDataStateObjects[i].SetActive((int)questData.State == i);
 			}

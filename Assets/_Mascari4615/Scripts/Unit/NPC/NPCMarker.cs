@@ -44,7 +44,7 @@ namespace Mascari4615
 		{
 			spriteRenderer.sprite = null;
 
-			List<Quest> dataSOs = npcObject.Data.QuestData;
+			List<QuestSO> dataSOs = npcObject.Data.QuestData;
 			if (dataSOs.Count == 0)
 				return;
 
