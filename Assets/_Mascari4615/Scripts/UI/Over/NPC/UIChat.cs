@@ -25,8 +25,10 @@ namespace Mascari4615
 
 		public void StartChat(NPCObject npc, Action action)
 		{
+			// Debug.Log($"{nameof(StartChat)}: {npc.UnitData.ID}");
+
 			// TODO: CSV가 아니라 스크립터블 오브젝트로 관리 가능하게
-			if (TryGetChatData("테스트", out List<LineData> curChatDatas) == false)
+			if (TryGetChatData(npc.UnitData.ID.ToString(), out List<LineData> curChatDatas) == false)
 				return;
 
 			curNPC = npc;
@@ -40,6 +42,8 @@ namespace Mascari4615
 
 		private IEnumerator ChatLoop(List<LineData> curChatDatas)
 		{
+			// Debug.Log($"{nameof(ChatLoop)}");
+
 			StartCoroutine(BubbleLoop());
 			bubbleCanvasGroup.alpha = 1;
 
@@ -47,6 +51,8 @@ namespace Mascari4615
 
 			foreach (LineData lineData in curChatDatas)
 			{
+				// Debug.Log($"{nameof(ChatLoop)}: {lineData.line}");
+
 				// TODO: 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
 				Unit unit = null;
 
@@ -84,6 +90,8 @@ namespace Mascari4615
 
 		private IEnumerator PrintLine(LineData lineData)
 		{
+			// Debug.Log($"{nameof(PrintLine)}: {lineData.line}");
+
 			const float waitTime = 0.05f;
 			WaitForSecondsRealtime wait = new(waitTime);
 			StringBuilder s = new();
@@ -104,6 +112,8 @@ namespace Mascari4615
 
 		public IEnumerator BubbleLoop()
 		{
+			// Debug.Log($"{nameof(BubbleLoop)}");
+
 			const float BubblePadding = 30f;
 			RectTransform bubbleRectTransform = bubbleCanvasGroup.GetComponent<RectTransform>();
 			float bubbleWidth = bubbleRectTransform.sizeDelta.x;
@@ -167,7 +177,12 @@ namespace Mascari4615
 				string[] columns = rows[i].Split(',');
 
 				if (columns[0] == "end")
+				{
+					chatDataDic.Add(eventName, lineDatas);
+					eventName = string.Empty;
+					lineDatas = new List<LineData>();
 					continue;
+				}
 
 				if (columns[0] != string.Empty)
 				{
@@ -178,7 +193,6 @@ namespace Mascari4615
 				LineData chatData = new(ref columns);
 				lineDatas.Add(chatData);
 			}
-			chatDataDic.Add(eventName, lineDatas);
 		}
 	}
 
