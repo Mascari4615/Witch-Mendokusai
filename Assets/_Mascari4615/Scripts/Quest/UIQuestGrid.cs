@@ -17,6 +17,8 @@ namespace Mascari4615
 		[SerializeField] private UIRewards rewardUI;
 		[SerializeField] private UIQuestTooltipCriteria questCriteriaUI;
 
+		[SerializeField] private GameObject noQuestInfo;
+
 		[SerializeField] private bool resetFilterOnEnable = true;
 
 		private RuntimeQuest CurQuest => Datas.Count > 0 ? Datas[CurSlotIndex] : null;
@@ -33,6 +35,7 @@ namespace Mascari4615
 				UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
 				for (int i = 0; i < fillerButtons.Length; i++)
 				{
+					fillerButtons[i].Init();
 					fillerButtons[i].SetSlotIndex(i);
 					fillerButtons[i].SetClickAction((slot) =>
 					{
@@ -53,6 +56,8 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
+			int activeSlotCount = 0;
+
 			foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
 			{
 				RuntimeQuest quest = Datas.ElementAtOrDefault(slot.Index);
@@ -77,7 +82,12 @@ namespace Mascari4615
 
 					slot.gameObject.SetActive(slotActive);
 				}
+
+				activeSlotCount += slot.gameObject.activeSelf ? 1 : 0;
 			}
+
+			if (noQuestInfo != null)
+				noQuestInfo.SetActive(activeSlotCount == 0);
 
 			if (CurSlot.DataSO)
 			{
