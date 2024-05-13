@@ -16,6 +16,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -879822008, guid: bbd7dc40015022146bb2bc7dbec9e92c, type: 3}
+    - target: {fileID: 1512278065530053246, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3178157855139304415, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -67,7 +71,7 @@ PrefabInstance:
     - target: {fileID: 7832280916129115842, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: 74b334b0cd3203448856e67ccff32c26, type: 2}
+      objectReference: {fileID: 9100000, guid: 7241926e841025945a87bb7e3d1511f5, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -101,7 +105,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UnitData>k__BackingField: {fileID: 0}
   <SpriteRenderer>k__BackingField: {fileID: 3636146261913355018}
-  mmfPlayer: {fileID: 7384126293819498099}
   animator: {fileID: 0}
   stoppingDistance: 0.1
   updateRotation: 0
@@ -151,14 +154,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7714682292764009147, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
   m_PrefabInstance: {fileID: 2777207088424509812}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7384126293819498099 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4680137885323034375, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
-  m_PrefabInstance: {fileID: 2777207088424509812}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6da43522623d4704e979466dc7650b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

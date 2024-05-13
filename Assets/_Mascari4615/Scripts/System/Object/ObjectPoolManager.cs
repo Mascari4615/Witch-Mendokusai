@@ -7,7 +7,6 @@ namespace Mascari4615
 {
 	public class ObjectPoolManager : Singleton<ObjectPoolManager>
 	{
-		[SerializeField] private Transform objectParent;
 		private readonly Dictionary<string, ObjectPool> poolDic = new();
 
 		public void Despawn(GameObject targetObject)
