@@ -284,13 +284,7 @@ namespace Mascari4615
 					{
 						dic.Add(asset.ID, asset);
 
-						string goodName = $"{assetPrefixes[type]}_{asset.ID}_{asset.Name}";
-						// if (asset.name.StartsWith($"{assetPrefixes[type]}_{asset.ID}") == false)
-
-						// 파일 이름에 사용할 수 없는 문자를 제거
-						Regex regex = new(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()))));
-						goodName = regex.Replace(goodName, string.Empty);
-
+						string goodName = GetGoodName(asset);
 						if (asset.name.Equals(goodName) == false)
 						{
 							Debug.Log($"에셋 이름을 변경합니다. {asset.name} -> {goodName}");
@@ -386,16 +380,24 @@ namespace Mascari4615
 			string assetName = $"{assetPrefixes[type]}_{nID}_{nName}";
 			string path = AssetDatabase.GenerateUniqueAssetPath($"{assetPaths[type]}{assetName}.asset");
 
-			AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(dataSO), path);
-			DataSO newDataSO = AssetDatabase.LoadAssetAtPath<DataSO>(path);
-			newDataSO.ID = nID;
-			newDataSO.Name = nName;
+			if (AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(dataSO), path))
+			{
+				DataSO newDataSO = AssetDatabase.LoadAssetAtPath<DataSO>(path);
+				newDataSO.ID = nID;
+				newDataSO.Name = nName;
 
-			dic.Add(nID, newDataSO);
+				dic.Add(newDataSO.ID, newDataSO);
+				Debug.Log($"복사 완료: {newDataSO.ID} {newDataSO.Name}");
 
-			UpdateGrid();
-			SelectDataSOSlot(DataSOSlots[nID]);
-			return newDataSO;
+				UpdateGrid();
+				SelectDataSOSlot(DataSOSlots[newDataSO.ID]);
+				return newDataSO;
+			}
+			else
+			{
+				Debug.LogError("복사 실패");
+				return null;
+			}
 		}
 
 		public Type GetTypeFromDataSO(DataSO dataSO)
@@ -523,6 +525,18 @@ namespace Mascari4615
 			AssetDatabase.Refresh();
 
 			Debug.Log($"{nameof(SaveAssets)} is executed.");
+		}
+
+		private string GetGoodName(DataSO dataSO)
+		{
+			return ConvertToGoodName($"{assetPrefixes[GetTypeFromDataSO(dataSO)]}_{dataSO.ID}_{dataSO.Name}");
+		}
+
+		private string ConvertToGoodName(string name)
+		{
+			// 파일 이름에 사용할 수 없는 문자와 공백을 제거
+			Regex regex = new(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()) + " ")));
+			return regex.Replace(name, string.Empty);
 		}
 	}
 }
