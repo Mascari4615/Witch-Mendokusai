@@ -20,6 +20,16 @@ namespace Mascari4615
 			return IsCompleted = Criteria.Evaluate();
 		}
 
+		public int GetCurValue()
+		{
+			return Criteria.GetCurValue();
+		}
+
+		public int GetTargetValue()
+		{
+			return Criteria.GetTargetValue();
+		}
+
 		public float GetProgress()
 		{
 			return Criteria.GetProgress();

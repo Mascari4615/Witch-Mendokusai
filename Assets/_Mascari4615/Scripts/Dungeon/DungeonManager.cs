@@ -69,31 +69,7 @@ namespace Mascari4615
 				StartCoroutine(DungeonLoop());
 				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
 
-				// TEST:
-				RuntimeQuest runtimeQuest = new(new QuestInfo()
-				{
-					Type = QuestType.Dungeon,
-					GameEvents = new(),
-					Criterias = new()
-				{
-					new CriteriaInfo()
-					{
-						Type = CriteriaType.Statistics,
-						Data = GetStatisticsData((int)StatisticsType.MONSTER_KILL),
-						ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
-						Value = CurDungeon.ClearValue,
-						JustOnce = true,
-					}
-				},
-					CompleteEffects = new(),
-					RewardEffects = new(),
-					Rewards = new(),
-
-					WorkTime = 0,
-					AutoWork = false,
-					AutoComplete = true,
-				});
-				DataManager.Instance.QuestManager.AddQuest(runtimeQuest);
+				CreateDungeonQuest();
 			}
 		}
 
@@ -102,13 +78,20 @@ namespace Mascari4615
 			// Debug.Log(nameof(DungeonLoop));
 			WaitForSeconds ws01 = new(.1f);
 
+			// HACK:
+			int dungeonClear = SOManager.Instance.Statistics[StatisticsType.DUNGEON_CLEAR];
+
 			while (true)
 			{
 				UpdateTime();
 				UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
-				CheckClear();
+				if (dungeonClear < SOManager.Instance.Statistics[StatisticsType.DUNGEON_CLEAR])
+				{
+					EndDungeon();
+					yield break;
+				}
 
 				yield return ws01;
 			}
@@ -117,38 +100,12 @@ namespace Mascari4615
 		private void UpdateTime()
 		{
 			DungeonCurTime -= TimeUpdateInterval;
+			SOManager.Instance.Statistics[StatisticsType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
 		}
 
 		private void UpdateDifficulty()
 		{
 			CurDifficulty = (DungeonDifficulty)((InitialDungeonTime - DungeonCurTime).TotalMinutes / 3);
-		}
-
-		private void CheckClear()
-		{
-			DungeonRecord curRecord = dungeonRecorder.GetResultRecord();
-			DungeonType dungeonType = CurDungeon.Type;
-
-			switch (dungeonType)
-			{
-				case DungeonType.TimeSurvival:
-					if (DungeonCurTime <= TimeSpan.Zero)
-						EndDungeon();
-					break;
-				case DungeonType.Domination:
-					// TODO:
-					break;
-				case DungeonType.KillCount:
-					//if (curRecord.KillCount >= CurDungeon.ClearValue)
-					//	EndDungeon();
-					break;
-				case DungeonType.Boss:
-					if (curRecord.BossKillCount >= CurDungeon.ClearValue)
-						EndDungeon();
-					break;
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
 		}
 
 		public void EndDungeon()
@@ -178,6 +135,93 @@ namespace Mascari4615
 				expChecker.Init();
 				cardManager.ClearCardEffect();
 			}
+		}
+
+		private void CreateDungeonQuest()
+		{
+			// TEST:
+			QuestInfo questInfo = new()
+			{
+				Type = QuestType.Dungeon,
+				GameEvents = new(),
+				Criterias = new(),
+				CompleteEffects = new()
+				{
+					// HACK:
+					new EffectInfo()
+					{
+						Type = EffectType.Statistics,
+						Data = GetStatisticsData((int)StatisticsType.DUNGEON_CLEAR),
+						ArithmeticOperator = ArithmeticOperator.Add,
+						Value = 1,
+					}
+				},
+				RewardEffects = new(),
+				Rewards = new(),
+
+				WorkTime = 0,
+				AutoWork = false,
+				AutoComplete = true,
+			};
+
+			string questName = string.Empty;
+
+			DungeonRecord curRecord = dungeonRecorder.GetResultRecord();
+			DungeonType dungeonType = CurDungeon.Type;
+
+			switch (dungeonType)
+			{
+				case DungeonType.TimeSurvival:
+					questName = "시간 동안 생존";
+					questInfo.Criterias = new()
+					{
+						new CriteriaInfo()
+						{
+							Type = CriteriaType.Statistics,
+							Data = GetStatisticsData((int)StatisticsType.DUNGEON_TIME),
+							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
+							Value = (int)InitialDungeonTime.TotalSeconds,
+							JustOnce = true,
+						}
+					};
+					break;
+				case DungeonType.Domination:
+					// TODO:
+					break;
+				case DungeonType.KillCount:
+					questName = "몬스터 처치";
+					questInfo.Criterias = new()
+					{
+						new CriteriaInfo()
+						{
+							Type = CriteriaType.Statistics,
+							Data = GetStatisticsData((int)StatisticsType.MONSTER_KILL),
+							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
+							Value = CurDungeon.ClearValue,
+							JustOnce = true,
+						}
+					};
+					break;
+				case DungeonType.Boss:
+					questName = "보스 처치";
+					questInfo.Criterias = new()
+					{
+						new CriteriaInfo()
+						{
+							Type = CriteriaType.Statistics,
+							Data = GetStatisticsData((int)StatisticsType.BOSS_KILL),
+							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
+							Value = CurDungeon.ClearValue,
+							JustOnce = true,
+						}
+					};
+					break;
+				default:
+					throw new ArgumentOutOfRangeException();
+			}
+
+			RuntimeQuest runtimeQuest = new(questInfo, questName);
+			DataManager.Instance.QuestManager.AddQuest(runtimeQuest);
 		}
 	}
 }

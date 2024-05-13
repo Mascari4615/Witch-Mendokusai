@@ -67,10 +67,14 @@ namespace Mascari4615
 					bool slotActive = (curFilter == QuestType.None) || (quest.Type == curFilter);
 
 					slot.SetQuestState(quest.State);
-					slot.SetProgress(quest.GetProgress());
 					slot.SetQuest(quest);
+					slot.UpdateUI();
 
-					slot.SetSlot(quest.SO?.Sprite, quest.SO?.Name, quest.SO?.Description);
+					if (quest.SO == null)
+						slot.SetSlot(null, quest.Name, quest.Description);
+					else
+						slot.SetSlot(quest.SO.Sprite, quest.SO.Name, quest.SO.Description);
+
 					slot.gameObject.SetActive(slotActive);
 				}
 			}

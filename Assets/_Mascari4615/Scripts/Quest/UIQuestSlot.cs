@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +12,7 @@ namespace Mascari4615
 		[SerializeField] private GameObject[] questDataStateObjects;
 		[SerializeField] private GameObject[] questStateObjects;
 		[SerializeField] private Image progress;
+		[SerializeField] private TextMeshProUGUI progressText;
 
 		public override void UpdateUI()
 		{
@@ -30,11 +32,6 @@ namespace Mascari4615
 				questStateObjects[i].SetActive((int)state == i);
 		}
 
-		public void SetProgress(float value)
-		{
-			progress.fillAmount = value;
-		}
-
 		public void SetQuest(RuntimeQuest quest)
 		{
 			for (int i = 0; i < criteriaObjects.Length; i++)
@@ -49,6 +46,9 @@ namespace Mascari4615
 					criteriaObjects[i].gameObject.SetActive(false);
 				}
 			}
+
+			progress.fillAmount = quest.GetProgress();
+			progressText.text = quest.GetProgressText();
 		}
 	}
 }

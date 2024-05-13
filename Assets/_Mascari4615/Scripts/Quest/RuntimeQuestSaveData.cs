@@ -11,6 +11,9 @@ namespace Mascari4615
 
 		public int SO_ID;
 
+		public string Name;
+		public string Description;
+
 		public QuestType Type;
 		public List<GameEventType> GameEvents;
 		public List<RuntimeCriteriaSaveData> Criterias;

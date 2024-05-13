@@ -11,6 +11,9 @@ namespace Mascari4615
 
 		public QuestSO SO { get; private set; }
 
+		public string Name { get; private set; }
+		public string Description { get; private set; }
+
 		public QuestType Type { get; private set; }
 		public List<GameEventType> GameEvents { get; private set; }
 		public List<RuntimeCriteria> Criterias { get; private set; }
@@ -29,14 +32,17 @@ namespace Mascari4615
 			StartQuest();
 		}
 
-		public RuntimeQuest(QuestSO questSO) : this(questSO.Data)
+		public RuntimeQuest(QuestSO questSO) : this(questSO.Data, questSO.Name, questSO.Description)
 		{
 			SO = questSO;
 		}
 
-		public RuntimeQuest(QuestInfo questInfo)
+		public RuntimeQuest(QuestInfo questInfo, string name = null, string description = null)
 		{
 			Guid = System.Guid.NewGuid();
+
+			Name = name;
+			Description = description;
 
 			Type = questInfo.Type;
 			GameEvents = questInfo.GameEvents;
@@ -88,6 +94,9 @@ namespace Mascari4615
 			else
 			{
 				State = RuntimeQuestState.CanComplete;
+
+				if (AutoComplete)
+					Complete();
 			}
 		}
 
@@ -125,7 +134,6 @@ namespace Mascari4615
 			foreach (GameEventType gameEventType in GameEvents)
 				GameEventManager.Instance.UnregisterCallback(gameEventType, Evaluate);
 			Effect.ApplyEffects(CompleteEffects);
-
 			GetReward();
 		}
 
@@ -155,6 +163,30 @@ namespace Mascari4615
 			foreach (RuntimeCriteria runtimeCriteria in Criterias)
 				progress += runtimeCriteria.GetProgress();
 			return progress /= Criterias.Count;
+		}
+
+		public string GetProgressText()
+		{
+			if (State == RuntimeQuestState.Working)
+			{
+				if (DataManager.Instance.WorkManager.TryGetWorkByQuestGuid(Guid, out Work work))
+				{
+					return work.GetProgress().ToString("P0");
+				}
+				return string.Empty;
+			}
+
+			if (Criterias.Count == 0)
+				return "100%";
+
+			float curValue = 0;
+			float targetValue = 0;
+			foreach (RuntimeCriteria runtimeCriteria in Criterias)
+			{
+				curValue += runtimeCriteria.GetCurValue();
+				targetValue += runtimeCriteria.GetTargetValue();
+			}
+			return $"{curValue} / {targetValue}";
 		}
 
 		public void Load(RuntimeQuestSaveData saveData)

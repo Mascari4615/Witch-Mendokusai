@@ -112,13 +112,14 @@ namespace Mascari4615
 				AddDataSO(Detail.CurDataSO.GetType());
 			});
 
-			VisualElement menu = rootVisualElement.Q<VisualElement>(name: "Menu");
-			foreach (Type type in assetPaths.Keys)
+			DropdownField dropdown = rootVisualElement.Q<DropdownField>(name: "Menu");
+			dropdown.choices = assetPaths.Keys.Select(type => type.Name).ToList();
+			dropdown.RegisterValueChangedCallback(ev =>
 			{
-				Button button = new() { text = type.Name, };
-				button.clicked += () => SetType(type);
-				menu.Add(button);
-			}
+				string typeName = ev.newValue;
+				Type type = assetPaths.Keys.First(t => t.Name == typeName);
+				SetType(type);
+			});
 
 			// ListView menu = rootVisualElement.Q<ListView>(name: "MenuList");
 			// List<Type> types = dataDics.Keys.ToList();

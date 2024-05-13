@@ -8,11 +8,6 @@ using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
-	public interface IInteractable
-	{
-		void OnInteract();
-	}
-
 	public class InteractiveObject : MonoBehaviour
 	{
 		private IInteractable[] interactable;

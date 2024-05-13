@@ -34,9 +34,11 @@ namespace Mascari4615
 		{
 			statistics[StatisticsType.TOTAL_MONSTER_KILL] += statistics[StatisticsType.MONSTER_KILL];
 			statistics[StatisticsType.TOTAL_MONSTER_KILL] += statistics[StatisticsType.BOSS_KILL];
+			statistics[StatisticsType.TOTAL_DUNGEON_TIME] += statistics[StatisticsType.DUNGEON_TIME];
 
 			statistics[StatisticsType.MONSTER_KILL] = 0;
 			statistics[StatisticsType.BOSS_KILL] = 0;
+			statistics[StatisticsType.DUNGEON_TIME] = 0;
 		}
 
 		public void OnAfterDeserialize()
