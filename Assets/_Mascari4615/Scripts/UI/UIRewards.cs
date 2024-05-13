@@ -8,10 +8,12 @@ namespace Mascari4615
 {
 	public class UIRewards : MonoBehaviour
 	{
+		private CanvasGroup canvasGroup;
 		private UISlot[] slots;
 
 		public void Init()
 		{
+			canvasGroup = gameObject.AddComponent<CanvasGroup>();
 			slots = GetComponentsInChildren<UISlot>(true);
 
 			foreach (UISlot slot in slots)
@@ -26,10 +28,13 @@ namespace Mascari4615
 
 		public void UpdateUI(List<RewardInfoData> datas)
 		{
+			canvasGroup.alpha = 1;
+
 			if (datas == null || datas.Count == 0)
 			{
-				foreach (UISlot slot in slots)
-					slot.gameObject.SetActive(false);
+				canvasGroup.alpha = 0;
+				// foreach (UISlot slot in slots)
+				// 	slot.gameObject.SetActive(false);
 				return;
 			}
 

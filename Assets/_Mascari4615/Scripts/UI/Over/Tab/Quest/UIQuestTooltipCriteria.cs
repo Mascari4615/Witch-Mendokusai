@@ -7,10 +7,12 @@ namespace Mascari4615
 {
 	public class UIQuestTooltipCriteria : MonoBehaviour
 	{
+		private CanvasGroup canvasGroup;
 		private UISlot[] slots;
 
 		public void Init()
 		{
+			canvasGroup = gameObject.AddComponent<CanvasGroup>();
 			slots = GetComponentsInChildren<UISlot>(true);
 
 			foreach (UISlot slot in slots)
@@ -22,10 +24,12 @@ namespace Mascari4615
 
 		public void SetCriteria(RuntimeQuest quest)
 		{
+			canvasGroup.alpha = 1;
 			if (quest == null || quest.Criterias == null)
 			{
-				foreach (UISlot slot in slots)
-					slot.gameObject.SetActive(false);
+				canvasGroup.alpha = 0;
+				// foreach (UISlot slot in slots)
+				// 	slot.gameObject.SetActive(false);
 				return;
 			}
 
