@@ -132,12 +132,23 @@ namespace Mascari4615
 			}
 
 			List<CardData> randomCards = new();
+			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
 			while (randomCards.Count < 3)
 			{
 				int randomIndex = Random.Range(0, curDeckBuffer.Count);
 				CardData randomCard = curDeckBuffer[randomIndex];
 
 				if (randomCards.Contains(randomCard))
+					continue;
+
+				if (randomCard.MaxStack == 0)
+				{
+					Debug.LogError("MaxStack is 0");
+					continue;
+				}
+
+				if (selectedCardBuffer.Datas.Count > 0 &&
+					selectedCardBuffer.Datas.Select(m => m.ID == randomCard.ID).Count() == randomCard.MaxStack)
 					continue;
 
 				cardSelectButtons[randomCards.Count].SetSlot(randomCard);

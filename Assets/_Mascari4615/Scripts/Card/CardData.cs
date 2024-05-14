@@ -9,7 +9,7 @@ namespace Mascari4615
 	{
 		[field: Header("_" + nameof(CardData))]
 		[field: SerializeField] public List<EffectInfo> Effects { get; private set; }
-		[field: SerializeField] public int MaxStack { get; private set; }
+		[field: SerializeField] public int MaxStack { get; private set; } = 5;
 
 		public void OnEquip()
 		{
