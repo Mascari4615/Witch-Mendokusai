@@ -10,7 +10,7 @@ namespace Mascari4615
 
 		private bool isShow;
 		private float disappearTimer;
-		
+
 		private float toolTipWidth;
 		private float toolTipHeight;
 		private const float ToolTipPadding = 30f;
@@ -37,17 +37,17 @@ namespace Mascari4615
 
 			if (isShow)
 			{
-				canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1, Time.deltaTime * 30);
+				canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 1, Time.unscaledDeltaTime * 30);
 			}
 			else
 			{
 				if (disappearTimer > 0)
 				{
-					disappearTimer -= Time.deltaTime;
+					disappearTimer -= Time.unscaledDeltaTime;
 					return;
 				}
-				
-				canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 0, Time.deltaTime * 10);
+
+				canvasGroup.alpha = Mathf.Lerp(canvasGroup.alpha, 0, Time.unscaledDeltaTime * 10);
 			}
 		}
 
