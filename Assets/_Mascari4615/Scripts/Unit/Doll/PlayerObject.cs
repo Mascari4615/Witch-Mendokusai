@@ -6,7 +6,7 @@ using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	public class PlayerObject : UnitObject
+	public class PlayerObject : UnitObject, IHitable
 	{
 		private Coroutine invincibleRoutine = null;
 		[SerializeField] private GameObject diedX;
