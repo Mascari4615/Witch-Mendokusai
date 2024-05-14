@@ -41,7 +41,7 @@ namespace Mascari4615
 				Stat = new Stat();
 
 			UnitData = unitData;
-			
+
 			if (SkillHandler != null)
 				TimeManager.Instance.RemoveCallback(SkillHandler.Tick);
 			SkillHandler = new(this);
@@ -74,12 +74,12 @@ namespace Mascari4615
 				Die();
 		}
 
-		public virtual void ReceiveDamage(int damage)
+		public virtual void ReceiveDamage(DamageInfo damageInfo)
 		{
 			if (!IsAlive)
 				return;
 
-			SetHp(Mathf.Clamp(Stat[StatType.HP_CUR] - damage, 0, int.MaxValue));
+			SetHp(Mathf.Clamp(Stat[StatType.HP_CUR] - damageInfo.damage, 0, int.MaxValue));
 
 			// SpriteRenderer 스케일 잠깐 키웠다가 줄이기
 			SpriteRenderer.transform.DOScale(originScale * 1.2f, .1f).OnComplete(() =>

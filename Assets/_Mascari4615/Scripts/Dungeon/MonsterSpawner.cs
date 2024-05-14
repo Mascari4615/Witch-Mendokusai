@@ -56,7 +56,7 @@ namespace Mascari4615
 			// 어차피 index만 알고 있으면 현재 단계에서 처리할 waveInstance에 접근할 수 있으므로
 			// 굳이 처리할 waveInstance까지는 전달받지 않아도 된다.
 			MonsterWaveInstance waveInstance = waves[waveIndex];
-			
+
 			TimeSpan dungeonTime = DungeonManager.Instance.DungeonCurTime;
 			DungeonDifficulty curDifficulty = DungeonManager.Instance.CurDifficulty;
 
@@ -74,7 +74,7 @@ namespace Mascari4615
 			{
 				StartCoroutine(SpawnMonster(waveInstance.Data.Monsters[Random.Range(0, waveInstance.Data.Monsters.Length)], spawnDelay, curDifficulty));
 				waveInstance.SpawnT = 0;
-			
+
 				if (waveInstance.Data.Once)
 					waves.RemoveAt(waveIndex);
 			}

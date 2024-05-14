@@ -31,7 +31,7 @@ namespace Mascari4615
 		public MCanvasType CurCanvas { get; private set; }
 		private readonly Dictionary<MCanvasType, UIPanel> canvasUIs = new();
 
-		public MPanelType CurOverlay{ get; private set; }
+		public MPanelType CurOverlay { get; private set; }
 		private readonly Dictionary<MPanelType, UIPanel> overlayUIs = new();
 
 		public UITab Tab { get; private set; }
@@ -89,9 +89,10 @@ namespace Mascari4615
 			GameManager.Instance.IsMouseOnUI = EventSystem.current.IsPointerOverGameObject();
 		}
 
-		public void PopDamage(Vector3 pos, int damge)
+		public void PopDamage(Vector3 pos, DamageInfo damageInfo)
 		{
-			StartCoroutine(damage.AniTextUI(pos, TextType.Damage, damge.ToString()));
+			TextType textType = DamageUtil.DamageTypeToTextType(damageInfo.type);
+			StartCoroutine(damage.AniTextUI(pos, textType, damageInfo.damage.ToString()));
 		}
 
 		// 함수를 전달받아 처리
@@ -177,7 +178,7 @@ namespace Mascari4615
 		}
 
 		public void SetCanvas(MCanvasType newCanvas)
-		{			
+		{
 			if (CurCanvas == newCanvas)
 				return;
 

@@ -6,7 +6,7 @@ using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	public class PlayerObject : UnitObject, IHitable
+	public class PlayerObject : UnitObject
 	{
 		private Coroutine invincibleRoutine = null;
 		[SerializeField] private GameObject diedX;
@@ -23,7 +23,7 @@ namespace Mascari4615
 			diedX.SetActive(false);
 		}
 
-		public override void ReceiveDamage(int damage)
+		public override void ReceiveDamage(DamageInfo damageInfo)
 		{
 			if (invincibleRoutine != null)
 				return;
@@ -31,7 +31,7 @@ namespace Mascari4615
 			if (!IsAlive)
 				return;
 
-			base.ReceiveDamage(damage);
+			base.ReceiveDamage(damageInfo);
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Hit", transform.position);
 			GameEventManager.Instance.Raise(GameEventType.OnPlayerHit);

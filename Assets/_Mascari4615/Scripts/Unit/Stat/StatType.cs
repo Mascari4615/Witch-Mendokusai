@@ -26,6 +26,10 @@ namespace Mascari4615
 		// 데미지
 		DAMAGE_BONUS = 500,
 
+		// 크리티컬
+		CRITICAL_CHANCE = 600,
+		CRITICAL_DAMAGE = 601,
+
 		// 키워드
 		EXP_COLLIDER_SCALE = 10000,
 		SATELLITE_COUNT = 10001,

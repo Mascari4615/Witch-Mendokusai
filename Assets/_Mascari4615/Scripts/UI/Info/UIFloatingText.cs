@@ -10,9 +10,12 @@ namespace Mascari4615
 {
 	public enum TextType
 	{
-		Damage,
-		Heal,
-		Exp,
+		Normal = 0,
+		Critical = 1,
+
+		Heal = 100,
+
+		Exp = 150,
 	}
 
 	public class UIFloatingText : MonoBehaviour
@@ -52,7 +55,7 @@ namespace Mascari4615
 		public IEnumerator AniTextUI(Vector3 pos, TextType textType, string msg)
 		{
 			(Animator animator, TextMeshProUGUI text) = Pop();
-			
+
 			animator.SetTrigger("POP");
 			animator.gameObject.SetActive(true);
 
@@ -81,7 +84,11 @@ namespace Mascari4615
 		{
 			switch (textType)
 			{
-				case TextType.Damage:
+				case TextType.Normal:
+					text.color = Color.white;
+					break;
+				case TextType.Critical:
+					text.color = new Color(1, 110f / 255f, 86f / 255f);
 					break;
 				case TextType.Heal:
 					break;

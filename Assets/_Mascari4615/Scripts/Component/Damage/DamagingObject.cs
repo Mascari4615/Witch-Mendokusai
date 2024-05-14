@@ -13,7 +13,7 @@ namespace Mascari4615
 
 		[SerializeField] private bool useHitCount;
 		[SerializeField] private int hitCount = 1;
-		
+
 		[SerializeField] private bool disableWhenInvaild;
 
 		[SerializeField] private bool usedByPlayer = false;
@@ -65,20 +65,33 @@ namespace Mascari4615
 			gameObject.SetActive(false);
 		}
 
-		private int CalcDamage()
+		private DamageInfo CalcDamage()
 		{
+			DamageInfo damageInfo = new()
+			{
+				type = DamageType.Normal
+			};
+
 			int calcDamage = damage + damageBonus;
 
 			if (usedByPlayer)
 			{
-				// HACK
-				if (skillObject == null)
-					return calcDamage;
+				Stat stat = Player.Instance.Stat;
 
-				calcDamage = (int)(calcDamage * (1 + (skillObject.User.Stat[StatType.DAMAGE_BONUS] / 100f)));
+				calcDamage = (int)(calcDamage * (1 + (stat[StatType.DAMAGE_BONUS] / 100f)));
+
+				if (stat[StatType.CRITICAL_CHANCE] > 0)
+				{
+					if (UnityEngine.Random.Range(0, 100) < stat[StatType.CRITICAL_CHANCE])
+					{
+						calcDamage = (int)(calcDamage * (1 + (stat[StatType.CRITICAL_DAMAGE] / 100f)));
+						damageInfo.type = DamageType.Critical;
+					}
+				}
 			}
 
-			return calcDamage;
+			damageInfo.damage = calcDamage;
+			return damageInfo;
 		}
 
 		public void SetDamageBonus(int damageBonus)

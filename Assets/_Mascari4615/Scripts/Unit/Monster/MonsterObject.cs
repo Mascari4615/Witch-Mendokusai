@@ -41,10 +41,10 @@ namespace Mascari4615
 			SetHp((int)(Stat[StatType.HP_MAX] * persentage));
 		}
 
-		public override void ReceiveDamage(int damage)
+		public override void ReceiveDamage(DamageInfo damageInfo)
 		{
-			base.ReceiveDamage(damage);
-			UIManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damage);
+			base.ReceiveDamage(damageInfo);
+			UIManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damageInfo);
 
 			SOManager.Instance.LastHitMonsterObject.RuntimeValue = this;
 			hpBar.localScale = new Vector3((float)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX], 1, 1);
