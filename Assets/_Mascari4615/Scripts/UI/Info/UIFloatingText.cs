@@ -64,23 +64,31 @@ namespace Mascari4615
 			text.text = msg;
 			UpdateTextStyle(ref text, textType);
 
-			Vector3 screenPos;
+			if (worldPos != default)
+				worldPos += Random.insideUnitSphere * .3f;
 
-			if (worldPos == default)
-				screenPos = Input.mousePosition;
-			else
-				screenPos = Camera.main.WorldToScreenPoint(worldPos + (Random.insideUnitSphere * .3f));
-
-			float time = 1;
-			while (time > 0)
+			Vector3 GetScreenPos()
 			{
-				time -= Time.deltaTime;
-				animator.transform.position = screenPos;
+				if (worldPos == default)
+					return Input.mousePosition;
+				else
+					return Camera.main.WorldToScreenPoint(worldPos);
+			}
+
+			for (float time = 0; time < 1; time += Time.deltaTime)
+			{
+				animator.transform.position = GetScreenPos();
 				yield return null;
 			}
 
 			animator.gameObject.SetActive(false);
 			texts.Push((animator, text));
+		}
+
+		public Vector3 GetHorrorPos(Vector3 worldPos)
+		{
+			Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos + Random.insideUnitSphere * .3f);
+			return screenPos;
 		}
 
 		private void UpdateTextStyle(ref TextMeshProUGUI text, TextType textType)
