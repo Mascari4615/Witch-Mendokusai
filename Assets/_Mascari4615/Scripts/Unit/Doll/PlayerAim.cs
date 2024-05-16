@@ -8,6 +8,8 @@ namespace Mascari4615
 {
 	public class PlayerAim : MonoBehaviour
 	{
+		private const float WAIT_TIME = 0.1f;
+
 		[SerializeField] private CinemachineTargetGroup targetGroup;
 
 		[SerializeField] private float maxDistance;
@@ -20,6 +22,7 @@ namespace Mascari4615
 
 		private GameObject curNearestAutoTarget;
 		private Coroutine changeTarget;
+		private readonly WaitForSeconds ws = new(WAIT_TIME);
 
 		private void Start()
 		{
@@ -38,17 +41,27 @@ namespace Mascari4615
 			while (true)
 			{
 				GameObject aimTarget = null;
-			
+
 				List<GameObject> targets = ObjectBufferManager.Instance.GetObjectsWithDistance(ObjectType.Monster, transform.position, maxDistance);
 				if (targets != null)
 				{
+					float minDist = maxDistance;
 					foreach (GameObject target in targets)
 					{
-						if (Physics.Raycast(transform.position, target.transform.position - transform.position, out RaycastHit hit, maxDistance))
+						float dist = Vector3.Distance(transform.position, target.transform.position);
+
+						if (dist < minDist)
 						{
-							if (hit.collider.gameObject == target)
-								aimTarget = target;
+							if (Physics.Raycast(transform.position, target.transform.position - transform.position, out RaycastHit hit, maxDistance, 1 << LayerMask.NameToLayer("UNIT")))
+							{
+								if (hit.collider.gameObject == target)
+								{
+									aimTarget = target;
+									minDist = dist;
+								}
+							}
 						}
+
 					}
 				}
 
@@ -56,7 +69,7 @@ namespace Mascari4615
 				{
 					curNearestAutoTarget = null;
 					// targetGroup.m_Targets[1].target = null;
-					// SOManager.Instance.PlayerAutoAimPosition.RuntimeValue = Vector3.zero;
+					SOManager.Instance.PlayerAutoAimPosition.RuntimeValue = Vector3.zero;
 
 					if (targetMarker.activeSelf)
 						targetMarker.SetActive(false);
@@ -98,7 +111,7 @@ namespace Mascari4615
 				//		? null
 				//		: targetPos;
 
-				yield return new WaitForSeconds(.3f);
+				yield return ws;
 			}
 		}
 
@@ -135,7 +148,7 @@ namespace Mascari4615
 					SOManager.Instance.PlayerAimDirection.RuntimeValue = Vector3.zero;
 				}
 
-				yield return null;
+				yield return ws;
 			}
 		}
 	}
