@@ -67,10 +67,6 @@ namespace Mascari4615
 			{
 				transform.GetChild(i).transform.localRotation = Quaternion.Euler(Vector3.up * (delta * i));
 			}
-
-			Trail[] trails = transform.GetComponentsInChildren<Trail>(true);
-			foreach (Trail trail in trails)
-				trail.Clear();
 		}
 
 		private void UpdateRotationSpeed()

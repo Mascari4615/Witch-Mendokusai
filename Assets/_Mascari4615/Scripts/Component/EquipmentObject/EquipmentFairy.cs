@@ -58,6 +58,12 @@ namespace Mascari4615
 			int fairyIndex = 0;
 			while (true)
 			{
+				if (SOManager.Instance.PlayerAutoAimPosition.RuntimeValue == Vector3.zero)
+				{
+					yield return new WaitForSeconds(.1f);
+					continue;
+				}
+
 				fairyIndex = ++fairyIndex % fairyTransforms.Count;
 
 				GameObject g = ObjectPoolManager.Instance.Spawn(bulletPrefab);
@@ -74,7 +80,7 @@ namespace Mascari4615
 
 				g.SetActive(true);
 
-				yield return new WaitForSeconds(coolTime);
+				yield return new WaitForSeconds(coolTime / fairyTransforms.Count);
 			}
 		}
 

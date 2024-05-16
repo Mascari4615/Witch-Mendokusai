@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 50
+  useAutoAim: 0
 --- !u!114 &5976393549530359583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,9 +215,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7dd1ebcf87f5d1c4ca5292ddda1175df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skillComponents:
-  - {fileID: 1320119107605725228}
-  - {fileID: 7676953333559551506}
 --- !u!114 &6578544286334601627
 MonoBehaviour:
   m_ObjectHideFlags: 0
