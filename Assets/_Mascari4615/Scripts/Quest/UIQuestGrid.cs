@@ -53,6 +53,9 @@ namespace Mascari4615
 		{
 			Init();
 
+			if (CurSlotIndex >= Datas.Count)
+				CurSlotIndex = Datas.Count - 1;
+
 			int activeSlotCount = 0;
 			foreach (UIQuestSlot slot in Slots.Cast<UIQuestSlot>())
 			{

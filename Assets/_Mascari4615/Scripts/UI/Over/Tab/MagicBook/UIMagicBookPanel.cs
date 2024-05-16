@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -12,6 +13,8 @@ namespace Mascari4615
 
 		public override void Init()
 		{
+			// Debug.Log(nameof(Init));
+
 			base.Init();
 
 			toolTip = GetComponentInChildren<ToolTip>(true);
@@ -25,6 +28,8 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
+			// Debug.Log(nameof(UpdateUI) + DataManager.Instance.QuestState[0]);
+
 			base.UpdateUI();
 
 			foreach (UIChapter chapter in panels.Cast<UIChapter>())
@@ -33,6 +38,8 @@ namespace Mascari4615
 
 		public override void OpenPanel(int newPanelIndex)
 		{
+			// Debug.Log(nameof(OpenPanel));
+
 			if (toolTip != null)
 				toolTip.gameObject.SetActive(false);
 			base.OpenPanel(newPanelIndex);

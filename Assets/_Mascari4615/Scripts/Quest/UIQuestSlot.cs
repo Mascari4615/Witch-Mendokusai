@@ -16,29 +16,35 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
+			// Debug.Log($"{name} {nameof(UpdateUI)}");
 			base.UpdateUI();
 
 			if (DataSO)
 			{
 				QuestSO questData = DataSO as QuestSO;
-				SetQuestState(questData.State);
+				QuestState state = DataManager.Instance.QuestState[questData.ID];
+				SetQuestState(state);
 			}
 		}
 
 		public void SetQuestState(QuestState state)
 		{
+			// Debug.Log($"{name} {nameof(SetQuestState)}: {state}");
 			for (int i = 0; i < questStateObjects.Length; i++)
 				questStateObjects[i].SetActive((int)state == i);
 		}
 
 		public void SetRuntimeQuestState(RuntimeQuestState state)
 		{
+			// Debug.Log($"{name} {nameof(SetRuntimeQuestState)}: {state}");
 			for (int i = 0; i < runtimeQuestStateObjects.Length; i++)
 				runtimeQuestStateObjects[i].SetActive((int)state == i);
 		}
 
 		public void SetQuest(RuntimeQuest quest)
 		{
+			// Debug.Log($"{name} {nameof(SetQuest)}: {quest}");
+
 			for (int i = 0; i < criteriaObjects.Length; i++)
 			{
 				if (i < quest.Criterias.Count)

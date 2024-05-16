@@ -2,19 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
 	public class UIShop : UINPCPanel
 	{
+		[SerializeField] private Image shopImage;
+		[SerializeField] private Image dollImage;
+
 		private UIItemDataGrid shopInventoryUI;
 		private UIItemGrid itemInventoryUI;
+
+		private NPCObject npc;
 
 		public override void Init()
 		{
 			base.Init();
-			
+
 			shopInventoryUI = GetComponentInChildren<UIItemDataGrid>(true);
 			itemInventoryUI = GetComponentInChildren<UIItemGrid>(true);
 
@@ -43,11 +49,15 @@ namespace Mascari4615
 
 		public override void SetNPC(NPCObject npc)
 		{
+			this.npc = npc;
 			shopInventoryUI.SetDataBuffer(npc.Data.ItemDataBuffers[0]);
 		}
 
 		public override void UpdateUI()
 		{
+			shopImage.sprite = npc.Data.Sprite;
+			dollImage.sprite = GetDoll(DataManager.Instance.CurDollID).Sprite;
+
 			shopInventoryUI.UpdateUI();
 			itemInventoryUI.UpdateUI();
 		}
@@ -60,6 +70,12 @@ namespace Mascari4615
 				SOManager.Instance.Nyang.RuntimeValue -= itemData.PurchasePrice;
 				SOManager.Instance.ItemInventory.Add(itemData);
 				UpdateUI();
+
+				UIManager.Instance.PopText($"- {itemData.PurchasePrice}", TextType.Warning);
+			}
+			else
+			{
+				UIManager.Instance.PopText("냥이 부족합니다.", TextType.Warning);
 			}
 		}
 
@@ -72,6 +88,8 @@ namespace Mascari4615
 				SOManager.Instance.Nyang.RuntimeValue += itemData.SalePrice;
 				SOManager.Instance.ItemInventory.Remove(slotIndex);
 				UpdateUI();
+
+				UIManager.Instance.PopText($"+ {itemData.SalePrice}", TextType.Warning);
 			}
 		}
 	}

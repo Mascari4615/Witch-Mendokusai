@@ -44,6 +44,7 @@ namespace Mascari4615
 
 		public void SetQuest(RuntimeQuest newQuest)
 		{
+			// Debug.Log($"SetQuest {newQuest}");
 			curQuest = newQuest;
 		}
 
@@ -51,6 +52,7 @@ namespace Mascari4615
 		{
 			if (curQuest?.SO)
 			{
+				// Debug.Log($"A {curQuest.State == RuntimeQuestState.CanWork}, {curQuest.State == RuntimeQuestState.CanComplete}");
 				if (workButton != null)
 					workButton.gameObject.SetActive(curQuest.State == RuntimeQuestState.CanWork);
 				if (rewardButton != null)
@@ -58,6 +60,7 @@ namespace Mascari4615
 			}
 			else
 			{
+				// Debug.Log($"B");
 				if (workButton != null)
 					workButton.gameObject.SetActive(false);
 				if (rewardButton != null)

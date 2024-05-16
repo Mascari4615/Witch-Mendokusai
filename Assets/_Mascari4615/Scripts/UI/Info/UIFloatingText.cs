@@ -16,6 +16,8 @@ namespace Mascari4615
 		Heal = 100,
 
 		Exp = 150,
+
+		Warning = 1000
 	}
 
 	public class UIFloatingText : MonoBehaviour
@@ -52,7 +54,7 @@ namespace Mascari4615
 			return texts.Pop();
 		}
 
-		public IEnumerator AniTextUI(Vector3 pos, TextType textType, string msg)
+		public IEnumerator AniTextUI(TextType textType, string msg, Vector3 worldPos = default)
 		{
 			(Animator animator, TextMeshProUGUI text) = Pop();
 
@@ -62,18 +64,19 @@ namespace Mascari4615
 			text.text = msg;
 			UpdateTextStyle(ref text, textType);
 
-			Vector3 lastPosition = pos + (Random.insideUnitSphere * .3f);
-			float time = 0;
-			while (true)
+			Vector3 screenPos;
+
+			if (worldPos == default)
+				screenPos = Input.mousePosition;
+			else
+				screenPos = Camera.main.WorldToScreenPoint(worldPos + (Random.insideUnitSphere * .3f));
+
+			float time = 1;
+			while (time > 0)
 			{
-				animator.transform.position = Camera.main.WorldToScreenPoint(lastPosition);
+				time -= Time.deltaTime;
+				animator.transform.position = screenPos;
 				yield return null;
-				time += Time.deltaTime;
-
-				// damageText.gameObject.SetActive(PlayerBody.Local.IsTargetInSight(lastPosition));
-
-				if (time >= 1)
-					break;
 			}
 
 			animator.gameObject.SetActive(false);
@@ -93,6 +96,9 @@ namespace Mascari4615
 				case TextType.Heal:
 					break;
 				case TextType.Exp:
+					break;
+				case TextType.Warning:
+					text.color = Color.yellow;
 					break;
 				default:
 					break;

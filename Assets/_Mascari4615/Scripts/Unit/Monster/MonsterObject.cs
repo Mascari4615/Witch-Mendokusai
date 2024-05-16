@@ -44,7 +44,7 @@ namespace Mascari4615
 		public override void ReceiveDamage(DamageInfo damageInfo)
 		{
 			base.ReceiveDamage(damageInfo);
-			UIManager.Instance.PopDamage(transform.position + Vector3.forward * 1, damageInfo);
+			UIManager.Instance.PopDamage(damageInfo, transform.position + Vector3.forward * 1);
 
 			SOManager.Instance.LastHitMonsterObject.RuntimeValue = this;
 			hpBar.localScale = new Vector3((float)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX], 1, 1);

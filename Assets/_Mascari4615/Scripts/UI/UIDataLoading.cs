@@ -32,7 +32,7 @@ namespace Mascari4615
 					totalPercent += handle.PercentComplete;
 				progressBar.fillAmount = totalPercent / handles.Count;
 
-				Debug.Log($"Loading... {progressBar.fillAmount * 100}%");
+				// Debug.Log($"Loading... {progressBar.fillAmount * 100}%");
 
 				if (handles.All(handle => handle.IsDone))
 					break;

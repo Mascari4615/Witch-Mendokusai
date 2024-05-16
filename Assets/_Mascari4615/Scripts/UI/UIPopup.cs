@@ -22,14 +22,20 @@ namespace Mascari4615
 
 		private IEnumerator PopupCoroutine()
 		{
+			const float AnimationDuration = 4.5f;
+			WaitForSecondsRealtime ws = new(AnimationDuration);
+
 			while (dataSOs.Count > 0)
 			{
 				DataSO targetDataSO = dataSOs.Dequeue();
 
 				slot.SetSlot(targetDataSO);
 				animator.SetTrigger("POP");
-				yield return new WaitForSecondsRealtime(animator.GetCurrentAnimatorStateInfo(0).length);
+
+				yield return ws;
 			}
+
+			coroutine = null;
 		}
 	}
 }

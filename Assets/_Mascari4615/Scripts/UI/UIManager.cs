@@ -89,10 +89,15 @@ namespace Mascari4615
 			GameManager.Instance.IsMouseOnUI = EventSystem.current.IsPointerOverGameObject();
 		}
 
-		public void PopDamage(Vector3 pos, DamageInfo damageInfo)
+		public void PopDamage(DamageInfo damageInfo, Vector3 pos = default)
 		{
 			TextType textType = DamageUtil.DamageTypeToTextType(damageInfo.type);
-			StartCoroutine(damage.AniTextUI(pos, textType, damageInfo.damage.ToString()));
+			StartCoroutine(damage.AniTextUI(textType, damageInfo.damage.ToString(), pos));
+		}
+
+		public void PopText(string msg, TextType textType, Vector3 pos = default)
+		{
+			StartCoroutine(damage.AniTextUI(textType, msg, pos));
 		}
 
 		// 함수를 전달받아 처리

@@ -11,6 +11,8 @@ namespace Mascari4615
 		[SerializeField] private TextMeshProUGUI descriptionText;
 		[SerializeField] private TextMeshProUGUI gradeText;
 
+		[SerializeField] private ContentFitterRefresh contentFitterRefresh;
+
 		public void SetToolTipContent(SlotData slotData)
 		{
 			image.sprite = slotData.Sprite;
@@ -19,6 +21,9 @@ namespace Mascari4615
 			descriptionText.text = slotData.Description;
 
 			gradeText.text = "";
+
+			if (contentFitterRefresh != null)
+				contentFitterRefresh.RefreshContentFitters();
 		}
 	}
 }
