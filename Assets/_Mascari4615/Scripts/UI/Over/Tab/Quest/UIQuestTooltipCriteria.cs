@@ -25,7 +25,7 @@ namespace Mascari4615
 		public void SetCriteria(RuntimeQuest quest)
 		{
 			canvasGroup.alpha = 1;
-			if (quest == null || quest.Criterias == null)
+			if (quest == null || quest.Criterias == null || quest.Criterias.Count == 0)
 			{
 				canvasGroup.alpha = 0;
 				// foreach (UISlot slot in slots)

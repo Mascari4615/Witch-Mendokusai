@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 using static Mascari4615.SOHelper;
+using DG.Tweening;
 
 namespace Mascari4615
 {
@@ -79,7 +80,19 @@ namespace Mascari4615
 			}
 
 			selectDeckPanel.SetActive(curState == CardUIState.SelectDeck);
+			if (selectDeckPanel.activeSelf)
+			{
+				selectDeckPanel.transform.localScale = Vector3.zero;
+				selectDeckPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
+			}
+
 			deckPanel.SetActive(curState == CardUIState.SelectCard);
+			if (deckPanel.activeSelf)
+			{
+				deckPanel.transform.localScale = Vector3.zero;
+				deckPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
+			}
+
 			foreach (UIDeck deckUI in deckUIDic.Values)
 				deckUI.gameObject.SetActive(false);
 		}
@@ -95,7 +108,7 @@ namespace Mascari4615
 
 			foreach (List<CardData> cardDataBuffer in cardDataBuffers)
 				cardDataBuffer.Clear();
-			
+
 			List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
 			for (int i = 0; i < equipments.Count; i++)
 				cardDataBuffers[i].AddRange(equipments[i].EffectCards);
@@ -121,7 +134,7 @@ namespace Mascari4615
 		public void SelectDeck(int selectIndex)
 		{
 			curDeckIndex = deckIdMapping[selectIndex];
-			
+
 			// 선택한 덱에서 카드 뽑기
 			List<CardData> curDeckBuffer = cardDataBuffers[curDeckIndex];
 
@@ -133,26 +146,48 @@ namespace Mascari4615
 
 			List<CardData> randomCards = new();
 			CardBuffer selectedCardBuffer = SOManager.Instance.SelectedCardBuffer;
+
+			// HACK:
+			int maxLoop = 100;
 			while (randomCards.Count < 3)
 			{
+				if (--maxLoop < 0)
+					break;
+	
 				int randomIndex = Random.Range(0, curDeckBuffer.Count);
 				CardData randomCard = curDeckBuffer[randomIndex];
 
 				if (randomCards.Contains(randomCard))
+				{
+					// Debug.LogWarning("Already Contains");
 					continue;
+				}
 
 				if (randomCard.MaxStack == 0)
 				{
-					Debug.LogError("MaxStack is 0");
+					// Debug.LogWarning("MaxStack is 0");
 					continue;
 				}
 
 				if (selectedCardBuffer.Datas.Count > 0 &&
-					selectedCardBuffer.Datas.Select(m => m.ID == randomCard.ID).Count() == randomCard.MaxStack)
+					selectedCardBuffer.Datas.Where(m => m.ID == randomCard.ID).Count() >= randomCard.MaxStack)
+				{
+					// Debug.LogWarning($"MaxStack is Full {randomCard.ID} {randomCard.MaxStack}");
 					continue;
+				}
 
 				cardSelectButtons[randomCards.Count].SetSlot(randomCard);
 				randomCards.Add(randomCard);
+			}
+
+			// HACK:
+			if (randomCards.Count < 3)
+			{
+				for (int i = randomCards.Count; i < 3; i++)
+				{
+					cardSelectButtons[i].SetSlot(null);
+					randomCards.Add(null);
+				}
 			}
 
 			SetState(CardUIState.SelectCard);
@@ -173,7 +208,7 @@ namespace Mascari4615
 			List<CardData> curDeckBuffer = cardDataBuffers[curDeckIndex];
 			selectedCardBuffer.Add(card);
 
-			int sameCardCount = selectedCardBuffer.Datas.Select(m => m == card).Count();
+			int sameCardCount = selectedCardBuffer.Datas.Where(m => m.ID == card.ID).Count();
 			if (card.MaxStack == sameCardCount)
 			{
 				int cardIndex = curDeckBuffer.IndexOf(card);

@@ -26,7 +26,7 @@ namespace Mascari4615
 
 		public RuntimeQuest GetQuest(QuestSO questData)
 		{
-			return Quests.Datas.Find(x => x.SO == questData);
+			return Quests.Datas.Find(x => x.SO?.ID == questData.ID);
 		}
 
 		public RuntimeQuest GetQuest(Guid? guid)
