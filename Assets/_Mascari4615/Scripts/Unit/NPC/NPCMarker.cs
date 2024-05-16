@@ -54,16 +54,20 @@ namespace Mascari4615
 			bool hasCompletableQuest = dataSOs.Exists(i => questManager.GetQuest(i)?.State == RuntimeQuestState.CanComplete);
 			if (hasCompletableQuest)
 			{
-				Debug.Log("hasCompletableQuest");
+				// Debug.Log("hasCompletableQuest");
 				spriteRenderer.sprite = sprites[0];
 				return;
 			}
 
 			// 획득 가능한 퀘스트가 있다면
-			bool hasLockedQuest = dataSOs.Exists(i => i.State == QuestState.Locked);
+			bool hasLockedQuest = dataSOs.Exists(i =>
+			{
+				return DataManager.Instance.QuestState[i.ID] == QuestState.Locked;
+			});
+			
 			if (hasLockedQuest)
 			{
-				Debug.Log("hasLockedQuest");
+				// Debug.Log("hasLockedQuest");
 				spriteRenderer.sprite = sprites[1];
 				return;
 			}
@@ -72,7 +76,7 @@ namespace Mascari4615
 			bool hasWorkingQuest = dataSOs.Exists(i => questManager.GetQuest(i)?.State <= RuntimeQuestState.Working);
 			if (hasWorkingQuest)
 			{
-				Debug.Log("hasWorkingQuest");
+				// Debug.Log("hasWorkingQuest");
 				spriteRenderer.sprite = sprites[2];
 				return;
 			}

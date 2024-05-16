@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +13,8 @@ namespace Mascari4615
 
 		public override void Init()
 		{
+			// Debug.Log($"{name} {nameof(Init)}");
+
 			questSlots = GetComponentsInChildren<UIQuestSlot>(true);
 
 			foreach (UIQuestSlot slot in questSlots)
@@ -20,6 +23,8 @@ namespace Mascari4615
 
 		public void SetToolTip(ToolTip toolTip, UIQuestToolTip questToolTip)
 		{
+			// Debug.Log($"{name} {nameof(SetToolTip)}");
+
 			foreach (UIQuestSlot slot in questSlots)
 			{
 				slot.ToolTipTrigger.SetClickToolTip(toolTip);
@@ -27,7 +32,11 @@ namespace Mascari4615
 				{
 					slot.ToolTipTrigger.ClickToolTip.gameObject.SetActive(true);
 
-					RuntimeQuest quest = DataManager.Instance.QuestManager.GetQuest((slot as UIQuestSlot).DataSO as QuestSO);
+					RuntimeQuest quest = DataManager.Instance.QuestManager.GetQuest(slot.DataSO as QuestSO);
+
+					//DataManager.Instance.QuestManager.Quests.Datas ToString
+					Debug.Log($"Q {DataManager.Instance.QuestManager.Quests.Datas.Select(x => x.SO.ID.ToString()).Aggregate((x, y) => $"{x}, {y}")}");
+					Debug.Log($"ClickClick {slot.name} | {quest} | {slot.DataSO as QuestSO} | {slot.DataSO}");
 					questToolTip.SetQuest(quest);
 					questToolTip.UpdateUI();
 				});
@@ -36,12 +45,16 @@ namespace Mascari4615
 
 		public override void OnOpen()
 		{
+			// Debug.Log($"{name} {nameof(OnOpen)}");
+		
 			// 스크롤 위치 초기화
 			content.anchoredPosition = Vector2.zero;
 		}
 
 		public override void UpdateUI()
 		{
+			// Debug.Log($"{name} {nameof(UpdateUI)}");
+			
 			foreach (UIQuestSlot slot in questSlots)
 			{
 				RuntimeQuest runtimeQuest = DataManager.Instance.QuestManager.GetQuest(slot.DataSO as QuestSO);
@@ -58,7 +71,8 @@ namespace Mascari4615
 				else
 				{
 					QuestSO questData = slot.DataSO as QuestSO;
-					slot.SetDisable(questData.State == QuestState.Locked);
+					QuestState state = DataManager.Instance.QuestState[questData.ID];
+					slot.SetDisable(state == QuestState.Locked);
 				}
 
 				slot.UpdateUI();

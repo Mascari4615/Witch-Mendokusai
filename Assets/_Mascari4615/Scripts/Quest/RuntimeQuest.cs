@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static Mascari4615.SOHelper;
 
@@ -35,6 +36,7 @@ namespace Mascari4615
 
 		public RuntimeQuest(QuestSO questSO)
 		{
+			Debug.Log(nameof(RuntimeQuest) + " " + questSO.ID);
 			SO = questSO;
 			Initialize(questSO.Data, questSO.Name, questSO.Description);
 			StartQuest();
@@ -54,7 +56,7 @@ namespace Mascari4615
 			Description = description;
 
 			Type = questInfo.Type;
-			GameEvents = questInfo.GameEvents;
+			GameEvents = questInfo.GameEvents.ToList();
 			Criterias = questInfo.Criterias.ConvertAll(criteriaData => new RuntimeCriteria(criteriaData));
 			CompleteEffects = questInfo.CompleteEffects.ConvertAll(effectData => new EffectInfoData(effectData));
 			RewardEffects = questInfo.RewardEffects.ConvertAll(effectData => new EffectInfoData(effectData));
@@ -133,7 +135,7 @@ namespace Mascari4615
 
 			if (SO != null)
 			{
-				SO.Complete();
+				DataManager.Instance.QuestState[SO.ID] = QuestState.Completed;
 				if (Type == QuestType.Achievement)
 					UIManager.Instance?.Popup(SO);
 			}

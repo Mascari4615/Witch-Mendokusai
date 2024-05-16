@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Mascari4615.SOHelper;
 
@@ -58,7 +59,8 @@ namespace Mascari4615
 				if (doll.ID != 0)
 					newGameData.dolls.Add(doll.Save());
 			});
-			ForEach<QuestSO>(questData => newGameData.quests.Add(questData.Save()));
+			DataManager.QuestState = new();
+			ForEach<QuestSO>(questData => DataManager.QuestState.Add(questData.ID, QuestState.Locked));
 
 			// 초기 퀘스트 추가
 			// DataManager.QuestManager.AddQuest(new RuntimeQuest(GetQuestSO(0)));
@@ -77,7 +79,7 @@ namespace Mascari4615
 				string json = File.ReadAllText(path);
 				LoadData(JsonConvert.DeserializeObject<GameData>(json, new JsonSerializerSettings
 				{
-					TypeNameHandling = TypeNameHandling.Auto
+					TypeNameHandling = TypeNameHandling.Auto,
 				}));
 			}
 			else
@@ -109,11 +111,12 @@ namespace Mascari4615
 				SOManager.DollBuffer.Add(GetDoll(Doll.DUMMY_ID));
 
 			// 퀘스트 초기화
-			foreach (QuestSOSaveData questData in saveData.quests)
+			DataManager.Instance.QuestState = new();
+			foreach (var (id, state) in saveData.quests)
 			{
-				GetQuestSO(questData.QuestID).Load(questData);
-				if (questData.State >= QuestState.Unlocked)
-					SOManager.QuestDataBuffer.Add(GetQuestSO(questData.QuestID));
+				DataManager.QuestState.Add(id, (QuestState)state);
+				if ((QuestState)state >= QuestState.Unlocked)
+					SOManager.QuestDataBuffer.Add(GetQuestSO(id));
 			}
 
 			// 작업 초기화
@@ -139,13 +142,14 @@ namespace Mascari4615
 			};
 
 			ForEach<Doll>(doll => gameData.dolls.Add(doll.Save()));
-			ForEach<QuestSO>(questData => gameData.quests.Add(questData.Save()));
+			foreach (var (id, state) in DataManager.QuestState)
+				gameData.quests.Add(id, (int)state);
 
 			if (GameSetting.UseLocalData)
 			{
 				string json = JsonConvert.SerializeObject(gameData, Formatting.Indented, new JsonSerializerSettings
 				{
-					TypeNameHandling = TypeNameHandling.Auto
+					TypeNameHandling = TypeNameHandling.Auto,
 				});
 				string path = Path.Combine(Application.dataPath, "WM.json");
 				File.WriteAllText(path, json);

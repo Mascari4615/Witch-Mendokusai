@@ -97,7 +97,8 @@ namespace Mascari4615
 			{
 				if (i < questDatas.Count)
 				{
-					if (questDatas[i].State == QuestState.Completed)
+					QuestState state = DataManager.Instance.QuestState[questDatas[i].ID];
+					if (state == QuestState.Completed)
 					{
 						questOptions[i].gameObject.SetActive(false);
 						continue;
@@ -163,10 +164,11 @@ namespace Mascari4615
 			List<QuestSO> questDatas = curNPCData.QuestData;
 			QuestSO questData = questDatas[index];
 
-			switch (questData.State)
+			QuestState state = DataManager.Instance.QuestState[questDatas[index].ID];
+			switch (state)
 			{
 				case QuestState.Locked:
-					questData.Unlock();
+					DataManager.Instance.QuestState[questDatas[index].ID] = QuestState.Unlocked;
 					DataManager.Instance.QuestManager.AddQuest(new RuntimeQuest(questData));
 					break;
 				case QuestState.Unlocked:
@@ -174,10 +176,16 @@ namespace Mascari4615
 					break;
 				case QuestState.Completed:
 				default:
-					Debug.LogError($"Invalid Quest State : {questData.State}");
+					Debug.LogError($"Invalid Quest State : {state}");
 					break;
 			}
 
+			// HACK:
+			Invoke(nameof(Close), .1f);
+		}
+
+		public void Close()
+		{
 			UIManager.Instance.SetOverlay(MPanelType.None);
 		}
 	}
