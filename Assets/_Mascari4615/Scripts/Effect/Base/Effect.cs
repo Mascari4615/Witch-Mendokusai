@@ -16,6 +16,7 @@ namespace Mascari4615
 			foreach (EffectInfoData effectInfoData in effectInfoDatas)
 			{
 				int id = effectInfoData.DataSOID;
+				EffectType effectType = effectInfoData.Type;
 				DataSO dataSO = null;
 
 				switch (effectInfoData.Type)
@@ -26,7 +27,9 @@ namespace Mascari4615
 					case EffectType.AddQuest:
 						dataSO = GetQuestSO(id);
 						break;
-					case EffectType.AddRandomQuest:
+					case EffectType.AddRandomVillageQuest:
+						effectType = EffectType.AddQuest;
+						dataSO = SOManager.Instance.VQuests.Datas[Random.Range(0, SOManager.Instance.VQuests.Datas.Count)];
 						break;
 					case EffectType.FloatVariable:
 						break;
@@ -52,7 +55,7 @@ namespace Mascari4615
 
 				ApplyEffect(new EffectInfo()
 				{
-					Type = effectInfoData.Type,
+					Type = effectType,
 					Data = dataSO,
 					ArithmeticOperator = effectInfoData.ArithmeticOperator,
 					Value = effectInfoData.Value
@@ -76,10 +79,8 @@ namespace Mascari4615
 					effect = new AddCardEffect();
 					break;
 				case EffectType.AddQuest:
+				case EffectType.AddRandomVillageQuest:
 					effect = new AddQuestEffect();
-					break;
-				case EffectType.AddRandomQuest:
-					effect = new AddRandomQuestEffect();
 					break;
 				case EffectType.FloatVariable:
 					effect = new FloatVariableEffect();

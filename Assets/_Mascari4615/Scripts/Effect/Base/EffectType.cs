@@ -10,7 +10,7 @@ namespace Mascari4615
 
 		UnlockQuest = 100,
 		AddQuest = 101,
-		AddRandomQuest = 102,
+		AddRandomVillageQuest = 102,
 
 		AddCard = 200,
 		Item = 201,
