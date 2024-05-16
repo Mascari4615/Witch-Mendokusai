@@ -20,6 +20,8 @@ namespace Mascari4615
 		public DungeonDifficulty CurDifficulty { get; private set; }
 		public DungeonRecord Result { get; private set; }
 
+		public bool IsDungeon { get; private set; }
+
 		private CardManager cardManager;
 		private MonsterSpawner monsterSpawner;
 		private ExpManager expChecker;
@@ -58,6 +60,7 @@ namespace Mascari4615
 				monsterSpawner.InitWaves(dungeon);
 
 				GameManager.Instance.Init();
+				GameManager.Instance.InitEquipment();
 				expChecker.Init();
 				cardManager.Init();
 
@@ -65,6 +68,8 @@ namespace Mascari4615
 				DungeonCurTime = InitialDungeonTime;
 
 				dungeonRecorder = new DungeonRecorder();
+
+				IsDungeon = true;
 
 				StartCoroutine(DungeonLoop());
 				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
@@ -117,6 +122,8 @@ namespace Mascari4615
 			monsterSpawner.StopWave();
 
 			Result = dungeonRecorder.GetResultRecord();
+
+			IsDungeon = false;
 
 			UIManager.Instance.SetOverlay(MPanelType.DungeonResult);
 		}

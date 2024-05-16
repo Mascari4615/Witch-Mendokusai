@@ -57,7 +57,7 @@ namespace Mascari4615
 			// 굳이 처리할 waveInstance까지는 전달받지 않아도 된다.
 			MonsterWaveInstance waveInstance = waves[waveIndex];
 
-			TimeSpan dungeonTime = DungeonManager.Instance.DungeonCurTime;
+			TimeSpan dungeonTime = DungeonManager.Instance.InitialDungeonTime - DungeonManager.Instance.DungeonCurTime;
 			DungeonDifficulty curDifficulty = DungeonManager.Instance.CurDifficulty;
 
 			if (dungeonTime < TimeSpan.FromSeconds(waveInstance.Data.StartTime))

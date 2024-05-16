@@ -7,7 +7,7 @@ namespace Mascari4615
 {
 	public class ExpManager : MonoBehaviour
 	{
-		private const int REQUIRE_EXP_INCREASEMENT = 50;
+		private const int REQUIRE_EXP_INCREASEMENT = 30;
 		
 		[SerializeField] private GameObject levelUpEffect;
 		

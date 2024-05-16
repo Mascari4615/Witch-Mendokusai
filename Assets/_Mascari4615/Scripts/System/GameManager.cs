@@ -22,6 +22,12 @@ namespace Mascari4615
 
 			Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
 
+			DataManager.Instance.QuestManager.RemoveQuests(QuestType.Dungeon);
+			SOManager.Instance.Statistics.UpdateData();
+		}
+
+		public void InitEquipment()
+		{
 			List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
 			foreach (EquipmentData equipment in equipments)
 			{
@@ -40,9 +46,6 @@ namespace Mascari4615
 					g.SetActive(true);
 				}
 			}
-
-			DataManager.Instance.QuestManager.RemoveQuests(QuestType.Dungeon);
-			SOManager.Instance.Statistics.UpdateData();
 		}
 	}
 }

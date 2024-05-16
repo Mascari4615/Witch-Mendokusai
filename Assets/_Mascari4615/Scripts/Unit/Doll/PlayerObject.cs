@@ -25,6 +25,9 @@ namespace Mascari4615
 
 		public override void ReceiveDamage(DamageInfo damageInfo)
 		{
+			if (DungeonManager.Instance.IsDungeon == false)
+				return;
+
 			if (invincibleRoutine != null)
 				return;
 			
