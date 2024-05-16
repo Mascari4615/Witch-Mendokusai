@@ -14,18 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ID>k__BackingField: 10000001
   <Name>k__BackingField: "\uB9C8\uC744 \uC758\uB8B0 \uBD88\uB7EC\uC624\uB294\uC911..."
-  <Description>k__BackingField: 
+  <Description>k__BackingField: "\uB9C8\uC744 \uC758\uB8B0\uB97C \uBD88\uB7EC\uC624\uACE0
+    \uC788\uC2B5\uB2C8\uB2E4."
   <Sprite>k__BackingField: {fileID: 1461701424, guid: fbd184d873518c24aaaa66f4c3d4c2a9, type: 3}
   <Data>k__BackingField:
-    Type: 0
-    GameEvents: 
+    Type: 1
+    GameEvents: 04000000
     Criterias: []
     CompleteEffects: []
     RewardEffects:
     - Type: 102
-      Data: {fileID: 11400000, guid: 6e2d9946ac1317b49bc0ef4f40abdd13, type: 2}
-      ArithmeticOperator: 1
-      Value: 1
+      Data: {fileID: 0}
+      ArithmeticOperator: 0
+      Value: 0
     Rewards: []
     WorkTime: 10
     AutoWork: 1
