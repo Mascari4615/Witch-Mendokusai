@@ -123,7 +123,7 @@ namespace Mascari4615
 		{
 			TimeManager.Instance.Pause();
 			// Debug.Log(nameof(TransitionCoroutine));
-			transitionAnimator.SetTrigger("IN");
+			transitionAnimator.SetTrigger("OUT");
 
 			AnimatorStateInfo animatorStateInfo = transitionAnimator.GetCurrentAnimatorStateInfo(0);
 			float duration = animatorStateInfo.length / animatorStateInfo.speedMultiplier;
@@ -132,7 +132,7 @@ namespace Mascari4615
 			yield return StartCoroutine(corountineDuringTransition);
 			yield return new WaitForSecondsRealtime(.2f);
 
-			transitionAnimator.SetTrigger("OUT");
+			transitionAnimator.SetTrigger("IN");
 			TimeManager.Instance.Resume();
 		}
 
