@@ -18,7 +18,7 @@ namespace Mascari4615
 			if (SetRotation)
 			{
 				// 공격 위치를 향하도록 회전
-				o.transform.rotation = Quaternion.LookRotation(SOManager.Instance.PlayerAimDirection.RuntimeValue);
+				o.transform.rotation = Quaternion.LookRotation(Player.Instance.AimDirection);
 			}
 
 			if (o.TryGetComponent(out SkillObject skillObject))

@@ -8,16 +8,24 @@ namespace Mascari4615
 {
 	public class Player : Singleton<Player>
 	{
-		public PlayerInteraction Interaction { get; private set; }
 		public PlayerObject Object { get; private set; }
-		[field: SerializeField]	public GameObject ExpCollider { get; private set; }
+		[field: SerializeField] public GameObject ExpCollider { get; private set; }
+
+		private PlayerInteraction interaction;
+		private PlayerAim aim;
+
+		public Vector3 AimDirection { get; private set; }
+		public Vector3 AutoAimPos { get; private set; }
+		public bool IsAutoAim { get; private set; }
+		public Transform NearestTarget { get; private set; }
 
 		public Stat Stat => Object.Stat;
 
 		protected override void Awake()
 		{
 			base.Awake();
-			Interaction = new();
+			interaction = new();
+			aim = new(transform);
 			Object = GetComponent<PlayerObject>();
 		}
 
@@ -26,12 +34,19 @@ namespace Mascari4615
 			Object.Init(GetDoll(DataManager.Instance.CurDollID));
 		}
 
+		private void Update()
+		{
+			AimDirection = aim.CalcMouseAimDriection();
+			AutoAimPos = IsAutoAim ? aim.CalcAutoAim() : Vector3.zero;
+			NearestTarget = aim.GetNearestTarget()?.transform;
+		}
+
 		public void TryInteract()
 		{
 			if (UIManager.Instance.CurOverlay != MPanelType.None)
 				return;
 
-			Interaction.TryInteraction();
+			interaction.TryInteraction();
 		}
 
 		public void TryUseSkill(int skillIndex)
@@ -39,6 +54,11 @@ namespace Mascari4615
 			if (GameManager.Instance.IsCooling)
 				return;
 			Object.UseSkill(skillIndex);
+		}
+
+		public void SetAutoAim(bool isAutoAim)
+		{
+			IsAutoAim = isAutoAim;
 		}
 	}
 }

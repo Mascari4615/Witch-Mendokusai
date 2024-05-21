@@ -27,13 +27,13 @@ namespace Mascari4615
 			{
 				if (useAutoAim == false)
 				{
-					moveDirection = SOManager.Instance.PlayerAimDirection.RuntimeValue;
+					moveDirection = Player.Instance.AimDirection;
 					moveDirection.y = 0;
 				}
 				// TODO: Setting, UseAutoAim Option
 				else
 				{
-					moveDirection = (SOManager.Instance.PlayerAutoAimPosition.RuntimeValue - transform.position).normalized;
+					moveDirection = (Player.Instance.AutoAimPos - transform.position).normalized;
 					moveDirection.y = 0;
 				}
 			}

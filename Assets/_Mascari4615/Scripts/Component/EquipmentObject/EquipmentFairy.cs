@@ -58,7 +58,7 @@ namespace Mascari4615
 			int fairyIndex = 0;
 			while (true)
 			{
-				if (SOManager.Instance.PlayerAutoAimPosition.RuntimeValue == Vector3.zero)
+				if (Player.Instance.AutoAimPos == Vector3.zero)
 				{
 					yield return new WaitForSeconds(.1f);
 					continue;

@@ -29,6 +29,8 @@ namespace Mascari4615
 			// Player
 			if (inputActionAsset["UI/Submit"].triggered)
 				Player.Instance.TryInteract();
+			if (Input.GetKeyDown(KeyCode.C))
+				Player.Instance.SetAutoAim(!Player.Instance.IsAutoAim);
 			if (Input.GetKeyDown(KeyCode.Space))
 				Player.Instance.TryUseSkill(0);
 			if (GameManager.Instance.IsMouseOnUI || TimeManager.Instance.IsPaused)

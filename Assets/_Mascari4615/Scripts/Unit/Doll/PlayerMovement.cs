@@ -17,6 +17,9 @@ namespace Mascari4615
 		private const float CAMERA_ROTATE_SPEED = 15;
 		private float yRotation = 0;
 
+		public Vector3 MoveDirection { get; private set; }
+		public Vector3 LookDirection { get; private set; }
+
 		private void Awake()
 		{
 			playerRigidBody = GetComponent<Rigidbody>();
@@ -64,7 +67,7 @@ namespace Mascari4615
 				return;
 			}
 
-			Vector3 moveDirection = SOManager.Instance.PlayerMoveDirection.RuntimeValue;
+			Vector3 moveDirection = MoveDirection;
 			Vector3 finalVelocity;
 
 			if (GameManager.Instance.IsDied)
@@ -97,7 +100,7 @@ namespace Mascari4615
 			// moveDirection.z = v;
 			Vector3 moveDirection = (h * transform.right) + (v * transform.forward);
 			moveDirection = moveDirection.normalized;
-			SOManager.Instance.PlayerMoveDirection.RuntimeValue = moveDirection;
+			MoveDirection = moveDirection;
 
 			if (h != 0 || v != 0)
 				UpdateLookDirection(moveDirection);
@@ -108,7 +111,7 @@ namespace Mascari4615
 			// Debug.Log(newDirection);
 			float h = Input.GetAxisRaw("Horizontal");
 
-			SOManager.Instance.PlayerLookDirection.RuntimeValue = newDirection;
+			LookDirection = newDirection;
 			playerSprite.flipX = h == 0 ? playerSprite.flipX : h < 0;
 		}
 	}

@@ -32,10 +32,7 @@ namespace Mascari4615
 
 		[field: Header("_" + nameof(SOManager))]		[field: SerializeField] public FloatVariable DashDuration { get; private set; }
 		[field: SerializeField] public FloatVariable DashSpeed { get; private set; }
-		[field: SerializeField] public Vector3Variable PlayerMoveDirection { get; private set; }
-		[field: SerializeField] public Vector3Variable PlayerLookDirection { get; private set; }
-		[field: SerializeField] public Vector3Variable PlayerAimDirection { get; private set; }
-		[field: SerializeField] public Vector3Variable PlayerAutoAimPosition { get; private set; }
+
 		[field: SerializeField] public MonsterObjectVariable LastHitMonsterObject { get; private set; }
 		[field: SerializeField] public IntVariable Nyang { get; private set; }
 		[field: SerializeField] public IntVariable VQExp { get; private set; }

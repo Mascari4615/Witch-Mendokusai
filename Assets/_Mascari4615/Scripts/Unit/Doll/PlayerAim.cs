@@ -6,149 +6,67 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class PlayerAim : MonoBehaviour
+	public class PlayerAim
 	{
-		private const float WAIT_TIME = 0.1f;
+		private const float MaxAimDistance = 100f;
 
-		[SerializeField] private CinemachineTargetGroup targetGroup;
-
-		[SerializeField] private float maxDistance;
-		// [SerializeField] private float maxWeight;
-		// [SerializeField] private float blendSpeed;
-
-		[SerializeField] private GameObject targetMarker;
-		[SerializeField] private Transform targetPos;
-		[SerializeField] private Animator targetMarkerAnimator;
-
-		private GameObject curNearestAutoTarget;
-		private Coroutine changeTarget;
-		private readonly WaitForSeconds ws = new(WAIT_TIME);
-
-		private void Start()
+		private readonly Transform transform;
+		public PlayerAim(Transform transform)
 		{
-			StartCoroutine(AimLoop());
-			StartCoroutine(AutoAimLoop());
+			this.transform = transform;
 		}
 
-		private void Update()
+		public GameObject GetNearestTarget()
 		{
-			if (curNearestAutoTarget)
-				targetMarker.transform.position = curNearestAutoTarget.transform.position;
-		}
+			List<GameObject> targets = ObjectBufferManager.Instance.GetObjectsWithDistance(ObjectType.Monster, transform.position, MaxAimDistance);
+			if (targets == null)
+				return null;
 
-		private IEnumerator AutoAimLoop()
-		{
-			while (true)
+			GameObject curNearestAutoTarget = null;
+			int layerMask = 1 << LayerMask.NameToLayer("UNIT");
+
+			float minDistance = MaxAimDistance;
+			foreach (GameObject target in targets)
 			{
-				GameObject aimTarget = null;
+				float distance = Vector3.Distance(transform.position, target.transform.position);
+				if (distance >= minDistance)
+					continue;
 
-				List<GameObject> targets = ObjectBufferManager.Instance.GetObjectsWithDistance(ObjectType.Monster, transform.position, maxDistance);
-				if (targets != null)
-				{
-					float minDist = maxDistance;
-					foreach (GameObject target in targets)
-					{
-						float dist = Vector3.Distance(transform.position, target.transform.position);
+				Vector3 direction = target.transform.position - transform.position;
+				if (Physics.Raycast(transform.position, direction, out RaycastHit hit, MaxAimDistance, layerMask) == false)
+					continue;
 
-						if (dist < minDist)
-						{
-							if (Physics.Raycast(transform.position, target.transform.position - transform.position, out RaycastHit hit, maxDistance, 1 << LayerMask.NameToLayer("UNIT")))
-							{
-								if (hit.collider.gameObject == target)
-								{
-									aimTarget = target;
-									minDist = dist;
-								}
-							}
-						}
+				if (hit.collider.gameObject != target)
+					continue;
 
-					}
-				}
-
-				if (aimTarget == null)
-				{
-					curNearestAutoTarget = null;
-					// targetGroup.m_Targets[1].target = null;
-					SOManager.Instance.PlayerAutoAimPosition.RuntimeValue = Vector3.zero;
-
-					if (targetMarker.activeSelf)
-						targetMarker.SetActive(false);
-
-					// targetGroup.m_Targets[1].weight = .5f;
-				}
-				else
-				{
-					bool targetChanged = false;
-
-					if (curNearestAutoTarget != aimTarget)
-					{
-						targetChanged = true;
-						curNearestAutoTarget = aimTarget;
-
-						if (changeTarget != null)
-						{
-							// StopCoroutine(changeTarget);
-						}
-
-						// changeTarget = StartCoroutine(ChangeTarget());
-
-						targetPos.position = curNearestAutoTarget.transform.position;
-						// targetGroup.m_Targets[1].target = curNearestTarget.transform;
-					}
-
-					if (!targetMarker.activeSelf)
-						targetMarker.SetActive(true);
-
-					if (targetChanged)
-						targetMarkerAnimator.SetTrigger("ON");
-
-					// targetMarker.transform.position = curNearestTarget.transform.position;
-					SOManager.Instance.PlayerAutoAimPosition.RuntimeValue = curNearestAutoTarget.transform.position;
-				}
-
-				targetGroup.m_Targets[1].target = null;
-				//	Vector3.Distance(PlayerController.Instance.transform.position, targetPos.transform.position) > maxDistance
-				//		? null
-				//		: targetPos;
-
-				yield return ws;
+				curNearestAutoTarget = target;
+				minDistance = distance;
 			}
+
+			return curNearestAutoTarget;
 		}
 
-		/*public IEnumerator ChangeTarget()
-        {
-            while (targetGroup.m_Targets[1].weight > 0)
-            {
-                targetGroup.m_Targets[1].weight -= Time.deltaTime * blendSpeed;
-                yield return null;
-            }
-
-            targetGroup.m_Targets[1].target = curNearestTarget.transform;
-
-            while (targetGroup.m_Targets[1].weight < maxWeight)
-            {
-                targetGroup.m_Targets[1].weight += Time.deltaTime * blendSpeed;
-                yield return null;
-            }
-        }*/
-
-		private IEnumerator AimLoop()
+		public Vector3 CalcAutoAim()
 		{
-			while (true)
-			{
-				// if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
-				if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, 100, 1 << LayerMask.NameToLayer("GROUND")))
-				{
-					// Debug.Log($"충돌된 물체 이름 : {hit.transform.name}, Position : {hit.point}");
-					Vector3 mouseWorldPosition = hit.point;
-					SOManager.Instance.PlayerAimDirection.RuntimeValue = (mouseWorldPosition - transform.position).normalized;
-				}
-				else
-				{
-					SOManager.Instance.PlayerAimDirection.RuntimeValue = Vector3.zero;
-				}
+			GameObject nearestTarget = GetNearestTarget();
+			return nearestTarget == null ? Vector3.zero : nearestTarget.transform.position;
+		}
 
-				yield return ws;
+		public Vector3 CalcMouseAimDriection()
+		{
+			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+			float distance = 100f;
+			int layerMask = 1 << LayerMask.NameToLayer("GROUND");
+			
+			if (Physics.Raycast(ray, out RaycastHit hit, distance, layerMask))
+			{
+				// Debug.Log($"충돌된 물체 이름 : {hit.transform.name}, Position : {hit.point}");
+				Vector3 mouseWorldPosition = hit.point;
+				return (mouseWorldPosition - transform.position).normalized;
+			}
+			else
+			{
+				return Vector3.zero;
 			}
 		}
 	}
