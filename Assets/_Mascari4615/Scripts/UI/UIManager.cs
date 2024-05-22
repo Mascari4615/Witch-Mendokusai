@@ -26,8 +26,6 @@ namespace Mascari4615
 
 	public class UIManager : Singleton<UIManager>
 	{
-		[SerializeField] private Animator transitionAnimator;
-
 		public MCanvasType CurCanvas { get; private set; }
 		private readonly Dictionary<MCanvasType, UIPanel> canvasUIs = new();
 
@@ -43,6 +41,8 @@ namespace Mascari4615
 		private UIDungeon dungeon;
 		private UIDungeonResult dungeonResult;
 		public UINPC Npc { get; private set; }
+
+		public UITransition Transition { get; private set; }
 
 		protected override void Awake()
 		{
@@ -64,6 +64,8 @@ namespace Mascari4615
 			overlayUIs[MPanelType.Setting] = Setting;
 			overlayUIs[MPanelType.DungeonResult] = dungeonResult;
 			overlayUIs[MPanelType.NPC] = Npc;
+
+			Transition = FindObjectOfType<UITransition>(true);
 		}
 
 		private void Start()
@@ -98,42 +100,6 @@ namespace Mascari4615
 		public void PopText(string msg, TextType textType, Vector3 pos = default)
 		{
 			StartCoroutine(damage.AniTextUI(textType, msg, pos));
-		}
-
-		// 함수를 전달받아 처리
-		public void Transition(Action actionDuringTransition)
-		{
-			// Debug.Log(nameof(Transition) + " " + actionDuringTransition);
-			StartCoroutine(TransitionCoroutine(ActionToCoroutine(actionDuringTransition)));
-
-			static IEnumerator ActionToCoroutine(Action action)
-			{
-				action();
-				yield return null;
-			}
-		}
-
-		public void Transition(IEnumerator corountineDuringTransition)
-		{
-			// Debug.Log(nameof(Transition) + " " + corountineDuringTransition);
-			StartCoroutine(TransitionCoroutine(corountineDuringTransition));
-		}
-
-		private IEnumerator TransitionCoroutine(IEnumerator corountineDuringTransition)
-		{
-			TimeManager.Instance.Pause();
-			// Debug.Log(nameof(TransitionCoroutine));
-			transitionAnimator.SetTrigger("OUT");
-
-			AnimatorStateInfo animatorStateInfo = transitionAnimator.GetCurrentAnimatorStateInfo(0);
-			float duration = animatorStateInfo.length / animatorStateInfo.speedMultiplier;
-
-			yield return new WaitForSecondsRealtime(duration + .2f);
-			yield return StartCoroutine(corountineDuringTransition);
-			yield return new WaitForSecondsRealtime(.2f);
-
-			transitionAnimator.SetTrigger("IN");
-			TimeManager.Instance.Resume();
 		}
 
 		public void Popup(DataSO dataSO)

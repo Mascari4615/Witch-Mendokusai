@@ -27,7 +27,7 @@ namespace Mascari4615
 
 		public void LoadStage(Stage stage, int spawnPortalIndex, Action action = null)
 		{
-			UIManager.Instance.Transition(LoadStage_());
+			UIManager.Instance.Transition.Transition(LoadStage_());
 
 			IEnumerator LoadStage_()
 			{
