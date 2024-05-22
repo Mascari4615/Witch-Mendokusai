@@ -15,13 +15,13 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			ObjectBufferManager.Instance.AddObject(ObjectType.Skill, gameObject);
+			ObjectBufferManager.AddObject(ObjectType.Skill, gameObject);
 		}
 
 		private void OnDisable()
 		{
 			if (IsPlaying)
-				ObjectBufferManager.Instance.RemoveObject(ObjectType.Skill, gameObject);
+				ObjectBufferManager.RemoveObject(ObjectType.Skill, gameObject);
 		}
 
 		public void InitContext(UnitObject unitObject)

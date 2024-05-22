@@ -23,14 +23,14 @@ namespace Mascari4615
 		protected virtual void OnEnable()
 		{
 			SpriteRenderer.sharedMaterial = UnitData.Material;
-			ObjectBufferManager.Instance.AddObject(ObjectType.Monster, gameObject);
+			ObjectBufferManager.AddObject(ObjectType.Monster, gameObject);
 			hpBar.localScale = Vector3.one;
 		}
 
 		protected virtual void OnDisable()
 		{
 			if (IsPlaying)
-				ObjectBufferManager.Instance.RemoveObject(ObjectType.Monster, gameObject);
+				ObjectBufferManager.RemoveObject(ObjectType.Monster, gameObject);
 			StopAllCoroutines();
 		}
 
@@ -113,7 +113,7 @@ namespace Mascari4615
 
 			// Animator.SetTrigger("COLLAPSE");
 			if (IsPlaying)
-				ObjectBufferManager.Instance.RemoveObject(ObjectType.Monster, gameObject);
+				ObjectBufferManager.RemoveObject(ObjectType.Monster, gameObject);
 
 			/*
             if (StageManager.Instance.CurrentRoom is NormalRoom)

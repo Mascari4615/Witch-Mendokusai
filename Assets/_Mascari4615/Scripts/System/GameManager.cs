@@ -15,10 +15,10 @@ namespace Mascari4615
 		// 게임 상태 초기화
 		public void Init()
 		{
-			ObjectBufferManager.Instance.ClearObjects(ObjectType.Drop);
-			ObjectBufferManager.Instance.ClearObjects(ObjectType.Monster);
-			ObjectBufferManager.Instance.ClearObjects(ObjectType.Skill);
-			ObjectBufferManager.Instance.ClearObjects(ObjectType.SpawnCircle);
+			ObjectBufferManager.ClearObjects(ObjectType.Drop);
+			ObjectBufferManager.ClearObjects(ObjectType.Monster);
+			ObjectBufferManager.ClearObjects(ObjectType.Skill);
+			ObjectBufferManager.ClearObjects(ObjectType.SpawnCircle);
 
 			Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
 

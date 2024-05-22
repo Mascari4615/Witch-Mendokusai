@@ -22,7 +22,7 @@ namespace Mascari4615
 		{
 			base.Awake();
 			interaction = new(transform);
-			aim = new(transform);
+			aim = new(transform, ObjectBufferManager.GetObjects(ObjectType.Monster));
 			Object = GetComponent<PlayerObject>();
 		}
 

@@ -13,9 +13,9 @@ namespace Mascari4615
 		Skill,
 	}
 
-	public class ObjectBufferManager : Singleton<ObjectBufferManager>
+	public class ObjectBufferManager
 	{
-		private readonly Dictionary<ObjectType, List<GameObject>> bufferDic = new()
+		private static readonly Dictionary<ObjectType, List<GameObject>> bufferDic = new()
 		{
 			{ ObjectType.SpawnCircle, new List<GameObject>() },
 			{ ObjectType.Monster, new List<GameObject>() },
@@ -23,17 +23,17 @@ namespace Mascari4615
 			{ ObjectType.Skill, new List<GameObject>() },
 		};
 
-		public void AddObject(ObjectType type, GameObject obj)
+		public static void AddObject(ObjectType type, GameObject obj)
 		{
 			bufferDic[type].Add(obj);
 		}
 
-		public void RemoveObject(ObjectType type, GameObject obj)
+		public static void RemoveObject(ObjectType type, GameObject obj)
 		{
 			bufferDic[type].Remove(obj);
 		}
 
-		public void ClearObjects(ObjectType type)
+		public static void ClearObjects(ObjectType type)
 		{
 			for (int i = bufferDic[type].Count - 1; i >= 0; i--)
 			{
@@ -44,7 +44,12 @@ namespace Mascari4615
 			bufferDic[type].Clear();
 		}
 
-		public List<GameObject> GetObjectsWithDistance(ObjectType type, Vector3 position, float maxDistance)
+		public static List<GameObject> GetObjects(ObjectType type)
+		{
+			return bufferDic[type];
+		}
+
+		public static List<GameObject> GetObjectsWithDistance(ObjectType type, Vector3 position, float maxDistance)
 		{
 			List<GameObject> targetObjects = new();
 

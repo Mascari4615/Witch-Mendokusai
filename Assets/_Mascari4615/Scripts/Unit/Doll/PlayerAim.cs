@@ -10,40 +10,75 @@ namespace Mascari4615
 	{
 		private const float MaxAimDistance = 100f;
 
-		private readonly Transform transform;
-		public PlayerAim(Transform transform)
+		private GameObject lastAutoTarget;
+
+		private readonly Transform playerTr;
+		private readonly List<GameObject> targets;
+		
+		public PlayerAim(Transform transform, List<GameObject> targets)
 		{
-			this.transform = transform;
+			playerTr = transform;
+			this.targets = targets;
 		}
 
 		public GameObject GetNearestTarget()
 		{
-			List<GameObject> targets = ObjectBufferManager.Instance.GetObjectsWithDistance(ObjectType.Monster, transform.position, MaxAimDistance);
-			if (targets == null)
-				return null;
-
-			GameObject curNearestAutoTarget = null;
-			int layerMask = 1 << LayerMask.NameToLayer("UNIT");
-
-			float minDistance = MaxAimDistance;
-			foreach (GameObject target in targets)
+			bool TryItsNearest(GameObject target, float minDistance, out float distance)
 			{
-				float distance = Vector3.Distance(transform.position, target.transform.position);
-				if (distance >= minDistance)
-					continue;
+				int layerMask = 1 << LayerMask.NameToLayer("UNIT");
+				Vector3 actualTargetPosition = target.transform.position + Vector3.up * 0.5f;
 
-				Vector3 direction = target.transform.position - transform.position;
-				if (Physics.Raycast(transform.position, direction, out RaycastHit hit, MaxAimDistance, layerMask) == false)
-					continue;
+				distance = Vector3.Distance(playerTr.position, actualTargetPosition);
+				Vector3 direction = actualTargetPosition - playerTr.position;
+			
+				if (distance >= minDistance)
+					return false;
+
+				// Debug.DrawRay(transform.position, direction, Color.red, 0.1f);
+				if (Physics.Raycast(playerTr.position, direction, out RaycastHit hit, distance, layerMask) == false)
+					return false;
 
 				if (hit.collider.gameObject != target)
-					continue;
+				{
+					// Debug.Log($"Hit Object : {hit.collider.gameObject.name}, Target Object : {target.name}");
+					return false;
+				}
 
-				curNearestAutoTarget = target;
-				minDistance = distance;
+				return true;
 			}
 
-			return curNearestAutoTarget;
+			if (targets.Count == 0)
+				return null;
+
+			GameObject nearestAutoTarget = null;
+			float minDistance = MaxAimDistance;
+
+			// 최적화 : 마지막 오토 타겟을 먼저 검사
+			// 마지막 오토 타겟이 여전히 가장 가까울 확률이 높기 때문에
+			// 미리 검사하면 minDistance를 처음부터 작게 시작할 수 있음
+			if (lastAutoTarget != null)
+			{
+				if (lastAutoTarget.activeSelf == false)
+					lastAutoTarget = null;
+				else if (TryItsNearest(lastAutoTarget, minDistance, out float distance))
+				{
+					nearestAutoTarget = lastAutoTarget;
+					minDistance = distance;
+				}
+			}
+
+			// 그 다음 나머지 타겟들 검사
+			foreach (GameObject target in targets)
+			{
+				if (TryItsNearest(target, minDistance, out float distance))
+				{
+					nearestAutoTarget = target;
+					minDistance = distance;
+				}
+			}
+
+			lastAutoTarget = nearestAutoTarget;
+			return nearestAutoTarget;
 		}
 
 		public Vector3 CalcAutoAim()
@@ -62,7 +97,7 @@ namespace Mascari4615
 			{
 				// Debug.Log($"충돌된 물체 이름 : {hit.transform.name}, Position : {hit.point}");
 				Vector3 mouseWorldPosition = hit.point;
-				return (mouseWorldPosition - transform.position).normalized;
+				return (mouseWorldPosition - playerTr.position).normalized;
 			}
 			else
 			{

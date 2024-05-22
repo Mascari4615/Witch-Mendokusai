@@ -21,7 +21,7 @@ namespace Mascari4615
 
 	public abstract class StateMachine<T> : MonoBehaviour where T : Enum
 	{
-		// private const float TICK = 0.1f;
+		private const float TICK = 0.3f;
 
 		protected T currentState;
 		private readonly Dictionary<(T, StateEvent), Action> stateEventDic = new();
@@ -68,12 +68,12 @@ namespace Mascari4615
 
 		private IEnumerator StateLoop()
 		{
-			// WaitForSeconds waitForTick = new(TICK);
+			WaitForSeconds waitForTick = new(TICK);
 			while (true)
 			{
 				stateEventDic[(currentState, StateEvent.Update)]?.Invoke();
-				// yield return waitForTick;
-				yield return null;
+				yield return waitForTick;
+				// yield return null;
 			}
 		}
 	}

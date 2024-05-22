@@ -18,7 +18,7 @@ namespace Mascari4615
 		{
 			StopAllCoroutines();
 			_moveLoop = null;
-			ObjectBufferManager.Instance.AddObject(ObjectType.Drop, gameObject);
+			ObjectBufferManager.AddObject(ObjectType.Drop, gameObject);
 		}
 
 		public void OnTriggerEnter(Collider other)
@@ -56,7 +56,7 @@ namespace Mascari4615
 		private void OnDisable()
 		{
 			if (IsPlaying)
-				ObjectBufferManager.Instance.RemoveObject(ObjectType.Drop, gameObject);
+				ObjectBufferManager.RemoveObject(ObjectType.Drop, gameObject);
 		}
 	}
 }
