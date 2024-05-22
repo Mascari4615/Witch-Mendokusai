@@ -11,6 +11,9 @@ namespace Mascari4615
 
 		public void Despawn(GameObject targetObject)
 		{
+			if (targetObject == null)
+				return;
+
 			// Debug.Log($"PushObject: {targetObject.name}");
 			string objectName = GetActualObjectName(targetObject);
 

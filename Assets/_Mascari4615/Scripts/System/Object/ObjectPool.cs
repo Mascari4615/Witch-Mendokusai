@@ -27,6 +27,9 @@ namespace Mascari4615
 
 		public void Push(GameObject targetObject)
 		{
+			if (targetObject.activeSelf)
+				targetObject.SetActive(false);
+
 			if (stack.Contains(targetObject))
 			{
 				// Debug.Log($"{targetObject.name}, 이미 스택에 존재합니다");

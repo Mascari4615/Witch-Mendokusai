@@ -44,11 +44,6 @@ namespace Mascari4615
 			bufferDic[type].Clear();
 		}
 
-		public GameObject GetNearestObject(ObjectType type, Vector3 position, float maxDistance)
-		{
-			return MHelper.GetNearest(bufferDic[type], position, maxDistance);
-		}
-
 		public List<GameObject> GetObjectsWithDistance(ObjectType type, Vector3 position, float maxDistance)
 		{
 			List<GameObject> targetObjects = new();

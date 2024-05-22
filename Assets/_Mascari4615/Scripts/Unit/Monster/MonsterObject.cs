@@ -51,6 +51,7 @@ namespace Mascari4615
 
 			GameObject hitEffect = ObjectPoolManager.Instance.Spawn(hitEffectPrefab);
 			hitEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
+			hitEffect.SetActive(true);
 
 			/*
             if (DataManager.Instance.wgItemInven.Items.Contains(DataManager.Instance.ItemDic[36]))
@@ -133,6 +134,7 @@ namespace Mascari4615
 
 			GameObject dieEffect = ObjectPoolManager.Instance.Spawn(dieEffectPrefab);
 			dieEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
+			dieEffect.SetActive(true);
 
 			gameObject.SetActive(false);
 		}
