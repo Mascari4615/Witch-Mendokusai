@@ -8,6 +8,7 @@ Shader "Mascari4615/BillboardShader"
         _Emission("Emission", float) = 0
         _RotateVector("RotateVector", Vector) = (0,0,0,0)
         [HDR] _EmissionColor("Color", Color) = (0,0,0)
+        _BillboardMode("Billboard Mode", Range(0, 2)) = 0
     }
 
     SubShader
@@ -45,7 +46,6 @@ Shader "Mascari4615/BillboardShader"
             #define _BILLBOARD_MODE_POS 1
             #define _BILLBOARD_MODE_ROT 2
 
-            #define _BILLBOARD_MODE _BILLBOARD_MODE_ROT
             #define _BILLBOARD_ONLYYAW 0
 
             #pragma prefer_hlslcc gles
@@ -79,6 +79,7 @@ Shader "Mascari4615/BillboardShader"
             float4 _EmissionColor;
             float _Emission;
             float3 _RotateVector;
+            float _BillboardMode;
 
             v2f vert(appdata v)
             {
@@ -102,13 +103,18 @@ Shader "Mascari4615/BillboardShader"
                 // 월드 공간 회전 행렬 계산
                 float4x4 rotationMatrix;
                 float isOnlyYaw = _BILLBOARD_ONLYYAW;
-                #if _BILLBOARD_MODE == _BILLBOARD_MODE_OFF
-                    // Model Matrix에서 회전 행렬 추출
+
+                // Model Matrix에서 회전 행렬 추출
+                if (_BillboardMode == _BILLBOARD_MODE_OFF) 
+                {
                     rotationMatrix[0] = float4(UNITY_MATRIX_M._m00 / scaleX, UNITY_MATRIX_M._m01 / scaleY, UNITY_MATRIX_M._m02 / scaleZ, 0);
                     rotationMatrix[1] = float4(UNITY_MATRIX_M._m10 / scaleX, UNITY_MATRIX_M._m11 / scaleY, UNITY_MATRIX_M._m12 / scaleZ, 0);
                     rotationMatrix[2] = float4(UNITY_MATRIX_M._m20 / scaleX, UNITY_MATRIX_M._m21 / scaleY, UNITY_MATRIX_M._m22 / scaleZ, 0);
                     rotationMatrix[3] = float4(0, 0, 0, 1);
-                #elif _BILLBOARD_MODE == _BILLBOARD_MODE_POS    // 카메라 위치 기준 빌보드
+                }
+                // 카메라 위치기준 빌보드
+                else if (_BillboardMode == _BILLBOARD_MODE_POS) 
+                {
                     // 월드 포지션 기준 카메라 방향 벡터 계산
                     float3 pivotPosOS = float3(0, 0, 0);
                     float4 pivotPosWS = mul(UNITY_MATRIX_M, float4(pivotPosOS.xyz, 1));
@@ -121,23 +127,26 @@ Shader "Mascari4615/BillboardShader"
                     float3 rotM2 = cameraLookDir;
                     float3 rotM0 = normalize(cross(upVector, rotM2));
                     float3 rotM1 = cross(rotM2, rotM0);
-                    
+
                     float4x4 cameraRotMatrix;
                     cameraRotMatrix[0] = float4(rotM0.x, rotM1.x, rotM2.x, 0);
                     cameraRotMatrix[1] = float4(rotM0.y, rotM1.y, rotM2.y, 0);
                     cameraRotMatrix[2] = float4(rotM0.z, rotM1.z, rotM2.z, 0);
                     cameraRotMatrix[3] = float4(0, 0, 0, 1);
                     rotationMatrix = cameraRotMatrix;
-                #elif _BILLBOARD_MODE == _BILLBOARD_MODE_ROT    // 카메라 방향(Rotation) 기준 빌보드
-                float4x4 cameraRotMatrix;
-                // View 메트릭스(카메라 회전 행렬)를 회전 행렬로 사용
-                cameraRotMatrix[0] = float4(UNITY_MATRIX_V._m00, UNITY_MATRIX_V._m01, UNITY_MATRIX_V._m02, 0);
-                cameraRotMatrix[1] = float4(UNITY_MATRIX_V._m10, UNITY_MATRIX_V._m11, UNITY_MATRIX_V._m12, 0);
-                cameraRotMatrix[2] = float4(UNITY_MATRIX_V._m20, UNITY_MATRIX_V._m21, UNITY_MATRIX_V._m22, 0);
-                cameraRotMatrix[3] = float4(0, 0, 0, 1);
-                if (isOnlyYaw == 1.0f) cameraRotMatrix[1] = float4(0, 1, 0, 0); // Yaw축 빌보드
-                rotationMatrix = transpose(cameraRotMatrix); // View 공간을 월드 공간 기준으로 계산하기 위해 전치행렬로 변환하여 역행렬 계산하게 세팅.
-                #endif
+                }
+                // 카메라 방향(Rotation) 기준 빌보드
+                else if (_BillboardMode == _BILLBOARD_MODE_ROT) 
+                {
+                    float4x4 cameraRotMatrix;
+                    // View 메트릭스(카메라 회전 행렬)를 회전 행렬로 사용
+                    cameraRotMatrix[0] = float4(UNITY_MATRIX_V._m00, UNITY_MATRIX_V._m01, UNITY_MATRIX_V._m02, 0);
+                    cameraRotMatrix[1] = float4(UNITY_MATRIX_V._m10, UNITY_MATRIX_V._m11, UNITY_MATRIX_V._m12, 0);
+                    cameraRotMatrix[2] = float4(UNITY_MATRIX_V._m20, UNITY_MATRIX_V._m21, UNITY_MATRIX_V._m22, 0);
+                    cameraRotMatrix[3] = float4(0, 0, 0, 1);
+                    if (isOnlyYaw == 1.0f) cameraRotMatrix[1] = float4(0, 1, 0, 0); // Yaw축 빌보드
+                    rotationMatrix = transpose(cameraRotMatrix); // View 공간을 월드 공간 기준으로 계산하기 위해 전치행렬로 변환하여 역행렬 계산하게 세팅.
+                }
 
                 float4x4 moveMatrix;
                 // 월드 공간 위치 행렬 계산
@@ -150,7 +159,7 @@ Shader "Mascari4615/BillboardShader"
                 float4 positionWS = mul(modelMatrix, float4(positionOS.xyz, 1));
                 float4 positionVS = mul(UNITY_MATRIX_V, positionWS);
                 float4 positionCS = mul(UNITY_MATRIX_P, positionVS);
-
+                
                 o.positionCS = positionCS;
                 o.uv = v.uv;
                 return o;

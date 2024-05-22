@@ -93,12 +93,15 @@ namespace Mascari4615
 
 		private void UpdateTextStyle(ref TextMeshProUGUI text, TextType textType)
 		{
+			// TODO: 스탯 효과 (ex. DEF Down, ATK Up)
+
 			switch (textType)
 			{
 				case TextType.Normal:
 					text.color = Color.white;
 					break;
 				case TextType.Critical:
+					text.text = $"크리티컬!\n{text.text}";
 					text.color = new Color(1, 110f / 255f, 86f / 255f);
 					break;
 				case TextType.Heal:
