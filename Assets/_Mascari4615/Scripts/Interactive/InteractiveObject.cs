@@ -1,15 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.SceneManagement;
-using static Mascari4615.MHelper;
 
 namespace Mascari4615
 {
 	public class InteractiveObject : MonoBehaviour
 	{
+		public static readonly List<InteractiveObject> ActiveInteractives = new();
+
 		private IInteractable[] interactable;
 
 		public void Interact()
@@ -25,13 +22,13 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			ObjectBufferManager.Instance.AddObject(ObjectType.Interactive, gameObject);
+			ActiveInteractives.Add(this);
 		}
 
 		private void OnDisable()
 		{
-			if (IsPlaying)
-				ObjectBufferManager.Instance.RemoveObject(ObjectType.Interactive, gameObject);
+			if (MHelper.IsPlaying)
+				ActiveInteractives.Remove(this);
 		}
 	}
 }

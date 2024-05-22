@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Mascari4615.SOHelper;
 
@@ -24,7 +21,7 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
-			interaction = new();
+			interaction = new(transform);
 			aim = new(transform);
 			Object = GetComponent<PlayerObject>();
 		}

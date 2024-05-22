@@ -11,7 +11,6 @@ namespace Mascari4615
 		Monster,
 		Drop,
 		Skill,
-		Interactive,
 	}
 
 	public class ObjectBufferManager : Singleton<ObjectBufferManager>
@@ -22,7 +21,6 @@ namespace Mascari4615
 			{ ObjectType.Monster, new List<GameObject>() },
 			{ ObjectType.Drop, new List<GameObject>() },
 			{ ObjectType.Skill, new List<GameObject>() },
-			{ ObjectType.Interactive, new List<GameObject>() },
 		};
 
 		public void AddObject(ObjectType type, GameObject obj)
@@ -48,20 +46,7 @@ namespace Mascari4615
 
 		public GameObject GetNearestObject(ObjectType type, Vector3 position, float maxDistance)
 		{
-			GameObject nearest = null;
-			float nearestDistance = float.MaxValue;
-
-			foreach (GameObject obj in bufferDic[type])
-			{
-				float distance = Vector3.Distance(obj.transform.position, position);
-				if (distance < nearestDistance)
-				{
-					nearest = obj;
-					nearestDistance = distance;
-				}
-			}
-
-			return nearestDistance <= maxDistance ? nearest : null;
+			return MHelper.GetNearest(bufferDic[type], position, maxDistance);
 		}
 
 		public List<GameObject> GetObjectsWithDistance(ObjectType type, Vector3 position, float maxDistance)

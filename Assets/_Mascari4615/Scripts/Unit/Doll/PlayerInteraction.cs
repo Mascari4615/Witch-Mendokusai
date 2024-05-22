@@ -1,7 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Mascari4615
@@ -10,15 +6,15 @@ namespace Mascari4615
 	{
 		public const float InteractionDistance = 1.5f;
 
-		private GameObject GetNearestInteractiveObject()
+		private readonly Transform player;
+		public PlayerInteraction(Transform player)
 		{
-			GameObject nearest = ObjectBufferManager.Instance.GetNearestObject(ObjectType.Interactive, Player.Instance.transform.position, InteractionDistance);
-			return nearest;
+			this.player = player;
 		}
 
 		public void TryInteraction()
 		{
-			GameObject nearest = GetNearestInteractiveObject();
+			InteractiveObject nearest = MHelper.GetNearest(InteractiveObject.ActiveInteractives, player.position, InteractionDistance);
 			if (nearest == null)
 				return;
 			nearest.GetComponent<InteractiveObject>().Interact();
