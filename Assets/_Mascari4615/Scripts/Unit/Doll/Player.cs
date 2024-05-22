@@ -33,8 +33,15 @@ namespace Mascari4615
 
 		private void Update()
 		{
+			AutoAimPos = aim.CalcAutoAim();
 			AimDirection = aim.CalcMouseAimDriection();
-			AutoAimPos = IsAutoAim ? aim.CalcAutoAim() : Vector3.zero;
+
+			if (IsAutoAim && AutoAimPos != Vector3.zero)
+			{
+				Vector3 autoAimDirection = (AutoAimPos - transform.position).normalized;
+				AimDirection = autoAimDirection;
+			}
+
 			NearestTarget = aim.GetNearestTarget()?.transform;
 		}
 
