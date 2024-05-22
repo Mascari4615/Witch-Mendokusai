@@ -32,9 +32,9 @@ namespace Mascari4615
 		public MPanelType CurOverlay { get; private set; }
 		private readonly Dictionary<MPanelType, UIPanel> overlayUIs = new();
 
-		public UITab Tab { get; private set; }
+		public UITab tab;
 		public CutSceneModule CutSceneModule { get; private set; }
-		public UISetting Setting { get; private set; }
+		public UISetting setting;
 		private UIFloatingText damage;
 		private UIPopup popup;
 		public UIChat Chat { get; private set; }
@@ -43,16 +43,17 @@ namespace Mascari4615
 		public UINPC Npc { get; private set; }
 
 		public UITransition Transition { get; private set; }
+		private UIStagePopup stagePopup;
 
 		protected override void Awake()
 		{
 			base.Awake();
 
-			Tab = FindObjectOfType<UITab>(true);
+			tab = FindObjectOfType<UITab>(true);
 			CutSceneModule = FindObjectOfType<CutSceneModule>(true);
 			damage = FindObjectOfType<UIFloatingText>(true);
 			popup = FindObjectOfType<UIPopup>(true);
-			Setting = FindObjectOfType<UISetting>(true);
+			setting = FindObjectOfType<UISetting>(true);
 			Chat = FindObjectOfType<UIChat>(true);
 			dungeon = FindObjectOfType<UIDungeon>(true);
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
@@ -60,12 +61,13 @@ namespace Mascari4615
 
 			canvasUIs[MCanvasType.Dungeon] = FindObjectOfType<UIDungeon>(true);
 
-			overlayUIs[MPanelType.Tab] = Tab;
-			overlayUIs[MPanelType.Setting] = Setting;
+			overlayUIs[MPanelType.Tab] = tab;
+			overlayUIs[MPanelType.Setting] = setting;
 			overlayUIs[MPanelType.DungeonResult] = dungeonResult;
 			overlayUIs[MPanelType.NPC] = Npc;
 
 			Transition = FindObjectOfType<UITransition>(true);
+			stagePopup = FindObjectOfType<UIStagePopup>(true);
 		}
 
 		private void Start()
@@ -100,6 +102,11 @@ namespace Mascari4615
 		public void PopText(string msg, TextType textType, Vector3 pos = default)
 		{
 			StartCoroutine(damage.AniTextUI(textType, msg, pos));
+		}
+
+		public void StagePopup(Stage stage)
+		{
+			stagePopup.Popup(stage);
 		}
 
 		public void Popup(DataSO dataSO)
