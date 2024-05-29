@@ -14,7 +14,7 @@ namespace Mascari4615
 
 		private readonly Transform playerTr;
 		private readonly List<GameObject> targets;
-		
+
 		public PlayerAim(Transform transform, List<GameObject> targets)
 		{
 			playerTr = transform;
@@ -25,12 +25,12 @@ namespace Mascari4615
 		{
 			bool TryItsNearest(GameObject target, float minDistance, out float distance)
 			{
-				int layerMask = 1 << LayerMask.NameToLayer("UNIT");
+				int layerMask = LayerMask.GetMask("UNIT");
 				Vector3 actualTargetPosition = target.transform.position + Vector3.up * 0.5f;
 
 				distance = Vector3.Distance(playerTr.position, actualTargetPosition);
 				Vector3 direction = actualTargetPosition - playerTr.position;
-			
+
 				if (distance >= minDistance)
 					return false;
 
@@ -89,20 +89,8 @@ namespace Mascari4615
 
 		public Vector3 CalcMouseAimDriection()
 		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			float distance = 100f;
-			int layerMask = 1 << LayerMask.NameToLayer("GROUND");
-			
-			if (Physics.Raycast(ray, out RaycastHit hit, distance, layerMask))
-			{
-				// Debug.Log($"충돌된 물체 이름 : {hit.transform.name}, Position : {hit.point}");
-				Vector3 mouseWorldPosition = hit.point;
-				return (mouseWorldPosition - playerTr.position).normalized;
-			}
-			else
-			{
-				return Vector3.zero;
-			}
+			Vector3 mouseWorldPosition = InputManager.Instance.MouseWorldPosition;
+			return (mouseWorldPosition - playerTr.position).normalized;
 		}
 	}
 }

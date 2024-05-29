@@ -3,20 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 namespace Mascari4615
 {
-	public class InputManager : MonoBehaviour
+	public class InputManager : Singleton<InputManager>
 	{
 		// TODO: InputManager를 통해 모든 입력을 받아서 처리하도록 한다.
 
-		[SerializeField] private InputActionAsset inputActionAsset;
+		[SerializeField]
+		private InputActionAsset inputActionAsset;
+
+		public Vector3 MouseWorldPosition { get; private set; }
+
+		public event Action OnClicked, OnExit;
+
+		public bool IsPointerOverUI() => EventSystem.current.IsPointerOverGameObject();
 
 		private void Update()
 		{
+			UpdateMouseWorldPosition();
+
+			if (Input.GetMouseButtonDown(0))
+				OnClicked?.Invoke();
+			if (Input.GetKeyDown(KeyCode.Escape))
+				OnExit?.Invoke();
+
 			if (GameManager.Instance.IsChatting)
 				return;
 
@@ -25,7 +40,7 @@ namespace Mascari4615
 				UIManager.Instance.ToggleOverlayUI_Tab();
 			if (inputActionAsset["UI/Cancel"].triggered)
 				UIManager.Instance.ToggleOverlayUI_Setting();
-			
+
 			// Player
 			if (inputActionAsset["UI/Submit"].triggered)
 				Player.Instance.TryInteract();
@@ -39,6 +54,18 @@ namespace Mascari4615
 				Player.Instance.TryUseSkill(1);
 			if (Input.GetMouseButton(1))
 				Player.Instance.TryUseSkill(2);
+		}
+
+		private void UpdateMouseWorldPosition()
+		{
+			Vector3 mousePos = Input.mousePosition;
+			mousePos.z = Camera.main.nearClipPlane;
+			Ray ray = Camera.main.ScreenPointToRay(mousePos);
+
+			if (Physics.Raycast(ray, out RaycastHit hit, 100, LayerMask.GetMask("GROUND")))
+				MouseWorldPosition = hit.point;
+			else
+				MouseWorldPosition = Vector3.zero;
 		}
 	}
 }

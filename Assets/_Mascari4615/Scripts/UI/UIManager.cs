@@ -1,11 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 namespace Mascari4615
 {
@@ -86,11 +80,6 @@ namespace Mascari4615
 
 			SetCanvas(MCanvasType.None);
 			SetOverlay(MPanelType.None);
-		}
-
-		private void Update()
-		{
-			GameManager.Instance.IsMouseOnUI = EventSystem.current.IsPointerOverGameObject();
 		}
 
 		public void PopDamage(DamageInfo damageInfo, Vector3 pos = default)
