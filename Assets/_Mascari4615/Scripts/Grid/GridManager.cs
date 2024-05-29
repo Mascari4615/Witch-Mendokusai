@@ -22,8 +22,12 @@ namespace Mascari4615
 
 		private Vector3 targetCellPos;
 
+		private GridData gridData;
+
 		private void Start()
 		{
+			gridData = new();
+
 			StopBuilding();
 		}
 
@@ -71,10 +75,22 @@ namespace Mascari4615
 			if (InputManager.IsPointerOverUI())
 				return;
 
+			if (gridData.TryGetObjectAt(grid.WorldToCell(targetCellPos), out GameObject obj))
+			{
+				gridData.RemoveObjectAt(grid.WorldToCell(targetCellPos));
+				ObjectPoolManager.Instance.Despawn(obj);
+				return;
+			}
+			else
+			{
+				GameObject block = ObjectPoolManager.Instance.Spawn(blockPrefab);
+				block.transform.position = targetCellPos;
+				block.SetActive(true);
+
+				gridData.AddObjectAt(grid.WorldToCell(targetCellPos), block);
+			}
+
 			// buildingState.OnAction(gridPosition);
-			GameObject block = ObjectPoolManager.Instance.Spawn(blockPrefab);
-			block.transform.position = targetCellPos;
-			block.SetActive(true);
 		}
 	}
 }
