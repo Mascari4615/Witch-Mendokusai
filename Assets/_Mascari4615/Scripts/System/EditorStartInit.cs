@@ -1,9 +1,10 @@
-
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
 
 namespace Mascari4615
 {
+
 	// https://mentum.tistory.com/657
 	[InitializeOnLoad]
 	public class EditorStartInit
@@ -16,3 +17,4 @@ namespace Mascari4615
 		}
 	}
 }
+#endif
