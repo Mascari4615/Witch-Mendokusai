@@ -33,10 +33,10 @@ namespace Mascari4615
 			targetUnit = lastHitEnemyObject.RuntimeValue;
 			nameText.text = targetUnit.UnitData.Name;
 
-			hpBarText.text = $"{targetUnit.Stat[StatType.HP_CUR]} / {targetUnit.Stat[StatType.HP_MAX]}";
-			hpBar.fillAmount = (float)targetUnit.Stat[StatType.HP_CUR] / targetUnit.Stat[StatType.HP_MAX];
+			hpBarText.text = $"{targetUnit.UnitStat[UnitStatType.HP_CUR]} / {targetUnit.UnitStat[UnitStatType.HP_MAX]}";
+			hpBar.fillAmount = (float)targetUnit.UnitStat[UnitStatType.HP_CUR] / targetUnit.UnitStat[UnitStatType.HP_MAX];
 
-			if (targetUnit.Stat[StatType.HP_CUR] != 0)
+			if (targetUnit.UnitStat[UnitStatType.HP_CUR] != 0)
 				return;
 
 			if (disableOnDied)
@@ -50,8 +50,8 @@ namespace Mascari4615
 			targetUnit = targetEnemy;
 			nameText.text = targetUnit.UnitData.Name;
 
-			hpBarText.text = $"{curHp} / {targetUnit.Stat[StatType.HP_MAX]}";
-			hpBar.fillAmount = (float)curHp / targetUnit.Stat[StatType.HP_MAX];
+			hpBarText.text = $"{curHp} / {targetUnit.UnitStat[UnitStatType.HP_MAX]}";
+			hpBar.fillAmount = (float)curHp / targetUnit.UnitStat[UnitStatType.HP_MAX];
 
 			if (curHp != 0)
 				return;

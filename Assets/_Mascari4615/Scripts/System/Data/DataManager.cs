@@ -16,6 +16,7 @@ namespace Mascari4615
 		public SaveManager SaveManager { get; private set; } = new();
 		public WorkManager WorkManager { get; private set; } = new();
 		public QuestManager QuestManager { get; private set; } = new();
+		public GameStat GameStat { get; private set; } = new();
 		public readonly Dictionary<string, (Recipe recipe, int itemID)> CraftDic = new();
 
 		private SOManager SOManager;

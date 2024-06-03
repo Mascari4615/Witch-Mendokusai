@@ -64,8 +64,8 @@ namespace Mascari4615
 			LoadAsset<Doll>("DOLL");
 			LoadAsset<NPC>("NPC");
 			LoadAsset<Monster>("MONSTER");
-			LoadAsset<StatData>("STAT_DATA");
-			LoadAsset<StatisticsData>("STATISTICS_DATA");
+			LoadAsset<UnitStatData>("UNIT_STAT_DATA");
+			LoadAsset<GameStatData>("GAME_STAT_DATA");
 
 			void LoadAsset<T>(string label) where T : DataSO
 			{

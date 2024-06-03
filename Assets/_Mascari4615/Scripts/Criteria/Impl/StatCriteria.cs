@@ -8,14 +8,14 @@ namespace Mascari4615
 {
 	public class StatCriteria : NumCriteria
 	{
-		public StatType Type { get; private set; }
+		public UnitStatType Type { get; private set; }
 
 		public StatCriteria(CriteriaInfo criteriaInfo) : base(criteriaInfo)
 		{
-			Type = (criteriaInfo.Data as StatData).Type;
+			Type = (criteriaInfo.Data as UnitStatData).Type;
 		}
 
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 
 		public override int GetCurValue()
 		{

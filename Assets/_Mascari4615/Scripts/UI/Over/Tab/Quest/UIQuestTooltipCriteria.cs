@@ -61,10 +61,10 @@ namespace Mascari4615
 							criteriaSprite = SOManager.Instance.VQExp.Sprite;
 							criteriaName = statCriteria.Type.ToString();
 							break;
-						case StatisticsCriteria statisticsCriteria:
+						case GameStatCriteria gameStatCriteria:
 							// HACK
 							criteriaSprite = SOManager.Instance.VQExp.Sprite;
-							criteriaName = statisticsCriteria.Type.ToString();
+							criteriaName = gameStatCriteria.Type.ToString();
 							break;
 					}
 

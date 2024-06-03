@@ -76,15 +76,15 @@ namespace Mascari4615
 
 			if (usedByPlayer)
 			{
-				Stat stat = Player.Instance.Stat;
+				UnitStat unitStat = Player.Instance.UnitStat;
 
-				calcDamage = (int)(calcDamage * (1 + (stat[StatType.DAMAGE_BONUS] / 100f)));
+				calcDamage = (int)(calcDamage * (1 + (unitStat[UnitStatType.DAMAGE_BONUS] / 100f)));
 
-				if (stat[StatType.CRITICAL_CHANCE] > 0)
+				if (unitStat[UnitStatType.CRITICAL_CHANCE] > 0)
 				{
-					if (UnityEngine.Random.Range(0, 100) < stat[StatType.CRITICAL_CHANCE])
+					if (UnityEngine.Random.Range(0, 100) < unitStat[UnitStatType.CRITICAL_CHANCE])
 					{
-						calcDamage = (int)(calcDamage * (1 + (stat[StatType.CRITICAL_DAMAGE] / 100f)));
+						calcDamage = (int)(calcDamage * (1 + (unitStat[UnitStatType.CRITICAL_DAMAGE] / 100f)));
 						damageInfo.type = DamageType.Critical;
 					}
 				}

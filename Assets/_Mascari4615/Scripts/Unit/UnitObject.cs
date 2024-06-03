@@ -10,13 +10,13 @@ namespace Mascari4615
 	public abstract class UnitObject : MonoBehaviour
 	{
 		[field: SerializeField] public Unit UnitData { get; private set; }
-		public Stat Stat { get; private set; }
+		public UnitStat UnitStat { get; private set; }
 		public SkillHandler SkillHandler { get; protected set; }
 		[field: SerializeField] public SpriteRenderer SpriteRenderer { get; protected set; }
 		public NavMeshAgent NavMeshAgent { get; protected set; }
 		private Vector3 originScale;
 
-		public bool IsAlive => Stat[StatType.HP_CUR] > 0;
+		public bool IsAlive => UnitStat[UnitStatType.HP_CUR] > 0;
 
 		[SerializeField] protected Animator animator;
 
@@ -37,8 +37,8 @@ namespace Mascari4615
 
 		public virtual void Init(Unit unitData)
 		{
-			if (Stat == null)
-				Stat = new Stat();
+			if (UnitStat == null)
+				UnitStat = new UnitStat();
 
 			UnitData = unitData;
 
@@ -47,15 +47,15 @@ namespace Mascari4615
 			SkillHandler = new(this);
 			TimeManager.Instance.RegisterCallback(SkillHandler.Tick);
 
-			Stat.Init(UnitData.InitStatInfos.GetStat());
-			SetHp(Stat[StatType.HP_MAX]);
+			UnitStat.Init(UnitData.InitStatInfos.GetUnitStat());
+			SetHp(UnitStat[UnitStatType.HP_MAX]);
 
 			SpriteRenderer.transform.localScale = originScale;
 
 			if (NavMeshAgent)
 			{
 				NavMeshAgent.stoppingDistance = stoppingDistance;
-				NavMeshAgent.speed = Stat[StatType.MOVEMENT_SPEED];
+				NavMeshAgent.speed = UnitStat[UnitStatType.MOVEMENT_SPEED];
 				// agent.destination = moveDest;
 				NavMeshAgent.updateRotation = updateRotation;
 				NavMeshAgent.acceleration = acceleration;
@@ -69,8 +69,8 @@ namespace Mascari4615
 
 		protected virtual void SetHp(int newHp)
 		{
-			Stat[StatType.HP_CUR] = newHp;
-			if (Stat[StatType.HP_CUR] <= 0)
+			UnitStat[UnitStatType.HP_CUR] = newHp;
+			if (UnitStat[UnitStatType.HP_CUR] <= 0)
 				Die();
 		}
 
@@ -79,7 +79,7 @@ namespace Mascari4615
 			if (!IsAlive)
 				return;
 
-			SetHp(Mathf.Clamp(Stat[StatType.HP_CUR] - damageInfo.damage, 0, int.MaxValue));
+			SetHp(Mathf.Clamp(UnitStat[UnitStatType.HP_CUR] - damageInfo.damage, 0, int.MaxValue));
 
 			// SpriteRenderer 스케일 잠깐 키웠다가 줄이기
 			SpriteRenderer.transform.DOScale(originScale * 1.2f, .1f).OnComplete(() =>

@@ -23,8 +23,8 @@ namespace Mascari4615
 			{ typeof(MonsterWave), "MW" },
 			{ typeof(ObjectData), "O"},
 			{ typeof(SkillData), "SKL" },
-			{ typeof(StatData), "ST"},
-			{ typeof(StatisticsData), "STS"},
+			{ typeof(UnitStatData), "USD"},
+			{ typeof(GameStatData), "GSD"},
 			{ typeof(WorldStage), "WS" },
 			{ typeof(Dungeon), "D" },
 			{ typeof(DungeonStage), "DS" },
@@ -42,8 +42,8 @@ namespace Mascari4615
 			{ typeof(MonsterWave), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(MonsterWave)}/" },
 			{ typeof(ObjectData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ObjectData)}/" },
 			{ typeof(SkillData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(SkillData)}/" },
-			{ typeof(StatData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(StatData)}/"},
-			{ typeof(StatisticsData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(StatisticsData)}/"},
+			{ typeof(UnitStatData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(UnitStatData)}/"},
+			{ typeof(GameStatData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(GameStatData)}/"},
 			{ typeof(WorldStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(WorldStage)}/" },
 			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
 			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
@@ -84,8 +84,8 @@ namespace Mascari4615
 
 			InitList();
 
-			InitEnumData<StatData, StatType>();
-			InitEnumData<StatisticsData, StatisticsType>();
+			InitEnumData<UnitStatData, UnitStatType>();
+			InitEnumData<GameStatData, GameStatType>();
 
 			SaveAssets();
 		}
@@ -519,7 +519,14 @@ namespace Mascari4615
 
 			foreach (var dic in DataSOs.Values)
 				foreach (DataSO dataSO in dic.Values)
+				{
+					if (dataSO == null)
+					{
+						Debug.Log($"{nameof(SaveAssets)}: {dic.GetType().Name} is null.");
+						continue;
+					}
 					EditorUtility.SetDirty(dataSO);
+				}
 
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
