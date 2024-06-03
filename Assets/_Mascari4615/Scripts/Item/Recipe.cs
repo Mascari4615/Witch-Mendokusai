@@ -7,6 +7,7 @@ namespace Mascari4615
 	[Serializable]
 	public struct Recipe
 	{
+		public RecipeType Type;
 		public List<ItemData> Ingredients;
 		public float Percentage;
 	}

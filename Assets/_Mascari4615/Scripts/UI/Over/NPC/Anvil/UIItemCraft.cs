@@ -10,28 +10,30 @@ namespace Mascari4615
 {
 	public class UIItemCraft : UIPanel
 	{
-		[SerializeField] private UIItemSlot[] slots;
+		[SerializeField] protected RecipeType recipeType;
+
+		[SerializeField] private UIItemSlot[] craftTableSlots;
 		[SerializeField] private UIItemSlot resultSlot;
 		[SerializeField] private Inventory craftTableInventory;
 		[SerializeField] private UIItemGrid itemInventoryUI;
-		[SerializeField] private UIItemGrid anvilInventoryUI;
+		[SerializeField] private UIItemGrid craftTableInventoryUI;
 
 		public void TryCraft()
 		{
 			// Make Recipe
-			List<int> recipeToList = new(slots.Length);
-			foreach (UIItemSlot slot in slots)
+			List<int> recipeToList = new(craftTableSlots.Length);
+			foreach (UIItemSlot slot in craftTableSlots)
 			{
 				if (slot.DataSO)
 					recipeToList.Add(craftTableInventory.GetItem(slot.Index).Data.ID);
 			}
 			recipeToList.Sort();
+			string recipeString = RecipeUtil.RecipeToString(recipeType, recipeToList);
 
 			// Find Recipe
-			string key = string.Join(',', recipeToList);
-			if (DataManager.Instance.CraftDic.ContainsKey(key) == false)
+			if (DataManager.Instance.CraftDic.ContainsKey(recipeString) == false)
 				return;
-			ItemData resultItemData = GetItemData(DataManager.Instance.CraftDic[key]);
+			ItemData resultItemData = GetItemData(DataManager.Instance.CraftDic[recipeString]);
 
 			// Make Potion
 			if (resultSlot.DataSO)
@@ -48,7 +50,7 @@ namespace Mascari4615
 			}
 
 			// Actual Remove
-			foreach (UIItemSlot slot in slots)
+			foreach (UIItemSlot slot in craftTableSlots)
 			{
 				if (slot.DataSO)
 					craftTableInventory.Remove(slot.Index);
@@ -58,14 +60,14 @@ namespace Mascari4615
 		public override void Init()
 		{
 			itemInventoryUI.Init();
-			anvilInventoryUI.Init();
+			craftTableInventoryUI.Init();
 			resultSlot.Init();
 		}
 
 		public override void UpdateUI()
 		{
 			itemInventoryUI.UpdateUI();
-			anvilInventoryUI.UpdateUI();
+			craftTableInventoryUI.UpdateUI();
 			resultSlot.UpdateUI();
 		}
 	}

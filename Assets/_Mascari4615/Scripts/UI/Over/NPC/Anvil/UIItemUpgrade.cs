@@ -4,11 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
-using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	public class UIPotionCraft : UIItemCraft
+	public class UIItemUpgrade : UIItemCraft
 	{
 	}
 }

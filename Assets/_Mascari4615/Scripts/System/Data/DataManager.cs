@@ -50,11 +50,7 @@ namespace Mascari4615
 					return;
 
 				foreach (Recipe recipe in itemData.Recipes)
-				{
-					List<int> recipeToList = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
-					recipeToList.Sort();
-					CraftDic.Add(string.Join(',', recipeToList), itemData.ID);
-				}
+					CraftDic[RecipeUtil.RecipeToString(recipe)] = itemData.ID;
 			});
 
 			if (GameSetting.UseLocalData)
