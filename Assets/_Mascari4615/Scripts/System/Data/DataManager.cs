@@ -16,7 +16,7 @@ namespace Mascari4615
 		public SaveManager SaveManager { get; private set; } = new();
 		public WorkManager WorkManager { get; private set; } = new();
 		public QuestManager QuestManager { get; private set; } = new();
-		public readonly Dictionary<string, int> CraftDic = new();
+		public readonly Dictionary<string, (Recipe recipe, int itemID)> CraftDic = new();
 
 		private SOManager SOManager;
 
@@ -50,7 +50,7 @@ namespace Mascari4615
 					return;
 
 				foreach (Recipe recipe in itemData.Recipes)
-					CraftDic[RecipeUtil.RecipeToString(recipe)] = itemData.ID;
+					CraftDic[RecipeUtil.RecipeToString(recipe)] = (recipe, itemData.ID);
 			});
 
 			if (GameSetting.UseLocalData)

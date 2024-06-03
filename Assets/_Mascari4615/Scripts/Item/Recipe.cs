@@ -9,6 +9,7 @@ namespace Mascari4615
 	{
 		public RecipeType Type;
 		public List<ItemData> Ingredients;
+		public int priceNyang;
 		public float Percentage;
 	}
 }
