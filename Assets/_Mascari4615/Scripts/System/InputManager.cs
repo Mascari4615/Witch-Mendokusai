@@ -50,6 +50,10 @@ namespace Mascari4615
 				Player.Instance.TryUseSkill(0);
 			if (GameManager.Instance.IsMouseOnUI || TimeManager.Instance.IsPaused)
 				return;
+
+			if (IsPointerOverUI())
+				return;
+				
 			if (Input.GetMouseButton(0))
 				Player.Instance.TryUseSkill(1);
 			if (Input.GetMouseButton(1))
