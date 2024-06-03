@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class GameStat : Stat<GameStatType>
+	public class GameStat : Stat<GameStatType>, ISavable<Dictionary<GameStatType, int>>
 	{
 		public void UpdateData()
 		{
