@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static Mascari4615.SOHelper;
@@ -41,9 +42,16 @@ namespace Mascari4615
 
 			// Check Result Slot
 			ItemData resultItemData = GetItemData(itemID);
-			if (resultSlot.DataSO &&  resultSlot.DataSO.ID != resultItemData.ID)
+			if (resultSlot.DataSO)
 			{
-				UIManager.Instance.PopText("결과 슬롯을 비워주세요.", TextType.Warning);
+				if (resultSlot.DataSO.ID != resultItemData.ID)
+				{
+					UIManager.Instance.PopText("결과 슬롯을 비워주세요.", TextType.Warning);
+				}
+				else if (resultSlot.Amount + 1 >= (resultSlot.DataSO as ItemData).MaxAmount)
+				{
+					UIManager.Instance.PopText("결과 슬롯을 비워주세요.", TextType.Warning);
+				}
 				return;
 			}
 
