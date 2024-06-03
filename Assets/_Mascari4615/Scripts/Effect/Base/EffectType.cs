@@ -2,8 +2,8 @@ namespace Mascari4615
 {
 	public enum EffectType
 	{
-		Stat = 0,
-		Statistics = 1,
+		UnitStat = 0,
+		GameStat = 1,
 
 		IntVariable = 50,
 		FloatVariable = 51,

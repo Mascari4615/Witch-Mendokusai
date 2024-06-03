@@ -5,19 +5,19 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class Stat
+	public abstract class Stat<T> where T : Enum
 	{
-		private readonly Dictionary<StatType, int> stats = new();
-		private readonly Dictionary<StatType, Action> events = new();
+		private readonly Dictionary<T, int> stats = new();
+		private readonly Dictionary<T, Action> events = new();
 		
-		public void Init(Stat newStats)
+		public void Init(Stat<T> newStats)
 		{
 			stats.Clear();
-			foreach (var stat in newStats.stats)
-				stats[stat.Key] = stat.Value;
+			foreach (var (stat, value) in newStats.stats)
+				stats[stat] = value;
 		}
 
-		public int this [StatType statType]
+		public int this [T statType]
 		{
 			get
 			{
@@ -38,7 +38,7 @@ namespace Mascari4615
 			}
 		}
 
-		public void AddListener(StatType statType, Action action)
+		public void AddListener(T statType, Action action)
 		{
 			if (events.ContainsKey(statType) == false)
 				events[statType] = action;
@@ -46,7 +46,7 @@ namespace Mascari4615
 				events[statType] += action;
 		}
 
-		public void RemoveListener(StatType statType, Action action)
+		public void RemoveListener(T statType, Action action)
 		{
 			if (events.ContainsKey(statType) == false)
 				return;

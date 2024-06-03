@@ -10,6 +10,6 @@ namespace Mascari4615
 		[PropertyOrder(10)][field: SerializeField] public GameObject Prefab { get; set; }
 		[PropertyOrder(11)][field: SerializeField] public SkillData[] DefaultSkills { get; set; }
 		[PropertyOrder(12)][field: SerializeField] public Material Material { get; set; }
-		[PropertyOrder(13)][field: SerializeField] public StatInfos InitStatInfos { get; set; }
+		[PropertyOrder(13)][field: SerializeField] public UnitStatInfos InitStatInfos { get; set; }
 	}
 }

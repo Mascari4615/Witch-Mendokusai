@@ -1,6 +1,6 @@
 namespace Mascari4615
 {
-	public enum StatType
+	public enum UnitStatType
 	{
 		// 체력
 		HP_CUR = 0,

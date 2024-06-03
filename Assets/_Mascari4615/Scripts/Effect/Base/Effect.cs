@@ -40,11 +40,11 @@ namespace Mascari4615
 						break;
 					case EffectType.SpawnObject:
 						break;
-					case EffectType.Stat:
+					case EffectType.UnitStat:
 						dataSO = GetStatData(id);
 						break;
-					case EffectType.Statistics:
-						dataSO = GetStatisticsData(id);
+					case EffectType.GameStat:
+						dataSO = GetGameStatData(id);
 						break;
 					case EffectType.UnlockQuest:
 						dataSO = GetQuestSO(id);
@@ -94,11 +94,11 @@ namespace Mascari4615
 				case EffectType.SpawnObject:
 					effect = new SpawnObjectEffect();
 					break;
-				case EffectType.Stat:
+				case EffectType.UnitStat:
 					effect = new StatEffect();
 					break;
-				case EffectType.Statistics:
-					effect = new StatisticsEffect();
+				case EffectType.GameStat:
+					effect = new GameStatEffect();
 					break;
 				case EffectType.UnlockQuest:
 					effect = new UnlockQuestEffect();

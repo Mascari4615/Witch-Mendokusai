@@ -21,6 +21,6 @@ namespace Mascari4615
 		};
 		public Dictionary<int, int> quests = new();
 		public List<RuntimeQuestSaveData> runtimeQuests = new();
-		public Dictionary<StatisticsType, int> statistics = new();
+		public Dictionary<GameStatType, int> gameStats = new();
 	}
 }

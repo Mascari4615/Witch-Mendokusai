@@ -21,8 +21,8 @@ namespace Mascari4615
 			return criteriaInfo.Type switch
 			{
 				CriteriaType.ItemCount => new ItemCountCriteria(criteriaInfo),
-				CriteriaType.Stat => new StatCriteria(criteriaInfo),
-				CriteriaType.Statistics => new StatisticsCriteria(criteriaInfo),
+				CriteriaType.UnitStat => new StatCriteria(criteriaInfo),
+				CriteriaType.GameStat => new GameStatCriteria(criteriaInfo),
 				_ => throw new ArgumentOutOfRangeException(),
 			};
 		}

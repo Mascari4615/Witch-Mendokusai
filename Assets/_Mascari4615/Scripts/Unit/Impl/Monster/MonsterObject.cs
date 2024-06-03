@@ -36,9 +36,9 @@ namespace Mascari4615
 
 		public void UpdateStatByDifficulty(DungeonDifficulty newDifficulty)
 		{
-			double persentage = (double)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX];
-			Stat[StatType.HP_MAX] = (int)(Stat[StatType.HP_MAX] * (1 + .7f * (int)newDifficulty));
-			SetHp((int)(Stat[StatType.HP_MAX] * persentage));
+			double persentage = (double)UnitStat[UnitStatType.HP_CUR] / UnitStat[UnitStatType.HP_MAX];
+			UnitStat[UnitStatType.HP_MAX] = (int)(UnitStat[UnitStatType.HP_MAX] * (1 + .7f * (int)newDifficulty));
+			SetHp((int)(UnitStat[UnitStatType.HP_MAX] * persentage));
 		}
 
 		public override void ReceiveDamage(DamageInfo damageInfo)
@@ -47,7 +47,7 @@ namespace Mascari4615
 			UIManager.Instance.PopDamage(damageInfo, transform.position + Vector3.forward * 1);
 
 			SOManager.Instance.LastHitMonsterObject.RuntimeValue = this;
-			hpBar.localScale = new Vector3((float)Stat[StatType.HP_CUR] / Stat[StatType.HP_MAX], 1, 1);
+			hpBar.localScale = new Vector3((float)UnitStat[UnitStatType.HP_CUR] / UnitStat[UnitStatType.HP_MAX], 1, 1);
 
 			GameObject hitEffect = ObjectPoolManager.Instance.Spawn(hitEffectPrefab);
 			hitEffect.transform.position = transform.position + (Vector3.Normalize(Player.Instance.transform.position - transform.position) * .5f);
@@ -80,7 +80,7 @@ namespace Mascari4615
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Hit", transform.position);
 
-			switch (Stat[StatType.HP_CUR])
+			switch (UnitStat[UnitStatType.HP_CUR])
 			{
 				case > 0:
 					// Animator.SetTrigger("AHYA");
@@ -94,8 +94,8 @@ namespace Mascari4615
 			DropLoot();
 
 			if (UnitData.Tag == MonsterTag.Boss)
-				SOManager.Instance.Statistics[StatisticsType.BOSS_KILL]++;
-			SOManager.Instance.Statistics[StatisticsType.MONSTER_KILL]++;
+				SOManager.Instance.GameStat[GameStatType.BOSS_KILL]++;
+			SOManager.Instance.GameStat[GameStatType.MONSTER_KILL]++;
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Die", transform.position);
 			StopAllCoroutines();

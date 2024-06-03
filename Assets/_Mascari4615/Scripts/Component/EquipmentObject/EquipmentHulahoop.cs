@@ -13,7 +13,7 @@ namespace Mascari4615
 		private readonly List<DamagingObject> satellites = new();
 		private float rotateSpeed;
 
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 
 		private void OnEnable()
 		{
@@ -25,10 +25,10 @@ namespace Mascari4615
 
 		private void Start()
 		{
-			PlayerStat.AddListener(StatType.SATELLITE_COUNT, UpdateSatellite);
-			PlayerStat.AddListener(StatType.SATELLITE_ROTATE_SPEED_BONUS, UpdateRotationSpeed);
-			PlayerStat.AddListener(StatType.SATELLITE_DAMAGE_BONUS, UpdateDamageBonus);
-			PlayerStat.AddListener(StatType.SATELLITE_SCALE_BONUS, UpdateSatelliteScale);
+			PlayerStat.AddListener(UnitStatType.SATELLITE_COUNT, UpdateSatellite);
+			PlayerStat.AddListener(UnitStatType.SATELLITE_ROTATE_SPEED_BONUS, UpdateRotationSpeed);
+			PlayerStat.AddListener(UnitStatType.SATELLITE_DAMAGE_BONUS, UpdateDamageBonus);
+			PlayerStat.AddListener(UnitStatType.SATELLITE_SCALE_BONUS, UpdateSatelliteScale);
 		}
 
 		private void Update()
@@ -44,7 +44,7 @@ namespace Mascari4615
 
 		private void UpdateSatellite()
 		{
-			int satelliteCount = 1 + PlayerStat[StatType.SATELLITE_COUNT];
+			int satelliteCount = 1 + PlayerStat[UnitStatType.SATELLITE_COUNT];
 
 			if (transform.childCount < satelliteCount)
 			{
@@ -71,19 +71,19 @@ namespace Mascari4615
 
 		private void UpdateRotationSpeed()
 		{
-			rotateSpeed = originRotateSpeed * (1 + PlayerStat[StatType.SATELLITE_ROTATE_SPEED_BONUS] * .3f);
+			rotateSpeed = originRotateSpeed * (1 + PlayerStat[UnitStatType.SATELLITE_ROTATE_SPEED_BONUS] * .3f);
 		}
 
 		private void UpdateDamageBonus()
 		{
 			foreach (DamagingObject satellite in satellites)
-				satellite.SetDamageBonus(PlayerStat[StatType.SATELLITE_DAMAGE_BONUS]);
+				satellite.SetDamageBonus(PlayerStat[UnitStatType.SATELLITE_DAMAGE_BONUS]);
 		}
 
 		private void UpdateSatelliteScale()
 		{
 			foreach (DamagingObject satellite in satellites)
-				satellite.transform.localScale = Vector3.one * (1 + PlayerStat[StatType.SATELLITE_SCALE_BONUS] * .2f);
+				satellite.transform.localScale = Vector3.one * (1 + PlayerStat[UnitStatType.SATELLITE_SCALE_BONUS] * .2f);
 		}
 	}
 }

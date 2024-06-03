@@ -13,7 +13,7 @@ namespace Mascari4615
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; } = new();
 
 		[field: Space(10), Header("PlayerData")]
-		[field: SerializeField] public Statistics Statistics { get; private set; }
+		[field: SerializeField] public GameStat GameStat { get; private set; }
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickX { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }
@@ -30,7 +30,8 @@ namespace Mascari4615
 			private set => instance = value;
 		}
 
-		[field: Header("_" + nameof(SOManager))]		[field: SerializeField] public FloatVariable DashDuration { get; private set; }
+		[field: Header("_" + nameof(SOManager))]
+		[field: SerializeField] public FloatVariable DashDuration { get; private set; }
 		[field: SerializeField] public FloatVariable DashSpeed { get; private set; }
 
 		[field: SerializeField] public MonsterObjectVariable LastHitMonsterObject { get; private set; }

@@ -10,12 +10,12 @@ namespace Mascari4615
 	{
 		[SerializeField] private int amount;
 
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 
 		public override void Effect()
 		{
 			RuntimeManager.PlayOneShot("event:/SFX/EXP", transform.position);
-			PlayerStat[StatType.EXP_CUR] += amount;
+			PlayerStat[UnitStatType.EXP_CUR] += amount;
 		}
 	}
 }

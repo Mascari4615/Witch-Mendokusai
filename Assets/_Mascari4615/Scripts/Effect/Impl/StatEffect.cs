@@ -6,11 +6,11 @@ namespace Mascari4615
 {
 	public class StatEffect : IEffect
 	{
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 
 		public void Apply(EffectInfo effectInfo)
 		{
-			StatType Type = (effectInfo.Data as StatData).Type;
+			UnitStatType Type = (effectInfo.Data as UnitStatData).Type;
 			int value = effectInfo.Value;
 			ArithmeticOperator arithmeticOperator = effectInfo.ArithmeticOperator;
 

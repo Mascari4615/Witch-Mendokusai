@@ -48,7 +48,7 @@ namespace Mascari4615
 			ObjectManager.Instance.PopObject("Effect_Hit",
 				transform.position + (Vector3.Normalize(Wakgood.Instance.transform.position - transform.position) * .5f));*/
 
-			switch (Stat[StatType.HP_CUR])
+			switch (UnitStat[UnitStatType.HP_CUR])
 			{
 				case > 0:
 					// Animator.SetTrigger("AHYA");

@@ -18,8 +18,8 @@ namespace Mascari4615
 			Data = Type switch
 			{
 				CriteriaType.ItemCount => GetItemData(criteriaInfoSaveData.DataID),
-				CriteriaType.Stat => GetStatData(criteriaInfoSaveData.DataID),
-				CriteriaType.Statistics => GetStatisticsData(criteriaInfoSaveData.DataID),
+				CriteriaType.UnitStat => GetStatData(criteriaInfoSaveData.DataID),
+				CriteriaType.GameStat => GetGameStatData(criteriaInfoSaveData.DataID),
 				_ => throw new ArgumentOutOfRangeException(),
 			};
 			ComparisonOperator = criteriaInfoSaveData.ComparisonOperator;

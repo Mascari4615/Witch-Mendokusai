@@ -84,7 +84,7 @@ namespace Mascari4615
 			WaitForSeconds ws01 = new(.1f);
 
 			// HACK:
-			int dungeonClear = SOManager.Instance.Statistics[StatisticsType.DUNGEON_CLEAR];
+			int dungeonClear = SOManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR];
 
 			while (true)
 			{
@@ -92,7 +92,7 @@ namespace Mascari4615
 				UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
-				if (dungeonClear < SOManager.Instance.Statistics[StatisticsType.DUNGEON_CLEAR])
+				if (dungeonClear < SOManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR])
 				{
 					EndDungeon();
 					yield break;
@@ -105,7 +105,7 @@ namespace Mascari4615
 		private void UpdateTime()
 		{
 			DungeonCurTime -= TimeUpdateInterval;
-			SOManager.Instance.Statistics[StatisticsType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
+			SOManager.Instance.GameStat[GameStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
 		}
 
 		private void UpdateDifficulty()
@@ -157,8 +157,8 @@ namespace Mascari4615
 					// HACK:
 					new EffectInfo()
 					{
-						Type = EffectType.Statistics,
-						Data = GetStatisticsData((int)StatisticsType.DUNGEON_CLEAR),
+						Type = EffectType.GameStat,
+						Data = GetGameStatData((int)GameStatType.DUNGEON_CLEAR),
 						ArithmeticOperator = ArithmeticOperator.Add,
 						Value = 1,
 					}
@@ -184,8 +184,8 @@ namespace Mascari4615
 					{
 						new CriteriaInfo()
 						{
-							Type = CriteriaType.Statistics,
-							Data = GetStatisticsData((int)StatisticsType.DUNGEON_TIME),
+							Type = CriteriaType.GameStat,
+							Data = GetGameStatData((int)GameStatType.DUNGEON_TIME),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
 							Value = (int)InitialDungeonTime.TotalSeconds,
 							JustOnce = true,
@@ -201,8 +201,8 @@ namespace Mascari4615
 					{
 						new CriteriaInfo()
 						{
-							Type = CriteriaType.Statistics,
-							Data = GetStatisticsData((int)StatisticsType.MONSTER_KILL),
+							Type = CriteriaType.GameStat,
+							Data = GetGameStatData((int)GameStatType.MONSTER_KILL),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
 							Value = CurDungeon.ClearValue,
 							JustOnce = true,
@@ -215,8 +215,8 @@ namespace Mascari4615
 					{
 						new CriteriaInfo()
 						{
-							Type = CriteriaType.Statistics,
-							Data = GetStatisticsData((int)StatisticsType.BOSS_KILL),
+							Type = CriteriaType.GameStat,
+							Data = GetGameStatData((int)GameStatType.BOSS_KILL),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
 							Value = CurDungeon.ClearValue,
 							JustOnce = true,

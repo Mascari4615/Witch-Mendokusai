@@ -1,6 +1,6 @@
 namespace Mascari4615
 {
-	public enum StatisticsType
+	public enum GameStatType
 	{
 		TOTAL_MONSTER_KILL = 0,
 		TOTAL_BOSS_KILL = 1,

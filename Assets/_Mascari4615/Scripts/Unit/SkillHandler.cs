@@ -17,13 +17,13 @@ namespace Mascari4615
 
 			for (int i = 0; i < unitObject.UnitData.DefaultSkills.Length; i++)
 				SetSkill(i, unitObject.UnitData.DefaultSkills[i]);
-			unitObject.Stat.AddListener(StatType.COOLTIME_BONUS, UpdateCooltimeBonus);
+			unitObject.UnitStat.AddListener(UnitStatType.COOLTIME_BONUS, UpdateCooltimeBonus);
 		}
 
 		public void SetSkill(int skillIndex, SkillData skill)
 		{
 			SkillDic[skillIndex] = new Skill(skill);
-			SkillDic[skillIndex].UpdateCooltime(coolTimeBonus: unitObject.Stat[StatType.COOLTIME_BONUS]);
+			SkillDic[skillIndex].UpdateCooltime(coolTimeBonus: unitObject.UnitStat[UnitStatType.COOLTIME_BONUS]);
 		}
 
 		public bool UseSkill(int skillButtonIndex)
@@ -43,7 +43,7 @@ namespace Mascari4615
 		public void UpdateCooltimeBonus()
 		{
 			foreach (Skill skill in SkillDic.Values)
-				skill.UpdateCooltime(coolTimeBonus: unitObject.Stat[StatType.COOLTIME_BONUS]);
+				skill.UpdateCooltime(coolTimeBonus: unitObject.UnitStat[UnitStatType.COOLTIME_BONUS]);
 		}
 
 		public void Tick()

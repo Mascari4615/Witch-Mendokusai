@@ -11,15 +11,15 @@ namespace Mascari4615
 		[SerializeField] private Image bar;
 		[SerializeField] private TextMeshProUGUI text;
 
-		[SerializeField] private StatType curType;
-		[SerializeField] private StatType maxType;
-		[SerializeField] private StatType textType;
+		[SerializeField] private UnitStatType curType;
+		[SerializeField] private UnitStatType maxType;
+		[SerializeField] private UnitStatType textType;
 
 		[SerializeField] private float lerpSpeed = 5f;
 		[SerializeField] private bool isExpBar;
 		private Coroutine routine;
 
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 		private int Text => PlayerStat[textType];
 		private int Cur => PlayerStat[curType];
 		private int Max => PlayerStat[maxType];

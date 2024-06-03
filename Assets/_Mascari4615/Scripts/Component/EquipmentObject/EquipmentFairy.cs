@@ -18,7 +18,7 @@ namespace Mascari4615
 
 		private Coroutine loop;
 
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 
 		public override void InitContext(SkillObject skillObject)
 		{
@@ -42,9 +42,9 @@ namespace Mascari4615
 
 		private void Start()
 		{
-			PlayerStat.AddListener(StatType.FAIRY_COUNT, UpdateFairy);
-			PlayerStat.AddListener(StatType.FAIRY_DAMAGE_BONUS, UpdateDamageBonus);
-			PlayerStat.AddListener(StatType.FAIRY_ATTACK_SPEED_BONUS, UpdateAttackSpeedBonus);
+			PlayerStat.AddListener(UnitStatType.FAIRY_COUNT, UpdateFairy);
+			PlayerStat.AddListener(UnitStatType.FAIRY_DAMAGE_BONUS, UpdateDamageBonus);
+			PlayerStat.AddListener(UnitStatType.FAIRY_ATTACK_SPEED_BONUS, UpdateAttackSpeedBonus);
 		}
 
 		private void Update()
@@ -86,7 +86,7 @@ namespace Mascari4615
 
 		private void UpdateFairy()
 		{
-			int fairyCount = 1 + PlayerStat[StatType.FAIRY_COUNT];
+			int fairyCount = 1 + PlayerStat[UnitStatType.FAIRY_COUNT];
 
 			if (fairyTransforms.Count < fairyCount)
 			{
@@ -111,12 +111,12 @@ namespace Mascari4615
 
 		private void UpdateDamageBonus()
 		{
-			damageBonus = PlayerStat[StatType.FAIRY_DAMAGE_BONUS];
+			damageBonus = PlayerStat[UnitStatType.FAIRY_DAMAGE_BONUS];
 		}
 
 		private void UpdateAttackSpeedBonus()
 		{
-			coolTime = originCoolTime * (1 - PlayerStat[StatType.FAIRY_ATTACK_SPEED_BONUS] * .2f);
+			coolTime = originCoolTime * (1 - PlayerStat[UnitStatType.FAIRY_ATTACK_SPEED_BONUS] * .2f);
 		}
 	}
 }

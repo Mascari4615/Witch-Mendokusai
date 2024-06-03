@@ -11,33 +11,33 @@ namespace Mascari4615
 		
 		[SerializeField] private GameObject levelUpEffect;
 		
-		private Stat PlayerStat => Player.Instance.Stat;
+		private UnitStat PlayerStat => Player.Instance.UnitStat;
 
 		private void Start()
 		{
-			PlayerStat.AddListener(StatType.EXP_CUR, UpdateLevel);
+			PlayerStat.AddListener(UnitStatType.EXP_CUR, UpdateLevel);
 			Init();
 		}
 
 		public void Init()
 		{
-			PlayerStat[StatType.EXP_MAX] = REQUIRE_EXP_INCREASEMENT;
-			PlayerStat[StatType.EXP_CUR] = 0;
-			PlayerStat[StatType.LEVEL_CUR] = 0;
+			PlayerStat[UnitStatType.EXP_MAX] = REQUIRE_EXP_INCREASEMENT;
+			PlayerStat[UnitStatType.EXP_CUR] = 0;
+			PlayerStat[UnitStatType.LEVEL_CUR] = 0;
 			// Debug.Log(nameof(Init) + PlayerStat[StatType.EXP_CUR] + " / " + PlayerStat[StatType.EXP_MAX]);
 		}
 
 		public void UpdateLevel()
 		{
 			// Debug.Log("Try Level Up" + PlayerStat[StatType.EXP_CUR] + " / " + PlayerStat[StatType.EXP_MAX]);
-			if (PlayerStat[StatType.EXP_CUR] >= PlayerStat[StatType.EXP_MAX])
+			if (PlayerStat[UnitStatType.EXP_CUR] >= PlayerStat[UnitStatType.EXP_MAX])
 			{
 				// Debug.Log("Level Up");
 				RuntimeManager.PlayOneShot("event:/SFX/LevelUp", transform.position);
 
-				PlayerStat[StatType.EXP_CUR] -= PlayerStat[StatType.EXP_MAX];
-				PlayerStat[StatType.EXP_MAX] += REQUIRE_EXP_INCREASEMENT;
-				PlayerStat[StatType.LEVEL_CUR]++;
+				PlayerStat[UnitStatType.EXP_CUR] -= PlayerStat[UnitStatType.EXP_MAX];
+				PlayerStat[UnitStatType.EXP_MAX] += REQUIRE_EXP_INCREASEMENT;
+				PlayerStat[UnitStatType.LEVEL_CUR]++;
 				
 				GameEventManager.Instance.Raise(GameEventType.OnLevelUp);
 

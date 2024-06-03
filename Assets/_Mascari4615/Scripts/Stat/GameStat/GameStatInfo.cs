@@ -3,9 +3,9 @@ using System;
 namespace Mascari4615
 {
 	[Serializable]
-	public struct StatisticsInfo
+	public struct GameStatInfo
 	{
-		public StatisticsType type;
+		public GameStatType type;
 		public int value;
 	}
 }

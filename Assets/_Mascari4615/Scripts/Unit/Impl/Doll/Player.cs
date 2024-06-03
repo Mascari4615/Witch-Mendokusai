@@ -16,7 +16,7 @@ namespace Mascari4615
 		public bool IsAutoAim { get; private set; }
 		public Transform NearestTarget { get; private set; }
 
-		public Stat Stat => Object.Stat;
+		public UnitStat UnitStat => Object.UnitStat;
 
 		protected override void Awake()
 		{
