@@ -6,7 +6,7 @@ namespace Mascari4615
 {
 	public class GameStatEffect : IEffect
 	{
-		private GameStat GameStat => SOManager.Instance.GameStat;
+		private GameStat GameStat => DataManager.Instance.GameStat;
 
 		public void Apply(EffectInfo effectInfo)
 		{

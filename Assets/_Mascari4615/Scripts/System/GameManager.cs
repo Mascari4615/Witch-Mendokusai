@@ -23,7 +23,7 @@ namespace Mascari4615
 			Player.Instance.Object.Init(GetDoll(DataManager.Instance.CurDollID));
 
 			DataManager.Instance.QuestManager.RemoveQuests(QuestType.Dungeon);
-			SOManager.Instance.GameStat.UpdateData();
+			DataManager.Instance.GameStat.UpdateData();
 		}
 
 		public void InitEquipment()

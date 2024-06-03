@@ -13,7 +13,6 @@ namespace Mascari4615
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; } = new();
 
 		[field: Space(10), Header("PlayerData")]
-		[field: SerializeField] public GameStat GameStat { get; private set; }
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickX { get; private set; }
 		[field: SerializeField] public FloatVariable JoystickY { get; private set; }

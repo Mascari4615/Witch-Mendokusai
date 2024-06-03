@@ -94,8 +94,8 @@ namespace Mascari4615
 			DropLoot();
 
 			if (UnitData.Tag == MonsterTag.Boss)
-				SOManager.Instance.GameStat[GameStatType.BOSS_KILL]++;
-			SOManager.Instance.GameStat[GameStatType.MONSTER_KILL]++;
+				DataManager.Instance.GameStat[GameStatType.BOSS_KILL]++;
+			DataManager.Instance.GameStat[GameStatType.MONSTER_KILL]++;
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Die", transform.position);
 			StopAllCoroutines();

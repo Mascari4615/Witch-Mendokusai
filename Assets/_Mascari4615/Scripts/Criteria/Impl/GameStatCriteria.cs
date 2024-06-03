@@ -13,7 +13,7 @@ namespace Mascari4615
 
 		public override int GetCurValue()
 		{
-			return SOManager.Instance.GameStat[Type];
+			return DataManager.Instance.GameStat[Type];
 		}
 	}
 }

@@ -7,8 +7,14 @@ namespace Mascari4615
 {
 	public abstract class Stat<T> where T : Enum
 	{
-		private readonly Dictionary<T, int> stats = new();
-		private readonly Dictionary<T, Action> events = new();
+		protected readonly Dictionary<T, int> stats = new();
+		protected readonly Dictionary<T, Action> events = new();
+
+		public void InitAllZero()
+		{
+			foreach (T statType in Enum.GetValues(typeof(T)))
+				stats[statType] = 0;
+		}
 		
 		public void Init(Stat<T> newStats)
 		{

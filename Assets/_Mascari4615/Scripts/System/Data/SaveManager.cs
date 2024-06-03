@@ -95,7 +95,7 @@ namespace Mascari4615
 			SOManager.Nyang.RuntimeValue = saveData.nyang;
 
 			// 통계 초기화
-			SOManager.GameStat.Load(saveData.gameStats);
+			DataManager.GameStat.Load(saveData.gameStats);
 
 			// 아이템 초기화
 			SOManager.ItemInventory.Load(saveData.inventoryItems);
@@ -138,7 +138,7 @@ namespace Mascari4615
 				works = DataManager.WorkManager.Works,
 				quests = new(),
 				runtimeQuests = DataManager.QuestManager.Quests.Datas.Where(quest => quest.Type != QuestType.Dungeon).ToList().ConvertAll(quest => quest.Save()),
-				gameStats = SOManager.GameStat.Save()
+				gameStats = DataManager.GameStat.Save()
 			};
 
 			ForEach<Doll>(doll => gameData.dolls.Add(doll.Save()));

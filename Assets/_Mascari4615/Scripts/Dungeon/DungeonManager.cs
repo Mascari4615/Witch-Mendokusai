@@ -84,7 +84,7 @@ namespace Mascari4615
 			WaitForSeconds ws01 = new(.1f);
 
 			// HACK:
-			int dungeonClear = SOManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR];
+			int dungeonClear = DataManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR];
 
 			while (true)
 			{
@@ -92,7 +92,7 @@ namespace Mascari4615
 				UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
-				if (dungeonClear < SOManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR])
+				if (dungeonClear < DataManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR])
 				{
 					EndDungeon();
 					yield break;
@@ -105,7 +105,7 @@ namespace Mascari4615
 		private void UpdateTime()
 		{
 			DungeonCurTime -= TimeUpdateInterval;
-			SOManager.Instance.GameStat[GameStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
+			DataManager.Instance.GameStat[GameStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
 		}
 
 		private void UpdateDifficulty()
