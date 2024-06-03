@@ -24,43 +24,31 @@ namespace Mascari4615
 
 		public void TryCraft()
 		{
-			// Make Recipe
-			List<int> recipeToList = new(craftTableSlots.Length);
-			foreach (UIItemSlot slot in craftTableSlots)
-			{
-				if (slot.DataSO)
-					recipeToList.Add(craftTableInventory.GetItem(slot.Index).Data.ID);
-			}
-			recipeToList.Sort();
-			string recipeString = RecipeUtil.RecipeToString(recipeType, recipeToList);
-
 			// Find Recipe
-			if (DataManager.Instance.CraftDic.ContainsKey(recipeString) == false)
+			if (TryGetRecipeInfo(out Recipe recipe, out int itemID) == false)
 			{
 				UIManager.Instance.PopText("조합식이 유효하지 않습니다.", TextType.Warning);
 				return;
 			}
-
-			(Recipe recipe, int itemID) = DataManager.Instance.CraftDic[recipeString];
-			int recipePrice = recipe.priceNyang;
-
+			
 			// Check Nyang
+			int recipePrice = recipe.priceNyang;
 			if (recipePrice > SOManager.Instance.Nyang.RuntimeValue)
-				UIManager.Instance.PopText($"제작에 필요한 냥이 부족합니다. ({recipePrice - SOManager.Instance.Nyang.RuntimeValue}냥)", TextType.Warning);
-
-			ItemData resultItemData = GetItemData(itemID);
-
-			// Check Result Slot
-			if (resultSlot.DataSO)
 			{
-				if (resultSlot.DataSO.ID != resultItemData.ID)
-				{
-					UIManager.Instance.PopText("결과 슬롯을 비워주세요.", TextType.Warning);
-					return;
-				}
+				int diff = recipePrice - SOManager.Instance.Nyang.RuntimeValue;
+				UIManager.Instance.PopText($"제작에 필요한 냥이 부족합니다. ({diff}냥)", TextType.Warning);
 			}
 
-			// Remove Ingredients
+			// Check Result Slot
+			ItemData resultItemData = GetItemData(itemID);
+			if (resultSlot.DataSO &&  resultSlot.DataSO.ID != resultItemData.ID)
+			{
+				UIManager.Instance.PopText("결과 슬롯을 비워주세요.", TextType.Warning);
+				return;
+			}
+
+			// Craft
+			// 1. Remove Ingredients
 			foreach (UIItemSlot slot in craftTableSlots)
 			{
 				if (slot.DataSO)
@@ -69,15 +57,19 @@ namespace Mascari4615
 			SOManager.Instance.Nyang.RuntimeValue -= recipePrice;
 			UIManager.Instance.PopText($"- {recipePrice}", TextType.Warning);
 
-			// Craft
+			// 2. Craft
 			if (Random.Range(0, 100) > recipe.Percentage)
 			{
 				// Fail
+				Reward.GetReward(recipe.FailureRewards);
 				UIManager.Instance.PopText("제작 실패 !", TextType.Warning);
 			}
 			else
 			{
 				// Success
+				Reward.GetReward(recipe.SuccessRewards);
+				UIManager.Instance.PopText("제작 성공 !", TextType.Heal);
+
 				if (resultSlot.DataSO && resultSlot.DataSO.ID == resultItemData.ID)
 				{
 					craftTableInventory.SetItemAmount(resultSlot.Index, craftTableInventory.GetItem(resultSlot.Index).Amount + 1);
@@ -87,8 +79,6 @@ namespace Mascari4615
 					Item newItem = new(Guid.NewGuid(), resultItemData);
 					craftTableInventory.SetItem(resultSlot.Index, newItem);
 				}
-
-				UIManager.Instance.PopText("제작 성공 !", TextType.Heal);
 			}
 
 			UpdateUI();
@@ -113,33 +103,41 @@ namespace Mascari4615
 			UpdateCraftInfo();
 		}
 
-
-
 		private void UpdateCraftInfo()
 		{
 			if (percentageText == null || priceText == null)
 				return;
 
-			List<int> recipeToList = new(craftTableSlots.Length);
-			foreach (UIItemSlot slot in craftTableSlots)
-			{
-				if (slot.DataSO)
-					recipeToList.Add(craftTableInventory.GetItem(slot.Index).Data.ID);
-			}
-			recipeToList.Sort();
-			string recipeString = RecipeUtil.RecipeToString(recipeType, recipeToList);
-
-			if (DataManager.Instance.CraftDic.ContainsKey(recipeString) == false)
+			if (TryGetRecipeInfo(out Recipe recipe, out int _) == false)
 			{
 				percentageText.text = "_";
 				priceText.text = "_";
 				return;
 			}
 
-			(Recipe recipe, _) = DataManager.Instance.CraftDic[recipeString];
-
 			percentageText.text = $"{recipe.Percentage}%";
 			priceText.text = recipe.priceNyang.ToString();
+		}
+
+		private bool TryGetRecipeInfo(out Recipe recipe, out int itemID)
+		{
+			List<int> recipeToList = new(craftTableSlots.Length);
+			foreach (UIItemSlot slot in craftTableSlots)
+			{
+				if (slot.DataSO)
+					recipeToList.Add(craftTableInventory.GetItem(slot.Index).Data.ID);
+			}
+			string recipeString = RecipeUtil.RecipeToString(recipeType, recipeToList);
+
+			if (DataManager.Instance.CraftDic.ContainsKey(recipeString) == false)
+			{
+				recipe = default;
+				itemID = -1;
+				return false;
+			}
+
+			(recipe, itemID) = DataManager.Instance.CraftDic[recipeString];
+			return true;
 		}
 	}
 }

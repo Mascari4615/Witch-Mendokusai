@@ -11,5 +11,8 @@ namespace Mascari4615
 		public List<ItemData> Ingredients;
 		public int priceNyang;
 		public float Percentage;
+
+		public List<RewardInfo> FailureRewards;
+		public List<RewardInfo> SuccessRewards;
 	}
 }

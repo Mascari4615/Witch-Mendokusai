@@ -24,6 +24,11 @@ MonoBehaviour:
     - {fileID: 11400000, guid: e22d8a2ccbaafc942a297c9cd7b53245, type: 2}
     priceNyang: 0
     Percentage: 70
+    FailureRewards:
+    - Type: 0
+      DataSO: {fileID: 11400000, guid: 62783774d379ac0458f4a7f2c463509d, type: 2}
+      Amount: 1
+    SuccessRewards: []
   <MaxAmount>k__BackingField: 1
   <PurchasePrice>k__BackingField: 4
   <SalePrice>k__BackingField: 6
