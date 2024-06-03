@@ -64,6 +64,7 @@ namespace Mascari4615
 			panelUIs[NPCType.Shop] = FindObjectOfType<UIShop>(true);
 			panelUIs[NPCType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
 			panelUIs[NPCType.Pot] = FindObjectOfType<UIPot>(true);
+			panelUIs[NPCType.Anvil] = FindObjectOfType<UIAnvil>(true);
 
 			foreach (UIPanel uiPanel in panelUIs.Values)
 			{
@@ -117,6 +118,7 @@ namespace Mascari4615
 			options[0].gameObject.SetActive(npcType.HasFlag(NPCType.Shop));
 			options[1].gameObject.SetActive(npcType.HasFlag(NPCType.DungeonEntrance));
 			options[2].gameObject.SetActive(npcType.HasFlag(NPCType.Pot));
+			options[3].gameObject.SetActive(npcType.HasFlag(NPCType.Anvil));
 
 			Talk();
 		}
