@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57bcccf40b075204a842ff5fb93c7f74, type: 3}
+  m_Name: "Q_1002_\uC591\uC870\uC5F0\uC2B5"
+  m_EditorClassIdentifier: 
+  <ID>k__BackingField: 1002
+  <Name>k__BackingField: "\uC591\uC870 \uC5F0\uC2B5"
+  <Description>k__BackingField: "\uD3EC\uC158\uC744 \uC11E\uACE0 \uC0B6\uC744 \uBC14\uAFC0
+    \uC2DC\uAC04\uC774\uAD70 !"
+  <Sprite>k__BackingField: {fileID: 21300000, guid: f04aac02dfd85f342bff514fc25d74b8, type: 3}
+  <Data>k__BackingField:
+    Type: 2
+    GameEvents: 04000000
+    Criterias:
+    - Type: 0
+      Data: {fileID: 11400000, guid: 4953f4b841176404d9ff2bc35ecf6a84, type: 2}
+      ComparisonOperator: 4
+      Value: 1
+      JustOnce: 0
+    CompleteEffects: []
+    RewardEffects: []
+    Rewards: []
+    WorkTime: 0
+    AutoWork: 0
+    AutoComplete: 0

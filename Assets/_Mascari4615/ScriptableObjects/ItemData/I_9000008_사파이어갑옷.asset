@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b75fdf0248adbd4392c1e2a8a5f0999, type: 3}
-  m_Name: "I_9000001_\uAC00\uC8FD\uAC11\uC637"
+  m_Name: "I_9000008_\uC0AC\uD30C\uC774\uC5B4\uAC11\uC637"
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 9000001
-  <Name>k__BackingField: "\uAC00\uC8FD \uAC11\uC637"
-  <Description>k__BackingField: "\uAC00\uC8FD\uC73C\uB85C \uB9CC\uB4E4\uC5B4\uC9C4
+  <ID>k__BackingField: 9000008
+  <Name>k__BackingField: "\uC0AC\uD30C\uC774\uC5B4 \uAC11\uC637"
+  <Description>k__BackingField: "\uC0AC\uD30C\uC774\uC5B4\uB85C \uB9CC\uB4E4\uC5B4\uC9C4
     \uAC11\uC637\uC774\uB2E4."
-  <Sprite>k__BackingField: {fileID: 291612046, guid: 0d615c72f68bd6d40bd8d180ff6556ec, type: 3}
+  <Sprite>k__BackingField: {fileID: -1643921874, guid: 0d615c72f68bd6d40bd8d180ff6556ec, type: 3}
   <Grade>k__BackingField: 0
   <Type>k__BackingField: 0
   <Recipes>k__BackingField:
   - Type: 100
     Ingredients:
-    - {fileID: 11400000, guid: 142429c3d8fa33f4c86f0d4daaaf2c31, type: 2}
+    - {fileID: 11400000, guid: ab9b03e803eea624fa8f136eb61466d7, type: 2}
     priceNyang: 0
-    Percentage: 90
+    Percentage: 20
     FailureRewards:
     - Type: 0
-      DataSO: {fileID: 11400000, guid: 67e257cddaa135d4184569a2e140bd49, type: 2}
+      DataSO: {fileID: 11400000, guid: e4c2359965cadad448715e7ce971bfe0, type: 2}
       Amount: 1
     SuccessRewards: []
   <MaxAmount>k__BackingField: 1
-  <PurchasePrice>k__BackingField: 20
-  <SalePrice>k__BackingField: 10
+  <PurchasePrice>k__BackingField: 2480
+  <SalePrice>k__BackingField: 1240
