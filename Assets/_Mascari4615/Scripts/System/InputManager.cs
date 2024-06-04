@@ -40,6 +40,8 @@ namespace Mascari4615
 				UIManager.Instance.ToggleOverlayUI_Tab();
 			if (inputActionAsset["UI/Cancel"].triggered)
 				UIManager.Instance.ToggleOverlayUI_Setting();
+			if (Input.GetKeyDown(KeyCode.V))
+				UIManager.Instance.ToggleStatus();
 
 			// Player
 			if (inputActionAsset["UI/Submit"].triggered)
