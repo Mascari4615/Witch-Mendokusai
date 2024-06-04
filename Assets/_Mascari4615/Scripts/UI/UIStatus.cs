@@ -35,7 +35,7 @@ namespace Mascari4615
 					UnitStatType targetType = stats[i];
 					int curValue = Player.Instance.UnitStat[targetType];
 
-					Debug.Log($"UpdateUI: {targetType} - {curValue}");
+					// Debug.Log($"UpdateUI: {targetType} - {curValue}");
 					statusSlots[i].SetSlot(Get<UnitStatData>((int)targetType), curValue);
 				}
 			}

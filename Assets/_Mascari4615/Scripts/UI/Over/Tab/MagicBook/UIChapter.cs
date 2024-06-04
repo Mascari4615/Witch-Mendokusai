@@ -34,9 +34,9 @@ namespace Mascari4615
 
 					RuntimeQuest quest = DataManager.Instance.QuestManager.GetQuest(slot.DataSO as QuestSO);
 
-					//DataManager.Instance.QuestManager.Quests.Datas ToString
-					Debug.Log($"Q {DataManager.Instance.QuestManager.Quests.Datas.Select(x => x.SO.ID.ToString()).Aggregate((x, y) => $"{x}, {y}")}");
-					Debug.Log($"ClickClick {slot.name} | {quest} | {slot.DataSO as QuestSO} | {slot.DataSO}");
+					// DataManager.Instance.QuestManager.Quests.Datas ToString
+					// Debug.Log($"Q {DataManager.Instance.QuestManager.Quests.Datas.Select(x => x.SO.ID.ToString()).Aggregate((x, y) => $"{x}, {y}")}");
+					// Debug.Log($"ClickClick {slot.name} | {quest} | {slot.DataSO as QuestSO} | {slot.DataSO}");
 					questToolTip.SetQuest(quest);
 					questToolTip.UpdateUI();
 				});
