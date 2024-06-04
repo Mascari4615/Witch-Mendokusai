@@ -162,7 +162,7 @@ namespace Mascari4615
 			}
 
 			GameObject exp = ObjectPoolManager.Instance.Spawn(expPrefab);
-			exp.transform.position = transform.position;
+			exp.transform.position = transform.position + Vector3.up * 0.3f;
 			exp.SetActive(true);
 		}
 
