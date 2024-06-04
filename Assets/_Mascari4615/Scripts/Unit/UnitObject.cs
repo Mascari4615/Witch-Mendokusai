@@ -18,8 +18,6 @@ namespace Mascari4615
 
 		public bool IsAlive => UnitStat[UnitStatType.HP_CUR] > 0;
 
-		[SerializeField] protected Animator animator;
-
 		public float stoppingDistance = 0.1f;
 		public bool updateRotation = false;
 		public float acceleration = 40.0f;
@@ -82,8 +80,8 @@ namespace Mascari4615
 			SetHp(Mathf.Clamp(UnitStat[UnitStatType.HP_CUR] - damageInfo.damage, 0, int.MaxValue));
 
 			// SpriteRenderer 스케일 잠깐 키웠다가 줄이기
-			SpriteRenderer.transform.DOScale(originScale * 1.2f, .1f).OnComplete(() =>
-				SpriteRenderer.transform.DOScale(originScale, .1f));
+			SpriteRenderer.transform.DOScale(originScale * 1.4f, .1f).OnComplete(() =>
+				SpriteRenderer.transform.DOScale(originScale, .2f));
 		}
 
 		protected virtual void Die()
