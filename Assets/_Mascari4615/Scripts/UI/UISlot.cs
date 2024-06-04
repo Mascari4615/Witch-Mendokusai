@@ -72,11 +72,12 @@ namespace Mascari4615
 
 		[SerializeField] protected DataSO defaultDataSO;
 		[SerializeField] private bool blockClickWhenDisable = false;
+		[SerializeField] private bool showAmountOne = false;
 
 		protected Button button;
 		protected Image iconImage;
 		protected TextMeshProUGUI nameText;
-		protected TextMeshProUGUI countText;
+		protected TextMeshProUGUI amountText;
 		protected TextMeshProUGUI descriptionText;
 		protected Image disableImage;
 
@@ -101,7 +102,7 @@ namespace Mascari4615
 			disableImage = transform.Find("[Image] Disable").GetComponent<Image>();
 
 			nameText = transform.Find("[Text] Name").GetComponent<TextMeshProUGUI>();
-			countText = transform.Find("[Text] Count").GetComponent<TextMeshProUGUI>();
+			amountText = transform.Find("[Text] Amount").GetComponent<TextMeshProUGUI>();
 			descriptionText = transform.Find("[Text] Description").GetComponent<TextMeshProUGUI>();
 
 			ToolTipTrigger = GetComponent<ToolTipTrigger>();
@@ -142,7 +143,7 @@ namespace Mascari4615
 			nameText.text = Data.Name;
 			descriptionText.text = Data.Description;
 
-			countText.text = Amount == 1 ? "" : Amount.ToString();
+			amountText.text = (Amount == 1 && showAmountOne == false) ? "" : Amount.ToString();
 		}
 
 		public void SetDisable(bool isDisable)

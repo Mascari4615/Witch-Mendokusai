@@ -41,7 +41,7 @@ namespace Mascari4615
 					case EffectType.SpawnObject:
 						break;
 					case EffectType.UnitStat:
-						dataSO = GetStatData(id);
+						dataSO = GetUnitStatData(id);
 						break;
 					case EffectType.GameStat:
 						dataSO = GetGameStatData(id);

@@ -18,7 +18,7 @@ namespace Mascari4615
 			Data = Type switch
 			{
 				CriteriaType.ItemCount => GetItemData(criteriaInfoSaveData.DataID),
-				CriteriaType.UnitStat => GetStatData(criteriaInfoSaveData.DataID),
+				CriteriaType.UnitStat => GetUnitStatData(criteriaInfoSaveData.DataID),
 				CriteriaType.GameStat => GetGameStatData(criteriaInfoSaveData.DataID),
 				_ => throw new ArgumentOutOfRangeException(),
 			};

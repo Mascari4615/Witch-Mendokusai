@@ -11,7 +11,7 @@ namespace Mascari4615
 		public static DungeonConstraint GetDungeonConstraint(int id) => Get<DungeonConstraint>(id);
 		public static Dungeon GetDungeon(int id) => Get<Dungeon>(id);
 		public static NPC GetNPC(int id) => Get<NPC>(id);
-		public static UnitStatData GetStatData(int id) => Get<UnitStatData>(id);
+		public static UnitStatData GetUnitStatData(int id) => Get<UnitStatData>(id);
 		public static GameStatData GetGameStatData(int id) => Get<GameStatData>(id);
 		public static CardData GetCardData(int id) => Get<CardData>(id);
 

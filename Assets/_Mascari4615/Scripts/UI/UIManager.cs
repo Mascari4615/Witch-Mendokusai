@@ -38,6 +38,7 @@ namespace Mascari4615
 
 		public UITransition Transition { get; private set; }
 		private UIStagePopup stagePopup;
+		public UIStatus Status { get; private set; }
 
 		protected override void Awake()
 		{
@@ -62,6 +63,7 @@ namespace Mascari4615
 
 			Transition = FindObjectOfType<UITransition>(true);
 			stagePopup = FindObjectOfType<UIStagePopup>(true);
+			Status = FindObjectOfType<UIStatus>(true);
 		}
 
 		private void Start()
@@ -80,6 +82,8 @@ namespace Mascari4615
 
 			SetCanvas(MCanvasType.None);
 			SetOverlay(MPanelType.None);
+
+			Status.Init();
 		}
 
 		public void PopDamage(DamageInfo damageInfo, Vector3 pos = default)
@@ -162,6 +166,14 @@ namespace Mascari4615
 				canvasUIs[CurCanvas].SetActive(true);
 				canvasUIs[CurCanvas].UpdateUI();
 			}
+		}
+
+		public void ToggleStatus()
+		{
+			Status.gameObject.SetActive(!Status.gameObject.activeSelf);
+
+			if (Status.gameObject.activeSelf)
+				Status.UpdateUI();
 		}
 	}
 }
