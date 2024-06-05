@@ -18,6 +18,7 @@ MonoBehaviour:
   <Sprite>k__BackingField: {fileID: -1418086324, guid: fbd184d873518c24aaaa66f4c3d4c2a9, type: 3}
   <Data>k__BackingField:
     Type: 1
+    UnlockEffects: []
     GameEvents: 04000000
     Criterias:
     - Type: 2
@@ -30,7 +31,6 @@ MonoBehaviour:
       ComparisonOperator: 4
       Value: 1
       JustOnce: 0
-    UnlockEffects: []
     CompleteEffects:
     - Type: 201
       Data: {fileID: 11400000, guid: 4953f4b841176404d9ff2bc35ecf6a84, type: 2}

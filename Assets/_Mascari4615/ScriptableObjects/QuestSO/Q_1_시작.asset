@@ -19,9 +19,9 @@ MonoBehaviour:
   <Sprite>k__BackingField: {fileID: 21300000, guid: 84407d3f5149c504bbd1ce6f7937395e, type: 3}
   <Data>k__BackingField:
     Type: 2
+    UnlockEffects: []
     GameEvents: 
     Criterias: []
-    UnlockEffects: []
     CompleteEffects:
     - Type: 100
       Data: {fileID: 11400000, guid: 04a784f3ad9f0f742b7c07eaf3ba5fe8, type: 2}
@@ -37,6 +37,42 @@ MonoBehaviour:
       Value: 1
     - Type: 101
       Data: {fileID: 11400000, guid: 1f31942d902b6424aaa584f98f279888, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: 142429c3d8fa33f4c86f0d4daaaf2c31, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: 669db162aedf38a45a42c50f14488004, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: e22d8a2ccbaafc942a297c9cd7b53245, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: 87df5deb9e1f9514c8036a4dd6ddcc1e, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: 3a1a1e49a96d107439511d8dc49c3b29, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: 0038c279ad86f864d845e8de090bb472, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: 0c14bd7b0b27b874d8bd17eca092c12d, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: ab9b03e803eea624fa8f136eb61466d7, type: 2}
+      ArithmeticOperator: 1
+      Value: 1
+    - Type: 150
+      Data: {fileID: 11400000, guid: fe41c278e7043724389d56fb1867123d, type: 2}
       ArithmeticOperator: 1
       Value: 1
     RewardEffects: []
