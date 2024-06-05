@@ -36,7 +36,7 @@ namespace Mascari4615
 					return i;
 			}
 
-			Debug.LogWarning("Item not found");
+			// Debug.LogWarning("Item not found");
 			return NONE;
 		}
 
@@ -52,7 +52,7 @@ namespace Mascari4615
 					return i;
 			}
 
-			Debug.LogWarning("Item not found");
+			// Debug.LogWarning("Item not found");
 			return NONE;
 		}
 
@@ -218,22 +218,31 @@ namespace Mascari4615
 
 		public Item GetItem(int index)
 		{
-			if (!IsValidIndex(index)) return null;
+			if (IsValidIndex(index) == false)
+				return null;
 			return Datas[index] ?? null;
 		}
 
 		public void SetItem(int index, Item item)
 		{
-			if (!IsValidIndex(index))
+			if (IsValidIndex(index) == false)
+			{
+				Debug.Log($"{name} : Invalid index {index}");
 				return;
+			}
+
 			Datas[index] = item;
 			UpdateSlot(index);
 		}
 
 		public void SetItemAmount(int index, int amount)
 		{
-			if (!IsValidIndex(index))
+			if (IsValidIndex(index) == false)
+			{
+				Debug.Log($"{name} : Invalid index {index}");
 				return;
+			}
+
 			if (Datas[index] != null)
 				Datas[index].SetAmount(amount);
 			UpdateSlot(index);
@@ -272,7 +281,10 @@ namespace Mascari4615
 			if (Datas[index] != null)
 				if (Datas[index].Data.IsCountable)
 					if (Datas[index].IsEmpty)
+					{
+						Debug.Log($"{name} : {index} is empty");
 						Datas[index] = null;
+					}
 
 			UpdateUI();
 		}
