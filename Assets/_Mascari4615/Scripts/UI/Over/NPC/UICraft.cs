@@ -114,7 +114,7 @@ namespace Mascari4615
 
 					// 인벤토리에 있는 해당 아이템의 양
 					int amount = SOManager.Instance.ItemInventory.GetItemAmount(ingredientInfo.ItemData.ID);
-					craftTableAmounts[i].text = $"{(amount > ingredientInfo.Amount ? "<color=white>" : "<color=red>")}{amount}</color>";
+					craftTableAmounts[i].text = $"{(amount >= ingredientInfo.Amount ? "<color=white>" : "<color=red>")}{amount}</color>";
 					craftTableAmounts[i].text += $"/{ingredientInfo.Amount}";
 				}
 				else
@@ -128,6 +128,8 @@ namespace Mascari4615
 
 		public void TryCraft()
 		{
+			Debug.Log(nameof(TryCraft));
+
 			// Check Recipe
 			if (recipeGrid.CurSlot == null)
 			{
@@ -157,33 +159,50 @@ namespace Mascari4615
 				UIManager.Instance.PopText($"제작에 필요한 냥이 부족합니다. ({diff}냥)", TextType.Warning);
 			}
 
+			Debug.Log("D");
+			Debug.Log(recipe);
+			Debug.Log(recipe.Ingredients);
+
 			// Craft
 			// 1. Remove Ingredients
 			foreach (IngredientInfo ingredientInfo in recipe.Ingredients)
 			{
+				Debug.Log($"{ingredientInfo.ItemData.Name} {ingredientInfo.Amount}");
+
 				int remain = ingredientInfo.Amount;
 
 				while (remain > 0)
 				{
-					int slotIndex = SOManager.Instance.ItemInventory.FindItemIndex(ingredientInfo.ItemData);
+					int slotIndex = SOManager.Instance.ItemInventory.FindItemIndex(ingredientInfo.ItemData.ID);
+					Debug.Log($"A : {slotIndex} {remain}");
 
 					Item item = SOManager.Instance.ItemInventory.GetItem(slotIndex);
 					int slotAmount = item.Amount;
+					Debug.Log($"A2 : {slotIndex} {slotAmount}");
 
 					if (slotAmount > remain)
 					{
+						Debug.Log($"C : {slotIndex} {slotAmount} {remain}");
 						SOManager.Instance.ItemInventory.SetItemAmount(slotIndex, slotAmount - remain);
+						Debug.Log($"CEnd");
 						break;
 					}
 					else
 					{
+						Debug.Log($"B : {slotIndex} {slotAmount} {remain}");
 						SOManager.Instance.ItemInventory.Remove(slotIndex);
 						remain -= slotAmount;
+						Debug.Log($"BEnd");
 					}
 				}
 			}
+
+			Debug.Log("D2");
+
 			SOManager.Instance.Nyang.RuntimeValue -= recipePrice;
 			UIManager.Instance.PopText($"- {recipePrice}", TextType.Warning);
+
+			Debug.Log("E");
 
 			// 2. Craft
 			if (Random.Range(0, 100) > recipe.Percentage)
@@ -200,7 +219,11 @@ namespace Mascari4615
 				SOManager.Instance.ItemInventory.Add(itemData, 1);
 			}
 
+			Debug.Log("F");
+
 			UpdateUI();
+
+			Debug.Log("G");
 		}
 	}
 }
