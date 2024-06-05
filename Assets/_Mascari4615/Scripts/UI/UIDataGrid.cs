@@ -15,7 +15,8 @@ namespace Mascari4615
 		[SerializeField] protected Transform slotsParent;
 		[SerializeField] protected bool dontShowEmptySlot = false;
 		[SerializeField] protected ToolTip clickToolTip;
-		private bool isInit = false;
+		[SerializeField] protected GameObject noElementInfo;
+		protected bool isInit = false;
 
 		public UISlot CurSlot => Slots[CurSlotIndex];
 
@@ -99,6 +100,20 @@ namespace Mascari4615
 
 			if (clickToolTip != null)
 				clickToolTip.SetToolTipContent(CurSlot.Data);
+
+			UpdateNoElementInfo();
+		}
+
+		protected void UpdateNoElementInfo()
+		{
+
+			if (clickToolTip != null)
+			{
+				if (Datas.Count == 0)
+					clickToolTip.Clear();
+			}
+			if (noElementInfo != null)
+				noElementInfo.SetActive(Datas.Count == 0);
 		}
 
 		public void SetDataBuffer(DataBufferSO<T> newDataBuffer)

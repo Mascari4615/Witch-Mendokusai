@@ -112,6 +112,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3336456389896455098, guid: e70aad13c90d3eb45b51a0d86453c6b9, type: 3}
+      propertyPath: canDrag
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3336456389896455098, guid: e70aad13c90d3eb45b51a0d86453c6b9, type: 3}
+      propertyPath: canPlayerSetItem
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4409237354779015088, guid: e70aad13c90d3eb45b51a0d86453c6b9, type: 3}
       propertyPath: m_IsActive
       value: 1

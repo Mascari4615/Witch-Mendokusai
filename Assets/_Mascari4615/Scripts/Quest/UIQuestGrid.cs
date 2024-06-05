@@ -13,8 +13,6 @@ namespace Mascari4615
 
 		private UIQuestToolTip questToolTip;
 
-		[SerializeField] private GameObject noQuestInfo;
-
 		[SerializeField] private bool resetFilterOnEnable = true;
 
 		private RuntimeQuest CurQuest => Datas.Count > 0 ? Datas[CurSlotIndex] : null;
@@ -85,9 +83,6 @@ namespace Mascari4615
 				activeSlotCount += slot.gameObject.activeSelf ? 1 : 0;
 			}
 
-			if (noQuestInfo != null)
-				noQuestInfo.SetActive(activeSlotCount == 0);
-
 			if (clickToolTip != null)
 				clickToolTip.SetToolTipContent(CurSlot.Data);
 
@@ -96,6 +91,8 @@ namespace Mascari4615
 				questToolTip.SetQuest(CurQuest);
 				questToolTip.UpdateUI();
 			}
+
+			UpdateNoElementInfo();
 		}
 
 		public void SetFilter(QuestType filter)
