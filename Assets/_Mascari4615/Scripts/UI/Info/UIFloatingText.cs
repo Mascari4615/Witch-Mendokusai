@@ -95,10 +95,11 @@ namespace Mascari4615
 		{
 			// TODO: 스탯 효과 (ex. DEF Down, ATK Up)
 
+			text.color = Color.white;
+		
 			switch (textType)
 			{
 				case TextType.Normal:
-					text.color = Color.white;
 					break;
 				case TextType.Critical:
 					text.text = $"크리티컬!\n{text.text}";
