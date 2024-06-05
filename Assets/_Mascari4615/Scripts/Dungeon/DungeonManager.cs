@@ -228,7 +228,7 @@ namespace Mascari4615
 			}
 
 			RuntimeQuest runtimeQuest = new(questInfo, questName);
-			DataManager.Instance.QuestManager.AddQuest(runtimeQuest);
+			QuestManager.Instance.AddQuest(runtimeQuest);
 		}
 	}
 }

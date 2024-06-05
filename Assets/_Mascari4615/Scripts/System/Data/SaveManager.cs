@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
@@ -60,8 +61,9 @@ namespace Mascari4615
 				if (doll.ID != 0)
 					newGameData.dolls.Add(doll.Save());
 			});
-			DataManager.QuestState = new();
-			ForEach<QuestSO>(questData => DataManager.QuestState.Add(questData.ID, QuestState.Locked));
+			Dictionary<int, QuestState> questStates = new();
+			ForEach<QuestSO>(questData => questStates.Add(questData.ID, QuestState.Locked));
+			DataManager.QuestManager.LoadQuestState(questStates);
 
 			// 레시피 초기화
 			// 모든 아이템 ID에 대해 bool
@@ -119,13 +121,14 @@ namespace Mascari4615
 				SOManager.DollBuffer.Add(GetDoll(Doll.DUMMY_ID));
 
 			// 퀘스트 초기화
-			DataManager.Instance.QuestState = new();
+			Dictionary<int, QuestState> questStates = new();
 			foreach (var (id, state) in saveData.questStates)
 			{
-				DataManager.QuestState.Add(id, (QuestState)state);
+				questStates.Add(id, (QuestState)state);
 				if ((QuestState)state >= QuestState.Unlocked)
 					SOManager.QuestDataBuffer.Add(GetQuestSO(id));
 			}
+			DataManager.QuestManager.LoadQuestState(questStates);
 
 			// 레시피 초기화
 			DataManager.HasRecipe = saveData.hasRecipe;
@@ -147,15 +150,13 @@ namespace Mascari4615
 				inventoryItems = SOManager.ItemInventory.Save(),
 				dolls = new(),
 				works = DataManager.WorkManager.Works,
-				questStates = new(),
+				questStates = DataManager.QuestManager.GetQuestStates().ToDictionary(pair => pair.Key, pair => (int)pair.Value),
 				hasRecipe = DataManager.HasRecipe,
 				runtimeQuests = DataManager.QuestManager.Quests.Datas.Where(quest => quest.Type != QuestType.Dungeon).ToList().ConvertAll(quest => quest.Save()),
 				gameStats = DataManager.GameStat.Save()
 			};
 
 			ForEach<Doll>(doll => gameData.dolls.Add(doll.Save()));
-			foreach (var (id, state) in DataManager.QuestState)
-				gameData.questStates.Add(id, (int)state);
 
 			if (GameSetting.UseLocalData)
 			{

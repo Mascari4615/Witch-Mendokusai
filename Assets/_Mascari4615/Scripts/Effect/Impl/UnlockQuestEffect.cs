@@ -6,7 +6,7 @@ namespace Mascari4615
 	{
 		public void Apply(EffectInfo effectInfo)
 		{
-			DataManager.Instance.QuestState[(effectInfo.Data as QuestSO).ID] = QuestState.Unlocked;
+			QuestManager.Instance.UnlockQuest(effectInfo.Data as QuestSO);
 		}
 	}
 }

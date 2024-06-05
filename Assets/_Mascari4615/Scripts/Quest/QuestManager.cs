@@ -6,7 +6,15 @@ namespace Mascari4615
 {
 	public class QuestManager
 	{
+		public static QuestManager Instance => DataManager.Instance.QuestManager;
+
 		public QuestBuffer Quests => SOManager.Instance.QuestBuffer;
+
+		private Dictionary<int, QuestState> questStates = new();
+		public void LoadQuestState(Dictionary<int, QuestState> questStates) => this.questStates = questStates;
+		public Dictionary<int, QuestState> GetQuestStates() => questStates;
+		public void SetQuestState(int questID, QuestState state) => questStates[questID] = state;
+		public QuestState GetQuestState(int questID) => questStates[questID];
 
 		public void Init(List<RuntimeQuest> quests)
 		{
@@ -32,6 +40,18 @@ namespace Mascari4615
 		public RuntimeQuest GetQuest(Guid? guid)
 		{
 			return Quests.Datas.Find(x => x.Guid == guid);
+		}
+
+		public void UnlockQuest(QuestSO questData)
+		{
+			questStates[questData.ID] = QuestState.Unlocked;
+
+			List<EffectInfo> effects = questData.Data.UnlockEffects;
+
+			foreach (EffectInfo effect in effects)
+			{
+				Effect.ApplyEffect(effect);
+			}
 		}
 
 		public void CompleteQuest(Guid? guid)

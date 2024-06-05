@@ -22,7 +22,7 @@ namespace Mascari4615
 			if (DataSO)
 			{
 				QuestSO questData = DataSO as QuestSO;
-				QuestState state = DataManager.Instance.QuestState[questData.ID];
+				QuestState state = QuestManager.Instance.GetQuestState(questData.ID);
 				SetQuestState(state);
 			}
 		}

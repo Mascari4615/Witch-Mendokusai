@@ -48,7 +48,7 @@ namespace Mascari4615
 			if (dataSOs.Count == 0)
 				return;
 
-			QuestManager questManager = DataManager.Instance.QuestManager;
+			QuestManager questManager = QuestManager.Instance;
 
 			// 클리어 가능한 퀘스트가 있다면
 			bool hasCompletableQuest = dataSOs.Exists(i => questManager.GetQuest(i)?.State == RuntimeQuestState.CanComplete);
@@ -62,7 +62,7 @@ namespace Mascari4615
 			// 획득 가능한 퀘스트가 있다면
 			bool hasLockedQuest = dataSOs.Exists(i =>
 			{
-				return DataManager.Instance.QuestState[i.ID] == QuestState.Locked;
+				return QuestManager.Instance.GetQuestState(i.ID) == QuestState.Locked;
 			});
 			
 			if (hasLockedQuest)

@@ -9,7 +9,7 @@ namespace Mascari4615
 		public void Apply(EffectInfo effectInfo)
 		{
 			QuestSO quest = effectInfo.Data as QuestSO;
-			DataManager.Instance.QuestManager.AddQuest(new(quest));
+			QuestManager.Instance.AddQuest(new(quest));
 		}
 	}
 }
