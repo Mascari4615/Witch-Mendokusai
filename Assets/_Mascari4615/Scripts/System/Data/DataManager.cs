@@ -26,6 +26,7 @@ namespace Mascari4615
 		public int CurDollID;
 		public int DummyDollCount;
 		public Dictionary<int, QuestState> QuestState = new();
+		public Dictionary<int, bool> HasRecipe = new();
 
 		public string localDisplayName = "";
 

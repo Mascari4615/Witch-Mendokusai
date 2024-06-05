@@ -8,7 +8,7 @@ namespace Mascari4615
 	public abstract class UIDataGrid<T> : MonoBehaviour, IUI
 	{
 		[field: SerializeField] public DataBufferSO<T> DataBufferSO { get; private set; }
-		public List<T> Datas { get; private set; }
+		public List<T> Datas { get; private set; } = new();
 		public List<UISlot> Slots { get; protected set; } = new();
 		public int CurSlotIndex { get; protected set; } = 0;
 		
@@ -60,19 +60,40 @@ namespace Mascari4615
 		/// </summary>
 		public virtual void UpdateUI()
 		{
+			if (!isInit)
+				Init();
+
 			for (int i = 0; i < Slots.Count; i++)
 			{
-				if (i < DataBufferSO.Datas.Count)
+				if (DataBufferSO)
 				{
-					Slots[i].SetSlot(DataBufferSO.Datas[i] as DataSO);
-					Slots[i].gameObject.SetActive(true);
+					if (i < DataBufferSO.Datas.Count)
+					{
+						Slots[i].SetSlot(DataBufferSO.Datas[i] as DataSO);
+						Slots[i].gameObject.SetActive(true);
+					}
+					else
+					{
+						Slots[i].SetSlot(null);
+
+						if (dontShowEmptySlot)
+							Slots[i].gameObject.SetActive(false);
+					}
 				}
 				else
 				{
-					Slots[i].SetSlot(null);
+					if (i < Datas.Count)
+					{
+						Slots[i].SetSlot(Datas[i] as DataSO);
+						Slots[i].gameObject.SetActive(true);
+					}
+					else
+					{
+						Slots[i].SetSlot(null);
 
-					if (dontShowEmptySlot)
-						Slots[i].gameObject.SetActive(false);
+						if (dontShowEmptySlot)
+							Slots[i].gameObject.SetActive(false);
+					}
 				}
 			}
 
