@@ -69,9 +69,6 @@ namespace Mascari4615
 			// 모든 아이템 ID에 대해 bool
 			DataManager.HasRecipe = SOManager.DataSOs[typeof(ItemData)].Values.ToDictionary(itemData => itemData.ID, itemData => false);
 
-			// Test
-			DataManager.HasRecipe[10001000] = true;
-
 			// 초기 퀘스트 추가
 			// DataManager.QuestManager.AddQuest(new RuntimeQuest(GetQuestSO(0)));
 			new RuntimeQuest(GetQuestSO(0));

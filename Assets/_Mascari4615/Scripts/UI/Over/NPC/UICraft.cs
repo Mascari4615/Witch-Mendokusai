@@ -76,6 +76,9 @@ namespace Mascari4615
 				if (itemData.Recipes.Count == 0)
 					continue;
 
+				if (itemData.Recipes[0].Type != recipeType)
+					continue;
+
 				if (HasRecipe.ContainsKey(itemData.ID) && HasRecipe[itemData.ID])
 					recipes.Add(itemData);
 			}
