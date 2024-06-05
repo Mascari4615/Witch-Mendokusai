@@ -6,6 +6,6 @@ namespace Mascari4615
 	public struct IngredientInfo
 	{
 		public ItemData ItemData;
-		public int Count;
+		public int Amount;
 	}
 }
