@@ -1,14 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
-using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
-	public class UIPotionCraft : UIItemCraft
+	[RequireComponent(typeof(UICraft))]
+	public class UIPotionCraft : UIPanel
 	{
+		private UICraft craft;
+
+		public override void Init()
+		{
+			craft = GetComponent<UICraft>();
+			craft.Init();
+		}
+
+		public override void UpdateUI()
+		{
+			craft.UpdateUI();
+		}
 	}
 }

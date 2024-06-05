@@ -98,7 +98,7 @@ namespace Mascari4615
 			{
 				if (i < questDatas.Count)
 				{
-					QuestState state = DataManager.Instance.QuestState[questDatas[i].ID];
+					QuestState state = QuestManager.Instance.GetQuestState(questDatas[i].ID);
 					if (state == QuestState.Completed)
 					{
 						questOptions[i].gameObject.SetActive(false);
@@ -166,12 +166,12 @@ namespace Mascari4615
 			List<QuestSO> questDatas = curNPCData.QuestData;
 			QuestSO questData = questDatas[index];
 
-			QuestState state = DataManager.Instance.QuestState[questDatas[index].ID];
+			QuestState state = QuestManager.Instance.GetQuestState(questData.ID);
 			switch (state)
 			{
 				case QuestState.Locked:
-					DataManager.Instance.QuestState[questDatas[index].ID] = QuestState.Unlocked;
-					DataManager.Instance.QuestManager.AddQuest(new RuntimeQuest(questData));
+					QuestManager.Instance.UnlockQuest(questData);
+					QuestManager.Instance.AddQuest(new RuntimeQuest(questData));
 					break;
 				case QuestState.Unlocked:
 					// TODO: 퀘스트 진행 중 대사 출력

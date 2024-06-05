@@ -31,10 +31,13 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
+			if (!isInit)
+				Init();
+
 			for (int i = 0; i < Slots.Count; i++)
 			{
 				UIItemSlot slot = Slots[i] as UIItemSlot;
-				ItemData itemData = DataBufferSO.Datas.ElementAtOrDefault(i);
+				ItemData itemData = Datas.ElementAtOrDefault(i);
 
 				if (itemData == null)
 				{
@@ -49,6 +52,8 @@ namespace Mascari4615
 					slot.gameObject.SetActive(slotActive);
 				}
 			}
+
+			UpdateNoElementInfo();
 		}
 
 		public void UpdateSlotUI(int index, Item item)

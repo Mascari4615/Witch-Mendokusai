@@ -19,7 +19,18 @@ namespace Mascari4615
 			image.color = slotData.Sprite == null ? Color.clear : Color.white;
 			nameText.text = slotData.Name;
 			descriptionText.text = slotData.Description;
+			gradeText.text = "";
 
+			if (contentFitterRefresh != null)
+				contentFitterRefresh.RefreshContentFitters();
+		}
+
+		public void Clear()
+		{
+			image.sprite = null;
+			image.color = Color.clear;
+			nameText.text = "";
+			descriptionText.text = "";
 			gradeText.text = "";
 
 			if (contentFitterRefresh != null)

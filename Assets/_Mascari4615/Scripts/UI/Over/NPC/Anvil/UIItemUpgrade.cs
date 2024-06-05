@@ -1,13 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
-	public class UIItemUpgrade : UIItemCraft
+	[RequireComponent(typeof(UICraft))]
+	public class UIItemUpgrade : UIPanel
 	{
+		private UICraft craft;
+
+		public override void Init()
+		{
+			craft = GetComponent<UICraft>();
+			craft.Init();
+		}
+
+		public override void UpdateUI()
+		{
+			craft.UpdateUI();
+		}
 	}
 }

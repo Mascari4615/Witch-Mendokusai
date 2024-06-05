@@ -32,10 +32,10 @@ namespace Mascari4615
 				{
 					slot.ToolTipTrigger.ClickToolTip.gameObject.SetActive(true);
 
-					RuntimeQuest quest = DataManager.Instance.QuestManager.GetQuest(slot.DataSO as QuestSO);
+					RuntimeQuest quest = QuestManager.Instance.GetQuest(slot.DataSO as QuestSO);
 
-					// DataManager.Instance.QuestManager.Quests.Datas ToString
-					// Debug.Log($"Q {DataManager.Instance.QuestManager.Quests.Datas.Select(x => x.SO.ID.ToString()).Aggregate((x, y) => $"{x}, {y}")}");
+					// QuestManager.Instance.Quests.Datas ToString
+					// Debug.Log($"Q {QuestManager.Instance.Quests.Datas.Select(x => x.SO.ID.ToString()).Aggregate((x, y) => $"{x}, {y}")}");
 					// Debug.Log($"ClickClick {slot.name} | {quest} | {slot.DataSO as QuestSO} | {slot.DataSO}");
 					questToolTip.SetQuest(quest);
 					questToolTip.UpdateUI();
@@ -57,7 +57,7 @@ namespace Mascari4615
 			
 			foreach (UIQuestSlot slot in questSlots)
 			{
-				RuntimeQuest runtimeQuest = DataManager.Instance.QuestManager.GetQuest(slot.DataSO as QuestSO);
+				RuntimeQuest runtimeQuest = QuestManager.Instance.GetQuest(slot.DataSO as QuestSO);
 
 				// HACK:
 				slot.SetDisable(false);
@@ -71,7 +71,7 @@ namespace Mascari4615
 				else
 				{
 					QuestSO questData = slot.DataSO as QuestSO;
-					QuestState state = DataManager.Instance.QuestState[questData.ID];
+					QuestState state = QuestManager.Instance.GetQuestState(questData.ID);
 					slot.SetDisable(state == QuestState.Locked);
 				}
 

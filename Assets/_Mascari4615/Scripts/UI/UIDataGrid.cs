@@ -8,14 +8,15 @@ namespace Mascari4615
 	public abstract class UIDataGrid<T> : MonoBehaviour, IUI
 	{
 		[field: SerializeField] public DataBufferSO<T> DataBufferSO { get; private set; }
-		public List<T> Datas { get; private set; }
+		public List<T> Datas { get; private set; } = new();
 		public List<UISlot> Slots { get; protected set; } = new();
 		public int CurSlotIndex { get; protected set; } = 0;
 		
 		[SerializeField] protected Transform slotsParent;
 		[SerializeField] protected bool dontShowEmptySlot = false;
 		[SerializeField] protected ToolTip clickToolTip;
-		private bool isInit = false;
+		[SerializeField] protected GameObject noElementInfo;
+		protected bool isInit = false;
 
 		public UISlot CurSlot => Slots[CurSlotIndex];
 
@@ -60,24 +61,59 @@ namespace Mascari4615
 		/// </summary>
 		public virtual void UpdateUI()
 		{
+			if (!isInit)
+				Init();
+
 			for (int i = 0; i < Slots.Count; i++)
 			{
-				if (i < DataBufferSO.Datas.Count)
+				if (DataBufferSO)
 				{
-					Slots[i].SetSlot(DataBufferSO.Datas[i] as DataSO);
-					Slots[i].gameObject.SetActive(true);
+					if (i < DataBufferSO.Datas.Count)
+					{
+						Slots[i].SetSlot(DataBufferSO.Datas[i] as DataSO);
+						Slots[i].gameObject.SetActive(true);
+					}
+					else
+					{
+						Slots[i].SetSlot(null);
+
+						if (dontShowEmptySlot)
+							Slots[i].gameObject.SetActive(false);
+					}
 				}
 				else
 				{
-					Slots[i].SetSlot(null);
+					if (i < Datas.Count)
+					{
+						Slots[i].SetSlot(Datas[i] as DataSO);
+						Slots[i].gameObject.SetActive(true);
+					}
+					else
+					{
+						Slots[i].SetSlot(null);
 
-					if (dontShowEmptySlot)
-						Slots[i].gameObject.SetActive(false);
+						if (dontShowEmptySlot)
+							Slots[i].gameObject.SetActive(false);
+					}
 				}
 			}
 
 			if (clickToolTip != null)
 				clickToolTip.SetToolTipContent(CurSlot.Data);
+
+			UpdateNoElementInfo();
+		}
+
+		protected void UpdateNoElementInfo()
+		{
+
+			if (clickToolTip != null)
+			{
+				if (Datas.Count == 0)
+					clickToolTip.Clear();
+			}
+			if (noElementInfo != null)
+				noElementInfo.SetActive(Datas.Count == 0);
 		}
 
 		public void SetDataBuffer(DataBufferSO<T> newDataBuffer)

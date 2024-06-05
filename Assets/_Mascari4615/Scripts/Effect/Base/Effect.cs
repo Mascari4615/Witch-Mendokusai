@@ -49,6 +49,9 @@ namespace Mascari4615
 					case EffectType.UnlockQuest:
 						dataSO = GetQuestSO(id);
 						break;
+					case EffectType.UnlockRecipe:
+						dataSO = GetItemData(id);
+						break;
 					default:
 						break;
 				}
@@ -102,6 +105,9 @@ namespace Mascari4615
 					break;
 				case EffectType.UnlockQuest:
 					effect = new UnlockQuestEffect();
+					break;
+				case EffectType.UnlockRecipe:
+					effect = new UnlockRecipeEffect();
 					break;
 			}
 

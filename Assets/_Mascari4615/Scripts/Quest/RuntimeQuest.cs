@@ -131,11 +131,11 @@ namespace Mascari4615
 		{
 			State = RuntimeQuestState.Completed;
 
-			DataManager.Instance.QuestManager.RemoveQuest(this);
+			QuestManager.Instance.RemoveQuest(this);
 
 			if (SO != null)
 			{
-				DataManager.Instance.QuestState[SO.ID] = QuestState.Completed;
+				QuestManager.Instance.SetQuestState(SO.ID, QuestState.Completed);
 				if (Type == QuestType.Achievement)
 					UIManager.Instance?.Popup(SO);
 			}

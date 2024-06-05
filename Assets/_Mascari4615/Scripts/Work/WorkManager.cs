@@ -44,7 +44,7 @@ namespace Mascari4615
 					switch (work.WorkType)
 					{
 						case WorkType.QuestWork:
-							DataManager.Instance.QuestManager.EndQuestWork(work.Value);
+							QuestManager.Instance.EndQuestWork(work.Value);
 							break;
 					}
 					works.RemoveAt(i);

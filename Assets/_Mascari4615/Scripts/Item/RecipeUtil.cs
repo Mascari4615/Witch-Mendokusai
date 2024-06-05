@@ -11,7 +11,7 @@ namespace Mascari4615
 		{
 			string s = recipe.Type + ",";
 			
-			List<int> ingredientIDs = recipe.Ingredients.Select(ingredient => ingredient.ID).ToList();
+			List<int> ingredientIDs = recipe.Ingredients.Select(ingredient => ingredient.ItemData.ID).ToList();
 					ingredientIDs.Sort();
 			s += string.Join(',', ingredientIDs);
 			
