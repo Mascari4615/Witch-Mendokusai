@@ -64,38 +64,51 @@ namespace Mascari4615
 			switch (eventData.button)
 			{
 				case PointerEventData.InputButton.Left:
-					Debug.Log("Left Click");
+					// Debug.Log("Left Click");
 					if (UIHoldingSlot.Instance.IsHolding)
 					{
 						if (Inventory.GetItem(Index) == null)
 						{
-							// Debug.Log("L:A");
 							// 들고 있는 아이템을 슬롯에 놓기
 							Item item = UIHoldingSlot.Instance.DropSlot();
 							Inventory.SetItem(Index, item);
 						}
 						else
 						{
-							// Debug.Log("L:B");
-							// 이미 들고 있는 아이템이 있으면 들고 있는 아이템과 슬롯을 교체
+							// 이미 이 슬롯에 아이템이 있으면 들고 있는 아이템과 슬롯을 교체
 							UIHoldingSlot.Instance.SwapSlot(this);
 						}
 					}
 					else
 					{
-						// Debug.Log("L:C");
 						// 집기
 						UIHoldingSlot.Instance.HoldSlot(this);
 					}
 					break;
 				case PointerEventData.InputButton.Right:
-					Debug.Log("Right Click");
-					// 절반 집기
-					// 들고 있는 아이템이 있으면 들고 있는 아이템 하나 놓기
-					// 들고 있는 아이템이 있는데 아이템이 있는 슬롯에 우클릭한거면 슬롯 교체
+					// Debug.Log("Right Click");
+					if (UIHoldingSlot.Instance.IsHolding)
+					{
+						if (Inventory.GetItem(Index) == null)
+						{
+							// 하나 놓기
+							Item item = UIHoldingSlot.Instance.DropSlotOne();
+							Inventory.SetItem(Index, item);
+						}
+						else
+						{
+							// 이미 이 슬롯에 아이템이 있으면 들고 있는 아이템과 슬롯을 교체
+							UIHoldingSlot.Instance.SwapSlot(this);
+						}
+					}
+					else
+					{
+						// 절반 집기
+						UIHoldingSlot.Instance.HoldSlotHalf(this);
+					}
 					break;
 				case PointerEventData.InputButton.Middle:
-					Debug.Log("Middle Click");
+					// Debug.Log("Middle Click");
 					break;
 			}
 		}
