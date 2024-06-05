@@ -66,56 +66,7 @@ namespace Mascari4615
 			if (canHold == false)
 				return;
 
-			switch (eventData.button)
-			{
-				case PointerEventData.InputButton.Left:
-					Debug.Log("Left Click");
-					if (UIHoldingSlot.Instance.IsHolding)
-					{
-						if (Inventory.GetItem(Index) == null)
-						{
-							// 들고 있는 아이템을 슬롯에 놓기
-							Item item = UIHoldingSlot.Instance.DropSlot();
-							Inventory.SetItem(Index, item);
-						}
-						else
-						{
-							// 이미 이 슬롯에 아이템이 있으면 들고 있는 아이템과 슬롯을 교체
-							UIHoldingSlot.Instance.SwapSlot(this);
-						}
-					}
-					else
-					{
-						// 집기
-						UIHoldingSlot.Instance.HoldSlot(this);
-					}
-					break;
-				case PointerEventData.InputButton.Right:
-					// Debug.Log("Right Click");
-					if (UIHoldingSlot.Instance.IsHolding)
-					{
-						if (Inventory.GetItem(Index) == null)
-						{
-							// 하나 놓기
-							Item item = UIHoldingSlot.Instance.DropSlotOne();
-							Inventory.SetItem(Index, item);
-						}
-						else
-						{
-							// 이미 이 슬롯에 아이템이 있으면 들고 있는 아이템과 슬롯을 교체
-							UIHoldingSlot.Instance.SwapSlot(this);
-						}
-					}
-					else
-					{
-						// 절반 집기
-						UIHoldingSlot.Instance.HoldSlotHalf(this);
-					}
-					break;
-				case PointerEventData.InputButton.Middle:
-					// Debug.Log("Middle Click");
-					break;
-			}
+			UIHoldingSlot.Instance.DoSomething(this, eventData.button == PointerEventData.InputButton.Left);
 		}
 	}
 }
