@@ -22,7 +22,8 @@ MonoBehaviour:
   <Recipes>k__BackingField:
   - Type: 100
     Ingredients:
-    - {fileID: 11400000, guid: 3a1a1e49a96d107439511d8dc49c3b29, type: 2}
+    - ItemData: {fileID: 11400000, guid: 3a1a1e49a96d107439511d8dc49c3b29, type: 2}
+      Count: 1
     priceNyang: 0
     Percentage: 50
     FailureRewards:
