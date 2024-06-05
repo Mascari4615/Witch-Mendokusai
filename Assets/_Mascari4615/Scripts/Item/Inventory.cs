@@ -24,6 +24,22 @@ namespace Mascari4615
 			return NONE;
 		}
 
+		public int FindItemIndex(int targetID, int startIndex = 0)
+		{
+			for (int i = startIndex; i < Capacity; i++)
+			{
+				Item cur = Datas[i];
+				if (cur == null)
+					continue;
+
+				if (cur.Data.ID == targetID)
+					return i;
+			}
+
+			Debug.LogWarning("Item not found");
+			return NONE;
+		}
+
 		public int FindItemIndex(ItemData target, int startIndex = 0)
 		{
 			for (int i = startIndex; i < Capacity; i++)
@@ -36,7 +52,7 @@ namespace Mascari4615
 					return i;
 			}
 
-			// Debug.LogWarning("Item not found");
+			Debug.LogWarning("Item not found");
 			return NONE;
 		}
 
