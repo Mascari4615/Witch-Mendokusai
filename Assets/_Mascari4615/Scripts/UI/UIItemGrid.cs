@@ -51,7 +51,7 @@ namespace Mascari4615
 				UIItemSlot slot = Slots[i] as UIItemSlot;
 				Item item = inventory.Datas.ElementAtOrDefault(i);
 
-				slot.canDrag = filter == ItemType.None;
+				slot.canHold = filter == ItemType.None;
 
 				if (item == null)
 				{

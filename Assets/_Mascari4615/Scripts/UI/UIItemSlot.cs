@@ -14,17 +14,16 @@ namespace Mascari4615
 		Buy,
 		Sell
 	}
-	
-	public class UIItemSlot : UISlot, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
+
+	public class UIItemSlot : UISlot, IPointerDownHandler
 	{
 		protected TextMeshProUGUI priceText;
-	
+
 		public UIItemGrid UIItemGrid { get; private set; }
 		public Inventory Inventory => UIItemGrid.DataBufferSO as Inventory;
 
-		public bool onlyOneItem = false;
 		public bool canPlayerSetItem = true;
-		public bool canDrag = true;
+		public bool canHold = true;
 		private PriceType priceType = PriceType.Buy;
 
 		public override bool Init()
@@ -40,7 +39,7 @@ namespace Mascari4615
 		public override void UpdateUI()
 		{
 			base.UpdateUI();
-			
+
 			if (DataSO)
 			{
 				ItemData itemData = DataSO as ItemData;
@@ -52,124 +51,22 @@ namespace Mascari4615
 			}
 		}
 
-		public void OnBeginDrag(PointerEventData eventData)
-		{
-			if (!canDrag)
-				return;
-
-			if (DataSO == null)
-				return;
-
-			if (IsDisable)
-				return;
-
-			UIDragSlot.Instance.SetSlot(this);
-		}
-
-		public void OnDrag(PointerEventData eventData)
-		{
-			if (!canDrag)
-				return;
-
-			if (DataSO == null)
-				return;
-
-			UIDragSlot.Instance.transform.position = eventData.position;
-		}
-
-		public void OnEndDrag(PointerEventData eventData)
-		{
-			if (!canDrag)
-				return;
-
-			UIDragSlot.Instance.SetActive(false);
-			UIDragSlot.Instance.SetSlot(null);
-		}
-
-		// DragSlot이 위에 떨어졌을 때
-		public void OnDrop(PointerEventData eventData)
-		{
-			if (!canDrag)
-				return;
-
-			if (!UIDragSlot.Instance.IsHolding)
-				return;
-
-			if (!canPlayerSetItem)
-				return;
-
-			SwapSlot();
-		}
-
-		private void SwapSlot()
-		{
-			Debug.Log(nameof(SwapSlot));
-
-			if (onlyOneItem)
-			{
-				if (DataSO == null)
-				{
-					// DragSlot.HoldingSlot의 Item에서 하나만 가져오기 (빼오기)
-				}
-				else
-				{
-					// slot.SpecialThing을 아이템 인벤토리애 넣기
-					// DragSlot.HoldingSlot의 Item에서 하나만 가져오기 
-				}
-			}
-			else
-			{
-				// ChangeSlot
-			}
-
-			UIItemSlot slotA = this;
-			UIItemSlot slotB = UIDragSlot.Instance.HoldingSlot;
-
-			if (slotA == slotB)
-			{
-				Debug.Log("같은 슬롯입니다.");
-				return;
-			}
-
-			Item itemA = slotA.Inventory.GetItem(slotA.Index);
-			Item itemB = slotB.Inventory.GetItem(slotB.Index);
-
-			// 1. 셀 수 있는 아이템이고, 동일한 아이템일 경우 indexA -> indexB로 개수 합치기
-			if (itemA != null && itemB != null && itemA.Data == itemB.Data)
-			{
-				int maxAmount = itemA.MaxAmount;
-				int sum = itemA.Amount + itemB.Amount;
-
-				if (sum <= maxAmount)
-				{
-					itemA.SetAmount(sum);
-					itemB.SetAmount(0);
-				}
-				else
-				{
-					itemA.SetAmount(maxAmount);
-					itemB.SetAmount(sum - maxAmount);
-				}
-			}
-			// 2. 일반적인 경우 : 슬롯 교체
-			else
-			{
-				slotA.Inventory.SetItem(slotA.Index, itemB);
-				slotB.Inventory.SetItem(slotB.Index, itemA);
-			}
-
-			// 두 슬롯 정보 갱신
-			slotA.Inventory.UpdateSlot(slotA.Index);
-			slotB.Inventory.UpdateSlot(slotB.Index);
-
-			slotA.Select();
-		}
-
 		public void SetUIItemGrid(UIItemGrid itemGridUI) => UIItemGrid = itemGridUI;
 		public void SetPriceType(PriceType priceType)
 		{
 			this.priceType = priceType;
 			UpdateUI();
+		}
+
+		public void OnPointerDown(PointerEventData eventData)
+		{
+			if (canPlayerSetItem == false)
+				return;
+
+			if (canHold == false)
+				return;
+
+			UIHoldingSlot.Instance.DoSomething(this, eventData.button == PointerEventData.InputButton.Left);
 		}
 	}
 }
