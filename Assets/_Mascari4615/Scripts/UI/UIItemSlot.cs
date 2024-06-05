@@ -15,16 +15,15 @@ namespace Mascari4615
 		Sell
 	}
 
-	public class UIItemSlot : UISlot, IPointerClickHandler
+	public class UIItemSlot : UISlot, IPointerDownHandler
 	{
 		protected TextMeshProUGUI priceText;
 
 		public UIItemGrid UIItemGrid { get; private set; }
 		public Inventory Inventory => UIItemGrid.DataBufferSO as Inventory;
 
-		public bool onlyOneItem = false;
 		public bool canPlayerSetItem = true;
-		public bool canDrag = true;
+		public bool canHold = true;
 		private PriceType priceType = PriceType.Buy;
 
 		public override bool Init()
@@ -59,12 +58,18 @@ namespace Mascari4615
 			UpdateUI();
 		}
 
-		public void OnPointerClick(PointerEventData eventData)
+		public void OnPointerDown(PointerEventData eventData)
 		{
+			if (canPlayerSetItem == false)
+				return;
+
+			if (canHold == false)
+				return;
+
 			switch (eventData.button)
 			{
 				case PointerEventData.InputButton.Left:
-					// Debug.Log("Left Click");
+					Debug.Log("Left Click");
 					if (UIHoldingSlot.Instance.IsHolding)
 					{
 						if (Inventory.GetItem(Index) == null)
