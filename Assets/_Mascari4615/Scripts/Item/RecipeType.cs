@@ -9,8 +9,9 @@ namespace Mascari4615
 		ItemCraft = 0,
 		PotionCraft,
 
-		Upgrade = 100,
+		Reforge = 100,
 
 		Distillation = 1000,
+		Smeling = 1001,
 	}
 }

@@ -9,5 +9,6 @@ namespace Mascari4615
 		Pot = 1 << 2,
 		Anvil = 1 << 3,
 		Quest = 1 << 4,
+		Furnace = 1 << 5,
 	}
 }

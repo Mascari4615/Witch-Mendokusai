@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 27295272ebf3533408ef818242e78912, type: 3}
-  m_Name: "NPC_0_\uB5A0\uB3CC\uC774\uC0C1\uC778"
+  m_Name: "NPC_5_\uC6A9\uAD11\uB85C"
   m_EditorClassIdentifier: 
-  <ID>k__BackingField: 0
-  <Name>k__BackingField: "\uB5A0\uB3CC\uC774 \uC0C1\uC778"
+  <ID>k__BackingField: 5
+  <Name>k__BackingField: "\uC6A9\uAD11\uB85C"
   <Description>k__BackingField: 
-  <Sprite>k__BackingField: {fileID: 21300000, guid: 824b9eac07ee3e340b3a148cbd1b11d5, type: 3}
+  <Sprite>k__BackingField: {fileID: 21300000, guid: 9cd2728f6478e3d49b3b46233e59a062, type: 3}
   <Prefab>k__BackingField: {fileID: 0}
   <DefaultSkills>k__BackingField: []
   <Material>k__BackingField: {fileID: 0}
@@ -26,6 +26,5 @@ MonoBehaviour:
     - unitStat: 300
       value: 3
   <PanelInfos>k__BackingField:
-  - Type: 1
-    DataSOs:
-    - {fileID: 11400000, guid: ab06591aa08605a48afcc9e28b3bd87b, type: 2}
+  - Type: 32
+    DataSOs: []

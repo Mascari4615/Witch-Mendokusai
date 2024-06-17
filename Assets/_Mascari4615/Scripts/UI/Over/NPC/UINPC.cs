@@ -65,6 +65,7 @@ namespace Mascari4615
 			panelUIs[NPCType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
 			panelUIs[NPCType.Pot] = FindObjectOfType<UIPot>(true);
 			panelUIs[NPCType.Anvil] = FindObjectOfType<UIAnvil>(true);
+			panelUIs[NPCType.Furnace] = FindObjectOfType<UIFurnace>(true);
 
 			foreach (UIPanel uiPanel in panelUIs.Values)
 			{
@@ -72,15 +73,30 @@ namespace Mascari4615
 				uiPanel.SetActive(false);
 			}
 
-			for (int slotIndex = 0; slotIndex < options.Length; slotIndex++)
+			int slotIndex = 0;
+			foreach (NPCType type in System.Enum.GetValues(typeof(NPCType)))
 			{
-				NPCType p = (NPCType)(1 << slotIndex);
-				UIPanel panel = panelUIs[p];
+				NPCType npcType = type;
+				Debug.Log($"{npcType}");
+
+				if (npcType == NPCType.None)
+					continue;
+
+				if (!panelUIs.ContainsKey(npcType))
+					continue;
+
+				if (npcType == NPCType.Quest)
+					continue;
+
+				UIPanel panel = panelUIs[npcType];
 
 				options[slotIndex].SetSlotIndex(slotIndex);
 				options[slotIndex].SetSlot(panel.PanelIcon, panel.Name, string.Empty);
 				options[slotIndex].Init();
-				options[slotIndex].SetClickAction((slot) => { SetPanel((NPCType)(1 << slot.Index)); });
+				options[slotIndex].SetClickAction((slot) => { SetPanel(npcType); });
+				slotIndex++;
+
+				Debug.Log($"{npcType} {slotIndex}");
 			}
 
 			SetPanel(NPCType.None);
@@ -119,6 +135,7 @@ namespace Mascari4615
 			options[1].gameObject.SetActive(npcType.HasFlag(NPCType.DungeonEntrance));
 			options[2].gameObject.SetActive(npcType.HasFlag(NPCType.Pot));
 			options[3].gameObject.SetActive(npcType.HasFlag(NPCType.Anvil));
+			options[4].gameObject.SetActive(npcType.HasFlag(NPCType.Furnace));
 
 			Talk();
 		}
