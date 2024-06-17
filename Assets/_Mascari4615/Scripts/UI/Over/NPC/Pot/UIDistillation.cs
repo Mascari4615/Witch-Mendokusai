@@ -1,20 +1,21 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Mascari4615
 {
+	[RequireComponent(typeof(UICraft))]
 	public class UIDistillation : UIPanel
 	{
-		public void Distillation()
+		private UICraft craft;
+
+		public override void Init()
 		{
+			craft = GetComponent<UICraft>();
+			craft.Init();
 		}
 
 		public override void UpdateUI()
 		{
+			craft.UpdateUI();
 		}
 	}
 }

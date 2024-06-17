@@ -138,6 +138,9 @@ namespace Mascari4615
 
 		public virtual void UpdateUI()
 		{
+			if (!isInit)
+				Init();
+
 			iconImage.sprite = Data.Sprite;
 			iconImage.color = Data.Sprite == null ? Color.clear : Color.white;
 			nameText.text = Data.Name;

@@ -10,5 +10,7 @@ namespace Mascari4615
 		PotionCraft,
 
 		Upgrade = 100,
+
+		Distillation = 1000,
 	}
 }
