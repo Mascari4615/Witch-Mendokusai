@@ -36,6 +36,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 326598798078735030, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
+      propertyPath: m_Size
+      value: 0.21233861
+      objectReference: {fileID: 0}
     - target: {fileID: 390325743109961092, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -458,6 +462,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3678610423434135812, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768685855756414821, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3781823165278485125, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
@@ -1390,6 +1398,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8651087678427832522, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9022012008870256031, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9075079294049511859, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
@@ -1840,6 +1852,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 326598798078735030, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
+      propertyPath: m_Size
+      value: 0.21233861
+      objectReference: {fileID: 0}
     - target: {fileID: 390325743109961092, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1890,7 +1906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 560819189032928169, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_text
-      value: "\uAC15\uD654"
+      value: "\uC7AC\uB828"
       objectReference: {fileID: 0}
     - target: {fileID: 609948032988502324, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchorMax.y
@@ -1994,7 +2010,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2208494109673571909, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_Name
-      value: '[Panel] ItemUpgrade'
+      value: '[Panel] Reforging'
       objectReference: {fileID: 0}
     - target: {fileID: 2229376855324753431, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchorMax.y
@@ -2266,6 +2282,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3678610423434135812, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3768685855756414821, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3781823165278485125, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
@@ -3200,6 +3220,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9022012008870256031, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9075079294049511859, guid: 5c3a9f28b54a9bb4e816a945e74fd089, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -3258,7 +3282,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c2c0a9ea9d00a2438fd51b49426606b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <Name>k__BackingField: "\uAC15\uD654"
+  <Name>k__BackingField: "\uC7AC\uB828"
   <PanelIcon>k__BackingField: {fileID: 21300000, guid: 331173e2b14e63a4ba5c03df66ed43f5, type: 3}
 --- !u!114 &6574453953666275262 stripped
 MonoBehaviour:

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Mascari4615
 {
@@ -8,7 +7,8 @@ namespace Mascari4615
 	public struct Recipe
 	{
 		public RecipeType Type;
-		public List<IngredientInfo> Ingredients;
+		public int amount;
+		public List<ItemInfo> Items;
 		public int priceNyang;
 		public float Percentage;
 
