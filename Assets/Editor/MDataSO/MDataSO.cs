@@ -17,7 +17,6 @@ namespace Mascari4615
 
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
-			{ typeof(Aspect), "A" },
 			{ typeof(QuestSO), "Q" },
 			{ typeof(CardData), "C" },
 			{ typeof(ItemData), "I" },
@@ -37,7 +36,6 @@ namespace Mascari4615
 
 		private readonly Dictionary<Type, string> assetPaths = new()
 		{
-			{ typeof(Aspect), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Aspect)}/" },
 			{ typeof(QuestSO), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestSO)}/" },
 			{ typeof(CardData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(CardData)}/" },
 			{ typeof(ItemData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(ItemData)}/" },
