@@ -27,9 +27,19 @@ namespace Mascari4615
 				UISlot[] fillerButtons = filtersParent.GetComponentsInChildren<UISlot>(true);
 				for (int i = 0; i < fillerButtons.Length; i++)
 				{
-					fillerButtons[i].Init();
-					fillerButtons[i].SetSlotIndex(i);
-					fillerButtons[i].SetClickAction((slot) => { SetFilter((ItemType)(slot.Index - 1)); });
+					// None 포함
+					if (i <= (int)ItemType.Count)
+					{
+						fillerButtons[i].Init();
+						fillerButtons[i].SetSlotIndex(i);
+						fillerButtons[i].SetClickAction((slot) => { SetFilter((ItemType)(slot.Index - 1)); });
+
+						fillerButtons[i].gameObject.SetActive(true);
+					}
+					else
+					{
+						fillerButtons[i].gameObject.SetActive(false);
+					}
 				}
 			}
 
