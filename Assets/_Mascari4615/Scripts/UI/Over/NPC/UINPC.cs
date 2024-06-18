@@ -77,7 +77,6 @@ namespace Mascari4615
 			foreach (NPCType type in System.Enum.GetValues(typeof(NPCType)))
 			{
 				NPCType npcType = type;
-				Debug.Log($"{npcType}");
 
 				if (npcType == NPCType.None)
 					continue;
@@ -95,8 +94,6 @@ namespace Mascari4615
 				options[slotIndex].Init();
 				options[slotIndex].SetClickAction((slot) => { SetPanel(npcType); });
 				slotIndex++;
-
-				Debug.Log($"{npcType} {slotIndex}");
 			}
 
 			SetPanel(NPCType.None);
