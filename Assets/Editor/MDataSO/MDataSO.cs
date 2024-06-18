@@ -48,9 +48,9 @@ namespace Mascari4615
 			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
 			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
 			{ typeof(DungeonConstraint), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonConstraint)}/" },
-			{ typeof(Doll), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Doll)}/" },
-			{ typeof(NPC), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(NPC)}/" },
-			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Unit)}/{nameof(Monster)}/" },
+			{ typeof(Doll), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Doll)}/" },
+			{ typeof(NPC), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(NPC)}/" },
+			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Monster)}/" },
 		};
 
 		public static MDataSO Instance { get; private set; }
@@ -71,15 +71,29 @@ namespace Mascari4615
 		[MenuItem("Mascari4615/MDataSO")]
 		public static void ShowMDataSO()
 		{
-			MDataSO wnd = GetWindow<MDataSO>();
-			wnd.titleContent = new GUIContent("MDataSO");
+			Debug.Log(nameof(ShowMDataSO));
+			// (유틸리티 창 여부, 타이틀, 이미 창이 열려있을 때 새로 열지 여부)
+			GetWindow<MDataSO>(false, nameof(MDataSO), true);
+			
+			Debug.Log($"{nameof(ShowMDataSO)} End : {Instance}");
 		}
 
 		private void OnEnable()
 		{
 			Debug.Log(nameof(OnEnable));
 
-			Instance = this;
+			if (Instance == null)
+			{
+				Debug.Log("인스턴스를 생성합니다.");
+				Instance = this;
+			}
+			else
+			{
+				Debug.LogWarning("이미 인스턴스가 존재합니다.");
+				Close();
+				return;
+			}
+
 			DataSOs = new();
 
 			InitList();
@@ -87,7 +101,15 @@ namespace Mascari4615
 			InitEnumData<UnitStatData, UnitStatType>();
 			InitEnumData<GameStatData, GameStatType>();
 
-			SaveAssets();
+			// SaveAssets();
+
+			Debug.Log($"{nameof(OnEnable)} End : {Instance}");
+		}
+
+		private void OnDestroy()
+		{
+			Debug.Log(nameof(OnDestroy));
+			Instance = null;
 		}
 
 		public void CreateGUI()
@@ -159,7 +181,7 @@ namespace Mascari4615
 			};
 
 			isInit = true;
-			Debug.Log("OnEnable is executed.");
+			Debug.Log($"{nameof(CreateGUI)} End");
 		}
 
 		public void UpdateGrid()
@@ -186,17 +208,16 @@ namespace Mascari4615
 
 			SelectDataSOSlot(DataSOSlots.Values.First());
 			Repaint();
-		}
 
-		private void OnValidate()
-		{
-			Debug.Log("OnValidate is executed.");
+			Debug.Log($"{nameof(UpdateGrid)} End");
 		}
 
 		private void SetType(Type type)
 		{
+			Debug.Log($"{nameof(SetType)} <{type.Name}>");
 			CurType = type;
 			UpdateGrid();
+			Debug.Log($"{nameof(SetType)} End");
 		}
 
 		private void InitList()
@@ -234,7 +255,7 @@ namespace Mascari4615
 
 			Dictionary<int, DataSO> dic = DataSOs[type] = new();
 			InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR);
-			SaveAssets();
+			// SaveAssets();
 
 			if (BadIDDataSOs.Count > 0)
 			{
@@ -244,6 +265,8 @@ namespace Mascari4615
 					IdChanger.StartProcessBadIdDataSOs();
 				}
 			}
+
+			Debug.Log($"{nameof(InitDic)} End");
 
 			void InitDic(ref Dictionary<int, DataSO> dic, Type type, string dirPath, bool searchSubDir = true)
 			{
@@ -455,6 +478,8 @@ namespace Mascari4615
 
 		public void SelectDataSOSlot(MDataSOSlot slot)
 		{
+			Debug.Log(nameof(SelectDataSOSlot));
+
 			Type type = GetTypeFromDataSO(slot.DataSO);
 
 			if (CurType != type)
@@ -466,6 +491,8 @@ namespace Mascari4615
 			CurSlot.UpdateUI();
 
 			Detail.UpdateCurDataSO(slot.DataSO);
+
+			Debug.Log($"{nameof(SelectDataSOSlot)} End");
 		}
 
 		public void InitEnumData<TData, TEnum>() where TData : DataSO
@@ -511,13 +538,22 @@ namespace Mascari4615
 					typeProperty.SetValue(typedData, nID);
 				}
 			}
+
+			Debug.Log($"{nameof(InitEnumData)} End");
 		}
 
-		public void SaveAssets()
+		[MenuItem("Mascari4615/SaveAssets")]
+		public static void SaveAssets()
 		{
 			Debug.Log(nameof(SaveAssets));
 
-			foreach (var dic in DataSOs.Values)
+			if (Instance == null)
+			{
+				Debug.LogError("인스턴스가 존재하지 않습니다.");
+				return;
+			}
+
+			foreach (var dic in Instance.DataSOs.Values)
 				foreach (DataSO dataSO in dic.Values)
 				{
 					if (dataSO == null)
@@ -544,6 +580,46 @@ namespace Mascari4615
 			// 파일 이름에 사용할 수 없는 문자와 공백을 제거
 			Regex regex = new(string.Format("[{0}]", Regex.Escape(new string(Path.GetInvalidFileNameChars()) + " ")));
 			return regex.Replace(name, string.Empty);
+		}
+
+		private void OnValidate()
+		{
+			Debug.Log("OnValidate is executed.");
+		}
+
+		private void OnFocus()
+		{
+			Debug.Log("OnFocus is executed.");
+		}
+
+		private void OnLostFocus()
+		{
+			Debug.Log("OnLostFocus is executed.");
+		}
+
+		private void OnProjectChange()
+		{
+			Debug.Log("OnProjectChange is executed.");
+		}
+
+		private void OnSelectionChange()
+		{
+			Debug.Log("OnSelectionChange is executed.");
+		}
+
+		private void OnInspectorUpdate()
+		{
+			// Debug.Log("OnInspectorUpdate is executed.");
+		}
+
+		private void OnHierarchyChange()
+		{
+			Debug.Log("OnHierarchyChange is executed.");
+		}
+
+		private void OnGUI()
+		{
+			// Debug.Log("OnGUI is executed.");
 		}
 	}
 }

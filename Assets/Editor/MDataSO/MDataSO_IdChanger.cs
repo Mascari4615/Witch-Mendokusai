@@ -99,7 +99,7 @@ namespace Mascari4615
 
 		private void UpdateUI()
 		{
-			Debug.Log("UpdateUI");
+			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(UpdateUI)}");
 
 			origin.SetDataSO(CurDataSO);
 			target.SetDataSO(null);
@@ -109,11 +109,13 @@ namespace Mascari4615
 			thisRoot.style.display = CurDataSO == null ? DisplayStyle.None : DisplayStyle.Flex;
 			deleteButton.SetEnabled(processBadIdDataSOs);
 			closeButton.SetEnabled(processBadIdDataSOs == false);
+
+			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(UpdateUI)} End");
 		}
 
 		private void CheckID(ChangeEvent<int> evt)
 		{
-			Debug.Log("CheckID");
+			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(CheckID)} : {evt.newValue}");
 
 			if (CurDataSO == null)
 				return;
@@ -134,11 +136,13 @@ namespace Mascari4615
 				target.SetDataSO(null);
 				changeButton.SetEnabled(true);
 			}
+
+			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(CheckID)} End");
 		}
 
 		private void ChangeID()
 		{
-			Debug.Log(nameof(ChangeID));
+			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(ChangeID)}");
 
 			if (CurDataSO == null)
 				return;
@@ -179,7 +183,7 @@ namespace Mascari4615
 				MDataSO.Instance.DataSOs[type].Remove(CurDataSO.ID);
 				CurDataSO.ID = newID;
 				MDataSO.Instance.DataSOs[type].Add(newID, CurDataSO);
-				MDataSO.Instance.SaveAssets();
+				MDataSO.SaveAssets();
 
 				MDataSO.Instance.UpdateGrid();
 				MDataSO.Instance.SelectDataSOSlot(MDataSO.Instance.DataSOSlots[CurDataSO.ID]);
@@ -187,6 +191,8 @@ namespace Mascari4615
 				CurDataSO = null;
 				UpdateUI();
 			}
+
+			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(ChangeID)} End");
 		}
 
 		private void Delete()

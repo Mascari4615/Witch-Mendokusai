@@ -25,6 +25,8 @@ namespace Mascari4615
 
 		private void Init()
 		{
+			Debug.Log(nameof(Init));
+
 			root = MDataSO.Instance.rootVisualElement;
 
 			dataSODetail = root.Q<VisualElement>(name: "DataSODetail");
@@ -38,16 +40,24 @@ namespace Mascari4615
 
 			Button changeIDButton = root.Q<Button>(name: "BTN_ChangeID");
 			changeIDButton.clicked += () => MDataSO.Instance.IdChanger.SelectDataSO(CurDataSO);
+
+			Debug.Log($"{nameof(Init)} End");
 		}
 
 		public void UpdateCurDataSO(DataSO dataSO)
 		{
+			Debug.Log(nameof(UpdateCurDataSO) + " : " + dataSO.name);
+
 			CurDataSO = dataSO;
 			UpdateUI();
+
+			Debug.Log($"{nameof(UpdateCurDataSO)} End");
 		}
 
 		public void UpdateUI()
 		{
+			Debug.Log(nameof(UpdateUI) + " : " + CurDataSO.name);
+
 			SerializedObject serializedObject = new(CurDataSO);
 
 			// CurDataSO의 모든 프로퍼티를 리플렉션으로 가져오기
@@ -84,6 +94,8 @@ namespace Mascari4615
 				if (propertyInfo.Name == "ID")
 					propertyField.SetEnabled(false);
 			}
+
+			Debug.Log($"{nameof(UpdateUI)} End");
 		}
 
 		public void DuplicateCurDataSO()
