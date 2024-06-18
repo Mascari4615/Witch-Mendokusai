@@ -10,21 +10,23 @@ namespace Mascari4615
 		[SerializeField] private Animator animator;
 
 		private readonly Queue<DataSO> dataSOs = new();
-		private Coroutine coroutine;
+		private bool isPlaying = false;
 
 		public void Popup(DataSO dataSO)
 		{
 			dataSOs.Enqueue(dataSO);
 
-			if (coroutine == null)
-				coroutine = StartCoroutine(PopupCoroutine());
+			if (isPlaying)
+				return;
+
+			StartCoroutine(PopupCoroutine());
 		}
 
 		private IEnumerator PopupCoroutine()
 		{
-			const float AnimationDuration = 4.5f;
-			WaitForSecondsRealtime ws = new(AnimationDuration);
+			isPlaying = true;
 
+			WaitForSecondsRealtime ws01 = new(.1f);
 			while (dataSOs.Count > 0)
 			{
 				DataSO targetDataSO = dataSOs.Dequeue();
@@ -32,10 +34,14 @@ namespace Mascari4615
 				slot.SetSlot(targetDataSO);
 				animator.SetTrigger("POP");
 
-				yield return ws;
+				yield return ws01;
+
+				// 현재 재생되고 있는 애니메이션 클립의 이름이 "Idle"이 아닐 때까지 대기
+				while (animator.GetCurrentAnimatorStateInfo(0).IsName("Popup_IDLE") == false)
+					yield return null;
 			}
 
-			coroutine = null;
+			isPlaying = false;
 		}
 	}
 }
