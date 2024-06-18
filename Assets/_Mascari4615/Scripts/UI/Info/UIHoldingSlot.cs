@@ -1,11 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor.Localization.Plugins.XLIFF.V12;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace Mascari4615
 {
@@ -17,7 +10,7 @@ namespace Mascari4615
 		private Item holdingItem;
 		public bool IsHolding => holdingItem != null;
 
-		private const float funcATime = 0.5f;
+		private const float funcATime = 0.2f;
 		private float curFuncATime = 0;
 		public bool CanFuncA => curFuncATime >= 0;
 
