@@ -40,6 +40,8 @@ namespace Mascari4615
 				gameStats = new()
 			};
 
+			SOManager.Instance.Nyang.RuntimeValue = newGameData.nyang;
+
 			// 아이템(장비) 초기화
 			Doll defaultDoll = GetDoll(0);
 			defaultDoll.EquipmentGuids.Clear();
