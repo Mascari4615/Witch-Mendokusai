@@ -37,7 +37,8 @@ namespace Mascari4615
 				questStates = new(),
 				hasRecipe = new(),
 				runtimeQuests = new(),
-				gameStats = new()
+				gameStats = new(),
+				dungeons = new()
 			};
 
 			SOManager.Instance.Nyang.RuntimeValue = newGameData.nyang;
@@ -74,6 +75,9 @@ namespace Mascari4615
 			// 초기 퀘스트 추가
 			// DataManager.QuestManager.AddQuest(new RuntimeQuest(GetQuestSO(0)));
 			new RuntimeQuest(GetQuestSO(0));
+
+			// 던전 초기화
+			ForEach<Dungeon>(dungeon => {dungeon.Init();});
 
 			SaveData();
 			LoadLocalData();
@@ -136,6 +140,13 @@ namespace Mascari4615
 			DataManager.WorkManager.Init(saveData.works);
 			DataManager.QuestManager.Init(saveData.runtimeQuests.ConvertAll(questData => new RuntimeQuest(questData)));
 
+			// 던전 초기화
+			foreach (var (id, dungeonData) in saveData.dungeons)
+			{
+				Dungeon dungeon = GetDungeon(id);
+				dungeon.Load(dungeonData);
+			}
+
 			IsDataLoaded = true;
 		}
 
@@ -152,10 +163,12 @@ namespace Mascari4615
 				questStates = DataManager.QuestManager.GetQuestStates().ToDictionary(pair => pair.Key, pair => (int)pair.Value),
 				hasRecipe = DataManager.HasRecipe,
 				runtimeQuests = DataManager.QuestManager.Quests.Datas.Where(quest => quest.Type != QuestType.Dungeon).ToList().ConvertAll(quest => quest.Save()),
-				gameStats = DataManager.GameStat.Save()
+				gameStats = DataManager.GameStat.Save(),
+				dungeons = new()
 			};
 
 			ForEach<Doll>(doll => gameData.dolls.Add(doll.Save()));
+			ForEach<Dungeon>(dungeon => gameData.dungeons.Add(dungeon.ID, dungeon.Save()));
 
 			if (GameSetting.UseLocalData)
 			{

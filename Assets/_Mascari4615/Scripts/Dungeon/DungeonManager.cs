@@ -1,11 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using Cinemachine;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using static Mascari4615.SOHelper;
 
 namespace Mascari4615

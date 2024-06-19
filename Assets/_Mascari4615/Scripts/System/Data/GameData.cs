@@ -23,5 +23,6 @@ namespace Mascari4615
 		public Dictionary<int, bool> hasRecipe = new();
 		public List<RuntimeQuestSaveData> runtimeQuests = new();
 		public Dictionary<GameStatType, int> gameStats = new();
+		public Dictionary<int, DungeonSaveData> dungeons = new();
 	}
 }

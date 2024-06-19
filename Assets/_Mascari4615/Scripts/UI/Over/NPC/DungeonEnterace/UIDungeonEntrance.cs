@@ -76,6 +76,8 @@ namespace Mascari4615
 		{
 			dungeonSlot.SetSlot(CurDungeon);
 			rewardUI.UpdateUI(CurDungeon.Rewards);
+
+			constraintUI.SetDungeon(CurDungeon);
 			constraintUI.UpdateUI();
 		}
 

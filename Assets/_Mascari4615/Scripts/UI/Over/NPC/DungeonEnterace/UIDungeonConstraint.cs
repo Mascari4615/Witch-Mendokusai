@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using static Mascari4615.SOHelper;
 
 namespace Mascari4615
 {
@@ -16,7 +14,6 @@ namespace Mascari4615
 
 		// 슬롯으로?
 
-		// TODO: 각 Dungeon마다 마지막으로 선택했던 제약 저장
 		private Dungeon dungeon;
 		private List<UISlot> constraintSlots;
 
@@ -26,14 +23,6 @@ namespace Mascari4615
 			
 			for (int i = 0; i < constraintSlots.Count; i++)
 			{
-				if (CountOf<DungeonConstraint>() <= i)
-				{
-					constraintSlots[i].gameObject.SetActive(false);
-					continue;
-				}
-				
-				constraintSlots[i].gameObject.SetActive(true);
-				constraintSlots[i].SetSlot(GetDungeonConstraint(i));
 				constraintSlots[i].SetSlotIndex(i);
 				constraintSlots[i].Init();
 				constraintSlots[i].SetClickAction((UISlot slot) => ToggleConstraint(slot.Index));
@@ -47,15 +36,26 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			for (int i = 0; i < CountOf<DungeonConstraint>(); i++)
+			for (int i = 0; i < constraintSlots.Count; i++)
 			{
-				constraintSlots[i].SetDisable(GetDungeonConstraint(i).IsSelected == false);
+				if (i < dungeon.Constraints.Count)
+				{
+					DungeonConstraint constraint = dungeon.Constraints[i];
+
+					constraintSlots[i].SetSlot(constraint);
+					constraintSlots[i].SetDisable(dungeon.ConstraintSelected[constraint.ID] == false);
+					constraintSlots[i].gameObject.SetActive(true);
+				}
+				else
+				{
+					constraintSlots[i].gameObject.SetActive(false);
+				}
 			}
 		}
 
 		public void ToggleConstraint(int index)
 		{
-			GetDungeonConstraint(index).Toggle();
+			dungeon.ConstraintSelected[index] = !dungeon.ConstraintSelected[index];
 			UpdateUI();
 		}
 	}
