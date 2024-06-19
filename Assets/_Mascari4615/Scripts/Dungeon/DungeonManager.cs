@@ -13,6 +13,7 @@ namespace Mascari4615
 		public TimeSpan InitialDungeonTime { get; private set; } = new(0, 0, 15, 0, 0);
 		public TimeSpan DungeonCurTime { get; private set; }
 		public DungeonDifficulty CurDifficulty { get; private set; }
+		public DungeonContext Context { get; private set; }
 		public DungeonRecord Result { get; private set; }
 
 		public bool IsDungeon { get; private set; }
@@ -62,6 +63,8 @@ namespace Mascari4615
 				InitialDungeonTime = new TimeSpan(0, dungeon.TimeByMinute, 0);
 				DungeonCurTime = InitialDungeonTime;
 
+				Context = new DungeonContext(dungeon.Constraints);
+
 				dungeonRecorder = new DungeonRecorder();
 
 				IsDungeon = true;
@@ -79,7 +82,7 @@ namespace Mascari4615
 			WaitForSeconds ws01 = new(.1f);
 
 			// HACK:
-			int dungeonClear = DataManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR];
+			int dungeonClear = DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_CLEAR];
 
 			while (true)
 			{
@@ -87,7 +90,7 @@ namespace Mascari4615
 				UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
-				if (dungeonClear < DataManager.Instance.GameStat[GameStatType.DUNGEON_CLEAR])
+				if (dungeonClear < DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_CLEAR])
 				{
 					EndDungeon();
 					yield break;
@@ -100,7 +103,7 @@ namespace Mascari4615
 		private void UpdateTime()
 		{
 			DungeonCurTime -= TimeUpdateInterval;
-			DataManager.Instance.GameStat[GameStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
+			DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
 		}
 
 		private void UpdateDifficulty()
@@ -153,7 +156,7 @@ namespace Mascari4615
 					new EffectInfo()
 					{
 						Type = EffectType.GameStat,
-						Data = GetGameStatData((int)GameStatType.DUNGEON_CLEAR),
+						Data = GetGameStatData((int)DungeonStatType.DUNGEON_CLEAR),
 						ArithmeticOperator = ArithmeticOperator.Add,
 						Value = 1,
 					}
@@ -179,8 +182,8 @@ namespace Mascari4615
 					{
 						new CriteriaInfo()
 						{
-							Type = CriteriaType.GameStat,
-							Data = GetGameStatData((int)GameStatType.DUNGEON_TIME),
+							Type = CriteriaType.DungeonStat,
+							Data = GetDungeonStatData((int)DungeonStatType.DUNGEON_TIME),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
 							Value = (int)InitialDungeonTime.TotalSeconds,
 							JustOnce = true,
@@ -196,8 +199,8 @@ namespace Mascari4615
 					{
 						new CriteriaInfo()
 						{
-							Type = CriteriaType.GameStat,
-							Data = GetGameStatData((int)GameStatType.MONSTER_KILL),
+							Type = CriteriaType.DungeonStat,
+							Data = GetDungeonStatData((int)DungeonStatType.MONSTER_KILL),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
 							Value = CurDungeon.ClearValue,
 							JustOnce = true,
@@ -210,8 +213,8 @@ namespace Mascari4615
 					{
 						new CriteriaInfo()
 						{
-							Type = CriteriaType.GameStat,
-							Data = GetGameStatData((int)GameStatType.BOSS_KILL),
+							Type = CriteriaType.DungeonStat,
+							Data = GetDungeonStatData((int)DungeonStatType.BOSS_KILL),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
 							Value = CurDungeon.ClearValue,
 							JustOnce = true,

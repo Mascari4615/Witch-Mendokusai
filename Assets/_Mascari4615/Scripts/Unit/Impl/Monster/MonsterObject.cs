@@ -34,11 +34,18 @@ namespace Mascari4615
 			StopAllCoroutines();
 		}
 
-		public void UpdateStatByDifficulty(DungeonDifficulty newDifficulty)
+		public void UpdateByDungeonDifficulty(DungeonDifficulty newDifficulty)
 		{
 			double persentage = (double)UnitStat[UnitStatType.HP_CUR] / UnitStat[UnitStatType.HP_MAX];
 			UnitStat[UnitStatType.HP_MAX] = (int)(UnitStat[UnitStatType.HP_MAX] * (1 + .7f * (int)newDifficulty));
 			SetHp((int)(UnitStat[UnitStatType.HP_MAX] * persentage));
+		}
+
+		public void UpdateByDungeonContext()
+		{
+			UnitStat newStat = DungeonManager.Instance.Context.UpdateMonsterStatByDiff(UnitData);
+			UnitStat.Add(newStat);
+			SetHp(UnitStat[UnitStatType.HP_MAX]);
 		}
 
 		public override void ReceiveDamage(DamageInfo damageInfo)
@@ -93,9 +100,9 @@ namespace Mascari4615
 			base.OnDied();
 			DropLoot();
 
-			if (UnitData.Tag == MonsterTag.Boss)
-				DataManager.Instance.GameStat[GameStatType.BOSS_KILL]++;
-			DataManager.Instance.GameStat[GameStatType.MONSTER_KILL]++;
+			if (UnitData.Type == MonsterType.Boss)
+				DataManager.Instance.DungeonStat[DungeonStatType.BOSS_KILL]++;
+			DataManager.Instance.DungeonStat[DungeonStatType.MONSTER_KILL]++;
 
 			RuntimeManager.PlayOneShot("event:/SFX/Monster/Die", transform.position);
 			StopAllCoroutines();

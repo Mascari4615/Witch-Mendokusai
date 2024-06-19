@@ -80,7 +80,7 @@ namespace Mascari4615
 			}
 		}
 
-		private IEnumerator SpawnMonster(Monster monster, float spawnDelay, DungeonDifficulty curDifficulty)
+		private IEnumerator SpawnMonster(Monster monster, float spawnDelay, DungeonDifficulty difficulty)
 		{
 			Vector3 randomOffset = Random.insideUnitCircle * spawnRange;
 			randomOffset.z = randomOffset.y;
@@ -96,9 +96,11 @@ namespace Mascari4615
 			yield return new WaitForSeconds(spawnDelay);
 
 			GameObject monsterObject = ObjectPoolManager.Instance.Spawn(monster.Prefab);
+			MonsterObject monsterObjectComponent = monsterObject.GetComponent<MonsterObject>();
 			monsterObject.transform.position = spawnPos;
-			monsterObject.GetComponent<MonsterObject>().Init(monster);
-			monsterObject.GetComponent<MonsterObject>().UpdateStatByDifficulty(curDifficulty);
+			monsterObjectComponent.Init(monster);
+			monsterObjectComponent.UpdateByDungeonContext();
+			monsterObjectComponent.UpdateByDungeonDifficulty(difficulty);
 			monsterObject.SetActive(true);
 		}
 

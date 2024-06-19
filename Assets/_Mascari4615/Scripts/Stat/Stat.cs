@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Mascari4615
 {
@@ -21,6 +19,12 @@ namespace Mascari4615
 			stats.Clear();
 			foreach (var (stat, value) in newStats.stats)
 				stats[stat] = value;
+		}
+
+		public void Add(Stat<T> addStats)
+		{
+			foreach (var (stat, value) in addStats.stats)
+				this[stat] += value;
 		}
 
 		public int this [T statType]
