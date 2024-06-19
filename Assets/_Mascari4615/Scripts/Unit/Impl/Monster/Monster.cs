@@ -8,7 +8,7 @@ namespace Mascari4615
 	public class Monster : Unit
 	{
 		[field: Header("_" + nameof(Monster))]
-		[PropertyOrder(20)][field: SerializeField] public MonsterTag Tag { get; private set; }
+		[PropertyOrder(20)][field: SerializeField] public MonsterType Type { get; private set; }
 		[PropertyOrder(21)][field: SerializeField] public List<DataSOWithPercentage> Loots { get; private set; }
 	}
 }
