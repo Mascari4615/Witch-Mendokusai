@@ -13,6 +13,7 @@ namespace Mascari4615
 		public static NPC GetNPC(int id) => Get<NPC>(id);
 		public static UnitStatData GetUnitStatData(int id) => Get<UnitStatData>(id);
 		public static GameStatData GetGameStatData(int id) => Get<GameStatData>(id);
+		public static DungeonStatData GetDungeonStatData(int id) => Get<DungeonStatData>(id);
 		public static CardData GetCardData(int id) => Get<CardData>(id);
 
 		// 아래 코드는 불가능

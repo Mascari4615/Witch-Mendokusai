@@ -23,6 +23,7 @@ namespace Mascari4615
 				CriteriaType.ItemCount => new ItemCountCriteria(criteriaInfo),
 				CriteriaType.UnitStat => new StatCriteria(criteriaInfo),
 				CriteriaType.GameStat => new GameStatCriteria(criteriaInfo),
+				CriteriaType.DungeonStat => new DungeonStatCriteria(criteriaInfo),
 				_ => throw new ArgumentOutOfRangeException(),
 			};
 		}

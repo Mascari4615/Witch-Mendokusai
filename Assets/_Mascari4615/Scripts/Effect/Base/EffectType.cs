@@ -4,6 +4,7 @@ namespace Mascari4615
 	{
 		UnitStat = 0,
 		GameStat = 1,
+		DungeonStat = 2,
 
 		IntVariable = 50,
 		FloatVariable = 51,

@@ -28,6 +28,7 @@ namespace Mascari4615
 			{ typeof(WorldStage), "WS" },
 			{ typeof(Dungeon), "D" },
 			{ typeof(DungeonStage), "DS" },
+			{ typeof(DungeonStatData), "DSD" },
 			{ typeof(DungeonConstraint), "DC" },
 			{ typeof(Doll), "DOL" },
 			{ typeof(NPC), "NPC" },
@@ -47,6 +48,7 @@ namespace Mascari4615
 			{ typeof(WorldStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(WorldStage)}/" },
 			{ typeof(Dungeon), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/" },
 			{ typeof(DungeonStage), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonStage)}/" },
+			{ typeof(DungeonStatData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(DungeonStatData)}/" },
 			{ typeof(DungeonConstraint), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Dungeon)}/{nameof(DungeonConstraint)}/" },
 			{ typeof(Doll), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Doll)}/" },
 			{ typeof(NPC), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(NPC)}/" },
@@ -100,6 +102,7 @@ namespace Mascari4615
 
 			InitEnumData<UnitStatData, UnitStatType>();
 			InitEnumData<GameStatData, GameStatType>();
+			InitEnumData<DungeonStatData,DungeonStatType>();
 
 			// SaveAssets();
 
@@ -108,7 +111,7 @@ namespace Mascari4615
 
 		private void OnDestroy()
 		{
-			Debug.Log(nameof(OnDestroy));
+			Debug.Log($"{nameof(OnDestroy)} : {Instance}, rootVisualElement: {rootVisualElement}");
 			Instance = null;
 		}
 
@@ -186,9 +189,16 @@ namespace Mascari4615
 
 		public void UpdateGrid()
 		{
-			Debug.Log(nameof(UpdateGrid));
-
+			Debug.Log($"{nameof(UpdateGrid)}");
+			
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
+
+			if (grid == null)
+			{
+				Debug.LogWarning("Grid is null");
+				return;
+			}
+
 			grid.Clear();
 
 			InitDic(CurType);
@@ -536,6 +546,16 @@ namespace Mascari4615
 					TData typedData = AddDataSO(type, nID, nName) as TData;
 					PropertyInfo typeProperty = typeof(TData).GetProperty(PropertyName);
 					typeProperty.SetValue(typedData, nID);
+				}
+			}
+
+			// 유효하지 않은 데이터 삭제
+			foreach (var (key, value) in dic)
+			{
+				if (Enum.IsDefined(typeof(TEnum), key) == false)
+				{
+					Debug.Log($"{value.name}을 삭제합니다.");
+					DeleteDataSO(value);
 				}
 			}
 

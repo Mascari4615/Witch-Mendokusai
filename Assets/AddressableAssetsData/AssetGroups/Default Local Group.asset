@@ -24,7 +24,7 @@ MonoBehaviour:
     - CARD_DATA
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: acab784139fbb464e94835eb2d7c5345
-    m_Address: Assets/_Mascari4615/ScriptableObjects/Unit/Doll
+    m_Address: Assets/_Mascari4615/ScriptableObjects/Doll
     m_ReadOnly: 0
     m_SerializedLabels:
     - DOLL
@@ -42,7 +42,7 @@ MonoBehaviour:
     - QUEST_SO
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ac7c35b1bb574a84b8b1d2d1300b132b
-    m_Address: Assets/_Mascari4615/ScriptableObjects/Unit/Monster
+    m_Address: Assets/_Mascari4615/ScriptableObjects/Monster
     m_ReadOnly: 0
     m_SerializedLabels:
     - MONSTER
@@ -66,7 +66,7 @@ MonoBehaviour:
     - MONSTER_WAVE
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 926a322e2acfd854c86300fbf3a36474
-    m_Address: Assets/_Mascari4615/ScriptableObjects/Unit/NPC
+    m_Address: Assets/_Mascari4615/ScriptableObjects/NPC
     m_ReadOnly: 0
     m_SerializedLabels:
     - NPC
@@ -100,6 +100,12 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels:
     - GAME_STAT_DATA
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 44886f867ed082e42ad8ba228072f302
+    m_Address: Assets/_Mascari4615/ScriptableObjects/DungeonStatData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - DUNGEON_STAT_DATA
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 5a4d7636943b8d645af161ef05df63d6, type: 2}

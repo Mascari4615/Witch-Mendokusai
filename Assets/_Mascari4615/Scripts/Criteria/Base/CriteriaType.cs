@@ -5,5 +5,6 @@ namespace Mascari4615
 		ItemCount,
 		UnitStat,
 		GameStat,
+		DungeonStat
 	}
 }

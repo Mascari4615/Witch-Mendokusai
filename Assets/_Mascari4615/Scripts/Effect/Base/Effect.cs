@@ -52,6 +52,9 @@ namespace Mascari4615
 					case EffectType.UnlockRecipe:
 						dataSO = GetItemData(id);
 						break;
+					case EffectType.DungeonStat:
+						dataSO = GetDungeonStatData(id);
+						break;
 					default:
 						break;
 				}
@@ -108,6 +111,9 @@ namespace Mascari4615
 					break;
 				case EffectType.UnlockRecipe:
 					effect = new UnlockRecipeEffect();
+					break;
+				case EffectType.DungeonStat:
+					effect = new DungeonStatEffect();
 					break;
 			}
 

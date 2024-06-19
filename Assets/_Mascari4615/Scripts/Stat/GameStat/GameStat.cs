@@ -9,13 +9,13 @@ namespace Mascari4615
 	{
 		public void UpdateData()
 		{
-			stats[GameStatType.TOTAL_MONSTER_KILL] += stats[GameStatType.MONSTER_KILL];
-			stats[GameStatType.TOTAL_MONSTER_KILL] += stats[GameStatType.BOSS_KILL];
-			stats[GameStatType.TOTAL_DUNGEON_TIME] += stats[GameStatType.DUNGEON_TIME];
+			DungeonStat dungeonStat = DataManager.Instance.DungeonStat;
 
-			stats[GameStatType.MONSTER_KILL] = 0;
-			stats[GameStatType.BOSS_KILL] = 0;
-			stats[GameStatType.DUNGEON_TIME] = 0;
+			stats[GameStatType.TOTAL_MONSTER_KILL] += dungeonStat[DungeonStatType.MONSTER_KILL];
+			stats[GameStatType.TOTAL_MONSTER_KILL] += dungeonStat[DungeonStatType.BOSS_KILL];
+			stats[GameStatType.TOTAL_DUNGEON_TIME] += dungeonStat[DungeonStatType.DUNGEON_TIME];
+
+			dungeonStat.UpdateData();
 		}
 
 		public GameStat()
