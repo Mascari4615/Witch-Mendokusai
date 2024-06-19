@@ -8,6 +8,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Mascari4615.SOHelper;
+using DG.Tweening;
 
 namespace Mascari4615
 {
@@ -17,11 +18,18 @@ namespace Mascari4615
 		[SerializeField] private Image unitImage;
 		[SerializeField] private TextMeshProUGUI unitName;
 		[SerializeField] private TextMeshProUGUI lineText;
+		[SerializeField] private CanvasGroup chatCanvasGroup;
 		[SerializeField] private CanvasGroup bubbleCanvasGroup;
 
 		private NPCObject curNPC;
 		private int unitID;
 		private Action endAction;
+
+		private void Start()
+		{
+			chatCanvasGroup.alpha = 0;
+			bubbleCanvasGroup.alpha = 0;
+		}
 
 		public void StartChat(NPCObject npc, Action action)
 		{
@@ -45,9 +53,17 @@ namespace Mascari4615
 			// Debug.Log($"{nameof(ChatLoop)}");
 
 			StartCoroutine(BubbleLoop());
-			bubbleCanvasGroup.alpha = 1;
+			
+			chatCanvasGroup.DOFade(1, 0.2f);
+			bubbleCanvasGroup.DOFade(1, 0.2f);
+
+			unitImage.color = Color.clear;
+			unitName.text = string.Empty;
+			lineText.text = string.Empty;
 
 			yield return null;
+
+			unitImage.color = Color.white;
 
 			foreach (LineData lineData in curChatDatas)
 			{
@@ -63,6 +79,7 @@ namespace Mascari4615
 
 				unitID = lineData.unitID;
 				unitImage.sprite = unit.Sprite;
+				unitImage.transform.DOScaleY(.9f, .02f).OnComplete(() => unitImage.transform.DOScaleY(1, .02f));
 				unitName.text = unit.Name;
 
 				Coroutine coroutine = StartCoroutine(PrintLine(lineData));
@@ -78,7 +95,10 @@ namespace Mascari4615
 			}
 
 			GameManager.Instance.IsChatting = false;
-			bubbleCanvasGroup.alpha = 0;
+
+			chatCanvasGroup.DOFade(0, 0.2f);
+			bubbleCanvasGroup.DOFade(0, 0.2f);
+
 			StopAllCoroutines();
 
 			endAction?.Invoke();
