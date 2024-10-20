@@ -61,11 +61,11 @@ namespace Mascari4615
 				questOptions[i].SetClickAction((slot) => { SelectQuest(slot.Index); });
 			}
 
-			panelUIs[NPCType.Shop] = FindObjectOfType<UIShop>(true);
-			panelUIs[NPCType.DungeonEntrance] = FindObjectOfType<UIDungeonEntrance>(true);
-			panelUIs[NPCType.Pot] = FindObjectOfType<UIPot>(true);
-			panelUIs[NPCType.Anvil] = FindObjectOfType<UIAnvil>(true);
-			panelUIs[NPCType.Furnace] = FindObjectOfType<UIFurnace>(true);
+			panelUIs[NPCType.Shop] = FindFirstObjectByType<UIShop>(FindObjectsInactive.Include);
+			panelUIs[NPCType.DungeonEntrance] = FindFirstObjectByType<UIDungeonEntrance>(FindObjectsInactive.Include);
+			panelUIs[NPCType.Pot] = FindFirstObjectByType<UIPot>(FindObjectsInactive.Include);
+			panelUIs[NPCType.Anvil] = FindFirstObjectByType<UIAnvil>(FindObjectsInactive.Include);
+			panelUIs[NPCType.Furnace] = FindFirstObjectByType<UIFurnace>(FindObjectsInactive.Include);
 
 			foreach (UIPanel uiPanel in panelUIs.Values)
 			{

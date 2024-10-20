@@ -45,27 +45,27 @@ namespace Mascari4615
 		{
 			base.Awake();
 
-			tab = FindObjectOfType<UITab>(true);
-			CutSceneModule = FindObjectOfType<CutSceneModule>(true);
-			damage = FindObjectOfType<UIFloatingText>(true);
-			popup = FindObjectOfType<UIPopup>(true);
-			setting = FindObjectOfType<UISetting>(true);
-			Chat = FindObjectOfType<UIChat>(true);
-			dungeon = FindObjectOfType<UIDungeon>(true);
-			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
-			Npc = FindObjectOfType<UINPC>(true);
-			Map = FindObjectOfType<UIMap>(true);
+			tab = FindFirstObjectByType<UITab>(FindObjectsInactive.Include);
+			CutSceneModule = FindFirstObjectByType<CutSceneModule>(FindObjectsInactive.Include);
+			damage = FindFirstObjectByType<UIFloatingText>(FindObjectsInactive.Include);;
+			popup = FindFirstObjectByType<UIPopup>(FindObjectsInactive.Include);
+			setting = FindFirstObjectByType<UISetting>(FindObjectsInactive.Include);
+			Chat = FindFirstObjectByType<UIChat>(FindObjectsInactive.Include);
+			dungeon = FindFirstObjectByType<UIDungeon>(FindObjectsInactive.Include);
+			dungeonResult = FindFirstObjectByType<UIDungeonResult>(FindObjectsInactive.Include);
+			Npc = FindFirstObjectByType<UINPC>(FindObjectsInactive.Include);;
+			Map = FindFirstObjectByType<UIMap>(FindObjectsInactive.Include);
 
-			canvasUIs[MCanvasType.Dungeon] = FindObjectOfType<UIDungeon>(true);
+			canvasUIs[MCanvasType.Dungeon] = FindFirstObjectByType<UIDungeon>(FindObjectsInactive.Include);
 
 			overlayUIs[MPanelType.Tab] = tab;
 			overlayUIs[MPanelType.Setting] = setting;
 			overlayUIs[MPanelType.DungeonResult] = dungeonResult;
 			overlayUIs[MPanelType.NPC] = Npc;
 
-			Transition = FindObjectOfType<UITransition>(true);
-			stagePopup = FindObjectOfType<UIStagePopup>(true);
-			Status = FindObjectOfType<UIStatus>(true);
+			Transition = FindFirstObjectByType<UITransition>(FindObjectsInactive.Include);
+			stagePopup = FindFirstObjectByType<UIStagePopup>(FindObjectsInactive.Include);
+			Status = FindFirstObjectByType<UIStatus>(FindObjectsInactive.Include);
 		}
 
 		private void Start()

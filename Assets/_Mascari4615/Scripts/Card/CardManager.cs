@@ -37,7 +37,7 @@ namespace Mascari4615
 
 		private void Awake()
 		{
-			UIDeck[] deckUIs = FindObjectsOfType<UIDeck>(true);
+			UIDeck[] deckUIs = FindObjectsByType<UIDeck>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 			foreach (UIDeck deckUI in deckUIs)
 			{
 				deckUIDic.Add(deckUI.EquipmentData.ID, deckUI);

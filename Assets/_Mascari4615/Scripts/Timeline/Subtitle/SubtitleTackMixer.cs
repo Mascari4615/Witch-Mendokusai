@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
 
 namespace Mascari4615
 {
@@ -13,7 +10,7 @@ namespace Mascari4615
 		{
 			// TextMeshProUGUI text = playerData as TextMeshProUGUI;
 #if UNITY_EDITOR
-			TextMeshProUGUI text = Object.FindObjectOfType<UIManager>().CutSceneModule.Subtitle;
+			TextMeshProUGUI text = Object.FindFirstObjectByType<UIManager>().CutSceneModule.Subtitle;
 #else
         TextMeshProUGUI text = UIManager.Instance.CutSceneModule.Subtitle;
 #endif

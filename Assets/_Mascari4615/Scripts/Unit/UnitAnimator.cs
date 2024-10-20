@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mascari4615
@@ -9,7 +7,7 @@ namespace Mascari4615
 		[SerializeField] private Animator mainAnimator;
 		[SerializeField] private Transform pivot;
 
-		[SerializeField] private Rigidbody rigidbody;
+		[SerializeField] private new Rigidbody rigidbody;
 
 		[SerializeField] private Animator handAnimator;
 

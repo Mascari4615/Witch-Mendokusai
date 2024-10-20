@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
-using UnityEngine.Timeline;
 
 namespace Mascari4615
 {
@@ -12,7 +8,7 @@ namespace Mascari4615
 		public override void ProcessFrame(Playable playable, FrameData info, object playerData)
 		{
 #if UNITY_EDITOR
-			CanvasGroup canvasGroup = Object.FindObjectOfType<UIManager>().CutSceneModule.FadeCanvasGroup;
+			CanvasGroup canvasGroup = Object.FindFirstObjectByType<UIManager>().CutSceneModule.FadeCanvasGroup;
 #else
         CanvasGroup canvasGroup = UIManager.Instance.CutSceneModule.FadeCanvasGroup;
 #endif

@@ -138,7 +138,7 @@ public class PrefabLightmapData : MonoBehaviour
 		}
 		// UnityEditor.Lightmapping.Bake();
 
-		PrefabLightmapData[] instances = FindObjectsOfType<PrefabLightmapData>();
+		PrefabLightmapData[] instances = FindObjectsByType<PrefabLightmapData>(FindObjectsInactive.Include, FindObjectsSortMode.None);
 		foreach (PrefabLightmapData instance in instances)
 		{
 			GenerateLightmapInfo(instance);

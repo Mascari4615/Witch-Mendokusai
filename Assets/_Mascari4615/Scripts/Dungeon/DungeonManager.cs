@@ -27,10 +27,10 @@ namespace Mascari4615
 		{
 			base.Awake();
 
-			cardManager = FindObjectOfType<CardManager>(true);
-			monsterSpawner = FindObjectOfType<MonsterSpawner>(true);
+			cardManager = FindFirstObjectByType<CardManager>(FindObjectsInactive.Include);
+			monsterSpawner = FindFirstObjectByType<MonsterSpawner>(FindObjectsInactive.Include);
 
-			expChecker = FindObjectOfType<ExpManager>(true);
+			expChecker = FindFirstObjectByType<ExpManager>(FindObjectsInactive.Include);
 		}
 
 		// TODO: 던전 인트로

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
@@ -15,29 +14,29 @@ namespace Mascari4615
 	public class CameraManager : Singleton<CameraManager>
 	{
 		[SerializeField] private CinemachineBrain cinemachineBrain;
-		[SerializeField] private CinemachineVirtualCamera[] virtualCameras;
+		[SerializeField] private CinemachineCamera[] cinemachineCameras;
 		[SerializeField] private CinemachineImpulseSource impulseSource;
 		[SerializeField] private float xDiff = .3f;
 
 		private Coroutine chatXCoroutine;
-		private CinemachineFramingTransposer chatFramingTransposer; 
+		private CinemachinePositionComposer chatPositionTransposer;
 
 		protected override void Awake()
 		{
 			base.Awake();
 			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.FixedUpdate;
-			chatFramingTransposer = virtualCameras[2].GetCinemachineComponent<CinemachineFramingTransposer>();
+			chatPositionTransposer = cinemachineCameras[2].GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachinePositionComposer;
 		}
 
 		public void SetCamera(CameraType cameraType)
 		{
 			cinemachineBrain.DefaultBlend.Style = (int)cameraType == (int)MCanvasType.Dungeon ? CinemachineBlendDefinition.Styles.Cut : CinemachineBlendDefinition.Styles.EaseInOut;
 
-			for (int i = 0; i < virtualCameras.Length; i++)
+			for (int i = 0; i < cinemachineCameras.Length; i++)
 			{
-				virtualCameras[i].Priority = i == (int)cameraType ? 10 : 0;
+				cinemachineCameras[i].Priority = i == (int)cameraType ? 10 : 0;
 			}
-			
+
 			if (chatXCoroutine != null)
 				StopCoroutine(chatXCoroutine);
 			chatXCoroutine = StartCoroutine(ChatXCoroutine(0));
@@ -55,11 +54,10 @@ namespace Mascari4615
 		private IEnumerator ChatXCoroutine(float diff)
 		{
 			const float lerpSpeed = 0.03f;
-			const float defaultX = 0.5f;
 			while (true)
 			{
-				chatFramingTransposer.m_ScreenX = Mathf.Lerp(chatFramingTransposer.m_ScreenX, defaultX + diff, lerpSpeed);
-				if (Mathf.Abs(chatFramingTransposer.m_ScreenX - (defaultX + diff)) < 0.01f)
+				chatPositionTransposer.Composition.ScreenPosition.x = Mathf.Lerp(chatPositionTransposer.Composition.ScreenPosition.x, diff, lerpSpeed);
+				if (Mathf.Abs(chatPositionTransposer.Composition.ScreenPosition.x - diff) < 0.01f)
 					break;
 				yield return null;
 			}
@@ -81,7 +79,7 @@ namespace Mascari4615
 				}
 			}
 		}
-		
+
 		public void 뽀삐뽀삐뽀()
 		{
 			impulseSource.GenerateImpulse();
