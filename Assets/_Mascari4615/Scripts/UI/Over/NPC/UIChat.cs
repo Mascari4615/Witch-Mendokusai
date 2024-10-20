@@ -2,8 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Cinemachine;
-using FMODUnity;
+using Unity.Cinemachine;using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +39,7 @@ namespace Mascari4615
 				return;
 
 			curNPC = npc;
-			chatTargetGroup.m_Targets[1].target = npc.transform;
+			chatTargetGroup.Targets[1].Object = npc.transform;
 			endAction = action;
 
 			GameManager.Instance.IsChatting = true;
@@ -143,9 +142,9 @@ namespace Mascari4615
 				// Update Bubble Pos
 				Vector3 targetPos;
 				if (unitID == 0)
-					targetPos = chatTargetGroup.m_Targets[0].target.position;
+					targetPos = chatTargetGroup.Targets[0].Object.position;
 				else
-					targetPos = chatTargetGroup.m_Targets[1].target.position;
+					targetPos = chatTargetGroup.Targets[1].Object.position;
 				bubbleCanvasGroup.transform.position = GetVec(targetPos + Vector3.up);
 
 				yield return null;

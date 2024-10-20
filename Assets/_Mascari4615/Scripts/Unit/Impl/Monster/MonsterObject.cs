@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 using static Mascari4615.MHelper;
@@ -169,7 +167,12 @@ namespace Mascari4615
 			}
 
 			GameObject exp = ObjectPoolManager.Instance.Spawn(expPrefab);
-			exp.transform.position = transform.position + Vector3.up * 0.3f;
+			
+			Vector3 pos = transform.position;
+			pos += Vector3.up * 0.3f;
+			pos += new Vector3(Random.Range(-0.3f, 0.3f), 0, Random.Range(-0.3f, 0.3f));
+
+			exp.transform.position = pos;
 			exp.SetActive(true);
 		}
 

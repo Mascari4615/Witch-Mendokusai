@@ -32,6 +32,7 @@ namespace Mascari4615
 		private UIFloatingText damage;
 		private UIPopup popup;
 		public UIChat Chat { get; private set; }
+		public UIMap Map { get; private set; }
 		private UIDungeon dungeon;
 		private UIDungeonResult dungeonResult;
 		public UINPC Npc { get; private set; }
@@ -53,6 +54,7 @@ namespace Mascari4615
 			dungeon = FindObjectOfType<UIDungeon>(true);
 			dungeonResult = FindObjectOfType<UIDungeonResult>(true);
 			Npc = FindObjectOfType<UINPC>(true);
+			Map = FindObjectOfType<UIMap>(true);
 
 			canvasUIs[MCanvasType.Dungeon] = FindObjectOfType<UIDungeon>(true);
 

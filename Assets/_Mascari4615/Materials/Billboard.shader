@@ -5,9 +5,9 @@ Shader "Mascari4615/BillboardShader"
         _MainTex ("Main Texture", 2D) = "white" {}
         _Color ("Color", Color) = (1, 1, 1, 1)
         _Cutoff ("Cutoff", Float) = 0.5
+        [HDR] _EmissionColor("EmissionColor", Color) = (0,0,0)
         _Emission("Emission", float) = 0
         _RotateVector("RotateVector", Vector) = (0,0,0,0)
-        [HDR] _EmissionColor("Color", Color) = (0,0,0)
         _BillboardMode("Billboard Mode", Range(0, 2)) = 0
     }
 
@@ -56,6 +56,8 @@ Shader "Mascari4615/BillboardShader"
 
             struct appdata
             {
+				// SpriteRenderer의 Color 값
+                float4 color : COLOR;
                 float4 positionOS : POSITION;
                 float2 uv : TEXCOORD0;
             };
@@ -162,6 +164,7 @@ Shader "Mascari4615/BillboardShader"
                 
                 o.positionCS = positionCS;
                 o.uv = v.uv;
+				o.color = v.color;
                 return o;
             }
 
@@ -171,6 +174,7 @@ Shader "Mascari4615/BillboardShader"
                 float4 col = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, mainTexUV);
 
                 col *= _Color;
+                col *= i.color;
                 
                 clip(col.a - _Cutoff  * _Emission);
                 col += _EmissionColor * _Emission;

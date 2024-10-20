@@ -63,7 +63,7 @@ namespace Mascari4615
 
 			if (GameManager.Instance.IsCooling)
 			{
-				playerRigidBody.velocity = Vector3.zero;
+				playerRigidBody.linearVelocity = Vector3.zero;
 				return;
 			}
 
@@ -77,7 +77,7 @@ namespace Mascari4615
 			else
 				finalVelocity = moveDirection * playerObject.UnitStat[UnitStatType.MOVEMENT_SPEED];
 
-			playerRigidBody.velocity = finalVelocity;
+			playerRigidBody.linearVelocity = finalVelocity;
 			// playerRigidBody.AddForce(finalVelocity, ForceMode.VelocityChange);
 		}
 

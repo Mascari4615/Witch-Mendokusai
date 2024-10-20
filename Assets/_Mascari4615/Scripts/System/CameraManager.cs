@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+using Unity.Cinemachine;
 using UnityEngine;
 
 namespace Mascari4615
@@ -25,13 +25,13 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
-			cinemachineBrain.m_UpdateMethod = CinemachineBrain.UpdateMethod.FixedUpdate;
+			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.FixedUpdate;
 			chatFramingTransposer = virtualCameras[2].GetCinemachineComponent<CinemachineFramingTransposer>();
 		}
 
 		public void SetCamera(CameraType cameraType)
 		{
-			cinemachineBrain.m_DefaultBlend.m_Style = (int)cameraType == (int)MCanvasType.Dungeon ? CinemachineBlendDefinition.Style.Cut : CinemachineBlendDefinition.Style.EaseInOut;
+			cinemachineBrain.DefaultBlend.Style = (int)cameraType == (int)MCanvasType.Dungeon ? CinemachineBlendDefinition.Styles.Cut : CinemachineBlendDefinition.Styles.EaseInOut;
 
 			for (int i = 0; i < virtualCameras.Length; i++)
 			{
