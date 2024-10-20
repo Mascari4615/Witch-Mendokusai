@@ -1,6 +1,7 @@
 using System.Collections;
 using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.Animations;
 
 namespace Mascari4615
 {
@@ -15,6 +16,7 @@ namespace Mascari4615
 	{
 		[SerializeField] private CinemachineBrain cinemachineBrain;
 		[SerializeField] private CinemachineCamera[] cinemachineCameras;
+		[SerializeField] private PositionConstraint[] posDelegates;
 		[SerializeField] private CinemachineImpulseSource impulseSource;
 		[SerializeField] private float xDiff = .3f;
 
@@ -24,8 +26,19 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
+			Init();
+		}
+
+		private void Init()
+		{
 			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.FixedUpdate;
 			chatPositionTransposer = cinemachineCameras[2].GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachinePositionComposer;
+		}
+
+		private void Start()
+		{
+			posDelegates[0].SetSource(0, new ConstraintSource { sourceTransform = Player.Instance.Object.CameraPosition, weight = 1 });
+			posDelegates[1].SetSource(0, new ConstraintSource { sourceTransform = Player.Instance.Object.SpritePosition, weight = 1 });
 		}
 
 		public void SetCamera(CameraType cameraType)

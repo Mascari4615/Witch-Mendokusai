@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 using static Mascari4615.SOHelper;
@@ -10,6 +9,9 @@ namespace Mascari4615
 	{
 		private Coroutine invincibleRoutine = null;
 		[SerializeField] private GameObject diedX;
+
+		[field: SerializeField] public Transform CameraPosition { get; private set; }
+		[field: SerializeField] public Transform SpritePosition { get; private set; }
 
 		public void SetDoll(int dollID)
 		{
