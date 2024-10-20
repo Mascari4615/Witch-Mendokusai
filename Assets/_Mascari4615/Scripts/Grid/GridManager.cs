@@ -8,26 +8,16 @@ namespace Mascari4615
 	{
 		private InputManager InputManager => InputManager.Instance;
 
-		[SerializeField]
-		private Grid grid;
-
-		[SerializeField]
-		private GameObject gridVisualization;
-
-		[SerializeField]
-		private Animator marker;
-
-		[SerializeField]
-		private GameObject blockPrefab;
+		[SerializeField] private Grid grid;
+		[SerializeField] private GameObject gridVisualization;
+		[SerializeField] private Animator marker;
+		[SerializeField] private GameObject blockPrefab;
 
 		private Vector3 targetCellPos;
-
-		private GridData gridData;
+		private readonly GridData gridData = new();
 
 		private void Start()
 		{
-			gridData = new();
-
 			StopBuilding();
 		}
 
