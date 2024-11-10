@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7257138774340585240}
   - component: {fileID: 5123082678106289827}
   - component: {fileID: 4600170414709892731}
+  - component: {fileID: 3433694298448141983}
   - component: {fileID: 1357298894130424496}
   - component: {fileID: 2398214206902548977}
   m_Layer: 0
@@ -133,6 +134,21 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: -236.29199, y: -195.62854, z: -950.474}
+--- !u!114 &3433694298448141983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 94387142165518959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSpeed: 10
+  minZoom: 2
+  maxZoom: 28
 --- !u!114 &1357298894130424496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,10 +229,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
   cinemachineBrain: {fileID: 6193984086941767580}
-  cinemachineCameras:
-  - {fileID: 1171458456755304594}
-  - {fileID: 7257138774340585240}
-  - {fileID: 7181201690553760693}
+  cameras:
+  - {fileID: 6440958189742302734}
+  - {fileID: 3433694298448141983}
+  - {fileID: 5831963771205655523}
   posDelegates:
   - {fileID: 1868098835277548723}
   - {fileID: 877239471313983047}
@@ -515,6 +531,7 @@ GameObject:
   - component: {fileID: 1495291891151220615}
   - component: {fileID: 4176869629433973148}
   - component: {fileID: 5877673952825067507}
+  - component: {fileID: 387624394744812928}
   - component: {fileID: 2235260484728495236}
   - component: {fileID: 4067509652769010008}
   m_Layer: 0
@@ -636,6 +653,21 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 0, y: 0, z: 0}
+--- !u!114 &387624394744812928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4957845159342430547}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSpeed: 10
+  minZoom: 2
+  maxZoom: 20
 --- !u!114 &2235260484728495236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -677,6 +709,7 @@ GameObject:
   - component: {fileID: 7181201690553760693}
   - component: {fileID: 407754302289330047}
   - component: {fileID: 152520638569146067}
+  - component: {fileID: 5831963771205655523}
   - component: {fileID: 3616233593415228470}
   m_Layer: 0
   m_Name: Camera_Chat
@@ -797,6 +830,21 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: 726.57104, y: 514.0359, z: 826.4518}
+--- !u!114 &5831963771205655523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5444152389650569514}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSpeed: 10
+  minZoom: 2
+  maxZoom: 18
 --- !u!114 &3616233593415228470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -826,6 +874,7 @@ GameObject:
   - component: {fileID: 1171458456755304594}
   - component: {fileID: 6449674615429622753}
   - component: {fileID: 1084304667799294530}
+  - component: {fileID: 6440958189742302734}
   - component: {fileID: 8063760352781042478}
   - component: {fileID: 6614857846952808595}
   m_Layer: 0
@@ -947,6 +996,21 @@ MonoBehaviour:
     FrequencyGain: 1
     Duration: 1
     m_NoiseOffsets: {x: -250.9917, y: -53.193695, z: 95.541626}
+--- !u!114 &6440958189742302734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6211395759374763566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomSpeed: 10
+  minZoom: 2
+  maxZoom: 28
 --- !u!114 &8063760352781042478
 MonoBehaviour:
   m_ObjectHideFlags: 0
