@@ -21,13 +21,16 @@ namespace Mascari4615
 		protected override void Awake()
 		{
 			base.Awake();
-		}
 
-		private void Init()
-		{
+			// Init
 			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.FixedUpdate;
 			chatPositionTransposer = cameras[2].CinemachineCamera.GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachinePositionComposer;
+			curCamera = cameras[0];
+		}
 
+		private void Start()
+		{
+			// Init
 			posDelegates[0].SetSource(0, new ConstraintSource { sourceTransform = Player.Instance.Object.CameraPosition, weight = 1 });
 			posDelegates[1].SetSource(0, new ConstraintSource { sourceTransform = Player.Instance.Object.SpritePosition, weight = 1 });
 
@@ -35,13 +38,6 @@ namespace Mascari4615
 			{
 				Zoom();
 			});
-
-			curCamera = cameras[0];
-		}
-
-		private void Start()
-		{
-			Init();
 		}
 
 		public void SetCamera(CameraType cameraType)

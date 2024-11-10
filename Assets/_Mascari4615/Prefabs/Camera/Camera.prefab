@@ -146,7 +146,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 10
+  <CinemachineCamera>k__BackingField: {fileID: 7257138774340585240}
+  positionComposer: {fileID: 5123082678106289827}
   minZoom: 2
   maxZoom: 28
 --- !u!114 &1357298894130424496
@@ -665,7 +666,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 10
+  <CinemachineCamera>k__BackingField: {fileID: 1495291891151220615}
+  positionComposer: {fileID: 4176869629433973148}
   minZoom: 2
   maxZoom: 20
 --- !u!114 &2235260484728495236
@@ -842,7 +844,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 10
+  <CinemachineCamera>k__BackingField: {fileID: 7181201690553760693}
+  positionComposer: {fileID: 407754302289330047}
   minZoom: 2
   maxZoom: 18
 --- !u!114 &3616233593415228470
@@ -1008,7 +1011,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c9563464cfeb3a47ae6b3be2a054bb6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 10
+  <CinemachineCamera>k__BackingField: {fileID: 1171458456755304594}
+  positionComposer: {fileID: 6449674615429622753}
   minZoom: 2
   maxZoom: 28
 --- !u!114 &8063760352781042478
