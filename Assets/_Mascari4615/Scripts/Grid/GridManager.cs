@@ -24,7 +24,7 @@ namespace Mascari4615
 		[ContextMenu(nameof(StartBuilding))]
 		public void StartBuilding()
 		{
-			InputManager.OnClicked += ClickCell;
+			InputManager.RegisterMouseEvent(InputMouseEventType.Button0Down, () => ClickCell());
 			gridVisualization.SetActive(true);
 			marker.SetBool("ON", true);
 		}
@@ -32,7 +32,7 @@ namespace Mascari4615
 		[ContextMenu(nameof(StopBuilding))]
 		public void StopBuilding()
 		{
-			InputManager.OnClicked -= ClickCell;
+			InputManager.UnregisterMouseEvent(InputMouseEventType.Button0Down);
 			gridVisualization.SetActive(false);
 			marker.SetBool("ON", false);
 		}
