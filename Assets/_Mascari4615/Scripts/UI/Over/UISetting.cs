@@ -13,6 +13,7 @@ namespace Mascari4615
 		[SerializeField] private Slider bgmVolumeSlider;
 		[SerializeField] private Slider sfxVolumeSlider;
 		[SerializeField] private Button dungeonExitButton;
+		[SerializeField] private Button quitButton;
 
 		private void Start()
 		{
@@ -23,6 +24,11 @@ namespace Mascari4615
 				// HACK:
 				Player.Instance.Object.ReceiveDamage(new DamageInfo(9999, DamageType.Critical));
 				// DungeonManager.Instance.EndDungeon();
+			});
+
+			quitButton.onClick.AddListener(() =>
+			{
+				Application.Quit();
 			});
 		}
 
