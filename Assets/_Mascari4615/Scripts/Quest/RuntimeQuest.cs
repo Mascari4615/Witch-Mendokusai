@@ -78,6 +78,9 @@ namespace Mascari4615
 
 		public void Evaluate()
 		{
+			if (State == RuntimeQuestState.Completed)
+				return;
+
 			if (Type == QuestType.VillageRequest)
 			{
 				if (State >= RuntimeQuestState.Working)

@@ -66,7 +66,10 @@ namespace Mascari4615
 
 		public void RemoveQuest(RuntimeQuest quest)
 		{
-			if (Quests.Remove(quest) == false)
+			Guid? guid = quest.Guid;
+			RuntimeQuest runtimeQuest = GetQuest(guid);
+
+			if (Quests.Remove(runtimeQuest) == false)
 			{
 				Debug.Log("Quest not found");
 			}
