@@ -9,12 +9,11 @@ using UnityEngine.SceneManagement;
 
 namespace Mascari4615
 {
-	public class UIDataLoading : Singleton<UIDataLoading>
+	public class DataLoader : Singleton<DataLoader>
 	{
 		[SerializeField] private Image progressBar;
-		private readonly List<AsyncOperationHandle> handles = new();
 
-		public IEnumerator DataLoading()
+		public IEnumerator LoadData()
 		{
 			// 로딩 시 강제로 로비로 이동
 			// 인게임 씬에서 에디터 플레이 시 Awake, Start 등이 호출 될 때 로드가 안된 상태로 데이터에 접근해서 오류가 생기는 문제 방지
@@ -23,12 +22,13 @@ namespace Mascari4615
 			gameObject.SetActive(true);
 			progressBar.fillAmount = 0f;
 
-			LoadAssetsAsync();
+			List<AsyncOperationHandle> handles = new();
+			LoadAssetsAsync(handles);
 
 			while (true)
 			{
 				float totalPercent = 0;
-				foreach (var handle in handles)
+				foreach (AsyncOperationHandle handle in handles)
 					totalPercent += handle.PercentComplete;
 				progressBar.fillAmount = totalPercent / handles.Count;
 
@@ -48,7 +48,7 @@ namespace Mascari4615
 			gameObject.SetActive(false);
 		}
 
-		private void LoadAssetsAsync()
+		private void LoadAssetsAsync(List<AsyncOperationHandle> handles)
 		{
 			SOManager.Instance.DataSOs.Clear();
 

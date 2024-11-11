@@ -73,11 +73,15 @@ namespace Mascari4615
 			DataManager.HasRecipe = SOManager.DataSOs[typeof(ItemData)].Values.ToDictionary(itemData => itemData.ID, itemData => false);
 
 			// 초기 퀘스트 추가
+			DataManager.QuestManager.Init(new());
 			// DataManager.QuestManager.AddQuest(new RuntimeQuest(GetQuestSO(0)));
 			new RuntimeQuest(GetQuestSO(0));
 
 			// 던전 초기화
 			ForEach<Dungeon>(dungeon => {dungeon.Init();});
+
+			// 통계 초기화
+			DataManager.GameStat.InitAllZero();
 
 			SaveData();
 			LoadLocalData();

@@ -44,7 +44,7 @@ namespace Mascari4615
 			PlayFabManager = GetComponent<PlayFabManager>();
 			TimeManager.Instance.RegisterCallback(WorkManager.TickEachWorks);
 
-			yield return StartCoroutine(UIDataLoading.Instance.DataLoading());
+			yield return StartCoroutine(DataLoader.Instance.LoadData());
 
 			ForEach<ItemData>(itemData =>
 			{

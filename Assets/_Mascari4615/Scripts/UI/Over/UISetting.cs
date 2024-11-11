@@ -14,6 +14,7 @@ namespace Mascari4615
 		[SerializeField] private Slider sfxVolumeSlider;
 		[SerializeField] private Button dungeonExitButton;
 		[SerializeField] private Button quitButton;
+		[SerializeField] private Button clearDataButton;
 
 		private void Start()
 		{
@@ -29,6 +30,11 @@ namespace Mascari4615
 			quitButton.onClick.AddListener(() =>
 			{
 				Application.Quit();
+			});
+
+			clearDataButton.onClick.AddListener(() =>
+			{
+				DataManager.Instance.PlayFabManager.CreateAndSavePlayerData();
 			});
 		}
 
