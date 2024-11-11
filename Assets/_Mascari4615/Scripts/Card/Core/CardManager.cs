@@ -22,10 +22,12 @@ namespace Mascari4615
 		}
 
 		// UI
-		[SerializeField] private GameObject selectDeckPanel;
+		[SerializeField] private Transform selectDeckPanel;
+		[SerializeField] private Transform selectDeckPanelContent;
 		[SerializeField] private List<UISlot> deckSelectButtons;
 
-		[SerializeField] private GameObject deckPanel;
+		[SerializeField] private Transform deckPanel;
+		[SerializeField] private Transform deckPanelContent;
 		private readonly Dictionary<int, UIDeck> deckUIDic = new();
 		[SerializeField] private List<UICardSlot> cardSelectButtons;
 
@@ -79,18 +81,18 @@ namespace Mascari4615
 					break;
 			}
 
-			selectDeckPanel.SetActive(curState == CardUIState.SelectDeck);
-			if (selectDeckPanel.activeSelf)
+			selectDeckPanel.gameObject.SetActive(curState == CardUIState.SelectDeck);
+			if (selectDeckPanel.gameObject.activeSelf)
 			{
-				selectDeckPanel.transform.localScale = Vector3.zero;
-				selectDeckPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
+				selectDeckPanelContent.localScale = Vector3.zero;
+				selectDeckPanelContent.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
 			}
 
-			deckPanel.SetActive(curState == CardUIState.SelectCard);
-			if (deckPanel.activeSelf)
+			deckPanel.gameObject.SetActive(curState == CardUIState.SelectCard);
+			if (deckPanel.gameObject.activeSelf)
 			{
-				deckPanel.transform.localScale = Vector3.zero;
-				deckPanel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
+				deckPanelContent.localScale = Vector3.zero;
+				deckPanelContent.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
 			}
 
 			foreach (UIDeck deckUI in deckUIDic.Values)
@@ -153,7 +155,7 @@ namespace Mascari4615
 			{
 				if (--maxLoop < 0)
 					break;
-	
+
 				int randomIndex = Random.Range(0, curDeckBuffer.Count);
 				CardData randomCard = curDeckBuffer[randomIndex];
 
