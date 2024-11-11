@@ -78,7 +78,7 @@ namespace Mascari4615
 
 		private IEnumerator DungeonLoop()
 		{
-			// Debug.Log(nameof(DungeonLoop));
+			Debug.Log(nameof(DungeonLoop));
 			WaitForSeconds ws01 = new(.1f);
 
 			// HACK:

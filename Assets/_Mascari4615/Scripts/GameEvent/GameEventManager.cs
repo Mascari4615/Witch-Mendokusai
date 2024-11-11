@@ -33,6 +33,9 @@ namespace Mascari4615
 
 		public void UnregisterCallback(GameEventType gameEventType, Action action)
 		{
+			if (IsPlaying == false)
+				return;
+
 			if (Callback.ContainsKey(gameEventType))
 			{
 				Callback[gameEventType] -= action;

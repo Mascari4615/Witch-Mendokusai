@@ -13,8 +13,12 @@ namespace Mascari4615
 	{
 		public static void ApplyEffects(List<EffectInfoData> effectInfoDatas)
 		{
+			Debug.Log("Applying effects...");
+
 			foreach (EffectInfoData effectInfoData in effectInfoDatas)
 			{
+				Debug.Log(effectInfoData.Type + " " + effectInfoData.DataSOID + " " + effectInfoData.ArithmeticOperator + " " + effectInfoData.Value);
+
 				int id = effectInfoData.DataSOID;
 				EffectType effectType = effectInfoData.Type;
 				DataSO dataSO = null;
@@ -71,12 +75,16 @@ namespace Mascari4615
 
 		public static void ApplyEffects(List<EffectInfo> effectInfos)
 		{
+			Debug.Log("Applying effects...");
+
 			foreach (EffectInfo effectInfo in effectInfos)
 				ApplyEffect(effectInfo);
 		}
 
 		public static void ApplyEffect(EffectInfo effectInfo)
 		{
+			Debug.Log($"Applying effect: {effectInfo.Type} {effectInfo.Data} {effectInfo.ArithmeticOperator} {effectInfo.Value}");
+
 			IEffect effect = null;
 
 			switch (effectInfo.Type)

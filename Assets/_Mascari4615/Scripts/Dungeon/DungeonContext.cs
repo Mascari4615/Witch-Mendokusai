@@ -23,7 +23,7 @@ namespace Mascari4615
 					if (effect.Affiliation != unit.Affiliation)
 						continue;
 
-					Debug.Log($"{unit.Name} {effect.StatType} {effect.Value}");
+					// Debug.Log($"{unit.Name} {effect.StatType} {effect.Value}");
 					newStat[effect.StatType] += effect.Value;
 				}
 			}
