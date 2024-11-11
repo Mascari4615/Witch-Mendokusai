@@ -34,9 +34,13 @@ MonoBehaviour:
       Data: {fileID: 11400000, guid: 4953f4b841176404d9ff2bc35ecf6a84, type: 2}
       ComparisonOperator: 4
       Value: 1
-      JustOnce: 0
+      JustOnce: 1
     CompleteEffects:
     - Type: 100
+      Data: {fileID: 11400000, guid: 9b5a1ab92828711408059d72644cfc46, type: 2}
+      ArithmeticOperator: 0
+      Value: 0
+    - Type: 101
       Data: {fileID: 11400000, guid: 9b5a1ab92828711408059d72644cfc46, type: 2}
       ArithmeticOperator: 0
       Value: 0
