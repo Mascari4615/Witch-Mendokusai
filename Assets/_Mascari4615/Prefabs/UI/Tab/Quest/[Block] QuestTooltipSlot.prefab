@@ -10,15 +10,79 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 634781642427003200, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_Name
-      value: '[Block] ButtonWithSlot Variant'
+      value: '[Block] QuestTooltipSlot'
       objectReference: {fileID: 0}
     - target: {fileID: 3381044667181450294, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_fontSize
-      value: 15
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3381044667181450294, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: 8c3952f65c9ea944d93d24570eb5af80, type: 2}
+    - target: {fileID: 3381044667181450294, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_fontSizeBase
-      value: 15
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3381044667181450294, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 7827383132625158668, guid: 8c3952f65c9ea944d93d24570eb5af80, type: 2}
+    - target: {fileID: 3381044667181450294, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438517286439581543, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_Color.a
+      value: 0.39215687
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438517286439581543, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4438517286439581543, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 5990639241003299805, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_Color.a
+      value: 0.78431374
+      objectReference: {fileID: 0}
+    - target: {fileID: 5990639241003299805, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7318603815924370952, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7318603815924370952, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7318603815924370952, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7318603815924370952, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9068399386468635388, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9068399386468635388, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 9068399386468635388, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9068399386468635388, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9142351731795774557, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_Pivot.x
@@ -46,11 +110,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9142351731795774557, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9142351731795774557, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 9142351731795774557, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       propertyPath: m_LocalPosition.x
