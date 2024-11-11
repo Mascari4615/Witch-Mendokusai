@@ -25,7 +25,7 @@ namespace Mascari4615
 			if (DataSO)
 			{
 				Dungeon dungeon = DataSO as Dungeon;
-				playTimeText.text = $"{dungeon.TimeByMinute}분";
+				playTimeText.text = $"{dungeon.TimeBySecond / 60}분";
 				typeText.text = dungeon.Type.ToString();
 			}
 			else

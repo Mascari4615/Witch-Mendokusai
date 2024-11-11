@@ -60,7 +60,7 @@ namespace Mascari4615
 				expChecker.Init();
 				cardManager.Init();
 
-				InitialDungeonTime = new TimeSpan(0, dungeon.TimeByMinute, 0);
+				InitialDungeonTime = new TimeSpan(0, 0, dungeon.TimeBySecond);
 				DungeonCurTime = InitialDungeonTime;
 
 				Context = new DungeonContext(dungeon.Constraints);
@@ -72,7 +72,7 @@ namespace Mascari4615
 				StartCoroutine(DungeonLoop());
 				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
 
-				CreateDungeonQuest();
+				CreateDungeonQuest(dungeon);
 			}
 		}
 
@@ -83,6 +83,7 @@ namespace Mascari4615
 
 			// HACK:
 			int dungeonClear = DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_CLEAR];
+			Debug.Log($"DungeonClear: {dungeonClear}");
 
 			while (true)
 			{
@@ -90,6 +91,7 @@ namespace Mascari4615
 				UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
+				Debug.Log($"DungeonClear: {dungeonClear}");
 				if (dungeonClear < DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_CLEAR])
 				{
 					EndDungeon();
@@ -142,27 +144,30 @@ namespace Mascari4615
 			}
 		}
 
-		private void CreateDungeonQuest()
+		private void CreateDungeonQuest(Dungeon dungeon)
 		{
 			// TEST:
 			QuestInfo questInfo = new()
 			{
 				Type = QuestType.Dungeon,
-				GameEvents = new(),
+				GameEvents = new()
+				{
+					GameEventType.OnTick,
+				},
 				Criterias = new(),
 				CompleteEffects = new()
 				{
 					// HACK:
 					new EffectInfo()
 					{
-						Type = EffectType.GameStat,
-						Data = GetGameStatData((int)DungeonStatType.DUNGEON_CLEAR),
+						Type = EffectType.DungeonStat,
+						Data = GetDungeonStatData((int)DungeonStatType.DUNGEON_CLEAR),
 						ArithmeticOperator = ArithmeticOperator.Add,
 						Value = 1,
 					}
 				},
 				RewardEffects = new(),
-				Rewards = new(),
+				Rewards = dungeon.Rewards,
 
 				WorkTime = 0,
 				AutoWork = false,
@@ -172,7 +177,7 @@ namespace Mascari4615
 			string questName = string.Empty;
 
 			DungeonRecord curRecord = dungeonRecorder.GetResultRecord();
-			DungeonType dungeonType = CurDungeon.Type;
+			DungeonType dungeonType = dungeon.Type;
 
 			switch (dungeonType)
 			{
