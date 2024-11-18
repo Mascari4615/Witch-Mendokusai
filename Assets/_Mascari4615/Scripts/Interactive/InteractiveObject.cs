@@ -9,12 +9,6 @@ namespace Mascari4615
 
 		private IInteractable[] interactable;
 
-		public void Interact()
-		{
-			foreach (IInteractable interact in interactable)
-				interact.OnInteract();
-		}
-
 		private void Awake()
 		{
 			interactable = GetComponents<IInteractable>();
@@ -23,6 +17,12 @@ namespace Mascari4615
 		private void OnEnable()
 		{
 			ActiveInteractives.Add(this);
+		}
+
+		public void Interact()
+		{
+			foreach (IInteractable interact in interactable)
+				interact.OnInteract();
 		}
 
 		private void OnDisable()
