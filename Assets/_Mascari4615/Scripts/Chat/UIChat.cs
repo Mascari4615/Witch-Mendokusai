@@ -31,13 +31,17 @@ namespace Mascari4615
 			bubbleCanvasGroup.alpha = 0;
 		}
 
-		public void StartChat(NPCObject npc, Action action)
+		public void StartChat(NPCObject npc, Action action = null)
 		{
-			// Debug.Log($"{nameof(StartChat)}: {npc.UnitData.ID}");
-
 			// TODO: CSV가 아니라 스크립터블 오브젝트로 관리 가능하게
-			if (TryGetChatData(npc.UnitData.ID.ToString(), out List<LineData> curChatDatas) == false)
+			if (ChatManager.Instance.TryGetChatData(npc.UnitData.ID.ToString(), out List<LineData> curChatDatas) == false)
+			{
+				Debug.LogWarning($"ChatData not found: {npc.UnitData.ID}");
+				action?.Invoke();
 				return;
+			}
+
+			CameraManager.Instance.SetCamera(CameraType.Dialogue);
 
 			curNPC = npc;
 			chatTargetGroup.Targets[1].Object = npc.transform;
@@ -50,10 +54,8 @@ namespace Mascari4615
 
 		private IEnumerator ChatLoop(List<LineData> curChatDatas)
 		{
-			// Debug.Log($"{nameof(ChatLoop)}");
-
 			StartCoroutine(BubbleLoop());
-			
+
 			chatCanvasGroup.DOFade(1, 0.2f);
 			bubbleCanvasGroup.DOFade(1, 0.2f);
 
@@ -67,8 +69,6 @@ namespace Mascari4615
 
 			foreach (LineData lineData in curChatDatas)
 			{
-				// Debug.Log($"{nameof(ChatLoop)}: {lineData.line}");
-
 				// TODO: 유닛 이미지 바리에이션 어떻게 저장하고 불러온 것인지?
 				Unit unit = null;
 
@@ -110,8 +110,6 @@ namespace Mascari4615
 
 		private IEnumerator PrintLine(LineData lineData)
 		{
-			// Debug.Log($"{nameof(PrintLine)}: {lineData.line}");
-
 			const float waitTime = 0.05f;
 			WaitForSecondsRealtime wait = new(waitTime);
 			StringBuilder s = new();
@@ -132,8 +130,6 @@ namespace Mascari4615
 
 		public IEnumerator BubbleLoop()
 		{
-			// Debug.Log($"{nameof(BubbleLoop)}");
-
 			const float BubblePadding = 30f;
 			RectTransform bubbleRectTransform = bubbleCanvasGroup.GetComponent<RectTransform>();
 			float bubbleWidth = bubbleRectTransform.sizeDelta.x;
@@ -160,73 +156,6 @@ namespace Mascari4615
 					Mathf.Clamp(screenPos.x, bubbleWidth / 2 + BubblePadding, Screen.width - bubbleWidth / 2 - BubblePadding),
 					Mathf.Clamp(screenPos.y + 40, BubblePadding, Screen.height - bubbleHeight - BubblePadding), 0);
 			}
-		}
-
-		// =====================
-
-		[SerializeField] private TextAsset chatScripts;
-		private readonly Dictionary<string, List<LineData>> chatDataDic = new();
-
-		public bool TryGetChatData(string eventName, out List<LineData> chatDatas)
-		{
-			if (chatDataDic.Count == 0)
-				InitChatDic();
-
-			return chatDataDic.TryGetValue(eventName, out chatDatas);
-		}
-
-		private void InitChatDic()
-		{
-			if (chatScripts.bytes[0] == 0xEF && chatScripts.bytes[1] == 0xBB && chatScripts.bytes[2] == 0xBF)
-				Debug.Log("It's BOM");
-
-			// var bytes = Encoding.GetEncoding(1252).GetBytes(chatScripts.text);
-			// var myString = Encoding.UTF8.GetString(chatScripts.bytes);
-			string myString = chatScripts.text;
-
-			// Debug.Log(myString);
-
-			string csvText = myString[..(chatScripts.text.Length - 1)];
-			string[] rows = csvText.Split(new[] { '\n' });
-
-			string eventName = string.Empty;
-			List<LineData> lineDatas = new();
-
-			for (int i = 1; i < rows.Length; i++)
-			{
-				string[] columns = rows[i].Split(',');
-
-				if (columns[0] == "end")
-				{
-					chatDataDic.Add(eventName, lineDatas);
-					eventName = string.Empty;
-					lineDatas = new List<LineData>();
-					continue;
-				}
-
-				if (columns[0] != string.Empty)
-				{
-					eventName = columns[0];
-					lineDatas = new List<LineData>();
-				}
-
-				LineData chatData = new(ref columns);
-				lineDatas.Add(chatData);
-			}
-		}
-	}
-
-	public struct LineData
-	{
-		public int unitID;
-		public string line;
-		public string additionalData;
-
-		public LineData(ref string[] columns)
-		{
-			unitID = int.Parse(columns[1]);
-			line = columns[2];
-			additionalData = columns[3].TrimEnd('\r', '\n', ' ');
 		}
 	}
 }

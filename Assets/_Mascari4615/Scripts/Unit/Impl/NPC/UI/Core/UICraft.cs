@@ -37,12 +37,11 @@ namespace Mascari4615
 
 		private IEnumerator Loop()
 		{
-			WaitForSeconds wait = new(TimeManager.TICK);
-
-			UpdateGrid();
+			UpdateRecipeGrid();
 			recipeGrid.SelectSlot(0);
 			recipeGrid.CurSlot.OnSelect(null);
 
+			WaitForSeconds wait = new(TimeManager.TICK);
 			while (true)
 			{
 				// Debug.Log($"{nameof(UICraft)} {nameof(Loop)}");
@@ -62,31 +61,24 @@ namespace Mascari4615
 		{
 			foreach (UIItemSlot resultSlot in resultSlots)
 				resultSlot.UpdateUI();
-			UpdateGrid();
+			UpdateRecipeGrid();
 			UpdateTooltip();
 		}
 
-		private void UpdateGrid()
+		private void UpdateRecipeGrid()
 		{
-			Dictionary<int, bool> HasRecipe = DataManager.Instance.HasRecipe;
-			List<ItemData> recipes = new();
+			// 현재 가지고 있는 레시피만 보여주도록
+			List<ItemData> availableRecipes = new();
 
-			foreach (ItemData itemData in SOManager.Instance.DataSOs[typeof(ItemData)].Values.Cast<ItemData>())
+			// 모든 아이템 데이터 중에서 해당 아이템 타입과 레시피 타입이 일치하는 아이템 데이터만 필터링
+			foreach (ItemData itemData in SOManager.Instance[typeof(ItemData)].Values)
 			{
-				if (itemData.Type != itemType)
-					continue;
-
-				if (itemData.Recipes.Count == 0)
-					continue;
-
-				if (itemData.Recipes[0].Type != recipeType)
-					continue;
-
-				if (HasRecipe.ContainsKey(itemData.ID) && HasRecipe[itemData.ID])
-					recipes.Add(itemData);
+				if (itemData.Unlocked)
+					if ((itemData.Type == itemType) && (itemData.Recipes[0].Type == recipeType))
+						availableRecipes.Add(itemData);
 			}
 
-			recipeGrid.SetDatas(recipes);
+			recipeGrid.SetDatas(availableRecipes);
 			recipeGrid.UpdateUI();
 		}
 

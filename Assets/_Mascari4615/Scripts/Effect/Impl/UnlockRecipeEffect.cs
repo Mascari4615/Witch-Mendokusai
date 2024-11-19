@@ -6,7 +6,7 @@ namespace Mascari4615
 	{
 		public void Apply(EffectInfo effectInfo)
 		{
-			DataManager.Instance.HasRecipe[(effectInfo.Data as ItemData).ID] = true;
+			DataManager.Instance.IsRecipeUnlocked[(effectInfo.Data as ItemData).ID] = true;
 		}
 	}
 }

@@ -62,7 +62,7 @@ namespace Mascari4615
 		}
 	}
 
-	public class UISlot : MonoBehaviour, IUI, ISelectHandler
+	public class UISlot : MonoBehaviour, IUI, ISelectHandler, IDeselectHandler
 	{
 		public int Index { get; private set; }
 		public ToolTipTrigger ToolTipTrigger { get; private set; }
@@ -75,6 +75,7 @@ namespace Mascari4615
 		[SerializeField] private bool showAmountOne = false;
 
 		protected Button button;
+		public Selectable Selectable => button;
 		protected Image iconImage;
 		protected TextMeshProUGUI nameText;
 		protected TextMeshProUGUI amountText;
@@ -82,6 +83,7 @@ namespace Mascari4615
 		protected Image disableImage;
 
 		private Action<UISlot> selectAction;
+		private Action<UISlot> deselectAction;
 		private Action<UISlot> clickAction;
 
 		private bool isInit = false;
@@ -162,6 +164,7 @@ namespace Mascari4615
 		}
 
 		public void SetSelectAction(Action<UISlot> action) => selectAction = action;
+		public void SetDeselectAction(Action<UISlot> action) => deselectAction = action;
 		public void SetClickAction(Action<UISlot> action) => clickAction = action;
 
 		public void Select()
@@ -182,12 +185,24 @@ namespace Mascari4615
 				ToolTipTrigger.Trigger();
 		}
 
+		public void OnDeselect(BaseEventData eventData)
+		{
+			// Debug.Log($"{name} is deselected");
+			deselectAction?.Invoke(this);
+		}
+
 		public void OnClick()
 		{
 			// Debug.Log($"{name} is clicked");
 			clickAction?.Invoke(this);
 			if (ToolTipTrigger)
 				ToolTipTrigger.Trigger();
+		}
+
+		public void SetNavigation(Navigation navigation)
+		{
+			if (button)
+				button.navigation = navigation;
 		}
 	}
 }

@@ -70,7 +70,7 @@ namespace Mascari4615
 
 			// 레시피 초기화
 			// 모든 아이템 ID에 대해 bool
-			DataManager.HasRecipe = SOManager.DataSOs[typeof(ItemData)].Values.ToDictionary(itemData => itemData.ID, itemData => false);
+			DataManager.IsRecipeUnlocked = SOManager.DataSOs[typeof(ItemData)].Values.ToDictionary(itemData => itemData.ID, itemData => false);
 
 			// 초기 퀘스트 추가
 			DataManager.QuestManager.Init(new());
@@ -138,7 +138,7 @@ namespace Mascari4615
 			DataManager.QuestManager.LoadQuestState(questStates);
 
 			// 레시피 초기화
-			DataManager.HasRecipe = saveData.hasRecipe;
+			DataManager.IsRecipeUnlocked = saveData.hasRecipe;
 
 			// 작업 초기화
 			DataManager.WorkManager.Init(saveData.works);
@@ -165,7 +165,7 @@ namespace Mascari4615
 				dolls = new(),
 				works = DataManager.WorkManager.Works,
 				questStates = DataManager.QuestManager.GetQuestStates().ToDictionary(pair => pair.Key, pair => (int)pair.Value),
-				hasRecipe = DataManager.HasRecipe,
+				hasRecipe = DataManager.IsRecipeUnlocked,
 				runtimeQuests = DataManager.QuestManager.Quests.Datas.Where(quest => quest.Type != QuestType.Dungeon).ToList().ConvertAll(quest => quest.Save()),
 				gameStats = DataManager.GameStat.Save(),
 				dungeons = new()
