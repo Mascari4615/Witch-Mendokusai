@@ -57,7 +57,19 @@ namespace Mascari4615
 			{ typeof(Monster), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(Monster)}/" },
 		};
 
-		public static MDataSO Instance { get; private set; }
+		private static MDataSO instance;
+		public static MDataSO Instance
+		{
+			get
+			{
+				if (instance == null)
+				{
+					ShowMDataSO();
+				}
+				return instance;
+			}
+			private set => instance = value;
+		}
 
 		// public MDataSODetail Detail { get; private set; }
 		public MDataSO_IdChanger IdChanger { get; private set; }
@@ -79,17 +91,17 @@ namespace Mascari4615
 			// (유틸리티 창 여부, 타이틀, 이미 창이 열려있을 때 새로 열지 여부)
 			GetWindow<MDataSO>(false, nameof(MDataSO), true);
 			
-			Debug.Log($"{nameof(ShowMDataSO)} End : {Instance}");
+			Debug.Log($"{nameof(ShowMDataSO)} End : {instance}");
 		}
 
 		private void OnEnable()
 		{
 			Debug.Log(nameof(OnEnable));
 
-			if (Instance == null)
+			if (instance == null)
 			{
 				Debug.Log("인스턴스를 생성합니다.");
-				Instance = this;
+				instance = this;
 			}
 			else
 			{
