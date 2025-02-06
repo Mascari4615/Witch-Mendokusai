@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UIElements;
 
 namespace Mascari4615
@@ -13,6 +14,7 @@ namespace Mascari4615
 	public partial class MDataSO : EditorWindow
 	{
 		public const string SCRIPTABLE_OBJECTS_DIR = "Assets/_Mascari4615/ScriptableObjects/";
+		public const string EDITOR_DIR = "Assets/_Mascari4615/Editor/";
 		private const int ID_MAX = 100_000_000;
 
 		private readonly Dictionary<Type, string> assetPrefixes = new()
@@ -57,7 +59,7 @@ namespace Mascari4615
 
 		public static MDataSO Instance { get; private set; }
 
-		public MDataSODetail Detail { get; private set; }
+		// public MDataSODetail Detail { get; private set; }
 		public MDataSO_IdChanger IdChanger { get; private set; }
 		public Dictionary<int, MDataSOSlot> DataSOSlots { get; private set; } = new();
 		public MDataSOSlot CurSlot { get; private set; }
@@ -120,22 +122,22 @@ namespace Mascari4615
 			Debug.Log(nameof(CreateGUI));
 
 			VisualElement root = rootVisualElement;
-			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MDataSO/MDataSO.uxml");
+			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{EDITOR_DIR}MDataSO/MDataSO.uxml");
 
 			// Instantiate UXML
 			VisualElement labelFromUXML = visualTree.Instantiate();
 			root.Add(labelFromUXML);
 
-			Detail = new();
+			// Detail = new();
 			IdChanger = new();
 
 			UpdateGrid();
 
-			Button addButton = rootVisualElement.Q<Button>(name: "BTN_Add");
-			addButton.RegisterCallback<ClickEvent>(ev =>
-			{
-				AddDataSO(Detail.CurDataSO.GetType());
-			});
+			// Button addButton = rootVisualElement.Q<Button>(name: "BTN_Add");
+			// addButton.RegisterCallback<ClickEvent>(ev =>
+			// {
+			// 	AddDataSO(Detail.CurDataSO.GetType());
+			// });
 
 			DropdownField dropdown = rootVisualElement.Q<DropdownField>(name: "Menu");
 			dropdown.choices = assetPaths.Keys.Select(type => type.Name).ToList();
@@ -163,7 +165,10 @@ namespace Mascari4615
 
 			SelectDataSOSlot(DataSOSlots.Values.First());
 
-			Selection.selectionChanged += () =>
+			if (Selection.selectionChanged.GetInvocationList().Any(temp => temp.Method.Name == nameof(TryOpenDetail)) == false)
+				Selection.selectionChanged += TryOpenDetail;
+		
+			void TryOpenDetail()
 			{
 				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
 
@@ -176,12 +181,14 @@ namespace Mascari4615
 
 					if (type == typeof(DataSO))
 						return;
+				
+					Debug.Log($"Selection.activeObject: {dataSO.name}");
 
 					SetType(type);
 					MDataSOSlot slot = DataSOSlots[dataSO.ID];
 					SelectDataSOSlot(slot);
 				}
-			};
+			}
 
 			isInit = true;
 			Debug.Log($"{nameof(CreateGUI)} End");
@@ -224,6 +231,9 @@ namespace Mascari4615
 
 		private void SetType(Type type)
 		{
+			if (CurType == type)
+				return;
+
 			Debug.Log($"{nameof(SetType)} <{type.Name}>");
 			CurType = type;
 			UpdateGrid();
@@ -500,7 +510,8 @@ namespace Mascari4615
 			oldSlot?.UpdateUI();
 			CurSlot.UpdateUI();
 
-			Detail.UpdateCurDataSO(slot.DataSO);
+			// Detail.UpdateCurDataSO(slot.DataSO);
+			Selection.activeObject = slot.DataSO;
 
 			Debug.Log($"{nameof(SelectDataSOSlot)} End");
 		}

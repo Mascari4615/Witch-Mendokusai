@@ -9,103 +9,109 @@ using UnityEngine.UIElements;
 
 namespace Mascari4615
 {
-	public class MDataSODetail
+	[CustomEditor(typeof(DataSO), true)]
+	[CanEditMultipleObjects]
+	public class MDataSODetail : Editor
 	{
-		public DataSO CurDataSO { get; private set; }
-
+		private DataSO dataSO;
 		private VisualElement root;
-
-		private VisualElement dataSODetail;
 		private VisualElement dataSOContent;
 
-		public MDataSODetail()
+		public override VisualElement CreateInspectorGUI()
 		{
+			root = new VisualElement();
+
 			Init();
+			UpdateUI();
+
+			return root;
 		}
 
 		private void Init()
 		{
 			Debug.Log(nameof(Init));
 
-			root = MDataSO.Instance.rootVisualElement;
+			root.Add(new Label("This is a custom inspector"));
 
-			dataSODetail = root.Q<VisualElement>(name: "DataSODetail");
-			dataSOContent = root.Q<VisualElement>(name: "DataSOContent");
+			{
+				VisualElement buttonContainer = new VisualElement();
+				buttonContainer.style.flexDirection = FlexDirection.Row;
+				buttonContainer.style.justifyContent = Justify.SpaceBetween;
 
-			Button duplicateButton = root.Q<Button>(name: "BTN_Dup");
-			duplicateButton.clicked += DuplicateCurDataSO;
+				CreateButton("Duplicate", () => MDataSO.Instance.DuplicateDataSO(dataSO));
+				CreateButton("Delete", () => MDataSO.Instance.DeleteDataSO(dataSO));
+				CreateButton("Select", () => MDataSO.Instance.IdChanger.SelectDataSO(dataSO));
 
-			Button deleteButton = root.Q<Button>(name: "BTN_Del");
-			deleteButton.clicked += DeleteCurDataSO;
+				root.Add(buttonContainer);
 
-			Button changeIDButton = root.Q<Button>(name: "BTN_ChangeID");
-			changeIDButton.clicked += () => MDataSO.Instance.IdChanger.SelectDataSO(CurDataSO);
+				void CreateButton(string text, Action onClick)
+				{
+					Button button = new Button(onClick) { text = text };
+					ApplyButtonStyle(button);
+					buttonContainer.Add(button);
+				}	
+
+				void ApplyButtonStyle(Button button)
+				{
+					button.style.width = new StyleLength(Length.Percent(30));
+					button.style.height = new StyleLength(20);
+				}
+			}
+
+			root.Add(dataSOContent = new VisualElement());
+
+			dataSO = target as DataSO;
 
 			Debug.Log($"{nameof(Init)} End");
 		}
 
-		public void UpdateCurDataSO(DataSO dataSO)
+		private void UpdateUI()
 		{
-			Debug.Log(nameof(UpdateCurDataSO) + " : " + dataSO.name);
+			Debug.Log(nameof(UpdateUI) + " : " + dataSO.name);
 
-			CurDataSO = dataSO;
-			UpdateUI();
-
-			Debug.Log($"{nameof(UpdateCurDataSO)} End");
-		}
-
-		public void UpdateUI()
-		{
-			Debug.Log(nameof(UpdateUI) + " : " + CurDataSO.name);
-
-			SerializedObject serializedObject = new(CurDataSO);
+			// var defaultInspector = new IMGUIContainer(() => DrawDefaultInspector());
+			// root.Add(defaultInspector);
 
 			// CurDataSO의 모든 프로퍼티를 리플렉션으로 가져오기
-			List<PropertyInfo> propertyInfos = CurDataSO.GetType()
-			.GetProperties()
-			.OrderBy(
-				p =>
-				{
-					var attribute = p.GetCustomAttribute(typeof(PropertyOrderAttribute));
-					if (attribute == null)
-						return int.MaxValue;
-					else
-						return ((PropertyOrderAttribute)attribute).Order;
-				}).ToList();
-
-			// CurDataSO의 모든 프로퍼티를 PropertyBlock으로 만들어서 dataSOContent에 추가
-			dataSOContent.Clear();
-			foreach (PropertyInfo propertyInfo in propertyInfos)
 			{
-				if (propertyInfo.Name == "name" || propertyInfo.Name == "hideFlags")
-					continue;
+				List<PropertyInfo> propertyInfos = dataSO.GetType()
+				.GetProperties()
+				.OrderBy(
+					p =>
+					{
+						var attribute = p.GetCustomAttribute(typeof(PropertyOrderAttribute));
+						if (attribute == null)
+							return int.MaxValue;
+						else
+							return ((PropertyOrderAttribute)attribute).Order;
+					}).ToList();
 
-				// HACK : 자동으로 생성되는 프로퍼티의 필드의 이름 = <프로퍼티이름>k__BackingField
-				PropertyField propertyField = new(serializedObject.FindProperty($"<{propertyInfo.Name}>k__BackingField"));
-				propertyField.Bind(serializedObject);
-				propertyField.RegisterValueChangeCallback((evt) =>
+				// CurDataSO의 모든 프로퍼티를 PropertyBlock으로 만들어서 dataSOContent에 추가
+				dataSOContent.Clear();
+				foreach (PropertyInfo propertyInfo in propertyInfos)
 				{
-					serializedObject.ApplyModifiedProperties();
-					MDataSO.Instance.DataSOSlots[CurDataSO.ID].UpdateUI();
-				});
-				dataSOContent.Add(propertyField);
+					if (propertyInfo.Name == "name" || propertyInfo.Name == "hideFlags")
+						continue;
 
-				// 보이지만 수정은 불가능한 프로퍼티
-				if (propertyInfo.Name == "ID")
-					propertyField.SetEnabled(false);
+					// HACK : 자동으로 생성되는 프로퍼티의 필드의 이름 = <프로퍼티이름>k__BackingField
+					PropertyField propertyField = new(serializedObject.FindProperty($"<{propertyInfo.Name}>k__BackingField"));
+					propertyField.Bind(serializedObject);
+
+					propertyField.RegisterValueChangeCallback((evt) =>
+					{
+						serializedObject.ApplyModifiedProperties();
+						MDataSO.Instance.DataSOSlots[dataSO.ID].UpdateUI();
+					});
+					
+					dataSOContent.Add(propertyField);
+
+					// 보이지만 수정은 불가능한 프로퍼티
+					if (propertyInfo.Name == "ID")
+						propertyField.SetEnabled(false);
+				}
 			}
 
 			Debug.Log($"{nameof(UpdateUI)} End");
-		}
-
-		public void DuplicateCurDataSO()
-		{
-			MDataSO.Instance.DuplicateDataSO(CurDataSO);
-		}
-
-		public void DeleteCurDataSO()
-		{
-			MDataSO.Instance.DeleteDataSO(CurDataSO);
 		}
 	}
 }

@@ -16,7 +16,7 @@ namespace Mascari4615
 
 		public MDataSOSlot(Action<MDataSOSlot> clickAction)
 		{
-			VisualTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/Editor/MDataSO/MDataSOSlot/MDataSOSlot.uxml");
+			VisualTreeAsset treeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{MDataSO.EDITOR_DIR}MDataSO/MDataSOSlot/MDataSOSlot.uxml");
 			VisualElement = treeAsset.Instantiate();
 
 			button = VisualElement.Q<Button>();
