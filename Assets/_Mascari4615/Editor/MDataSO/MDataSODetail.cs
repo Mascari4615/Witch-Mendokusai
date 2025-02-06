@@ -29,7 +29,7 @@ namespace Mascari4615
 
 		private void Init()
 		{
-			Debug.Log(nameof(Init));
+			// Debug.Log(nameof(Init));
 
 			root.Add(new Label("This is a custom inspector"));
 
@@ -61,15 +61,18 @@ namespace Mascari4615
 			root.Add(dataSOContent = new VisualElement());
 
 			dataSO = target as DataSO;
-			if (MDataSO.Instance.CurType != dataSO.GetType())
-				MDataSO.Instance.SetType(dataSO.GetType());
+			Debug.Log($"{nameof(MDataSODetail)}.{nameof(Init)} : {dataSO.Name}");
+			
+			Type baseType = MDataSO.Instance.GetBaseType(dataSO);
+			if (MDataSO.Instance.CurType != baseType)
+				MDataSO.Instance.SetType(baseType);
 
-			Debug.Log($"{nameof(Init)} End");
+			// Debug.Log($"{nameof(Init)} End");
 		}
 
 		private void UpdateUI()
 		{
-			Debug.Log(nameof(UpdateUI) + " : " + dataSO.name);
+			// Debug.Log(nameof(UpdateUI) + " : " + dataSO.name);
 
 			// var defaultInspector = new IMGUIContainer(() => DrawDefaultInspector());
 			// root.Add(defaultInspector);
@@ -102,6 +105,12 @@ namespace Mascari4615
 					propertyField.RegisterValueChangeCallback((evt) =>
 					{
 						serializedObject.ApplyModifiedProperties();
+
+						Type baseType = MDataSO.Instance.GetBaseType(dataSO);
+						if (MDataSO.Instance.CurType != baseType)
+							MDataSO.Instance.SetType(baseType);
+
+						// Debug.Log(MDataSO.Instance.DataSOSlots.Count);
 						MDataSO.Instance.DataSOSlots[dataSO.ID].UpdateUI();
 					});
 
@@ -113,9 +122,9 @@ namespace Mascari4615
 					{
 						VisualElement spritePreviewContainer = new VisualElement();
 						spritePreviewContainer.style.flexDirection = FlexDirection.RowReverse;
-						
+
 						Sprite sprite = (Sprite)propertyInfo.GetValue(dataSO);
-						
+
 						if (sprite == null)
 						{
 							Label noSpriteLabel = new Label("No Sprite");
@@ -137,7 +146,7 @@ namespace Mascari4615
 									marginTop = 10
 								}
 							};
-						
+
 							// Sprite의 UV 설정
 							Rect uvRect = new Rect(
 								sprite.textureRect.x / sprite.texture.width,
@@ -145,14 +154,14 @@ namespace Mascari4615
 								sprite.textureRect.width / sprite.texture.width,
 								sprite.textureRect.height / sprite.texture.height
 							);
-						
+
 							// Sprite의 특정 영역을 잘라내어 표시
 							spritePreview.image = Sprite.Create(sprite.texture, sprite.textureRect, new Vector2(0.5f, 0.5f)).texture;
 							spritePreview.uv = uvRect;
-						
+
 							spritePreviewContainer.Add(spritePreview);
 							dataSOContent.Add(spritePreviewContainer);
-						
+
 							// Sprite가 변경될 때 프리뷰 업데이트
 							propertyField.RegisterValueChangeCallback((evt) =>
 							{
@@ -165,7 +174,7 @@ namespace Mascari4615
 										sprite.textureRect.width / sprite.texture.width,
 										sprite.textureRect.height / sprite.texture.height
 									);
-						
+
 									spritePreview.image = Sprite.Create(sprite.texture, sprite.textureRect, new Vector2(0.5f, 0.5f)).texture;
 									spritePreview.uv = uvRect;
 								}
@@ -177,7 +186,7 @@ namespace Mascari4615
 				}
 			}
 
-			Debug.Log($"{nameof(UpdateUI)} End");
+			// Debug.Log($"{nameof(UpdateUI)} End");
 		}
 	}
 }

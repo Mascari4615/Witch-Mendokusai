@@ -99,7 +99,7 @@ namespace Mascari4615
 
 		private void UpdateUI()
 		{
-			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(UpdateUI)}");
+			// Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(UpdateUI)}");
 
 			origin.SetDataSO(CurDataSO);
 			target.SetDataSO(null);
@@ -110,7 +110,7 @@ namespace Mascari4615
 			deleteButton.SetEnabled(processBadIdDataSOs);
 			closeButton.SetEnabled(processBadIdDataSOs == false);
 
-			Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(UpdateUI)} End");
+			// Debug.Log($"{nameof(MDataSO_IdChanger)}.{nameof(UpdateUI)} End");
 		}
 
 		private void CheckID(ChangeEvent<int> evt)

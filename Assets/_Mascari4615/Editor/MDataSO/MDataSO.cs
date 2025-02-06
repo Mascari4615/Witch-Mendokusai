@@ -17,6 +17,15 @@ namespace Mascari4615
 		public const string EDITOR_DIR = "Assets/_Mascari4615/Editor/";
 		private const int ID_MAX = 100_000_000;
 
+		public Type GetBaseType(DataSO dataSO)
+		{
+			Type type = dataSO.GetType();
+
+			while (type != typeof(DataSO) && assetPaths.ContainsKey(type) == false)
+				type = type.BaseType;
+			return type;
+		}
+
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
 			{ typeof(QuestSO), "Q" },
@@ -71,7 +80,6 @@ namespace Mascari4615
 			private set => instance = value;
 		}
 
-		// public MDataSODetail Detail { get; private set; }
 		public MDataSO_IdChanger IdChanger { get; private set; }
 		public Dictionary<int, MDataSOSlot> DataSOSlots { get; private set; } = new();
 		public MDataSOSlot CurSlot { get; private set; }
@@ -81,6 +89,7 @@ namespace Mascari4615
 
 		public Type CurType { get; private set; } = typeof(QuestSO);
 
+		private VisualElement grid;
 		private bool isInit = false;
 
 
@@ -112,21 +121,18 @@ namespace Mascari4615
 
 			DataSOs = new();
 
-			InitList();
-
 			InitEnumData<UnitStatData, UnitStatType>();
 			InitEnumData<GameStatData, GameStatType>();
 			InitEnumData<DungeonStatData,DungeonStatType>();
 
 			// SaveAssets();
-
-			Debug.Log($"{nameof(OnEnable)} End : {Instance}");
+			// Debug.Log($"{nameof(OnEnable)} End : {instance}");
 		}
 
 		private void OnDestroy()
 		{
-			Debug.Log($"{nameof(OnDestroy)} : {Instance}, rootVisualElement: {rootVisualElement}");
-			Instance = null;
+			Debug.Log($"{nameof(OnDestroy)} : {instance}, rootVisualElement: {rootVisualElement}");
+			instance = null;
 		}
 
 		public void CreateGUI()
@@ -140,16 +146,7 @@ namespace Mascari4615
 			VisualElement labelFromUXML = visualTree.Instantiate();
 			root.Add(labelFromUXML);
 
-			// Detail = new();
-			IdChanger = new();
-
-			UpdateGrid();
-
-			// Button addButton = rootVisualElement.Q<Button>(name: "BTN_Add");
-			// addButton.RegisterCallback<ClickEvent>(ev =>
-			// {
-			// 	AddDataSO(Detail.CurDataSO.GetType());
-			// });
+			grid = root.Q<VisualElement>(name: "Grid");
 
 			DropdownField dropdown = rootVisualElement.Q<DropdownField>(name: "Menu");
 			dropdown.choices = assetPaths.Keys.Select(type => type.Name).ToList();
@@ -160,63 +157,38 @@ namespace Mascari4615
 				SetType(type);
 			});
 
-			// ListView menu = rootVisualElement.Q<ListView>(name: "MenuList");
-			// List<Type> types = dataDics.Keys.ToList();
-			// menu.itemsSource = types;
-			// menu.makeItem = () => new Button();
-			// menu.bindItem = (VisualElement element, int index) =>
-			// {
-			// 	((Button)element).text = types[index].Name;
-			// 	((Button)element).clicked += () =>
-			// 	{
-			// 		CurType = types[index];
-			// 		UpdateGrid();
-			// 		MDataSODetail.UpdateCurDataSO(dataDics[CurType].Values.First());
-			// 	};
-			// };
+			IdChanger = new();
 
-			SelectDataSOSlot(DataSOSlots.Values.First());
+			UpdateGrid();
 
-			if (Selection.selectionChanged.GetInvocationList().Any(temp => temp.Method.Name == nameof(TryOpenDetail)) == false)
-				Selection.selectionChanged += TryOpenDetail;
+			if (Selection.selectionChanged.GetInvocationList().Any(temp => temp.Method.Name == nameof(SelectDataSO)) == false)
+				Selection.selectionChanged += SelectDataSO;
 		
-			void TryOpenDetail()
+			void SelectDataSO()
 			{
 				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
 
 				if (Selection.activeObject is DataSO dataSO)
 				{
-					Type type = dataSO.GetType();
-
-					while (type != typeof(DataSO) && assetPaths.ContainsKey(type) == false)
-						type = type.BaseType;
-
-					if (type == typeof(DataSO))
+					Type baseType = GetBaseType(dataSO);
+					if (baseType == typeof(DataSO))
 						return;
-				
-					Debug.Log($"Selection.activeObject: {dataSO.name}");
 
-					SetType(type);
+					// Debug.Log($"Selection.activeObject: {dataSO.name}");
+
+					SetType(baseType);
 					MDataSOSlot slot = DataSOSlots[dataSO.ID];
 					SelectDataSOSlot(slot);
 				}
 			}
 
 			isInit = true;
-			Debug.Log($"{nameof(CreateGUI)} End");
+			// Debug.Log($"{nameof(CreateGUI)} End");
 		}
 
 		public void UpdateGrid()
 		{
 			Debug.Log($"{nameof(UpdateGrid)}");
-			
-			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
-
-			if (grid == null)
-			{
-				Debug.LogWarning("Grid is null");
-				return;
-			}
 
 			grid.Clear();
 
@@ -224,21 +196,18 @@ namespace Mascari4615
 			Dictionary<int, DataSO> dataSOs = DataSOs[CurType];
 
 			DataSOSlots.Clear();
-			for (int i = 0; i < ID_MAX; i++)
+			foreach ((int id, DataSO dataSO) in dataSOs)
 			{
-				if (dataSOs.TryGetValue(i, out DataSO dataSO))
-				{
-					MDataSOSlot slot = new((slot) => SelectDataSOSlot(slot));
-					slot.SetDataSO(dataSO);
-					DataSOSlots.Add(i, slot);
-					grid.Add(slot.VisualElement);
-				}
+				MDataSOSlot slot = new((slot) => SelectDataSOSlot(slot));
+				slot.SetDataSO(dataSO);
+				DataSOSlots.Add(id, slot);
+				grid.Add(slot.VisualElement);
 			}
 
 			SelectDataSOSlot(DataSOSlots.Values.First());
 			Repaint();
 
-			Debug.Log($"{nameof(UpdateGrid)} End");
+			// Debug.Log($"{nameof(UpdateGrid)} End");
 		}
 
 		public void SetType(Type type)
@@ -252,38 +221,9 @@ namespace Mascari4615
 			Debug.Log($"{nameof(SetType)} End");
 		}
 
-		private void InitList()
-		{
-			static void InitList<T>(ref List<T> list, string dirPath, bool searchSubDir = true) where T : ScriptableObject
-			{
-				const string extension = ".asset";
-
-				DirectoryInfo dir = new(dirPath);
-				foreach (FileInfo file in dir.GetFiles())
-				{
-					if (string.Compare(file.Extension, extension, StringComparison.Ordinal) != 0)
-						continue;
-
-					// QuestData 스크립터블 객체가 아니면 Continue
-					if (AssetDatabase.GetMainAssetTypeAtPath($"{dirPath}/{file.Name}") != typeof(T))
-						continue;
-
-					T asset = AssetDatabase.LoadAssetAtPath<T>($"{dirPath}/{file.Name}");
-					list.Add(asset);
-				}
-
-				if (searchSubDir)
-				{
-					// dir 아래 모든 폴더 안에 있는 파일을 탐색
-					foreach (DirectoryInfo subDir in dir.GetDirectories())
-						InitList(ref list, $"{dirPath}/{subDir.Name}/");
-				}
-			}
-		}
-
 		private void InitDic(Type type)
 		{
-			Debug.Log($"{nameof(InitDic)} <{type.Name}>");
+			// Debug.Log($"{nameof(InitDic)} <{type.Name}>");
 
 			Dictionary<int, DataSO> dic = DataSOs[type] = new();
 			InitDic(ref dic, type, SCRIPTABLE_OBJECTS_DIR);
@@ -292,13 +232,10 @@ namespace Mascari4615
 			if (BadIDDataSOs.Count > 0)
 			{
 				if (isInit)
-				{
-					Debug.Log(IdChanger);
 					IdChanger.StartProcessBadIdDataSOs();
-				}
 			}
 
-			Debug.Log($"{nameof(InitDic)} End");
+			// Debug.Log($"{nameof(InitDic)} End");
 
 			void InitDic(ref Dictionary<int, DataSO> dic, Type type, string dirPath, bool searchSubDir = true)
 			{
@@ -525,12 +462,12 @@ namespace Mascari4615
 			// Detail.UpdateCurDataSO(slot.DataSO);
 			Selection.activeObject = slot.DataSO;
 
-			Debug.Log($"{nameof(SelectDataSOSlot)} End");
+			// Debug.Log($"{nameof(SelectDataSOSlot)} End");
 		}
 
 		public void InitEnumData<TData, TEnum>() where TData : DataSO
 		{
-			Debug.Log($"{nameof(InitEnumData)} <{typeof(TData).Name}, {typeof(TEnum).Name}>");
+			// Debug.Log($"{nameof(InitEnumData)} <{typeof(TData).Name}, {typeof(TEnum).Name}>");
 
 			InitDic(typeof(TData));
 
@@ -582,7 +519,7 @@ namespace Mascari4615
 				}
 			}
 
-			Debug.Log($"{nameof(InitEnumData)} End");
+			// Debug.Log($"{nameof(InitEnumData)} End");
 		}
 
 		[MenuItem("Mascari4615/SaveAssets")]
@@ -632,22 +569,22 @@ namespace Mascari4615
 
 		private void OnFocus()
 		{
-			Debug.Log("OnFocus is executed.");
+			// Debug.Log("OnFocus is executed.");
 		}
 
 		private void OnLostFocus()
 		{
-			Debug.Log("OnLostFocus is executed.");
+			// Debug.Log("OnLostFocus is executed.");
 		}
 
 		private void OnProjectChange()
 		{
-			Debug.Log("OnProjectChange is executed.");
+			// Debug.Log("OnProjectChange is executed.");
 		}
 
 		private void OnSelectionChange()
 		{
-			Debug.Log("OnSelectionChange is executed.");
+			// Debug.Log("OnSelectionChange is executed.");
 		}
 
 		private void OnInspectorUpdate()
@@ -657,7 +594,7 @@ namespace Mascari4615
 
 		private void OnHierarchyChange()
 		{
-			Debug.Log("OnHierarchyChange is executed.");
+			// Debug.Log("OnHierarchyChange is executed.");
 		}
 
 		private void OnGUI()
