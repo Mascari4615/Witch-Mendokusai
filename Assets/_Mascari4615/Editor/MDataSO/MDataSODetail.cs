@@ -49,7 +49,7 @@ namespace Mascari4615
 					Button button = new Button(onClick) { text = text };
 					ApplyButtonStyle(button);
 					buttonContainer.Add(button);
-				}	
+				}
 
 				void ApplyButtonStyle(Button button)
 				{
@@ -61,6 +61,8 @@ namespace Mascari4615
 			root.Add(dataSOContent = new VisualElement());
 
 			dataSO = target as DataSO;
+			if (MDataSO.Instance.CurType != dataSO.GetType())
+				MDataSO.Instance.SetType(dataSO.GetType());
 
 			Debug.Log($"{nameof(Init)} End");
 		}
@@ -102,12 +104,76 @@ namespace Mascari4615
 						serializedObject.ApplyModifiedProperties();
 						MDataSO.Instance.DataSOSlots[dataSO.ID].UpdateUI();
 					});
-					
-					dataSOContent.Add(propertyField);
 
 					// 보이지만 수정은 불가능한 프로퍼티
 					if (propertyInfo.Name == "ID")
 						propertyField.SetEnabled(false);
+
+					if (propertyInfo.PropertyType == typeof(Sprite))
+					{
+						VisualElement spritePreviewContainer = new VisualElement();
+						spritePreviewContainer.style.flexDirection = FlexDirection.RowReverse;
+						
+						Sprite sprite = (Sprite)propertyInfo.GetValue(dataSO);
+						
+						if (sprite == null)
+						{
+							Label noSpriteLabel = new Label("No Sprite");
+							noSpriteLabel.style.marginLeft = 10;
+							noSpriteLabel.style.marginTop = 10;
+							spritePreviewContainer.Add(noSpriteLabel);
+							dataSOContent.Add(spritePreviewContainer);
+						}
+						else
+						{
+							Image spritePreview = new Image
+							{
+								scaleMode = ScaleMode.ScaleToFit,
+								style =
+								{
+									width = 64,
+									height = 64,
+									marginLeft = 10,
+									marginTop = 10
+								}
+							};
+						
+							// Sprite의 UV 설정
+							Rect uvRect = new Rect(
+								sprite.textureRect.x / sprite.texture.width,
+								sprite.textureRect.y / sprite.texture.height,
+								sprite.textureRect.width / sprite.texture.width,
+								sprite.textureRect.height / sprite.texture.height
+							);
+						
+							// Sprite의 특정 영역을 잘라내어 표시
+							spritePreview.image = Sprite.Create(sprite.texture, sprite.textureRect, new Vector2(0.5f, 0.5f)).texture;
+							spritePreview.uv = uvRect;
+						
+							spritePreviewContainer.Add(spritePreview);
+							dataSOContent.Add(spritePreviewContainer);
+						
+							// Sprite가 변경될 때 프리뷰 업데이트
+							propertyField.RegisterValueChangeCallback((evt) =>
+							{
+								sprite = (Sprite)propertyInfo.GetValue(dataSO);
+								if (sprite != null)
+								{
+									uvRect = new Rect(
+										sprite.textureRect.x / sprite.texture.width,
+										sprite.textureRect.y / sprite.texture.height,
+										sprite.textureRect.width / sprite.texture.width,
+										sprite.textureRect.height / sprite.texture.height
+									);
+						
+									spritePreview.image = Sprite.Create(sprite.texture, sprite.textureRect, new Vector2(0.5f, 0.5f)).texture;
+									spritePreview.uv = uvRect;
+								}
+							});
+						}
+					}
+
+					dataSOContent.Add(propertyField);
 				}
 			}
 

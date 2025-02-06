@@ -229,7 +229,7 @@ namespace Mascari4615
 			Debug.Log($"{nameof(UpdateGrid)} End");
 		}
 
-		private void SetType(Type type)
+		public void SetType(Type type)
 		{
 			if (CurType == type)
 				return;
