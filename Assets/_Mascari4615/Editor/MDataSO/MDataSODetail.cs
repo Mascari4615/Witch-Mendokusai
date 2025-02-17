@@ -62,10 +62,20 @@ namespace Mascari4615
 
 			dataSO = target as DataSO;
 			Debug.Log($"{nameof(MDataSODetail)}.{nameof(Init)} : {dataSO.Name}");
-			
-			Type baseType = MDataSO.Instance.GetBaseType(dataSO);
-			if (MDataSO.Instance.CurType != baseType)
-				MDataSO.Instance.SetType(baseType);
+
+			{
+				Type baseType = MDataSO.Instance.GetBaseType(dataSO);
+				if (baseType == typeof(DataSO))
+				{
+					// Debug.LogWarning("DataSO는 MDataSO UI를 지원하지 않아용");
+					return;
+				}
+
+				if (MDataSO.Instance.CurType != baseType)
+					MDataSO.Instance.SetType(baseType);
+
+				MDataSO.Instance.SelectDataSOSlot(MDataSO.Instance.GetDataSOSlot(dataSO));
+			}
 
 			// Debug.Log($"{nameof(Init)} End");
 		}
@@ -106,12 +116,8 @@ namespace Mascari4615
 					{
 						serializedObject.ApplyModifiedProperties();
 
-						Type baseType = MDataSO.Instance.GetBaseType(dataSO);
-						if (MDataSO.Instance.CurType != baseType)
-							MDataSO.Instance.SetType(baseType);
-
-						// Debug.Log(MDataSO.Instance.DataSOSlots.Count);
-						MDataSO.Instance.DataSOSlots[dataSO.ID].UpdateUI();
+						if (MDataSO.Instance.CurType == MDataSO.Instance.GetBaseType(dataSO))
+							MDataSO.Instance.GetDataSOSlot(dataSO).UpdateUI();
 					});
 
 					// 보이지만 수정은 불가능한 프로퍼티

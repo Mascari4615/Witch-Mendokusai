@@ -17,15 +17,6 @@ namespace Mascari4615
 		public const string EDITOR_DIR = "Assets/_Mascari4615/Editor/";
 		private const int ID_MAX = 100_000_000;
 
-		public Type GetBaseType(DataSO dataSO)
-		{
-			Type type = dataSO.GetType();
-
-			while (type != typeof(DataSO) && assetPaths.ContainsKey(type) == false)
-				type = type.BaseType;
-			return type;
-		}
-
 		private readonly Dictionary<Type, string> assetPrefixes = new()
 		{
 			{ typeof(QuestSO), "Q" },
@@ -87,9 +78,8 @@ namespace Mascari4615
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; }
 		public Dictionary<int, List<DataSO>> BadIDDataSOs { get; private set; } = new();
 
-		public Type CurType { get; private set; } = typeof(QuestSO);
+		public Type CurType { get; private set; } = null;
 
-		private VisualElement grid;
 		private bool isInit = false;
 
 
@@ -99,8 +89,8 @@ namespace Mascari4615
 			Debug.Log(nameof(ShowMDataSO));
 			// (유틸리티 창 여부, 타이틀, 이미 창이 열려있을 때 새로 열지 여부)
 			GetWindow<MDataSO>(false, nameof(MDataSO), true);
-			
-			Debug.Log($"{nameof(ShowMDataSO)} End : {instance}");
+
+			// Debug.Log($"{nameof(ShowMDataSO)} End : {instance}");
 		}
 
 		private void OnEnable()
@@ -123,7 +113,10 @@ namespace Mascari4615
 
 			InitEnumData<UnitStatData, UnitStatType>();
 			InitEnumData<GameStatData, GameStatType>();
-			InitEnumData<DungeonStatData,DungeonStatType>();
+			InitEnumData<DungeonStatData, DungeonStatType>();
+
+			if (isInit)
+				SetType(typeof(QuestType));
 
 			// SaveAssets();
 			// Debug.Log($"{nameof(OnEnable)} End : {instance}");
@@ -131,7 +124,7 @@ namespace Mascari4615
 
 		private void OnDestroy()
 		{
-			Debug.Log($"{nameof(OnDestroy)} : {instance}, rootVisualElement: {rootVisualElement}");
+			// Debug.Log($"{nameof(OnDestroy)} : {instance}, rootVisualElement: {rootVisualElement}");
 			instance = null;
 		}
 
@@ -146,8 +139,6 @@ namespace Mascari4615
 			VisualElement labelFromUXML = visualTree.Instantiate();
 			root.Add(labelFromUXML);
 
-			grid = root.Q<VisualElement>(name: "Grid");
-
 			DropdownField dropdown = rootVisualElement.Q<DropdownField>(name: "Menu");
 			dropdown.choices = assetPaths.Keys.Select(type => type.Name).ToList();
 			dropdown.RegisterValueChangedCallback(ev =>
@@ -159,52 +150,37 @@ namespace Mascari4615
 
 			IdChanger = new();
 
-			UpdateGrid();
-
-			if (Selection.selectionChanged.GetInvocationList().Any(temp => temp.Method.Name == nameof(SelectDataSO)) == false)
-				Selection.selectionChanged += SelectDataSO;
-		
-			void SelectDataSO()
-			{
-				// Debug.Log($"Selection.activeObject: {Selection.activeObject}, {Selection.count}"); // "Selection.activeObject: null
-
-				if (Selection.activeObject is DataSO dataSO)
-				{
-					Type baseType = GetBaseType(dataSO);
-					if (baseType == typeof(DataSO))
-						return;
-
-					// Debug.Log($"Selection.activeObject: {dataSO.name}");
-
-					SetType(baseType);
-					MDataSOSlot slot = DataSOSlots[dataSO.ID];
-					SelectDataSOSlot(slot);
-				}
-			}
+			SetType(typeof(QuestType));
 
 			isInit = true;
 			// Debug.Log($"{nameof(CreateGUI)} End");
 		}
 
-		public void UpdateGrid()
+		public void UpdateGrid(bool selectFirst = true)
 		{
 			Debug.Log($"{nameof(UpdateGrid)}");
 
+			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
 			grid.Clear();
 
 			InitDic(CurType);
 			Dictionary<int, DataSO> dataSOs = DataSOs[CurType];
 
 			DataSOSlots.Clear();
-			foreach ((int id, DataSO dataSO) in dataSOs)
+
+			List<DataSO> dataSOsSortByID = dataSOs.Values.ToList();
+			dataSOsSortByID.Sort((a, b) => a.ID.CompareTo(b.ID));
+
+			foreach (DataSO dataSO in dataSOsSortByID)
 			{
-				MDataSOSlot slot = new((slot) => SelectDataSOSlot(slot));
+				MDataSOSlot slot = new((slot) => Selection.activeObject = slot.DataSO);
 				slot.SetDataSO(dataSO);
-				DataSOSlots.Add(id, slot);
+				DataSOSlots.Add(dataSO.ID, slot);
 				grid.Add(slot.VisualElement);
 			}
 
-			SelectDataSOSlot(DataSOSlots.Values.First());
+			if (selectFirst)
+				SelectDataSOSlot(DataSOSlots.Values.First());
 			Repaint();
 
 			// Debug.Log($"{nameof(UpdateGrid)} End");
@@ -212,13 +188,10 @@ namespace Mascari4615
 
 		public void SetType(Type type)
 		{
-			if (CurType == type)
-				return;
-
 			Debug.Log($"{nameof(SetType)} <{type.Name}>");
 			CurType = type;
 			UpdateGrid();
-			Debug.Log($"{nameof(SetType)} End");
+			// Debug.Log($"{nameof(SetType)} End");
 		}
 
 		private void InitDic(Type type)
@@ -339,7 +312,7 @@ namespace Mascari4615
 		{
 			Debug.Log(nameof(DuplicateDataSO));
 
-			Type type = GetTypeFromDataSO(dataSO);
+			Type type = GetBaseType(dataSO);
 
 			if (type == typeof(DataSO) || DataSOs[type].ContainsKey(dataSO.ID) == false)
 			{
@@ -392,10 +365,10 @@ namespace Mascari4615
 			}
 		}
 
-		public Type GetTypeFromDataSO(DataSO dataSO)
+		public Type GetBaseType(DataSO dataSO)
 		{
 			Type type = dataSO.GetType();
-			while (type != typeof(DataSO) && DataSOs.ContainsKey(type) == false)
+			while (type != typeof(DataSO) && assetPaths.ContainsKey(type) == false)
 				type = type.BaseType;
 
 			return type;
@@ -405,7 +378,7 @@ namespace Mascari4615
 		{
 			Debug.Log(nameof(DeleteDataSO));
 
-			Type type = GetTypeFromDataSO(dataSO);
+			Type type = GetBaseType(dataSO);
 
 			if (type == typeof(DataSO) || DataSOs[type].ContainsKey(dataSO.ID) == false)
 			{
@@ -445,12 +418,24 @@ namespace Mascari4615
 			return slot;
 		}
 
+		public MDataSOSlot GetDataSOSlot(DataSO dataSO)
+		{
+			Type type = GetBaseType(dataSO);
+			if (DataSOs.ContainsKey(type) == false)
+				return null;
+
+			Dictionary<int, DataSO> dic = DataSOs[type];
+			if (dic.ContainsKey(dataSO.ID) == false)
+				return null;
+
+			return DataSOSlots[dataSO.ID];
+		}
+
 		public void SelectDataSOSlot(MDataSOSlot slot)
 		{
 			Debug.Log(nameof(SelectDataSOSlot));
 
-			Type type = GetTypeFromDataSO(slot.DataSO);
-
+			Type type = GetBaseType(slot.DataSO);
 			if (CurType != type)
 				SetType(type);
 
@@ -458,9 +443,6 @@ namespace Mascari4615
 			CurSlot = slot;
 			oldSlot?.UpdateUI();
 			CurSlot.UpdateUI();
-
-			// Detail.UpdateCurDataSO(slot.DataSO);
-			Selection.activeObject = slot.DataSO;
 
 			// Debug.Log($"{nameof(SelectDataSOSlot)} End");
 		}
@@ -552,7 +534,7 @@ namespace Mascari4615
 
 		private string GetGoodName(DataSO dataSO)
 		{
-			return ConvertToGoodName($"{assetPrefixes[GetTypeFromDataSO(dataSO)]}_{dataSO.ID}_{dataSO.Name}");
+			return ConvertToGoodName($"{assetPrefixes[GetBaseType(dataSO)]}_{dataSO.ID}_{dataSO.Name}");
 		}
 
 		private string ConvertToGoodName(string name)

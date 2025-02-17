@@ -87,7 +87,7 @@ namespace Mascari4615
 			badIdDataSOsRoot.Clear();
 			foreach (DataSO badIdData in curBadIdDataSOs)
 			{
-				MDataSOSlot target = new((slot) => SelectDataSO(slot.DataSO));
+				MDataSOSlot target = new((slot) => Selection.activeObject = slot.DataSO);
 				target.SetDataSO(badIdData);
 				badIdDataSOsRoot.Add(target.VisualElement);
 			}
@@ -124,7 +124,7 @@ namespace Mascari4615
 			if (newID == CurDataSO.ID)
 				return;
 
-			Type type = MDataSO.Instance.GetTypeFromDataSO(CurDataSO);
+			Type type = MDataSO.Instance.GetBaseType(CurDataSO);
 			if (MDataSO.Instance.DataSOs[type].TryGetValue(newID, out DataSO existingDataSO))
 			{
 				Debug.Log("ID already exists");
@@ -151,7 +151,7 @@ namespace Mascari4615
 			if (newID == CurDataSO.ID)
 				return;
 
-			Type type = MDataSO.Instance.GetTypeFromDataSO(CurDataSO);
+			Type type = MDataSO.Instance.GetBaseType(CurDataSO);
 			if (MDataSO.Instance.DataSOs[type].TryGetValue(newID, out DataSO existingDataSO))
 			{
 				Debug.Log("ID already exists");
