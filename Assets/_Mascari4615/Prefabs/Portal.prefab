@@ -79,8 +79,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <TpPos>k__BackingField: {fileID: 6279377062769318453}
-  targetStage: {fileID: 11400000, guid: a9e3b44cff83bad47852b0e937ec9340, type: 2}
-  targetPortalIndex: 0
+  <TargetStage>k__BackingField: {fileID: 0}
+  targetPortalIndex: -1
 --- !u!135 &140425686772179422
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -4876,6 +4876,9 @@ ParticleSystemRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

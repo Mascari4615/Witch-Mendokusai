@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Mascari4615
@@ -25,7 +26,7 @@ namespace Mascari4615
 			CurStage = homeStage;
 		}
 
-		public void LoadStage(Stage stage, int spawnPortalIndex, Action action = null)
+		public void LoadStage(Stage stage, int spawnPortalIndex = -1, bool isBackToLastStage = false, Action action = null)
 		{
 			UIManager.Instance.Transition.Transition(cDuringTransition: LoadStage_(), aWhenEnd: () => UIManager.Instance.StagePopup(stage));
 
@@ -55,9 +56,12 @@ namespace Mascari4615
 				CurStageObject = ObjectPoolManager.Instance.Spawn(targetStage).GetComponent<StageObject>();
 
 				// 새로운 스테이지 위치 변환
-				Vector3 newStagePos = (spawnPortalIndex != -1)
-					? Player.Instance.transform.position - stage.Prefab.Portals[spawnPortalIndex].TpPos.position
-					: Player.Instance.transform.position - lastPosDiff;
+				// TODO: 
+				// Vector3 portalTPPos = stage.Prefab.Portals[spawnPortalIndex].TpPos.position;
+				Vector3 portalTPPos = stage.Prefab.Portals.Where(p => p.TargetStage == LastStage).First().TpPos.position;
+				Vector3 newStagePos = isBackToLastStage
+					? Player.Instance.transform.position - lastPosDiff
+					: Player.Instance.transform.position - portalTPPos;
 				CurStageObject.transform.position = newStagePos;
 
 				// 새로운 스테이지 활성화

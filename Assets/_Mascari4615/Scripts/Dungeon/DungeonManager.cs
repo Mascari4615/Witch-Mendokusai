@@ -45,7 +45,7 @@ namespace Mascari4615
 			CurDungeon = dungeon;
 
 			// TODO: 던전
-			StageManager.Instance.LoadStage(dungeon.Stages[0], 0, InitDungeonAndPlayer);
+			StageManager.Instance.LoadStage(dungeon.Stages[0], action: InitDungeonAndPlayer);
 
 			void InitDungeonAndPlayer()
 			{
@@ -91,7 +91,7 @@ namespace Mascari4615
 				UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
-				Debug.Log($"DungeonClear: {dungeonClear}");
+				// Debug.Log($"DungeonClear: {dungeonClear}");
 				if (dungeonClear < DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_CLEAR])
 				{
 					EndDungeon();
@@ -131,7 +131,12 @@ namespace Mascari4615
 		public void Continue()
 		{
 			// 집으로 돌아가기
-			StageManager.Instance.LoadStage(StageManager.Instance.LastStage, -1, ResetDungeonAndPlayer);
+			StageManager.Instance.LoadStage
+			(
+				StageManager.Instance.LastStage,
+				isBackToLastStage: true,
+				action: ResetDungeonAndPlayer
+			);
 
 			void ResetDungeonAndPlayer()
 			{
