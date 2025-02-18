@@ -17,7 +17,7 @@ namespace Mascari4615
 		public const string EDITOR_DIR = "Assets/_Mascari4615/Editor/";
 		private const int ID_MAX = 100_000_000;
 
-		private readonly Dictionary<Type, string> assetPrefixes = new()
+		private static readonly Dictionary<Type, string> assetPrefixes = new()
 		{
 			{ typeof(QuestSO), "Q" },
 			{ typeof(CardData), "C" },
@@ -37,7 +37,7 @@ namespace Mascari4615
 			{ typeof(Monster), "MOB" },
 		};
 
-		private readonly Dictionary<Type, string> assetPaths = new()
+		private static readonly Dictionary<Type, string> assetPaths = new()
 		{
 			{ typeof(QuestSO), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(QuestSO)}/" },
 			{ typeof(CardData), $"{SCRIPTABLE_OBJECTS_DIR}{nameof(CardData)}/" },
@@ -62,10 +62,11 @@ namespace Mascari4615
 		{
 			get
 			{
-				if (instance == null)
-				{
-					ShowMDataSO();
-				}
+				// if (instance == null)
+				// {
+				// 	ShowMDataSO();
+				// }
+
 				return instance;
 			}
 			private set => instance = value;
@@ -81,7 +82,6 @@ namespace Mascari4615
 		public Type CurType { get; private set; } = null;
 
 		private bool isInit = false;
-
 
 		[MenuItem("Mascari4615/MDataSO")]
 		public static void ShowMDataSO()
@@ -116,7 +116,7 @@ namespace Mascari4615
 			InitEnumData<DungeonStatData, DungeonStatType>();
 
 			if (isInit)
-				SetType(typeof(QuestType));
+				SetType(assetPaths.Keys.First());
 
 			// SaveAssets();
 			// Debug.Log($"{nameof(OnEnable)} End : {instance}");
@@ -150,7 +150,7 @@ namespace Mascari4615
 
 			IdChanger = new();
 
-			SetType(typeof(QuestType));
+			SetType(assetPaths.Keys.First());
 
 			isInit = true;
 			// Debug.Log($"{nameof(CreateGUI)} End");
@@ -161,6 +161,12 @@ namespace Mascari4615
 			Debug.Log($"{nameof(UpdateGrid)}");
 
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
+			if (grid == null)
+			{
+				Debug.LogWarning("Grid이 없습니다.");
+				// CreateGUI();
+				return;
+			}
 			grid.Clear();
 
 			InitDic(CurType);
@@ -180,7 +186,11 @@ namespace Mascari4615
 			}
 
 			if (selectFirst)
-				SelectDataSOSlot(DataSOSlots.Values.First());
+			{
+				if (DataSOSlots.Count > 0)
+					SelectDataSOSlot(DataSOSlots.Values.First());
+			}
+
 			Repaint();
 
 			// Debug.Log($"{nameof(UpdateGrid)} End");
@@ -203,10 +213,7 @@ namespace Mascari4615
 			// SaveAssets();
 
 			if (BadIDDataSOs.Count > 0)
-			{
-				if (isInit)
-					IdChanger.StartProcessBadIdDataSOs();
-			}
+				IdChanger.StartProcessBadIdDataSOs();
 
 			// Debug.Log($"{nameof(InitDic)} End");
 
@@ -365,7 +372,7 @@ namespace Mascari4615
 			}
 		}
 
-		public Type GetBaseType(DataSO dataSO)
+		public static Type GetBaseType(DataSO dataSO)
 		{
 			Type type = dataSO.GetType();
 			while (type != typeof(DataSO) && assetPaths.ContainsKey(type) == false)
@@ -428,12 +435,36 @@ namespace Mascari4615
 			if (dic.ContainsKey(dataSO.ID) == false)
 				return null;
 
+			if (isInit == false)
+			{
+				Debug.LogWarning("초기화되지 않았습니다.");
+				return null;
+			}
+
+			if (DataSOSlots.ContainsKey(dataSO.ID) == false)
+			{
+				Debug.LogWarning("선택할 슬롯이 없습니다.");
+				return null;
+			}
+
 			return DataSOSlots[dataSO.ID];
 		}
 
 		public void SelectDataSOSlot(MDataSOSlot slot)
 		{
 			Debug.Log(nameof(SelectDataSOSlot));
+
+			if (isInit == false)
+			{
+				Debug.LogWarning("초기화되지 않았습니다.");
+				return;
+			}
+
+			if (slot == null)
+			{
+				Debug.LogWarning("선택할 슬롯이 없습니다.");
+				return;
+			}
 
 			Type type = GetBaseType(slot.DataSO);
 			if (CurType != type)
@@ -566,7 +597,7 @@ namespace Mascari4615
 
 		private void OnSelectionChange()
 		{
-			// Debug.Log("OnSelectionChange is executed.");
+			Debug.Log("OnSelectionChange is executed.");
 		}
 
 		private void OnInspectorUpdate()

@@ -124,7 +124,7 @@ namespace Mascari4615
 			if (newID == CurDataSO.ID)
 				return;
 
-			Type type = MDataSO.Instance.GetBaseType(CurDataSO);
+			Type type = MDataSO.GetBaseType(CurDataSO);
 			if (MDataSO.Instance.DataSOs[type].TryGetValue(newID, out DataSO existingDataSO))
 			{
 				Debug.Log("ID already exists");
@@ -151,7 +151,7 @@ namespace Mascari4615
 			if (newID == CurDataSO.ID)
 				return;
 
-			Type type = MDataSO.Instance.GetBaseType(CurDataSO);
+			Type type = MDataSO.GetBaseType(CurDataSO);
 			if (MDataSO.Instance.DataSOs[type].TryGetValue(newID, out DataSO existingDataSO))
 			{
 				Debug.Log("ID already exists");
