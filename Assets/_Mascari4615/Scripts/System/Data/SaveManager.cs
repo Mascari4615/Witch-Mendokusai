@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 using UnityEngine;
 using static Mascari4615.SOHelper;
 
@@ -78,7 +77,7 @@ namespace Mascari4615
 			new RuntimeQuest(GetQuestSO(0));
 
 			// 던전 초기화
-			ForEach<Dungeon>(dungeon => {dungeon.Init();});
+			ForEach<Dungeon>(dungeon => { dungeon.Init(); });
 
 			// 통계 초기화
 			DataManager.GameStat.InitAllZero();

@@ -61,7 +61,7 @@ namespace Mascari4615
 			root.Add(dataSOContent = new VisualElement());
 
 			dataSO = target as DataSO;
-			Debug.Log($"{nameof(MDataSODetail)}.{nameof(CreateUI)} : {dataSO.Name}");
+			// Debug.Log($"{nameof(MDataSODetail)}.{nameof(CreateUI)} : {dataSO.Name}");
 
 			if (MDataSO.Instance)
 			{

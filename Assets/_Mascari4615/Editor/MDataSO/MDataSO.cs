@@ -86,7 +86,7 @@ namespace Mascari4615
 		[MenuItem("Mascari4615/MDataSO")]
 		public static void ShowMDataSO()
 		{
-			Debug.Log(nameof(ShowMDataSO));
+			// Debug.Log(nameof(ShowMDataSO));
 			// (유틸리티 창 여부, 타이틀, 이미 창이 열려있을 때 새로 열지 여부)
 			GetWindow<MDataSO>(false, nameof(MDataSO), true);
 
@@ -95,11 +95,11 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			Debug.Log(nameof(OnEnable));
+			// Debug.Log(nameof(OnEnable));
 
 			if (instance == null)
 			{
-				Debug.Log("인스턴스를 생성합니다.");
+				// Debug.Log("인스턴스를 생성합니다.");
 				instance = this;
 			}
 			else
@@ -130,7 +130,7 @@ namespace Mascari4615
 
 		public void CreateGUI()
 		{
-			Debug.Log(nameof(CreateGUI));
+			// Debug.Log(nameof(CreateGUI));
 
 			VisualElement root = rootVisualElement;
 			VisualTreeAsset visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>($"{EDITOR_DIR}MDataSO/MDataSO.uxml");
@@ -158,12 +158,12 @@ namespace Mascari4615
 
 		public void UpdateGrid(bool selectFirst = true)
 		{
-			Debug.Log($"{nameof(UpdateGrid)}");
+			// Debug.Log($"{nameof(UpdateGrid)}");
 
 			VisualElement grid = rootVisualElement.Q<VisualElement>(name: "Grid");
 			if (grid == null)
 			{
-				Debug.LogWarning("Grid이 없습니다.");
+				// Debug.LogWarning("Grid이 없습니다.");
 				// CreateGUI();
 				return;
 			}
@@ -198,7 +198,8 @@ namespace Mascari4615
 
 		public void SetType(Type type)
 		{
-			Debug.Log($"{nameof(SetType)} <{type.Name}>");
+			// TODO: 드롭박스 텍스트 변경
+			// Debug.Log($"{nameof(SetType)} <{type.Name}>");
 			CurType = type;
 			UpdateGrid();
 			// Debug.Log($"{nameof(SetType)} End");
@@ -437,13 +438,13 @@ namespace Mascari4615
 
 			if (isInit == false)
 			{
-				Debug.LogWarning("초기화되지 않았습니다.");
+				// Debug.LogWarning("초기화되지 않았습니다.");
 				return null;
 			}
 
 			if (DataSOSlots.ContainsKey(dataSO.ID) == false)
 			{
-				Debug.LogWarning("선택할 슬롯이 없습니다.");
+				// Debug.LogWarning("선택할 슬롯이 없습니다.");
 				return null;
 			}
 
@@ -452,17 +453,17 @@ namespace Mascari4615
 
 		public void SelectDataSOSlot(MDataSOSlot slot)
 		{
-			Debug.Log(nameof(SelectDataSOSlot));
+			// Debug.Log(nameof(SelectDataSOSlot));
 
 			if (isInit == false)
 			{
-				Debug.LogWarning("초기화되지 않았습니다.");
+				// Debug.LogWarning("초기화되지 않았습니다.");
 				return;
 			}
 
 			if (slot == null)
 			{
-				Debug.LogWarning("선택할 슬롯이 없습니다.");
+				// Debug.LogWarning("선택할 슬롯이 없습니다.");
 				return;
 			}
 
@@ -560,7 +561,7 @@ namespace Mascari4615
 			AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
 
-			Debug.Log($"{nameof(SaveAssets)} is executed.");
+			// Debug.Log($"{nameof(SaveAssets)} is executed.");
 		}
 
 		private string GetGoodName(DataSO dataSO)
@@ -577,7 +578,7 @@ namespace Mascari4615
 
 		private void OnValidate()
 		{
-			Debug.Log("OnValidate is executed.");
+			// Debug.Log("OnValidate is executed.");
 		}
 
 		private void OnFocus()
@@ -597,7 +598,7 @@ namespace Mascari4615
 
 		private void OnSelectionChange()
 		{
-			Debug.Log("OnSelectionChange is executed.");
+			// Debug.Log("OnSelectionChange is executed.");
 		}
 
 		private void OnInspectorUpdate()
