@@ -58,10 +58,26 @@ namespace Mascari4615
 				// 새로운 스테이지 위치 변환
 				// TODO: 
 				// Vector3 portalTPPos = stage.Prefab.Portals[spawnPortalIndex].TpPos.position;
-				Vector3 portalTPPos = stage.Prefab.Portals.Where(p => p.TargetStage == LastStage).First().TpPos.position;
-				Vector3 newStagePos = isBackToLastStage
-					? Player.Instance.transform.position - lastPosDiff
-					: Player.Instance.transform.position - portalTPPos;
+				Vector3 newStagePos;
+				{
+					if (isBackToLastStage)
+					{
+						newStagePos = Player.Instance.transform.position - newLastPosDiff;
+					}
+					else
+					{
+						Portal[] portals = stage.Prefab.Portals;
+						if (portals.Length == 0)
+						{
+							newStagePos = Player.Instance.transform.position;
+						}
+						else
+						{
+							Vector3 portalTPPos = stage.Prefab.Portals.Where(p => p.TargetStage == LastStage).First().TpPos.position;
+							newStagePos = Player.Instance.transform.position - portalTPPos;
+						}
+					}
+				}
 				CurStageObject.transform.position = newStagePos;
 
 				// 새로운 스테이지 활성화
