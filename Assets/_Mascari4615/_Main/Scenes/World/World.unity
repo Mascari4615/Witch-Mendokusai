@@ -21841,6 +21841,19 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8309116292081757039, guid: 71c2164e18f3b9a4d87a5951d3caf40d, type: 3}
   m_PrefabInstance: {fileID: 1446791356}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1465035068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762154649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e045485da60b61144bd0d9105ada1b58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  slotUI: {fileID: 602046399}
 --- !u!224 &1485722772 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3650879631936288370, guid: aaecc93bfc8007e46a0003f84fa5003c, type: 3}
@@ -28427,7 +28440,7 @@ MonoBehaviour:
   renderSettingsHackEmissiveBoost: 1
   renderSettingsHackIndirectBoost: 1
   renderSettingsTempPath: 
-  renderSettingsOutPath: _Mascari4615/Scenes/World/World
+  renderSettingsOutPath: _Mascari4615/_Main/Scenes/World/World
   renderSettingsUseScenePath: 1
   renderSettingsHackAOIntensity: 0
   renderSettingsHackAOSamples: 16
@@ -29408,7 +29421,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 634781642427003200, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1964570439}
+      addedObject: {fileID: 1465035068}
     - targetCorrespondingSourceObject: {fileID: 2942468316885731255, guid: eed8b00c4feb40541b7657745e266fd5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1964570438}
@@ -29436,19 +29449,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 1
---- !u!114 &1964570439
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762154649}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e045485da60b61144bd0d9105ada1b58, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slotUI: {fileID: 602046399}
 --- !u!1001 &1975908666
 PrefabInstance:
   m_ObjectHideFlags: 0
