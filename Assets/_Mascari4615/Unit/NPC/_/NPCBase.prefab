@@ -50,6 +50,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -150,6 +153,9 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -280,6 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <UnitData>k__BackingField: {fileID: 0}
+  <Pivot>k__BackingField: {fileID: 4039756866414532263}
   <SpriteRenderer>k__BackingField: {fileID: 3642406832583609316}
   stoppingDistance: 0.1
   updateRotation: 0
@@ -312,5 +319,10 @@ MonoBehaviour:
 --- !u!212 &3642406832583609316 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1512278065530053246, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
+  m_PrefabInstance: {fileID: 2769957124318603674}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4039756866414532263 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2188965074839273277, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
   m_PrefabInstance: {fileID: 2769957124318603674}
   m_PrefabAsset: {fileID: 0}

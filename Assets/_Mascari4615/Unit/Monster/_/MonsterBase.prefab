@@ -104,8 +104,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <UnitData>k__BackingField: {fileID: 0}
+  <Pivot>k__BackingField: {fileID: 4101190477955112521}
   <SpriteRenderer>k__BackingField: {fileID: 3636146261913355018}
-  animator: {fileID: 0}
   stoppingDistance: 0.1
   updateRotation: 0
   acceleration: 40
@@ -147,6 +147,11 @@ MonoBehaviour:
 --- !u!212 &3636146261913355018 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1512278065530053246, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
+  m_PrefabInstance: {fileID: 2777207088424509812}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4101190477955112521 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2188965074839273277, guid: 8985bc14129999340bfe02f05cc6a45f, type: 3}
   m_PrefabInstance: {fileID: 2777207088424509812}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &5591941910199305167 stripped
