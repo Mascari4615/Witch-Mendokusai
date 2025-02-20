@@ -117,17 +117,9 @@ namespace Mascari4615
 
 					propertyField.RegisterValueChangeCallback((evt) =>
 					{
+						// Debug.Log("Value Changed");
 						serializedObject.ApplyModifiedProperties();
-
-						if (MDataSO.Instance)
-						{
-							if (MDataSO.Instance.CurType == MDataSO.GetBaseType(dataSO))
-							{
-								MDataSOSlot dataSOSlot = MDataSO.Instance.GetDataSOSlot(dataSO);
-								if (dataSOSlot != null)
-									dataSOSlot.UpdateUI();
-							}
-						}
+						UpdateMDataSOSlot();
 					});
 
 					// 보이지만 수정은 불가능한 프로퍼티
@@ -175,16 +167,27 @@ namespace Mascari4615
 							spritePreview.image = Sprite.Create(sprite.texture, sprite.textureRect, new Vector2(0.5f, 0.5f)).texture;
 							spritePreview.uv = uvRect;
 
+							// spritePreview.image = previewTexture;
+
 							spritePreviewContainer.Add(spritePreview);
 							dataSOContent.Add(spritePreviewContainer);
 
-							// Sprite가 변경될 때 프리뷰 업데이트
+							// Sprite가 변경되면, Inspector의 SpritePreview도 갱신
 							propertyField.RegisterValueChangeCallback((evt) =>
 							{
+								// Debug.Log("Sprite Changed");
+
 								sprite = (Sprite)propertyInfo.GetValue(dataSO);
+
+								// HACK:
+								// 스프라이트 변경 시, 기존 스프라이트와 같은 스프라이트 그룹 내의 스프라이트로 변경하면 프리뷰가 갱신되지 않음 (왜 인지 모르겠음)
+								// 그래서 일단 null로 프리뷰 한 번 초기화하고 다시 설정
+								// 이러면 동작함
+								spritePreview.image = null;
+
 								if (sprite != null)
 								{
-									uvRect = new Rect(
+									Rect uvRect = new Rect(
 										sprite.textureRect.x / sprite.texture.width,
 										sprite.textureRect.y / sprite.texture.height,
 										sprite.textureRect.width / sprite.texture.width,
@@ -193,6 +196,10 @@ namespace Mascari4615
 
 									spritePreview.image = Sprite.Create(sprite.texture, sprite.textureRect, new Vector2(0.5f, 0.5f)).texture;
 									spritePreview.uv = uvRect;
+								}
+								else
+								{
+									spritePreview.image = null;
 								}
 							});
 						}
@@ -203,6 +210,19 @@ namespace Mascari4615
 			}
 
 			// Debug.Log($"{nameof(UpdateUI)} End");
+		}
+
+		private void UpdateMDataSOSlot()
+		{
+			if (MDataSO.Instance)
+			{
+				if (MDataSO.Instance.CurType == MDataSO.GetBaseType(dataSO))
+				{
+					MDataSOSlot dataSOSlot = MDataSO.Instance.GetDataSOSlot(dataSO);
+					if (dataSOSlot != null)
+						dataSOSlot.UpdateUI();
+				}
+			}
 		}
 	}
 }
