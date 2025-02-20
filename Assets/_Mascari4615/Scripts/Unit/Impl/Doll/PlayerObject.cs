@@ -30,6 +30,8 @@ namespace Mascari4615
 
 			GameManager.Instance.IsDied = false;
 			diedX.SetActive(false);
+
+			GameEventManager.Instance.Raise(GameEventType.OnPlayerDollChange);
 		}
 
 		public override void ReceiveDamage(DamageInfo damageInfo)
@@ -39,7 +41,7 @@ namespace Mascari4615
 
 			if (invincibleRoutine != null)
 				return;
-			
+
 			if (!IsAlive)
 				return;
 

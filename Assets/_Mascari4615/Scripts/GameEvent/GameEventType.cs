@@ -9,6 +9,7 @@ namespace Mascari4615
 		OnDungeonStart,
 		OnLastHitMonsterChange,
 		OnTick,
-		OnLevelUp
+		OnLevelUp,
+		OnPlayerDollChange
 	}
 }
