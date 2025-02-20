@@ -45,7 +45,10 @@ namespace Mascari4615
 			for (int i = 0; i < equipmentSlots.Count; i++)
 			{
 				equipmentSlots[i].SetSlotIndex(i);
-				equipmentSlots[i].SetClickAction((slot) => { OpenChangeEuqipmentPanel(slot.Index); });
+
+				if (i == 0)
+					continue;
+				equipmentSlots[i].SetClickAction((slot) => { OpenChangeEuqipmentPanel(slot.Index - 1); });
 			}
 
 			dollGridUI.Init();
