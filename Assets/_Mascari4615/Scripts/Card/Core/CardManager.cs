@@ -113,7 +113,11 @@ namespace Mascari4615
 
 			List<EquipmentData> equipments = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
 			for (int i = 0; i < equipments.Count; i++)
+			{
+				if (equipments[i] == null)
+					continue;
 				cardDataBuffers[i].AddRange(equipments[i].EffectCards);
+			}
 		}
 
 		private void ShuffleDeck()
