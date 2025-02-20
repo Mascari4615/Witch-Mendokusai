@@ -1703,6 +1703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <UnitData>k__BackingField: {fileID: 11400000, guid: f47218123e39da3459afd2f23f3b2a41, type: 2}
+  <Pivot>k__BackingField: {fileID: 2740852306550719136}
   <SpriteRenderer>k__BackingField: {fileID: 5534887127165330206}
   stoppingDistance: 0.1
   updateRotation: 0
@@ -1711,6 +1712,8 @@ MonoBehaviour:
   diedX: {fileID: 9165254187291573225}
   <CameraPosition>k__BackingField: {fileID: 7133439200021920221}
   <SpritePosition>k__BackingField: {fileID: 719466480940623808}
+  headRenderer: {fileID: 8321919602916171231}
+  bodyRenderer: {fileID: 5613304670366075000}
 --- !u!114 &1960143077941209161
 MonoBehaviour:
   m_ObjectHideFlags: 0
