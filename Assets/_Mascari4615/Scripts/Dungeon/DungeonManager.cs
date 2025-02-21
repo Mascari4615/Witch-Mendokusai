@@ -33,6 +33,12 @@ namespace Mascari4615
 			expChecker = FindFirstObjectByType<ExpManager>(FindObjectsInactive.Include);
 		}
 
+		private void Start()
+		{
+			// 당장 게임 이벤트 변화가 많아서, 인스펙터에서 GameEventListener 넣는 것보다, 이렇게 하드 코딩하는게 나은 듯
+			GameEventManager.Instance.RegisterCallback(GameEventType.OnPlayerDied, EndDungeon);
+		}
+
 		// TODO: 던전 인트로
 		public void CombatIntro()
 		{
