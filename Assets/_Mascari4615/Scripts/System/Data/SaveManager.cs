@@ -23,10 +23,7 @@ namespace Mascari4615
 				dummyDollCount = 1,
 				nyang = 100,
 				inventoryItems = new(),
-				dolls = new()
-				{
-					new(0, 1, 0, new(){})
-				},
+				dolls = new(),
 				works = new()
 				{
 					{ WorkListType.DollWork, new() },
@@ -42,34 +39,49 @@ namespace Mascari4615
 
 			SOManager.Instance.Nyang.RuntimeValue = newGameData.nyang;
 
-			// 아이템(장비) 초기화
-			Doll defaultDoll = GetDoll(0);
-			defaultDoll.EquipmentGuids.Clear();
-
-			Inventory inventory = SOManager.ItemInventory;
-			inventory.Load(newGameData.inventoryItems);
-			foreach (EquipmentData equipmentData in defaultDoll.DefaultEquipments)
+			// 인형, 인형 아이템(장비) 초기화
 			{
-				inventory.Add(equipmentData);
-				Guid? guid = inventory.GetItem(inventory.FindItemIndex(equipmentData)).Guid;
-				newGameData.dolls[0].EquipmentGuids.Add(guid);
-				defaultDoll.EquipmentGuids.Add(guid);
-			}
-			newGameData.inventoryItems = inventory.Save();
+				Inventory inventory = SOManager.ItemInventory;
+				inventory.Load(newGameData.inventoryItems);
 
-			// 장비 초기화 이후 저장
-			ForEach<Doll>(doll =>
-			{
-				if (doll.ID != 0)
+				ForEach<Doll>(doll =>
+				{
+					// newGameData.dolls.Add(doll.Save());
+					InitDoll(doll.ID);
+				});
+
+				void InitDoll(int dollID)
+				{
+					Doll doll = GetDoll(dollID);
+					DollSaveData newDollData = new()
+					{
+						DollID = doll.ID,
+						Level = 1,
+						Exp = 0,
+						EquipmentGuids = new()
+					};
+				
+					foreach (EquipmentData equipmentData in doll.DefaultEquipments)
+					{
+						inventory.Add(equipmentData);
+						Guid? guid = inventory.GetItem(inventory.FindItemIndex(equipmentData)).Guid;
+						newDollData.EquipmentGuids.Add(guid);
+					}
+
+					doll.Load(newDollData);
 					newGameData.dolls.Add(doll.Save());
-			});
-			Dictionary<int, QuestState> questStates = new();
-			ForEach<QuestSO>(questData => questStates.Add(questData.ID, QuestState.Locked));
-			DataManager.QuestManager.LoadQuestState(questStates);
+				}
+				newGameData.inventoryItems = inventory.Save();
+			}
 
 			// 레시피 초기화
 			// 모든 아이템 ID에 대해 bool
 			DataManager.IsRecipeUnlocked = SOManager.DataSOs[typeof(ItemData)].Values.ToDictionary(itemData => itemData.ID, itemData => false);
+
+			// 퀘스트 상태 초기화 이후 저장
+			Dictionary<int, QuestState> questStates = new();
+			ForEach<QuestSO>(questData => questStates.Add(questData.ID, QuestState.Locked));
+			DataManager.QuestManager.LoadQuestState(questStates);
 
 			// 초기 퀘스트 추가
 			DataManager.QuestManager.Init(new());
