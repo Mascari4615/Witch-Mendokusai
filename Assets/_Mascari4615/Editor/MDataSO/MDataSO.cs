@@ -316,9 +316,9 @@ namespace Mascari4615
 			return newDataSO;
 		}
 
-		public DataSO DuplicateDataSO(DataSO dataSO)
+		public DataSO CopyDataSO(DataSO dataSO)
 		{
-			Debug.Log(nameof(DuplicateDataSO));
+			Debug.Log(nameof(CopyDataSO));
 
 			Type type = GetBaseType(dataSO);
 
@@ -382,9 +382,9 @@ namespace Mascari4615
 			return type;
 		}
 
-		public void DeleteDataSO(DataSO dataSO)
+		public void RemoveDataSO(DataSO dataSO)
 		{
-			Debug.Log(nameof(DeleteDataSO));
+			Debug.Log(nameof(RemoveDataSO));
 
 			Type type = GetBaseType(dataSO);
 
@@ -529,7 +529,7 @@ namespace Mascari4615
 				if (Enum.IsDefined(typeof(TEnum), key) == false)
 				{
 					Debug.Log($"{value.name}을 삭제합니다.");
-					DeleteDataSO(value);
+					RemoveDataSO(value);
 				}
 			}
 

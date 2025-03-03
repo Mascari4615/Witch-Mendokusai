@@ -202,7 +202,7 @@ namespace Mascari4615
 			if (CurDataSO == null)
 				return;
 
-			MDataSO.Instance.DeleteDataSO(CurDataSO);
+			MDataSO.Instance.RemoveDataSO(CurDataSO);
 
 			if (processBadIdDataSOs)
 			{

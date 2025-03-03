@@ -31,16 +31,15 @@ namespace Mascari4615
 		{
 			// Debug.Log(nameof(CreateUI));
 
-			root.Add(new Label("This is a custom inspector"));
-
+			// root.Add(new Label("This is a custom inspector"));
 			{
 				VisualElement buttonContainer = new VisualElement();
 				buttonContainer.style.flexDirection = FlexDirection.Row;
 				buttonContainer.style.justifyContent = Justify.SpaceBetween;
 
-				CreateButton("Duplicate", () => MDataSO.Instance.DuplicateDataSO(dataSO));
-				CreateButton("Delete", () => MDataSO.Instance.DeleteDataSO(dataSO));
-				CreateButton("Select", () => MDataSO.Instance.IdChanger.SelectDataSO(dataSO));
+				CreateButton("Copy", () => MDataSO.Instance.CopyDataSO(dataSO));
+				CreateButton("Remove", () => MDataSO.Instance.RemoveDataSO(dataSO));
+				CreateButton("SetID", () => MDataSO.Instance.IdChanger.SelectDataSO(dataSO));
 
 				root.Add(buttonContainer);
 
