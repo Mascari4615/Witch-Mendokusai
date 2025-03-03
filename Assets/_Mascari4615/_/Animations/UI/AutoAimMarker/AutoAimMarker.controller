@@ -63,7 +63,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 1
-    m_ConditionEvent: ON
+    m_ConditionEvent: ENABLED
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7599974386897403093}
@@ -113,7 +113,7 @@ AnimatorController:
   m_Name: AutoAimMarker
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: ON
+  - m_Name: ENABLED
     m_Type: 4
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -173,7 +173,7 @@ AnimatorStateTransition:
   m_Name: 
   m_Conditions:
   - m_ConditionMode: 2
-    m_ConditionEvent: ON
+    m_ConditionEvent: ENABLED
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7472118969937285928}

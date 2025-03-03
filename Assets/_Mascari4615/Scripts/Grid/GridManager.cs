@@ -6,6 +6,9 @@ namespace Mascari4615
 {
 	public class GridManager : MonoBehaviour
 	{
+		private const string MarkerEnabled = "ENABLED";
+		private const string MarkerResetTrigger = "RESET";
+
 		private InputManager InputManager => InputManager.Instance;
 
 		[SerializeField] private Grid grid;
@@ -26,7 +29,7 @@ namespace Mascari4615
 		{
 			InputManager.RegisterMouseEvent(InputMouseEventType.Button0Down, () => ClickCell());
 			gridVisualization.SetActive(true);
-			marker.SetBool("ON", true);
+			marker.SetBool(MarkerEnabled, true);
 		}
 
 		[ContextMenu(nameof(StopBuilding))]
@@ -34,7 +37,7 @@ namespace Mascari4615
 		{
 			InputManager.UnregisterMouseEvent(InputMouseEventType.Button0Down);
 			gridVisualization.SetActive(false);
-			marker.SetBool("ON", false);
+			marker.SetBool(MarkerEnabled, false);
 		}
 
 		private void Update()
@@ -43,10 +46,10 @@ namespace Mascari4615
 
 			if (marker.transform.position != targetCellPos)
 			{
-				if (marker.GetBool("ON"))
+				if (marker.GetBool(MarkerEnabled) == true)
 				{
 					marker.transform.position = targetCellPos;
-					marker.SetTrigger("RESET");
+					marker.SetTrigger(MarkerResetTrigger);
 				}
 			}
 		}
