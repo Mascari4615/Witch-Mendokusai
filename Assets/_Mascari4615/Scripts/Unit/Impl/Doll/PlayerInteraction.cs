@@ -14,7 +14,7 @@ namespace Mascari4615
 
 		public void TryInteraction()
 		{
-			InteractiveObject nearest = MHelper.GetNearest(InteractiveObject.ActiveInteractives, player.position, InteractionDistance);
+			InteractiveObject nearest = InteractiveObject.GetNearest(player.position, InteractionDistance);
 			if (nearest == null)
 				return;
 			nearest.GetComponent<InteractiveObject>().Interact();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,11 @@ namespace Mascari4615
 	public class InteractiveObject : MonoBehaviour
 	{
 		public static readonly List<InteractiveObject> ActiveInteractives = new();
+
+		public static InteractiveObject GetNearest(Vector3 targetPosition, float maxDistance)
+		{
+			return MHelper.GetNearest(ActiveInteractives, element => element.transform.position, targetPosition, maxDistance);
+		}
 
 		private IInteractable[] interactable;
 
@@ -30,5 +36,6 @@ namespace Mascari4615
 			if (MHelper.IsPlaying)
 				ActiveInteractives.Remove(this);
 		}
+
 	}
 }

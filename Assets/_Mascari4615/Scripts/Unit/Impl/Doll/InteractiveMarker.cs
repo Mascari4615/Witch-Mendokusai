@@ -5,6 +5,9 @@ namespace Mascari4615
 {
 	public class InteractiveMarker : MonoBehaviour
 	{
+		private const string MarkerEnabled = "ENABLED";
+		private const string MarkerResetTrigger = "RESET";
+
 		private Animator animator;
 		private InteractiveObject lastNearest;
 
@@ -15,21 +18,22 @@ namespace Mascari4615
 
 		private void Update()
 		{
-			InteractiveObject nearest = MHelper.GetNearest(InteractiveObject.ActiveInteractives, Player.Instance.transform.position, PlayerInteraction.InteractionDistance);
-			
+			InteractiveObject nearest = InteractiveObject.GetNearest(Player.Instance.transform.position, PlayerInteraction.InteractionDistance);
+
+			Debug.Log(nearest);
 			if (nearest == null)
 			{
-				animator.SetBool("ON", false);
+				animator.SetBool(MarkerEnabled, false);
 				return;
 			}
 
 			if (lastNearest != nearest)
 			{
 				lastNearest = nearest;
-				animator.SetTrigger("RESET");
+				animator.SetTrigger(MarkerResetTrigger);
 			}
 
-			animator.SetBool("ON", true);
+			animator.SetBool(MarkerEnabled, true);
 			transform.position = nearest.transform.position;
 		}
 	}
