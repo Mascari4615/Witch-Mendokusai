@@ -32,20 +32,6 @@ namespace Mascari4615
 			StopAllCoroutines();
 		}
 
-		public void UpdateByDungeonDifficulty(DungeonDifficulty newDifficulty)
-		{
-			double persentage = (double)UnitStat[UnitStatType.HP_CUR] / UnitStat[UnitStatType.HP_MAX];
-			UnitStat[UnitStatType.HP_MAX] = (int)(UnitStat[UnitStatType.HP_MAX] * (1 + .7f * (int)newDifficulty));
-			SetHp((int)(UnitStat[UnitStatType.HP_MAX] * persentage));
-		}
-
-		public void UpdateByDungeonContext()
-		{
-			UnitStat newStat = DungeonManager.Instance.Context.UpdateMonsterStatByDiff(UnitData);
-			UnitStat.Add(newStat);
-			SetHp(UnitStat[UnitStatType.HP_MAX]);
-		}
-
 		public override void ReceiveDamage(DamageInfo damageInfo)
 		{
 			base.ReceiveDamage(damageInfo);

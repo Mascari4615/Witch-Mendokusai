@@ -12,7 +12,9 @@ namespace Mascari4615
 
 		private void SetRecord(ref DungeonRecord record)
 		{
-			record.PlayTime = DungeonManager.Instance.DungeonCurTime;
+			DungeonContext dungeonContext = DungeonManager.Instance.Context;
+
+			record.PlayTime = dungeonContext.DungeonCurTime;
 			record.KillCount = DataManager.Instance.DungeonStat[DungeonStatType.MONSTER_KILL];
 			record.BossKillCount = DataManager.Instance.DungeonStat[DungeonStatType.BOSS_KILL];
 			record.Nyang = SOManager.Instance.Nyang.RuntimeValue;

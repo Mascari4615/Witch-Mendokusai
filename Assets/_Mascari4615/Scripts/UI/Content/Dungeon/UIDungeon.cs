@@ -26,8 +26,8 @@ namespace Mascari4615
 
 		public override void UpdateUI()
 		{
-			UpdateDifficulty(DungeonManager.Instance.CurDifficulty);
-			UpdateTime(DungeonManager.Instance.DungeonCurTime);
+			UpdateDifficulty(DungeonManager.Instance.Context.CurDifficulty);
+			UpdateTime(DungeonManager.Instance.Context.DungeonCurTime);
 			questGrid.UpdateUI();
 		}
 
@@ -58,7 +58,7 @@ namespace Mascari4615
 
 		private void UpdateTime(TimeSpan timeSpan)
 		{
-			progressBar.fillAmount = 1 - (float)(timeSpan.TotalSeconds / DungeonManager.Instance.InitialDungeonTime.TotalSeconds);
+			progressBar.fillAmount = 1 - (float)(timeSpan.TotalSeconds / DungeonManager.Instance.Context.InitialDungeonTime.TotalSeconds);
 			timeText.text = timeSpan.ToString(@"mm\:ss");
 		}
 
@@ -70,7 +70,7 @@ namespace Mascari4615
 			}
 			else
 			{
-				difficultyCircle.fillAmount = (float)(DungeonManager.Instance.DungeonCurTime.TotalSeconds % 180f / 180f);
+				difficultyCircle.fillAmount = (float)(DungeonManager.Instance.Context.DungeonCurTime.TotalSeconds % 180f / 180f);
 			}
 			
 			switch (curDifficulty)

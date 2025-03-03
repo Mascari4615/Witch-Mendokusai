@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using PlayFab.EconomyModels;
 using UnityEngine;
 using static Mascari4615.SOHelper;
 
@@ -7,12 +8,7 @@ namespace Mascari4615
 {
 	public class DungeonManager : Singleton<DungeonManager>
 	{
-		public static readonly TimeSpan TimeUpdateInterval = new(0, 0, 0, 0, 100);
-
 		public Dungeon CurDungeon { get; private set; }
-		public TimeSpan InitialDungeonTime { get; private set; } = new(0, 0, 15, 0, 0);
-		public TimeSpan DungeonCurTime { get; private set; }
-		public DungeonDifficulty CurDifficulty { get; private set; }
 		public DungeonContext Context { get; private set; }
 		public DungeonRecord Result { get; private set; }
 
@@ -55,30 +51,34 @@ namespace Mascari4615
 
 			void InitDungeonAndPlayer()
 			{
-				UIManager.Instance.SetOverlay(MPanelType.None);
-				UIManager.Instance.SetCanvas(MCanvasType.Dungeon);
-
-				monsterSpawner.transform.position = Player.Instance.transform.position;
-				monsterSpawner.InitWaves(dungeon);
-
 				GameManager.Instance.Init();
 				GameManager.Instance.InitEquipment();
 				expChecker.Init();
 				cardManager.Init();
 
-				InitialDungeonTime = new TimeSpan(0, 0, dungeon.TimeBySecond);
-				DungeonCurTime = InitialDungeonTime;
-
-				Context = new DungeonContext(dungeon.Constraints);
+				Context = new DungeonContext
+				(
+					initialDungeonTime: new TimeSpan(0, 0, dungeon.TimeBySecond),
+					constraints: dungeon.Constraints
+				);
 
 				dungeonRecorder = new DungeonRecorder();
 
 				IsDungeon = true;
 
-				StartCoroutine(DungeonLoop());
-				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
-
 				CreateDungeonQuest(dungeon);
+
+				monsterSpawner.transform.position = Player.Instance.transform.position;
+				monsterSpawner.InitWaves(dungeon);
+
+				StartCoroutine(DungeonLoop());
+
+				// Context 생성 이후 UI 설정
+				// UIDungeon.UpdateUI(); 에서 Context를 사용합니다.
+				UIManager.Instance.SetOverlay(MPanelType.None);
+				UIManager.Instance.SetCanvas(MCanvasType.Dungeon);
+		
+				GameEventManager.Instance.Raise(GameEventType.OnDungeonStart);
 			}
 		}
 
@@ -93,8 +93,8 @@ namespace Mascari4615
 
 			while (true)
 			{
-				UpdateTime();
-				UpdateDifficulty();
+				Context.UpdateTime();
+				Context.UpdateDifficulty();
 				monsterSpawner.UpdateWaves();
 
 				// Debug.Log($"DungeonClear: {dungeonClear}");
@@ -106,17 +106,6 @@ namespace Mascari4615
 
 				yield return ws01;
 			}
-		}
-
-		private void UpdateTime()
-		{
-			DungeonCurTime -= TimeUpdateInterval;
-			DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
-		}
-
-		private void UpdateDifficulty()
-		{
-			CurDifficulty = (DungeonDifficulty)((InitialDungeonTime - DungeonCurTime).TotalMinutes / 3);
 		}
 
 		public void EndDungeon()
@@ -201,7 +190,7 @@ namespace Mascari4615
 							Type = CriteriaType.DungeonStat,
 							Data = GetDungeonStatData((int)DungeonStatType.DUNGEON_TIME),
 							ComparisonOperator = ComparisonOperator.GreaterThanOrEqualTo,
-							Value = (int)InitialDungeonTime.TotalSeconds,
+							Value = (int)Context.InitialDungeonTime.TotalSeconds,
 							JustOnce = true,
 						}
 					};
