@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Mascari4615
 {
-	public class UnitAnimator : MonoBehaviour
+	public class DollAnimator : MonoBehaviour
 	{
 		[SerializeField] private Animator mainAnimator;
 		[SerializeField] private Transform pivot;

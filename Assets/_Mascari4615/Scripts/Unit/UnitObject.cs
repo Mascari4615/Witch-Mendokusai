@@ -12,7 +12,7 @@ namespace Mascari4615
 		[field: SerializeField] public Unit UnitData { get; private set; } = null;
 		public UnitStat UnitStat { get; private set; } = new();
 		public SkillHandler SkillHandler { get; protected set; } = null;
-		[field: SerializeField] public Transform Pivot { get; protected set; } = null;
+		[field: SerializeField] public Transform MeshParent { get; protected set; } = null;
 		[field: SerializeField] public SpriteRenderer SpriteRenderer { get; protected set; } = null;
 		public NavMeshAgent NavMeshAgent { get; protected set; } = null;
 
@@ -27,7 +27,7 @@ namespace Mascari4615
 
 		protected virtual void Awake()
 		{
-			originScale = Pivot.localScale;
+			originScale = MeshParent.localScale;
 			SpriteRenderer.material.SetFloat("_Emission", 0);
 			NavMeshAgent = GetComponent<NavMeshAgent>();
 
@@ -49,7 +49,7 @@ namespace Mascari4615
 			UnitStat.Init(UnitData.InitStatInfos.GetUnitStat());
 			UpdateStat();
 
-			Pivot.localScale = originScale;
+			MeshParent.localScale = originScale;
 
 			if (NavMeshAgent)
 			{
@@ -90,8 +90,8 @@ namespace Mascari4615
 			SetHp(Mathf.Clamp(UnitStat[UnitStatType.HP_CUR] - damageInfo.damage, 0, int.MaxValue));
 
 			// Pivot 스케일 잠깐 키웠다가 줄이기
-			Pivot.DOScale(originScale * 1.4f, .1f).OnComplete(() =>
-				Pivot.DOScale(originScale, .2f));
+			MeshParent.DOScale(originScale * 1.4f, .1f).OnComplete(() =>
+				MeshParent.DOScale(originScale, .2f));
 		}
 
 		protected virtual void Die()
