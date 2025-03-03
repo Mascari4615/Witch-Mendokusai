@@ -20,7 +20,6 @@ namespace Mascari4615
 		{
 			InteractiveObject nearest = InteractiveObject.GetNearest(Player.Instance.transform.position, PlayerInteraction.InteractionDistance);
 
-			Debug.Log(nearest);
 			if (nearest == null)
 			{
 				animator.SetBool(MarkerEnabled, false);

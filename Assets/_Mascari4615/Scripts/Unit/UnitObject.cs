@@ -74,7 +74,6 @@ namespace Mascari4615
 		protected virtual void SetHp(int newHp)
 		{
 			UnitStat[UnitStatType.HP_CUR] = newHp;
-			Debug.Log($"{name} {nameof(SetHp)} {newHp} = {UnitStat[UnitStatType.HP_CUR]}");
 			if (UnitStat[UnitStatType.HP_CUR] <= 0)
 			{
 				Die();
@@ -88,7 +87,6 @@ namespace Mascari4615
 				return;
 			}
 
-			Debug.Log($"{name} {nameof(ReceiveDamage)} {damageInfo.damage}");
 			SetHp(Mathf.Clamp(UnitStat[UnitStatType.HP_CUR] - damageInfo.damage, 0, int.MaxValue));
 
 			// Pivot 스케일 잠깐 키웠다가 줄이기
@@ -98,7 +96,6 @@ namespace Mascari4615
 
 		protected virtual void Die()
 		{
-			Debug.Log($"{name} {nameof(Die)}");
 			OnDied();
 		}
 

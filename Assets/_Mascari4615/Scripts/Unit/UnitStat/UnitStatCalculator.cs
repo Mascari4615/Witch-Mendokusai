@@ -37,7 +37,6 @@ namespace Mascari4615
 			DungeonContext context = DungeonManager.Instance.Context;
 			{
 				double persentage = (double)unitStat[UnitStatType.HP_CUR] / (double)unitStat[UnitStatType.HP_MAX];
-				Debug.Log($"{unitData.Name} {unitStat[UnitStatType.HP_CUR]} / {unitStat[UnitStatType.HP_MAX]} = {persentage}");
 				unitStat[UnitStatType.HP_MAX] = (int)((double)unitStat[UnitStatType.HP_MAX_STAT] * (1 + DIFFICULTY_HP_BONUS_FACTOR * (double)context.CurDifficulty));
 				unitStat[UnitStatType.HP_CUR] = (int)((double)unitStat[UnitStatType.HP_MAX] * persentage);
 				// SetHp((int)(unitStat[UnitStatType.HP_MAX] * persentage));
