@@ -200,9 +200,13 @@ namespace Mascari4615
 
 			List<EquipmentData> equipmentDatas = DataManager.Instance.GetEquipmentDatas(DataManager.Instance.CurDollID);
 			int equipmentID = equipmentDatas[curDeckIndex].ID;
-			deckUIDic[equipmentID].SetCards(randomCards);
-			deckUIDic[equipmentID].UpdateUI();
-			deckUIDic[equipmentID].gameObject.SetActive(true);
+
+			if (deckUIDic.TryGetValue(equipmentID, out UIDeck deckUI))
+			{
+				deckUI.SetCards(randomCards);
+				deckUI.UpdateUI();
+				deckUI.gameObject.SetActive(true);
+			}
 		}
 
 		public void SelectCard(CardData card)
