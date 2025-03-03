@@ -27,9 +27,9 @@ namespace Mascari4615
 
 		private void OnEnable()
 		{
-			UpdateFairy();
-			UpdateDamageBonus();
-			UpdateAttackSpeedBonus();
+			UpdateFairy(PlayerStat[UnitStatType.FAIRY_COUNT]);
+			UpdateDamageBonus(PlayerStat[UnitStatType.FAIRY_DAMAGE_BONUS]);
+			UpdateAttackSpeedBonus(PlayerStat[UnitStatType.FAIRY_ATTACK_SPEED_BONUS]);
 
 			loop = StartCoroutine(Loop());
 		}
@@ -84,13 +84,13 @@ namespace Mascari4615
 			}
 		}
 
-		private void UpdateFairy()
+		private void UpdateFairy(int fairyCount)
 		{
-			int fairyCount = 1 + PlayerStat[UnitStatType.FAIRY_COUNT];
+			int actualFairyCount = 1 + fairyCount;
 
-			if (fairyTransforms.Count < fairyCount)
+			if (fairyTransforms.Count < actualFairyCount)
 			{
-				int diff = fairyCount - fairyTransforms.Count;
+				int diff = actualFairyCount - fairyTransforms.Count;
 				for (int i = 0; i < diff; i++)
 				{
 					GameObject g = ObjectPoolManager.Instance.Spawn(fairyPrefab);
@@ -102,21 +102,21 @@ namespace Mascari4615
 				}
 			}
 
-			float delta = 360f / fairyCount;
+			float delta = 360f / actualFairyCount;
 			for (int i = 0; i < transform.childCount; i++)
 			{
 				transform.GetChild(i).transform.localRotation = Quaternion.Euler(Vector3.up * (delta * i));
 			}
 		}
 
-		private void UpdateDamageBonus()
+		private void UpdateDamageBonus(int fairyDamamgeBonus)
 		{
-			damageBonus = PlayerStat[UnitStatType.FAIRY_DAMAGE_BONUS];
+			damageBonus = fairyDamamgeBonus;
 		}
 
-		private void UpdateAttackSpeedBonus()
+		private void UpdateAttackSpeedBonus(int fairyAttackSpeedBonus)
 		{
-			coolTime = originCoolTime * (1 - PlayerStat[UnitStatType.FAIRY_ATTACK_SPEED_BONUS] * .2f);
+			coolTime = originCoolTime * (1 - fairyAttackSpeedBonus * .2f);
 		}
 	}
 }

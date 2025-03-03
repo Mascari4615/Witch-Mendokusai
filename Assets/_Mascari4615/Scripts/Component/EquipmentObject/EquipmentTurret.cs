@@ -6,11 +6,9 @@ namespace Mascari4615
 {
 	public class EquipmentTurret : SkillComponent
 	{
-		[SerializeField] private int originDamage = 2;
 		[SerializeField] private float originCoolTime = 1.5f;
 		[SerializeField] private GameObject bulletPrefab;
 		[SerializeField] private GameObject turretPrefab;
-		[SerializeField] private float rotateSpeed = -30f;
 
 		private readonly List<Transform> turretTransforms = new();
 		private float coolTime;
@@ -49,12 +47,6 @@ namespace Mascari4615
 			PlayerStat.AddListener(UnitStatType.TURRET_ATTACK_SPEED_BONUS, UpdateAttackSpeedBonus);
 		}
 
-		private void Update()
-		{
-			// transform.position = Player.Instance.transform.position;
-			// transform.Rotate(0, rotateSpeed * Time.deltaTime, 0);
-		}
-
 		private IEnumerator Loop()
 		{
 			int turretIndex = 0;
@@ -68,19 +60,19 @@ namespace Mascari4615
 
 				turretIndex = ++turretIndex % turretTransforms.Count;
 
-				GameObject g = ObjectPoolManager.Instance.Spawn(bulletPrefab);
+				GameObject bulletObject = ObjectPoolManager.Instance.Spawn(bulletPrefab);
 
-				Vector3 spawnPosition = turretTransforms[turretIndex].position;
-				spawnPosition.y = 0;
-				g.transform.position = spawnPosition;
+				Vector3 bulletSpawnPos = turretTransforms[turretIndex].position;
+				bulletSpawnPos.y = 0;
+				bulletObject.transform.position = bulletSpawnPos;
 
-				if (g.TryGetComponent(out SkillObject skillObject))
+				if (bulletObject.TryGetComponent(out SkillObject skillObject))
 					skillObject.InitContext(Player.Instance.Object);
 
-				if (g.TryGetComponent(out DamagingObject damagingObject))
+				if (bulletObject.TryGetComponent(out DamagingObject damagingObject))
 					damagingObject.SetDamageBonus(damageBonus);
 
-				g.SetActive(true);
+				bulletObject.SetActive(true);
 
 				yield return new WaitForSeconds(coolTime / turretTransforms.Count);
 			}
