@@ -62,7 +62,7 @@ namespace Mascari4615
 				{
 					if (isBackToLastStage)
 					{
-						newStagePos = Player.Instance.transform.position - newLastPosDiff;
+						newStagePos = Player.Instance.transform.position - lastPosDiff;
 					}
 					else
 					{
