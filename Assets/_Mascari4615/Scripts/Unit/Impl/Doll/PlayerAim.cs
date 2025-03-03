@@ -84,7 +84,7 @@ namespace Mascari4615
 		public Vector3 CalcAutoAim()
 		{
 			GameObject nearestTarget = GetNearestTarget();
-			return nearestTarget == null ? Vector3.zero : nearestTarget.transform.position;
+			return (nearestTarget == null) ? Vector3.zero : nearestTarget.transform.position;
 		}
 
 		public Vector3 CalcMouseAimDriection()

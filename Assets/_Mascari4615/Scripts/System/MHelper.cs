@@ -15,23 +15,16 @@ namespace Mascari4615
 			return GetNearest(list, element => element.transform.position, targetPosition, maxDistance);
 		}
 
-		public static Transform GetNearest(List<Transform> list, Vector3 position, float maxDistance)
-		{
-			return GetNearest(list, transform => transform.position, position, maxDistance);
-		}
-
-		public static GameObject GetNearest(List<GameObject> list, Vector3 position, float maxDistance)
-		{
-			return GetNearest(list, obj => obj.transform.position, position, maxDistance);
-		}
-
-		public static T GetNearest<T>(List<T> list, Func<T, Vector3> getPositionByElement, Vector3 targetPosition, float maxDistance)
+		public static T GetNearest<T>(List<T> list, Func<T, Vector3> getPositionByElement, Vector3 targetPosition, float maxDistance, bool ignoreInactive = true) where T : MonoBehaviour
 		{
 			T nearest = default;
 			float nearestDistance = float.MaxValue;
 
 			foreach (T element in list)
 			{
+				if (ignoreInactive && (element.gameObject.activeInHierarchy == false))
+					continue;
+
 				Vector3 elementPosition = getPositionByElement(element);
 				float distance = Vector3.Distance(elementPosition, targetPosition);
 
@@ -44,6 +37,6 @@ namespace Mascari4615
 
 			return nearestDistance <= maxDistance ? nearest : default;
 		}
+		#endregion
 	}
-	#endregion
 }

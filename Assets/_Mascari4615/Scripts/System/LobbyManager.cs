@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,10 +9,20 @@ namespace Mascari4615
 	public class LobbyManager : MonoBehaviour
 	{
 		[SerializeField] private GameObject settingPanel;
+		[SerializeField] private TextMeshProUGUI versionText;
+		[SerializeField] private TextMeshProUGUI copyRightText;
+		[SerializeField] private int year = 2024;
 
 		private void Start()
 		{
 			Invoke(nameof(TryLogin), 1f);
+			UpdateUI();
+		}
+
+		private void UpdateUI()
+		{
+			versionText.text = $"마녀여 영원히 v{Application.version}";
+			copyRightText.text = $"© {year} {Application.companyName}";
 		}
 
 		private void TryLogin()

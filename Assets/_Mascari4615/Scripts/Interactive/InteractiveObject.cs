@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,13 +8,12 @@ namespace Mascari4615
 	{
 		public static readonly List<InteractiveObject> ActiveInteractives = new();
 
-		private IInteractable[] interactable;
-
-		public void Interact()
+		public static InteractiveObject GetNearest(Vector3 targetPosition, float maxDistance)
 		{
-			foreach (IInteractable interact in interactable)
-				interact.OnInteract();
+			return MHelper.GetNearest(ActiveInteractives, element => element.transform.position, targetPosition, maxDistance);
 		}
+
+		private IInteractable[] interactable;
 
 		private void Awake()
 		{
@@ -25,10 +25,17 @@ namespace Mascari4615
 			ActiveInteractives.Add(this);
 		}
 
+		public void Interact()
+		{
+			foreach (IInteractable interact in interactable)
+				interact.OnInteract();
+		}
+
 		private void OnDisable()
 		{
 			if (MHelper.IsPlaying)
 				ActiveInteractives.Remove(this);
 		}
+
 	}
 }

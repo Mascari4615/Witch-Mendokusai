@@ -18,7 +18,7 @@ namespace Mascari4615
 		[field: SerializeField] public List<EquipmentData> DefaultEquipments { get; private set; }
 
 		// 인형의 레벨과 경험치 (던전 내 일시적 레벨과 경험치와는 별개)
-		[field: NonSerialized] public int Level { get; private set; } = 0;
+		[field: NonSerialized] public int Level { get; private set; } = 1;
 		[field: NonSerialized] public int Exp { get; private set; } = 0;
 		// 현재 장착하고 있는 장비들의 Guid
 		[field: NonSerialized] public List<Guid?> EquipmentGuids { get; private set; } = new() { null, null, null };

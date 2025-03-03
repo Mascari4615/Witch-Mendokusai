@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using FMODUnity;
 using UnityEngine;
 using static Mascari4615.SOHelper;
@@ -11,6 +10,12 @@ namespace Mascari4615
 		private Coroutine invincibleRoutine = null;
 		[SerializeField] private GameObject diedX;
 
+		[field: SerializeField] public Transform CameraPosition { get; private set; }
+		[field: SerializeField] public Transform SpritePosition { get; private set; }
+
+		[SerializeField] private SpriteRenderer headRenderer;
+		[SerializeField] private SpriteRenderer bodyRenderer;
+
 		public void SetDoll(int dollID)
 		{
 			Init(GetDoll(dollID));
@@ -19,8 +24,14 @@ namespace Mascari4615
 		public override void Init(Unit unitData)
 		{
 			base.Init(unitData);
+
+			headRenderer.sprite = UnitData.Sprites[0];
+			bodyRenderer.sprite = UnitData.Sprites[1];
+
 			GameManager.Instance.IsDied = false;
 			diedX.SetActive(false);
+
+			GameEventManager.Instance.Raise(GameEventType.OnPlayerDollChange);
 		}
 
 		public override void ReceiveDamage(DamageInfo damageInfo)
@@ -30,7 +41,7 @@ namespace Mascari4615
 
 			if (invincibleRoutine != null)
 				return;
-			
+
 			if (!IsAlive)
 				return;
 

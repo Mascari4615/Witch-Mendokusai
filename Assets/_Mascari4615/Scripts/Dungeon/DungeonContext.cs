@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -5,30 +6,29 @@ namespace Mascari4615
 {
 	public class DungeonContext
 	{
-		public List<DungeonConstraint> Constraints { get; private set; }
+		public static readonly TimeSpan TimeUpdateInterval = new(0, 0, 0, 0, 100);
 
-		public DungeonContext(List<DungeonConstraint> constraints)
+		public List<DungeonConstraint> Constraints { get; private set; } = new();
+		public DungeonDifficulty CurDifficulty { get; private set; } = DungeonDifficulty.Easy;
+		public TimeSpan InitialDungeonTime { get; private set; } = new(0, 0, 15, 0, 0);
+		public TimeSpan DungeonCurTime { get; private set; } = new(0, 0, 15, 0, 0);
+
+		public DungeonContext(TimeSpan initialDungeonTime, List<DungeonConstraint> constraints)
 		{
 			Constraints = constraints;
+			InitialDungeonTime = initialDungeonTime;
+			DungeonCurTime = InitialDungeonTime;
+		}
+		
+		public void UpdateTime()
+		{
+			DungeonCurTime -= TimeUpdateInterval;
+			DataManager.Instance.DungeonStat[DungeonStatType.DUNGEON_TIME] = (int)(InitialDungeonTime.TotalSeconds - DungeonCurTime.TotalSeconds);
 		}
 
-		public UnitStat UpdateMonsterStatByDiff(Unit unit)
+		public void UpdateDifficulty()
 		{
-			UnitStat newStat = new();
-
-			foreach (DungeonConstraint constraint in Constraints)
-			{
-				foreach (DungeonConstraintEffectInfo effect in constraint.Effects)
-				{
-					if (effect.Affiliation != unit.Affiliation)
-						continue;
-
-					Debug.Log($"{unit.Name} {effect.StatType} {effect.Value}");
-					newStat[effect.StatType] += effect.Value;
-				}
-			}
-
-			return newStat;
+			CurDifficulty = (DungeonDifficulty)((InitialDungeonTime - DungeonCurTime).TotalMinutes / 3);
 		}
 	}
 }

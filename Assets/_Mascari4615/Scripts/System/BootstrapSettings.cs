@@ -21,7 +21,7 @@ namespace Mascari4615
 		{
 			Debug.Log("SANS");
 
-			var bootstrapStuff = Resources.Load<BootstrapSettings>(nameof(BootstrapSettings));
+			BootstrapSettings bootstrapStuff = Resources.Load<BootstrapSettings>(nameof(BootstrapSettings));
 			if (bootstrapStuff == null)
 			{
 				Debug.LogError("BootStrapSettings not found");

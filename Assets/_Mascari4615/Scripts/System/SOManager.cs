@@ -11,6 +11,16 @@ namespace Mascari4615
 	public class SOManager : ScriptableObject
 	{
 		public Dictionary<Type, Dictionary<int, DataSO>> DataSOs { get; private set; } = new();
+		public Dictionary<int, DataSO> this[Type type]
+		{
+			get
+			{
+				if (DataSOs.TryGetValue(type, out var dataSOs))
+					return dataSOs;
+
+				return null;
+			}
+		}
 
 		[field: Space(10), Header("PlayerData")]
 		[field: SerializeField] public FloatVariable InvincibleTime { get; private set; }

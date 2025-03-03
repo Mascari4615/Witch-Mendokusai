@@ -4,6 +4,9 @@ namespace Mascari4615
 {
 	public class AutoAimMarker : MonoBehaviour
 	{
+		private const string MarkerEnabled = "ENABLED";
+		private const string MarkerResetTrigger = "RESET";
+
 		private Animator animator;
 		private Transform lastNearestTarget;
 
@@ -16,17 +19,17 @@ namespace Mascari4615
 		{
 			if (Player.Instance.AutoAimPos == Vector3.zero)
 			{
-				animator.SetBool("ON", false);
+				animator.SetBool(MarkerEnabled, false);
 				return;
 			}
 
 			if (lastNearestTarget != Player.Instance.NearestTarget)
 			{
 				lastNearestTarget = Player.Instance.NearestTarget;
-				animator.SetTrigger("RESET");
+				animator.SetTrigger(MarkerResetTrigger);
 			}
 
-			animator.SetBool("ON", true);
+			animator.SetBool(MarkerEnabled, true);
 			transform.position = Player.Instance.AutoAimPos;
 		}
 	}

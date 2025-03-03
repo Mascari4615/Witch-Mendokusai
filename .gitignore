@@ -93,6 +93,11 @@ crashlytics-build.properties
 # Log files can be ignored.
 fmod_editor.log
 
+
+# FMOD files
+/Assets/Plugins/FMOD/Resources/FMODStudioCache.asset
+# /Assets/Plugins/FMOD*
+
 /FMODAssets/.cache/*
 
 /FMODAssets/Assets/PROTODOME/PROTODOME - 4000AD
@@ -113,8 +118,8 @@ Assets/PlayFabSDK/Shared/Public/Resources/PlayFabSharedSettings*
 
 # Rainbow Folders 2, Rainbow Hierachy 2
 /Assets/Plugins/Borodar*
-/Assets/Unity-Logs-Viewer*
-/Assets/SelectionUtility*
+/Assets/Plugins/SelectionUtility*
+/Assets/Plugins/Unity-Logs-Viewer*
 /Assets/SpecialSkillsEffectsPack*
 /Assets/AssetKits*
 
@@ -124,9 +129,6 @@ bakery_times.log
 
 # ---- ---- ---- ----
 
-/Assets/_Mascari4615/Sprite/Asset/game-icons.net*
-/Assets/_Mascari4615/Sprite/Asset/Tileable Grass Textures - Set 1*
-/Assets/_Mascari4615/Sprite/Asset/Tiling Bark*
-/Assets/_Mascari4615/Sprite/Temp*
+/Assets/_Mascari4615/_/Sprite/Temp*
 
 WM.json*

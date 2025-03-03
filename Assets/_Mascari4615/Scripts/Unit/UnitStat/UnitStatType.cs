@@ -3,8 +3,9 @@ namespace Mascari4615
 	public enum UnitStatType
 	{
 		// 체력
-		HP_CUR = 0,
-		HP_MAX = 1,
+		HP_CUR = 0, // 런타임
+		HP_MAX = 1, // 런타임
+		HP_MAX_STAT = 2, // 기반
 
 		// 경험치, 레벨
 		EXP_CUR = 100,
@@ -12,8 +13,9 @@ namespace Mascari4615
 		LEVEL_CUR = 102,
 
 		// 마나
-		MANA_CUR = 200,
-		MANA_MAX = 201,
+		MANA_CUR = 200, // 런타임
+		MANA_MAX = 201, // 런타임
+		MANA_MAX_STAT = 202, // 기반
 
 		// 이동
 		MOVEMENT_SPEED = 300,
@@ -40,5 +42,9 @@ namespace Mascari4615
 		FAIRY_COUNT = 10100,
 		FAIRY_DAMAGE_BONUS = 10101,
 		FAIRY_ATTACK_SPEED_BONUS = 10102,
+
+		TURRET_COUNT = 10200,
+		TURRET_DAMAGE_BONUS = 10201,
+		TURRET_ATTACK_SPEED_BONUS = 10202,
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -25,6 +26,7 @@ namespace Mascari4615
 		[PropertyOrder(1)][field: SerializeField] public string Name { get; set; }
 		[PropertyOrder(2)][field: SerializeField, TextArea] public string Description { get; set; }
 		[PropertyOrder(3)][field: SerializeField] public Sprite Sprite { get; set; }
+		[PropertyOrder(4)][field: SerializeField] public List<Sprite> Sprites { get; set; }
 	}
 
 	[Serializable]

@@ -57,8 +57,8 @@ namespace Mascari4615
 			// 굳이 처리할 waveInstance까지는 전달받지 않아도 된다.
 			MonsterWaveInstance waveInstance = waves[waveIndex];
 
-			TimeSpan dungeonTime = DungeonManager.Instance.InitialDungeonTime - DungeonManager.Instance.DungeonCurTime;
-			DungeonDifficulty curDifficulty = DungeonManager.Instance.CurDifficulty;
+			TimeSpan dungeonTime = DungeonManager.Instance.Context.InitialDungeonTime - DungeonManager.Instance.Context.DungeonCurTime;
+			DungeonDifficulty curDifficulty = DungeonManager.Instance.Context.CurDifficulty;
 
 			if (dungeonTime < TimeSpan.FromSeconds(waveInstance.Data.StartTime))
 				return;
@@ -69,7 +69,7 @@ namespace Mascari4615
 				return;
 			}
 
-			waveInstance.SpawnT += DungeonManager.TimeUpdateInterval.Milliseconds / 1000f;
+			waveInstance.SpawnT += DungeonContext.TimeUpdateInterval.Milliseconds / 1000f;
 			if (waveInstance.SpawnT > waveInstance.Data.SpawnDelay)
 			{
 				StartCoroutine(SpawnMonster(waveInstance.Data.Monsters[Random.Range(0, waveInstance.Data.Monsters.Length)], spawnDelay, curDifficulty));
@@ -99,8 +99,6 @@ namespace Mascari4615
 			MonsterObject monsterObjectComponent = monsterObject.GetComponent<MonsterObject>();
 			monsterObject.transform.position = spawnPos;
 			monsterObjectComponent.Init(monster);
-			monsterObjectComponent.UpdateByDungeonContext();
-			monsterObjectComponent.UpdateByDungeonDifficulty(difficulty);
 			monsterObject.SetActive(true);
 		}
 
