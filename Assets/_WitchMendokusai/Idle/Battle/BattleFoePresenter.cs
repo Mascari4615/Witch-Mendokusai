@@ -38,6 +38,9 @@ namespace WitchMendokusai.Idle
 		private float clock;
 		/// <summary>지금 조준선이 걸린 적. 없으면 -1</summary>
 		private long aimTarget = -1L;
+		private bool snapNext;
+		/// <summary>던전 그림. null 이면 본판 (구역 도형과 기본 prefab)</summary>
+		private DungeonSO look;
 
 		public BattleFoePresenter(Transform worldRoot, BattleEntityPresenter.Settings settings)
 		{
@@ -49,6 +52,7 @@ namespace WitchMendokusai.Idle
 		{
 			removedHeads.Clear();
 			Dress(snapshot, delta);
+			snapNext = false;
 			AdvanceMotion(delta);
 		}
 
@@ -136,6 +140,33 @@ namespace WitchMendokusai.Idle
 			aimTarget = index;
 		}
 
+		/// <summary>판이 원점을 되감은 만큼 단숨에 옮김</summary>
+		public void Shift(float dx)
+		{
+			foreach (Foe foe in foes)
+			{
+				foe.Piece.localPosition += new Vector3(dx, 0f, 0f);
+			}
+		}
+
+		public void SnapNext()
+		{
+			snapNext = true;
+		}
+
+		/// <summary>던전 그림으로. 이미 선 적은 다음 그리기에서 도형이 바뀌고, 새로 서는 적은 prefab 도 따름</summary>
+		public void SetLook(DungeonSO dungeon)
+		{
+			if (look == dungeon) { return; }
+			foreach (Foe foe in foes)
+			{
+				BattleVisualFactory.Kill(foe.BarAnchor.gameObject);
+				BattleVisualFactory.Kill(foe.Piece.gameObject);
+			}
+			foes.Clear();
+			look = dungeon;
+		}
+
 		private void Dress(IdleSnapshot snapshot, float delta)
 		{
 			for (int at = foes.Count - 1; at >= 0; at--)
@@ -152,7 +183,7 @@ namespace WitchMendokusai.Idle
 				foes.RemoveAt(at);
 			}
 
-			Geometry.Shape shape = Geometry.ShapeOfStage(snapshot.Stage, settings.ShapeStagesPerStep);
+			Geometry.Shape shape = look != null ? look.FoeShape : Geometry.ShapeOfStage(snapshot.Stage, settings.ShapeStagesPerStep);
 			int stage = snapshot.Stage;
 
 			for (int at = 0; at < snapshot.Foes.Length; at++)
@@ -189,7 +220,12 @@ namespace WitchMendokusai.Idle
 					foe.Piece.localPosition = wanted + Vector3.right * settings.FoeEntranceDistance;
 				}
 
-				if (foe.Entering)
+				if (snapNext)
+				{
+					foe.Piece.localPosition = wanted;
+					foe.Entering = false;
+				}
+				else if (foe.Entering)
 				{
 					foe.Piece.localPosition = Vector3.MoveTowards(
 						foe.Piece.localPosition, wanted, settings.FoeEntranceSpeed * delta);
@@ -340,7 +376,9 @@ namespace WitchMendokusai.Idle
 				Kind = IdleFoeKind.Melee,
 			};
 
-			GameObject source = boss && settings.BossPrefab != null ? settings.BossPrefab : settings.FoePrefab;
+			GameObject source = look != null
+				? (boss ? look.BossPrefab : look.FoePrefab)
+				: (boss && settings.BossPrefab != null ? settings.BossPrefab : settings.FoePrefab);
 			if (source != null)
 			{
 				GameObject made = Object.Instantiate(source, model.transform, false);

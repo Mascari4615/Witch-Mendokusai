@@ -21,6 +21,8 @@ namespace WitchMendokusai.Tests
 		public void RebasingAWave_KeepsTheAbsolutePlace()
 		{
 			IdleTuning tuning = new IdleTuning();
+			// 되감기는 이제 멀리 갔을 때만 (이음새). 40m 걸으면 되감기게 문턱을 낮춤
+			tuning.BattleRebaseDistance = 10d;
 			IdleState state = new IdleState();
 			IdleHeroes.EnsureStarter(state);
 			IdleBattleSim.Reset(state, tuning);

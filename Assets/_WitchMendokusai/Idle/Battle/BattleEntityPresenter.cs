@@ -93,6 +93,23 @@ namespace WitchMendokusai.Idle
 			foes = new BattleFoePresenter(worldRoot, settings);
 		}
 
+		/// <summary>판이 원점을 되감은 프레임. 인형과 적을 같은 만큼 단숨에 옮김 (Lerp 로 미끄러지면 뒤로 튐)</summary>
+		public void Shift(float dx)
+		{
+			allies.Shift(dx);
+			foes.Shift(dx);
+		}
+
+		/// <summary>다음 그리기에서 자리를 단숨에. 전환 막 뒤의 재배치용</summary>
+		public void SnapNext()
+		{
+			allies.SnapNext();
+			foes.SnapNext();
+		}
+
+		/// <summary>던전 그림. null 이면 본판 (구역 도형)</summary>
+		public void SetFoeLook(DungeonSO dungeon) => foes.SetLook(dungeon);
+
 		public void Render(IdleSnapshot snapshot, float delta)
 		{
 			allies.Render(snapshot, delta);

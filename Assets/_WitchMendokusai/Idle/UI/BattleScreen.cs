@@ -115,6 +115,7 @@ namespace WitchMendokusai.Idle
 			if (stage != null)
 			{
 				stage.Build();
+				stage.SetDungeonCatalog(tuningAsset.DungeonCatalog);
 			}
 			else
 			{

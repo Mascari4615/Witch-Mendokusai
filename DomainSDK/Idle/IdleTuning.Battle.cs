@@ -127,6 +127,14 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         public double WaveGapY { get; set; } = 1d;
 
+        /// <summary>
+        /// 좌표 되감기 거리 (m). 부대 맨 뒤가 이만큼 가면 원점을 되감음 (무대 float 정밀도)
+        ///
+        /// ★ 웨이브마다 되감지 않음. 되감으면 인형이 뒤로 튐 (사용자 2026-09-05, 09-08 두 번 지적).
+        ///   되감을 때는 무대가 인형, 적, 카메라를 같은 프레임에 같이 옮김
+        /// </summary>
+        public double BattleRebaseDistance { get; set; } = 1000d;
+
         /// <summary>원거리 적이 섞이기 시작하는 구역. 그 전은 근접만</summary>
         public int RangedFoeFromStage { get; set; } = 4;
 

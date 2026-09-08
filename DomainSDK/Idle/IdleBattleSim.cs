@@ -148,6 +148,7 @@ namespace WitchMendokusai.DomainSDK.Idle
             battle.Carry = 0d;
             battle.Ready = true;
             battle.StageSeen = state.Stage;
+            battle.Epoch += 1L;
 
             for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
             {

@@ -13,6 +13,20 @@ namespace WitchMendokusai.Idle
 
 		public int Count => dungeons.Count;
 
+		/// <summary>그 던전의 SO. 무대가 그림을 고를 때. 없으면 null</summary>
+		public DungeonSO DungeonOf(IdleDungeonKind kind)
+		{
+			for (int index = 0; index < dungeons.Count; index++)
+			{
+				if (dungeons[index] != null && dungeons[index].Kind == kind)
+				{
+					return dungeons[index];
+				}
+			}
+
+			return null;
+		}
+
 		public IdleDungeonSpec[] ToDomain()
 		{
 			IdleDungeonSpec[] specs = new IdleDungeonSpec[dungeons.Count];

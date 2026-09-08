@@ -123,6 +123,12 @@ namespace WitchMendokusai.Idle.UI
 		{
 			IdleDungeonRunView run = snapshot.DungeonRun;
 			DisplayStyle shown = run.Active ? DisplayStyle.Flex : DisplayStyle.None;
+			DisplayStyle mainShown = run.Active ? DisplayStyle.None : DisplayStyle.Flex;
+			opCode.style.display = mainShown;
+			opName.style.display = mainShown;
+			waveDots.style.display = mainShown;
+			waveLabel.style.display = mainShown;
+			stepBack.parent.parent.style.display = mainShown;
 			dungeonTimer.style.display = shown;
 			dungeonLeave.style.display = shown;
 			if (run.Active)
@@ -148,12 +154,28 @@ namespace WitchMendokusai.Idle.UI
 		private void RenderEnemy(IdleSnapshot snapshot)
 		{
 			bool boss = snapshot.KillsInStage >= snapshot.KillsPerStage - 1;
+			double healthRatio = snapshot.TargetHealthRatio;
+			int stageNumber = snapshot.Stage;
+			if (snapshot.DungeonRun.Active)
+			{
+				boss = false;
+				stageNumber = snapshot.DungeonRun.Stage + 1;
+				foreach (IdleFoeView foe in snapshot.Foes)
+				{
+					if (foe.Boss)
+					{
+						boss = true;
+						healthRatio = foe.HealthRatio;
+						break;
+					}
+				}
+			}
 			enemyBar.style.display = boss ? DisplayStyle.Flex : DisplayStyle.None;
 			if (boss)
 			{
-				enemyLabel.text = content.BossHealthText(snapshot.Stage, snapshot.TargetHealthRatio);
+				enemyLabel.text = content.BossHealthText(stageNumber, healthRatio);
 				enemyFill.style.width = new StyleLength(new Length(
-					(float)(snapshot.TargetHealthRatio * 100d), LengthUnit.Percent));
+					(float)(healthRatio * 100d), LengthUnit.Percent));
 			}
 
 			if (waveDotList.Count != snapshot.KillsPerStage)

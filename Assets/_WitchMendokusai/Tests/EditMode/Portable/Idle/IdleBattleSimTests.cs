@@ -187,6 +187,77 @@ namespace WitchMendokusai.Tests
 			Assert.AreEqual(IdleSquad.MaxHealthOf(state, tuning, 0), state.SeatHealth[0], 1e-6d, "구역을 깼는데 만렙이 아니다");
 		}
 
+		/// <summary>
+		/// 웨이브 사이는 이음새. 원점을 되감지 않고 (OriginX 0), 인형은 걸어서만 (x 가 줄지 않음), 재배치 번호 그대로
+		/// (사용자 2026-09-05, 09-08 두 번 지적. 구역 클리어와 전멸만 전환 뒤 Reset)
+		/// </summary>
+		[Test]
+		public void Waves_JoinSeamlessly_NoRewind_NoJump()
+		{
+			IdleTuning tuning = new IdleTuning();
+            // 원거리의 빠른 처치로 구역이 바뀌지 않도록 클리어 조건 분리
+			tuning.KillsPerStage = 100000;
+			IdleState state = Fresh(tuning, MELEE_HERO, RANGED_HERO, MID_HERO);
+			long epoch = state.Battle.Epoch;
+			double[] last = (double[])state.Battle.X.Clone();
+			int wavesSeen = state.Battle.Wave;
+
+			for (int tick = 0; tick < 1200; tick++)
+			{
+				IdleBattleSim.Advance(state, tuning, 0.1d);
+				for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
+				{
+					if (IdleSquad.Standing(state, seat))
+					{
+						Assert.GreaterOrEqual(state.Battle.X[seat] + 1e-9d, last[seat], "자리 " + seat + " 이 뒤로 갔다 (틱 " + tick + ", 구역 " + state.Stage + ", 재배치 " + state.Battle.Epoch + ", 원점 " + state.Battle.OriginX + ", 웨이브 " + state.Battle.Wave + ", 반복 " + state.Repeating + ", 체력 " + state.SeatHealth[seat] + ")");
+					}
+					last[seat] = state.Battle.X[seat];
+				}
+			}
+
+			Assert.Greater(state.Battle.Wave, wavesSeen + 1, "웨이브가 두 번 이상 바뀌어야 시험이 뜻이 있다");
+			Assert.AreEqual(0d, state.Battle.OriginX, 1e-9d, "웨이브 사이에 원점을 되감았다");
+			Assert.AreEqual(epoch, state.Battle.Epoch, "웨이브 사이에 재배치가 났다");
+		}
+
+		/// <summary>아주 멀리 가면 (BattleRebaseDistance) 그때만 되감음. 재배치 번호는 그대로 (무대가 같은 프레임에 옮김)</summary>
+		[Test]
+		public void Rewind_OnlyBeyondTheRebaseDistance()
+		{
+			IdleTuning tuning = new IdleTuning();
+			tuning.KillsPerStage = 100000;
+			tuning.BattleRebaseDistance = 30d;
+			IdleState state = Fresh(tuning, MELEE_HERO);
+			long epoch = state.Battle.Epoch;
+
+			for (int tick = 0; tick < 3000 && state.Battle.OriginX <= 0d; tick++)
+			{
+				IdleBattleSim.Advance(state, tuning, 0.1d);
+			}
+
+			Assert.Greater(state.Battle.OriginX, 0d, "30m 를 넘게 갔는데 안 되감았다 (x " + state.Battle.X[0] + ", 웨이브 " + state.Battle.Wave + ", 재배치 " + state.Battle.Epoch + ", 구역 " + state.Stage + ")");
+			Assert.AreEqual(epoch, state.Battle.Epoch, "되감기가 재배치로 셌다");
+			Assert.Less(state.Battle.X[0], 30d, "되감은 뒤 좌표가 작아지지 않았다");
+		}
+
+		/// <summary>구역 클리어는 Reset. 재배치 번호가 오름 (무대가 전환 막 뒤에 자리를 바꿈)</summary>
+		[Test]
+		public void StageClear_Resets_WithANewEpoch()
+		{
+			IdleTuning tuning = new IdleTuning();
+			IdleState state = Fresh(tuning, MELEE_HERO, RANGED_HERO, MID_HERO);
+			long epoch = state.Battle.Epoch;
+			int stage = state.Stage;
+
+			for (int tick = 0; tick < 3000 && state.Stage == stage; tick++)
+			{
+				IdleBattleSim.Advance(state, tuning, 0.1d);
+			}
+
+			Assert.Greater(state.Stage, stage, "300초 안에 구역을 못 넘겼다");
+			Assert.AreEqual(epoch + 1L, state.Battle.Epoch, "구역 클리어가 재배치 한 번이 아니다");
+		}
+
 		/// <summary>T7. 전멸이면 물러나 반복</summary>
 		[Test]
 		public void Wipe_FallsBack()

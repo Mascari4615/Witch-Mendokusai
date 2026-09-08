@@ -128,6 +128,14 @@ namespace WitchMendokusai.DomainSDK.Idle
         public int StageSeen = -1;
 
         /// <summary>
+        /// 재배치 번호. <see cref="IdleBattleSim.Reset"/> 마다 +1
+        ///
+        /// ★ 무대가 자리를 단숨에 바꿔도 되는 유일한 열쇠. 구역 클리어, 전멸, 던전 입장은 짧은 전환 막 뒤에
+        ///   자리를 바꿈 (사용자 2026-09-08). 그 밖 (웨이브 사이) 은 걸어서만 움직임
+        /// </summary>
+        public long Epoch;
+
+        /// <summary>
         /// 여태 <b>앞으로 민 거리</b>. 자리 좌표를 0 기준으로 다시 깎을 때마다 그만큼 여기 쌓임
         ///
         /// ★ 판은 좌표를 작게 유지해야 오래 켜 둬도 수가 안 흔들림. 그런데 화면은 그 순간

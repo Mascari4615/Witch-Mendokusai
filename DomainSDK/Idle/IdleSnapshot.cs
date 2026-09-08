@@ -182,6 +182,9 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         public long DungeonResultSequence { get; }
 
+        /// <summary>보고 있는 전장의 재배치 번호. 바뀌면 무대가 전환 막 뒤에 자리를 단숨에 바꿔도 됨. 던전은 음수</summary>
+        public long BattleEpoch { get; }
+
 
 
 
@@ -301,8 +304,9 @@ namespace WitchMendokusai.DomainSDK.Idle
             IdleHeroGrade pullBatchFloorGrade, int pickupHeroId, double pickupWeight, double pickupSecondsLeft,
             bool freeBoxReady, double freeBoxSecondsLeft, long freeBoxStones,
             long ticketsPerDay, int dungeonGearTier, IdleDungeonCellView[] dungeonCells, IdleDungeonRunView dungeonRun,
-            IdleDungeonResult lastDungeonResult, long dungeonResultSequence)
+            IdleDungeonResult lastDungeonResult, long dungeonResultSequence, long battleEpoch)
         {
+            BattleEpoch = battleEpoch;
             TicketsPerDay = ticketsPerDay;
             DungeonGearTier = dungeonGearTier;
             DungeonCells = dungeonCells;

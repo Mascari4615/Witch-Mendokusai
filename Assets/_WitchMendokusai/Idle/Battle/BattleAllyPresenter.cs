@@ -9,6 +9,8 @@ namespace WitchMendokusai.Idle
 		private readonly Transform worldRoot;
 		private readonly BattleEntityPresenter.Settings settings;
 		private readonly Transform[] dolls;
+		/// <summary>다음 그리기는 Lerp 없이 자리로. 전환 막 뒤의 재배치</summary>
+		private bool snapNext;
 		private readonly Transform[] barAnchors;
 		private readonly Material[] skins;
 		private readonly HealthBar[] bars;
@@ -136,6 +138,23 @@ namespace WitchMendokusai.Idle
 			return doll.transform;
 		}
 
+		/// <summary>판이 원점을 되감은 만큼 단숨에 옮김</summary>
+		public void Shift(float dx)
+		{
+			for (int seat = 0; seat < dolls.Length; seat++)
+			{
+				if (dolls[seat] != null)
+				{
+					dolls[seat].localPosition += new Vector3(dx, 0f, 0f);
+				}
+			}
+		}
+
+		public void SnapNext()
+		{
+			snapNext = true;
+		}
+
 		private void Dress(IdleSnapshot snapshot)
 		{
 			for (int seat = 0; seat < dolls.Length && seat < snapshot.Seats.Length; seat++)
@@ -215,14 +234,16 @@ namespace WitchMendokusai.Idle
 						clock, seat, settings.AllyWalkBobHeight,
 						settings.AllyWalkBobFrequency, settings.AllyWalkBobPhaseStep) : 0f;
 
-				dolls[seat].localPosition = Vector3.Lerp(
-					dolls[seat].localPosition,
-					new Vector3(
-						x + attack * settings.AllyLungeDistance - hurt * settings.AllyHurtDistance,
-						bob,
-						y),
-					BattleMotion.CatchUp(settings.PositionCatchUp, delta));
+				Vector3 wanted = new Vector3(
+					x + attack * settings.AllyLungeDistance - hurt * settings.AllyHurtDistance,
+					bob,
+					y);
+				dolls[seat].localPosition = snapNext
+					? wanted
+					: Vector3.Lerp(dolls[seat].localPosition, wanted, BattleMotion.CatchUp(settings.PositionCatchUp, delta));
 			}
+
+			snapNext = false;
 		}
 	}
 }

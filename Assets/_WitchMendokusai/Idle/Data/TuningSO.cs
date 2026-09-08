@@ -148,6 +148,9 @@ namespace WitchMendokusai.Idle
 		[Tooltip("던전 하나에 하루 몇 번 들어가나 (economy.md 4)")]
 		[SerializeField] private long ticketsPerDay = 3L;
 
+		[Tooltip("좌표 되감기 거리 (m). 부대 맨 뒤가 이만큼 가면 원점을 되감음. 웨이브마다는 안 함 (이음새)")]
+		[SerializeField] private double battleRebaseDistance = 1000d;
+
 		[Tooltip("던전 4종의 판 규칙 (시간, 웨이브, 보상). 던전마다 DungeonSO 하나")]
 		[SerializeField] private DungeonCatalogSO dungeons;
 

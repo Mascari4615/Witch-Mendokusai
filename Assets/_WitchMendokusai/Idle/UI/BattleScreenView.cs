@@ -41,8 +41,6 @@ namespace WitchMendokusai.Idle.UI
 		private VisualElement cancelTarget;
 		/// <summary>구역이 바뀔 때 덮는 막. 0 에서 1 로 갔다 다시 0 으로</summary>
 		private VisualElement stageVeil;
-		private float veilLeft;
-		private int veilStage = -1;
 		/// <summary>화면 알림. 설정 팝업 로그와 <b>같은 말</b>을 전투 창에도 띄운다</summary>
 		private VisualElement dungeonResultPopup;
 		private long shownDungeonResult = -1L;
@@ -104,6 +102,7 @@ namespace WitchMendokusai.Idle.UI
 
 			battleNote = root.RequireQ<Label>("battle-note");
 			stageVeil = root.RequireQ<VisualElement>("stage-veil");
+			stage?.SetTransitionVeil(stageVeil, settings.StageVeilSeconds);
 			VisualElement shell = root.RequireQ<VisualElement>("shell");
 			BuildBattle(shell);
 			BuildSide(shell);
@@ -321,49 +320,6 @@ namespace WitchMendokusai.Idle.UI
 		{
 			auxiliaryPopupCoordinator?.Tick(delta);
 			TickNote(delta);
-			TickVeil(delta);
-		}
-
-		/// <summary>
-		/// 구역 전환 막. 앞 절반은 어두워짐, 뒤 절반은 밝아짐
-		///
-		/// ★ 웨이브 사이는 이음새가 없어야 하지만 구역이 바뀌는 것은 다른 곳으로 간 것.
-		///   끊어 주는 편이 나음 (사용자 2026-09-05)
-		/// </summary>
-		private void TickVeil(float delta)
-		{
-			if (stageVeil == null || veilLeft <= 0f)
-			{
-				return;
-			}
-
-			veilLeft -= delta;
-			float half = settings.StageVeilSeconds * 0.5f;
-			float shown = veilLeft > half
-				? (settings.StageVeilSeconds - veilLeft) / half
-				: veilLeft / half;
-			stageVeil.style.opacity = Mathf.Clamp01(shown);
-		}
-
-		/// <summary>구역이 바뀌었으면 막을 친다</summary>
-		private void WatchStage(IdleSnapshot snapshot)
-		{
-			if (stageVeil == null)
-			{
-				return;
-			}
-
-			if (veilStage < 0)
-			{
-				veilStage = snapshot.Stage;
-				return;
-			}
-
-			if (veilStage != snapshot.Stage)
-			{
-				veilStage = snapshot.Stage;
-				veilLeft = settings.StageVeilSeconds;
-			}
 		}
 
 		/// <summary>화면 알림을 서서히 지운다. 마지막 1초는 흐려짐</summary>
@@ -389,7 +345,6 @@ namespace WitchMendokusai.Idle.UI
 				return;
 			}
 
-			WatchStage(snapshot);
 			WatchDungeonResult(snapshot);
 			screenLayoutController.SetDungeon(snapshot.DungeonRun.Active, (int)OpenedPage);
 			battleHudController.Render(snapshot);

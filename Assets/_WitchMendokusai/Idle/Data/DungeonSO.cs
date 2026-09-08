@@ -80,7 +80,36 @@ namespace WitchMendokusai.Idle
 		[Tooltip("난이도 순 (보통, 어려움, 지옥). 난이도마다 스테이지 5")]
 		[SerializeField] private List<TierData> tiers = new List<TierData>();
 
+		[Header("그림. 던전마다 개성 (사용자 2026-09-08). prefab 을 비우면 도형과 색")]
+		[Tooltip("바닥 색. 난이도가 오르면 BattlePresentationSO.DungeonDifficultyShade 만큼 어두워짐")]
+		[SerializeField] private Color floorColor = new Color(0.22f, 0.2f, 0.26f);
+
+		[Tooltip("소품 도형")]
+		[SerializeField] private Geometry.Shape sceneryShape = Geometry.Shape.Cube;
+
+		[Tooltip("잡몹 도형. 보스는 다음 도형")]
+		[SerializeField] private Geometry.Shape foeShape = Geometry.Shape.Cube;
+
+		[Tooltip("잡몹 prefab. 비우면 도형")]
+		[SerializeField] private GameObject foePrefab;
+
+		[Tooltip("보스 prefab. 비우면 도형")]
+		[SerializeField] private GameObject bossPrefab;
+		[SerializeField] private List<GameObject> sceneryPrefabs = new List<GameObject>();
+
+		public IReadOnlyList<GameObject> SceneryPrefabs => sceneryPrefabs;
+
 		public IdleDungeonKind Kind => kind;
+
+		public Color FloorColor => floorColor;
+
+		public Geometry.Shape SceneryShape => sceneryShape;
+
+		public Geometry.Shape FoeShape => foeShape;
+
+		public GameObject FoePrefab => foePrefab;
+
+		public GameObject BossPrefab => bossPrefab;
 
 		public IdleDungeonSpec ToDomain()
 		{

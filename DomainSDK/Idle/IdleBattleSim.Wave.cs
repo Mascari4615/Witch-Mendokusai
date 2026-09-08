@@ -195,8 +195,9 @@ namespace WitchMendokusai.DomainSDK.Idle
                 front = 0d;
             }
 
-            // 자리와 적을 함께 앞으로 민다. 민 거리는 OriginX 에 쌓여 화면이 이어 붙임
-            if (rear != 0d)
+            // 웨이브 사이 전진 유지. 원점 이동 간격을 넘을 때만 자리와 적을 함께 되감고
+            // 민 거리는 OriginX 에 쌓여 무대가 같은 프레임에 전부 같이 옮김
+            if (rear >= tuning.BattleRebaseDistance)
             {
                 for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
                 {
@@ -209,9 +210,8 @@ namespace WitchMendokusai.DomainSDK.Idle
                 }
 
                 battle.OriginX += rear;
+                front -= rear;
             }
-
-            front -= rear;
 
             bool bossWave;
             int count;

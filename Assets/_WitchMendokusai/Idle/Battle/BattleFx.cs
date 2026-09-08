@@ -106,6 +106,25 @@ namespace WitchMendokusai.Idle
 			this.settings = settings;
 		}
 
+		public void Clear()
+		{
+			foreach (Bolt bolt in bolts) { BattleVisualFactory.Kill(bolt.Piece.gameObject); }
+			foreach (Impact impact in impacts) { BattleVisualFactory.Kill(impact.Piece.gameObject); }
+			bolts.Clear();
+			impacts.Clear();
+			SetFloatingTextRoot(floatingTextRoot);
+			shakeLeft = 0f;
+			holder.localPosition = Vector3.zero;
+		}
+
+		public void Shift(float distance)
+		{
+			Vector3 shift = Vector3.right * distance;
+			foreach (Bolt bolt in bolts) { bolt.From += shift; bolt.Piece.position += shift; }
+			foreach (Impact impact in impacts) { impact.Piece.position += shift; }
+			foreach (Number number in numbers) { number.WorldPosition += shift; }
+		}
+
 		/// <summary>
 		/// 피해 숫자를 띄울까. 가게나 연구실을 보는 동안은 안 띄운다 (사용자 2026-09-05)
 		///

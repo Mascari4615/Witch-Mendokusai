@@ -7,7 +7,7 @@ namespace WitchMendokusai.Idle
 {
 	/// <summary>Idle 전투 스냅샷과 표시 계층을 조율한다.</summary>
 	[ExecuteAlways]
-	public sealed class BattleStage : MonoBehaviour
+	public sealed partial class BattleStage : MonoBehaviour
 	{
 		[SerializeField] private BattlePresentationSO presentationAsset;
 
@@ -17,6 +17,7 @@ namespace WitchMendokusai.Idle
 		private Transform holder;
 		private Transform battleRoot;
 		private Transform worldRoot;
+		private Transform groundRoot;
 		private AltScenePresenter altScene;
 		private Material groundMaterial;
 		private Color groundRest;
@@ -103,7 +104,9 @@ namespace WitchMendokusai.Idle
 		public void Render(IdleSnapshot snapshot, float delta)
 		{
 			if (built == false) { return; }
-			ReshapeScenery(Geometry.ShapeOfStage(snapshot.Stage, presentationAsset.ShapeStagesPerStep));
+			if (AdvanceTransition(snapshot, delta) == false) { return; }
+			ApplyDungeonLook(snapshot);
+			ReshapeScenery(dungeonLook != null ? dungeonLook.SceneryShape : Geometry.ShapeOfStage(snapshot.Stage, presentationAsset.ShapeStagesPerStep));
 			Follow(snapshot);
 			entities.Render(snapshot, delta);
 			fx.Consume(snapshot.Hits, entities);
@@ -169,13 +172,15 @@ namespace WitchMendokusai.Idle
 			{
 				GameObject made = Instantiate(presentationAsset.GroundPrefab, battleRoot, false);
 				made.name = "Ground";
+				groundRoot = made.transform;
 				MeshRenderer floor = made.GetComponentInChildren<MeshRenderer>();
-				groundMaterial = floor != null ? floor.sharedMaterial : BattleVisualFactory.MakeMaterial(presentationAsset.GroundColor);
+				groundMaterial = floor != null ? floor.material : BattleVisualFactory.MakeMaterial(presentationAsset.GroundColor);
 				groundRest = groundMaterial.color;
 				return;
 			}
 			GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
 			ground.name = "Ground";
+			groundRoot = ground.transform;
 			ground.transform.SetParent(battleRoot, false);
 			ground.transform.localScale = new Vector3(6f, 1f, 4f);
 			groundMaterial = BattleVisualFactory.Paint(ground, presentationAsset.GroundColor);
@@ -222,7 +227,7 @@ namespace WitchMendokusai.Idle
 		/// <summary>소품 도형을 구역에 맞춤. 같은 도형이면 그대로</summary>
 		private void ReshapeScenery(Geometry.Shape shape)
 		{
-			if (sceneryShape == shape && sceneryMeshes.Count > 0 && sceneryMeshes[0].sharedMesh != null)
+			if (sceneryMeshes.Count == 0 || sceneryShape == shape && sceneryMeshes[0].sharedMesh != null)
 			{
 				return;
 			}
@@ -239,8 +244,7 @@ namespace WitchMendokusai.Idle
 		/// <summary>
 		/// 카메라가 볼 자리 (편성 한가운데) 와 판이 민 거리 (<see cref="IdleSnapshot.OriginX"/>) 맞추기
 		///
-		/// ★ 세상은 안 민다. 인형과 적은 판이 준 좌표 그대로 서고 카메라만 움직임
-		///   판이 좌표를 다시 깎은 프레임에는 카메라를 같은 만큼 워프시켜 화면을 붙잡음
+		/// 원점이 바뀐 프레임에는 인형, 적, 효과, 소품과 카메라를 같은 거리만큼 이동
 		/// </summary>
 		private void Follow(IdleSnapshot snapshot)
 		{
@@ -251,7 +255,11 @@ namespace WitchMendokusai.Idle
 			}
 			else if (snapshot.OriginX != originShown)
 			{
-				cameraDirector.Warp((float)(snapshot.OriginX - originShown));
+				float shift = (float)(snapshot.OriginX - originShown);
+				entities.Shift(-shift);
+				fx.Shift(-shift);
+				foreach (Transform prop in scenery) { prop.localPosition -= Vector3.right * shift; }
+				cameraDirector.Warp(shift);
 				originShown = snapshot.OriginX;
 			}
 
@@ -267,6 +275,9 @@ namespace WitchMendokusai.Idle
 			}
 
 			float middle = count > 0 ? sum / count : 0f;
+			if (snapCamera) { cameraDirector.Warp(middleShown - middle); snapCamera = false; }
+			middleShown = middle;
+			groundRoot.localPosition = new Vector3(middle, groundRoot.localPosition.y, groundRoot.localPosition.z);
 			cameraDirector.Aim(worldRoot.TransformPoint(new Vector3(middle, 0f, 0f)));
 			WrapScenery(middle);
 		}
@@ -318,6 +329,10 @@ namespace WitchMendokusai.Idle
 			sceneryMeshes.Clear();
 			sceneryShape = (Geometry.Shape)(-1);
 			originReady = false;
+			epochReady = false;
+			transitionPhase = 0;
+			dungeonLook = null;
+			lookReady = false;
 			built = false;
 		}
 	}

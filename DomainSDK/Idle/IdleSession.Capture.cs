@@ -89,7 +89,14 @@ namespace WitchMendokusai.DomainSDK.Idle
                 CaptureDungeonCells(),
                 CaptureDungeonRun(),
                 state.LastDungeonResult,
-                state.DungeonResultSequence);
+                state.DungeonResultSequence,
+                CaptureBattleEpoch());
+        }
+
+        /// <summary>보고 있는 전장의 재배치 번호. 던전 전장은 음수로 (본판 번호와 안 겹치게)</summary>
+        private long CaptureBattleEpoch()
+        {
+            return state.Dungeon.Active ? -(state.Dungeon.Battle.Epoch + 1L) : state.Battle.Epoch;
         }
 
         private IdleDungeonCellView[] dungeonCellBuffer;

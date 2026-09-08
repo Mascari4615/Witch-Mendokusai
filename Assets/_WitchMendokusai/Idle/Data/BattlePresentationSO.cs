@@ -42,6 +42,8 @@ namespace WitchMendokusai.Idle
 		[SerializeField] private float sceneryLaneStep = 0.9f;
 		[SerializeField] private Vector3 sceneryEulerStep = new Vector3(23f, 37f, 13f);
 		[SerializeField] private float sceneryWrapMargin = 12f;
+		[Tooltip("던전 난이도 한 계단마다 바닥이 어두워지는 몫 (0~1)")]
+		[SerializeField, Range(0f, 1f)] private float dungeonDifficultyShade = 0.18f;
 		[SerializeField, Range(0f, 1f)] private float supplyGlowShare = 0.35f;
 
 		[Header("Ally presentation")]
@@ -216,6 +218,8 @@ namespace WitchMendokusai.Idle
 		public float SceneryWrapMargin => sceneryWrapMargin;
 		public float SupplyGlowShare => supplyGlowShare;
 		public Color GroundColor => groundColor;
+
+		public float DungeonDifficultyShade => dungeonDifficultyShade;
 		public Color SceneryColor => sceneryColor;
 		public Color BoltColor => boltColor;
 		public Color CameraBackgroundColor => cameraBackgroundColor;

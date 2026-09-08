@@ -7,7 +7,9 @@ namespace WitchMendokusai.Idle
 	// TuningSO.cs 의 ToTuning 조각. 같은 클래스의 partial. 상태(필드)는 원본 파일을 본다. 인스펙터 값을 코어 튜닝으로 옮기는 변환.
 	public sealed partial class TuningSO
 	{
-		/// <summary>코어가 쓰는 형태로 넘긴다.</summary>
+		/// <summary>무대가 던전 그림 (바닥, 소품, 적) 을 고를 때 보는 카탈로그</summary>
+		public DungeonCatalogSO DungeonCatalog => dungeons;
+
 		public IdleTuning ToTuning()
 		{
 			return new IdleTuning
@@ -87,6 +89,7 @@ namespace WitchMendokusai.Idle
 				BagUpgradeCostBase = bagUpgradeCostBase,
 				BagUpgradeCostRatio = bagUpgradeCostRatio,
 				TicketsPerDay = ticketsPerDay,
+				BattleRebaseDistance = battleRebaseDistance,
 				Dungeons = dungeons.ToDomain(),
 				DayResetOffsetSeconds = dayResetOffsetSeconds,
 				StoneDropChance = stoneDropChance,
@@ -174,4 +177,3 @@ namespace WitchMendokusai.Idle
 		}
 	}
 }
-
