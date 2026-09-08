@@ -22,6 +22,11 @@ namespace WitchMendokusai
 		[Tooltip("충돌면과 카메라 구체 사이 여유 거리")]
 		[SerializeField] private float collisionPadding = 0.02f;
 		[SerializeField, Range(1, 8)] private int overlapIterations = 4;
+		[Tooltip("현재 회전 방향의 사전 충돌 검사 시간. 0이면 즉시 안전 제한만 사용")]
+		[SerializeField, Range(0f, 0.5f)] private float anticipationTime = 0.25f;
+		[SerializeField, Range(2, 16)] private int anticipationSamples = 8;
+		[SerializeField, Range(1, 6)] private int anticipationRefinements = 4;
+		[SerializeField, Range(0f, 60f)] private float maximumAnticipationAngle = 30f;
 
 		[Tooltip("trigger collider 도 가림으로 인정할지")]
 		[SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
@@ -53,6 +58,7 @@ namespace WitchMendokusai
 		{
 			public float currentDistance;
 			public float velocity;
+			public Vector3 previousDirection;
 
 			// Debug 캐시 — OnDrawGizmos 가 Body callback 안에서 그릴 수 없어 마지막 값 보관
 			public Vector3 debugTarget;
@@ -84,38 +90,53 @@ namespace WitchMendokusai
 				return;
 			Vector3 direction = delta / desiredDistance;
 
-			int hitCount = Physics.SphereCastNonAlloc(
-				target,
-				probeRadius,
-				direction,
-				HIT_BUFFER,
-				desiredDistance,
-				broadMask,
-				triggerInteraction);
-
-			// NonAlloc 포화 시 전체 표본 재조회. 정렬되지 않은 부분 표본으로 가장 가까운 벽 누락 방지
-			RaycastHit[] hits = HIT_BUFFER;
-			if (hitCount == HIT_BUFFER.Length)
-			{
-				hits = Physics.SphereCastAll(target, probeRadius, direction, desiredDistance, broadMask, triggerInteraction);
-				hitCount = hits.Length;
-			}
-			float occludedDistance = desiredDistance;
-			for (int i = 0; i < hitCount; i++)
-			{
-				if (hits[i].collider.GetComponentInParent<GroundSurface>() == null)
-					continue;
-
-				occludedDistance = Mathf.Min(occludedDistance, Mathf.Max(0f, hits[i].distance - collisionPadding));
-			}
+			float occludedDistance = SafeDistance(target, direction, probeRadius, desiredDistance);
 
 			if (stateByVcam.TryGetValue(vcam, out VcamState vcamState) == false)
 			{
-				vcamState = new VcamState { currentDistance = desiredDistance, velocity = 0f };
+				vcamState = new VcamState { currentDistance = desiredDistance, velocity = 0f, previousDirection = direction };
 			}
 
 			// 안전 거리는 첫 프레임부터 적용. 보간은 벽에서 멀어지는 복원에만 사용
 			float targetDistance = occludedDistance;
+			if (deltaTime > 0f && anticipationTime > 0f && occludedDistance >= desiredDistance)
+			{
+				Quaternion rotation = Quaternion.FromToRotation(vcamState.previousDirection, direction);
+				float angle = Vector3.Angle(vcamState.previousDirection, direction);
+				if (angle > 0.001f)
+				{
+					float prediction = Mathf.Min(anticipationTime / deltaTime, maximumAnticipationAngle / angle);
+					float clearFraction = 0f;
+					for (int sample = 1; sample <= anticipationSamples; sample++)
+					{
+						float fraction = (float)sample / anticipationSamples;
+						Vector3 predicted = Quaternion.SlerpUnclamped(Quaternion.identity, rotation, prediction * fraction) * direction;
+						float clearance = SafeDistance(target, predicted, probeRadius, desiredDistance);
+						if (clearance >= desiredDistance)
+						{
+							clearFraction = fraction;
+							continue;
+						}
+						// 첫 가림 경계 세분화. 표본 번호가 바뀔 때 거리 계단 발생 방지
+						for (int refinement = 0; refinement < anticipationRefinements; refinement++)
+						{
+							float middle = (clearFraction + fraction) * 0.5f;
+							predicted = Quaternion.SlerpUnclamped(Quaternion.identity, rotation, prediction * middle) * direction;
+							float middleClearance = SafeDistance(target, predicted, probeRadius, desiredDistance);
+							if (middleClearance >= desiredDistance)
+								clearFraction = middle;
+							else
+							{
+								fraction = middle;
+								clearance = middleClearance;
+							}
+						}
+						targetDistance = Mathf.Min(targetDistance, Mathf.Lerp(clearance, desiredDistance, fraction));
+						break;
+					}
+				}
+			}
+			vcamState.previousDirection = direction;
 			bool pullingIn = targetDistance < vcamState.currentDistance;
 			float smoothTime = pullingIn ? 0f : smoothingTime;
 
@@ -160,6 +181,24 @@ namespace WitchMendokusai
 					Debug.DrawLine(hitPoint + Vector3.forward * 0.2f, hitPoint - Vector3.forward * 0.2f, hitColor);
 				}
 			}
+		}
+
+		private float SafeDistance(Vector3 target, Vector3 direction, float radius, float distance)
+		{
+			int count = Physics.SphereCastNonAlloc(target, radius, direction, HIT_BUFFER, distance, broadMask, triggerInteraction);
+			RaycastHit[] hits = HIT_BUFFER;
+			// NonAlloc 포화 시 전체 표본 재조회. 가까운 벽 누락 방지
+			if (count == hits.Length)
+			{
+				hits = Physics.SphereCastAll(target, radius, direction, distance, broadMask, triggerInteraction);
+				count = hits.Length;
+			}
+			for (int index = 0; index < count; index++)
+			{
+				if (hits[index].collider.GetComponentInParent<GroundSurface>() != null)
+					distance = Mathf.Min(distance, Mathf.Max(0f, hits[index].distance - collisionPadding));
+			}
+			return distance;
 		}
 
 		private Vector3 ResolveTarget(Vector3 target, float radius)

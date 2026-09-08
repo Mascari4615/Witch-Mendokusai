@@ -42,14 +42,34 @@ namespace WitchMendokusai.Tests
 			return wall;
 		}
 
-		private float Step(float deltaTime)
+		private float Step(float deltaTime, float yaw = 0f)
 		{
 			CameraState state = CameraState.Default;
 			state.ReferenceLookAt = target;
-			state.RawPosition = target + Vector3.back * 6f;
+			state.RawPosition = target + Quaternion.Euler(0f, yaw, 0f) * Vector3.back * 6f;
 			object[] arguments = { camera, CinemachineCore.Stage.Body, state, deltaTime };
 			typeof(CinemachineComponentDeoccluder).GetMethod("PostPipelineStageCallback", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(extension, arguments);
 			return Vector3.Distance(target, ((CameraState)arguments[2]).RawPosition);
+		}
+
+		[TestCase(30)]
+		[TestCase(60)]
+		[TestCase(120)]
+		public void OrbitPastPillar_SpreadsPullBeforeContact(int frameRate)
+		{
+			GameObject pillar = Wall(2f);
+			pillar.GetComponent<BoxCollider>().size = new Vector3(0.5f, 10f, 0.5f);
+			Physics.SyncTransforms();
+			float previous = Step(-1f, -50f);
+			float maximumPull = 0f;
+			for (int index = 1; index <= frameRate * 100 / 30; index++)
+			{
+				float distance = Step(1f / frameRate, -50f + index * 30f / frameRate);
+				maximumPull = Mathf.Max(maximumPull, previous - distance);
+				previous = distance;
+			}
+			TestContext.WriteLine($"Maximum pull per frame: {maximumPull}");
+			Assert.That(maximumPull, Is.LessThan(0.75f));
 		}
 
 		[Test]
