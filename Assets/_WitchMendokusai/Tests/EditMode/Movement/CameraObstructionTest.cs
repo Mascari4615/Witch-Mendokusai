@@ -12,6 +12,7 @@ namespace WitchMendokusai.Tests
 		private readonly Vector3 target = new(0f, 1000f, 0f);
 		private CinemachineComponentDeoccluder extension;
 		private CinemachineCamera camera;
+		private Material fadeTestMaterial;
 
 		[SetUp]
 		public void SetUp()
@@ -26,8 +27,15 @@ namespace WitchMendokusai.Tests
 		public void TearDown()
 		{
 			foreach (GameObject item in objects)
+			{
+				CameraFadeObstacle fade = item.GetComponent<CameraFadeObstacle>();
+				if (fade != null)
+					typeof(CameraFadeObstacle).GetMethod("OnDisable", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(fade, null);
 				Object.DestroyImmediate(item);
+			}
 			objects.Clear();
+			if (fadeTestMaterial != null)
+				Object.DestroyImmediate(fadeTestMaterial);
 		}
 
 		private GameObject Wall(float distance, bool marked = true)
@@ -70,6 +78,74 @@ namespace WitchMendokusai.Tests
 			}
 			TestContext.WriteLine($"Maximum pull per frame: {maximumPull}");
 			Assert.That(maximumPull, Is.LessThan(0.75f));
+		}
+
+		private CameraFadeObstacle FadePillar(string shaderName = "Universal Render Pipeline/Lit")
+		{
+			GameObject pillar = Wall(2f);
+			pillar.GetComponent<BoxCollider>().size = new Vector3(0.5f, 10f, 0.5f);
+			fadeTestMaterial = new Material(Shader.Find(shaderName));
+			pillar.AddComponent<MeshRenderer>().sharedMaterial = fadeTestMaterial;
+			Physics.SyncTransforms();
+			CameraFadeObstacle fade = pillar.AddComponent<CameraFadeObstacle>();
+			// 일반 MonoBehaviour 생명주기는 EditMode에서 자동 실행 없음
+			typeof(CameraFadeObstacle).GetMethod("OnEnable", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(fade, null);
+			return fade;
+		}
+
+		[TestCase("Universal Render Pipeline/Lit")]
+		[TestCase("Universal Render Pipeline/Unlit")]
+		public void FadePillar_RetainsDistanceAndOriginalMaterial(string shaderName)
+		{
+			CameraFadeObstacle pillar = FadePillar(shaderName);
+			Assert.That(Step(-1f), Is.EqualTo(6f).Within(0.001f));
+			Assert.That(pillar.Opacity, Is.EqualTo(0.15f).Within(0.001f));
+			Material rendered = pillar.GetComponent<MeshRenderer>().sharedMaterial;
+			Assert.That(rendered, Is.Not.SameAs(fadeTestMaterial));
+			Assert.That(rendered.GetFloat("_Surface"), Is.EqualTo(1f));
+			Assert.That(rendered.GetFloat("_ZWrite"), Is.Zero);
+			Assert.That(rendered.GetColor("_BaseColor").a, Is.EqualTo(0.15f).Within(0.001f));
+			Assert.That(fadeTestMaterial.GetFloat("_Surface"), Is.Zero);
+			Assert.That(pillar.GetComponent<Collider>().enabled, Is.True);
+		}
+
+		[Test]
+		public void DisabledFade_RestoresMaterialAndSafety()
+		{
+			CameraFadeObstacle pillar = FadePillar();
+			Step(-1f);
+			pillar.enabled = false;
+			typeof(CameraFadeObstacle).GetMethod("OnDisable", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(pillar, null);
+			Assert.That(pillar.GetComponent<MeshRenderer>().sharedMaterial, Is.SameAs(fadeTestMaterial));
+			Assert.That(pillar.Opacity, Is.EqualTo(1f));
+			Assert.That(Step(-1f), Is.LessThan(2f));
+		}
+
+		[Test]
+		public void FadePillar_DoesNotIgnoreWallBehindIt()
+		{
+			FadePillar();
+			Wall(4f);
+			Assert.That(Step(-1f), Is.InRange(3f, 4f));
+		}
+
+		[Test]
+		public void UnsupportedFade_StillPullsCamera()
+		{
+			GameObject pillar = Wall(2f);
+			pillar.AddComponent<MeshRenderer>();
+			CameraFadeObstacle fade = pillar.AddComponent<CameraFadeObstacle>();
+			Assert.That(fade.CanFade, Is.False);
+			Assert.That(Step(-1f), Is.LessThan(2f));
+		}
+
+		[Test]
+		public void FadeOrbit_DoesNotPullAtAnyPillarAngle()
+		{
+			FadePillar();
+			Step(-1f, -50f);
+			for (int index = 0; index <= 200; index++)
+				Assert.That(Step(1f / 60f, -50f + index * 0.5f), Is.EqualTo(6f).Within(0.001f));
 		}
 
 		[Test]

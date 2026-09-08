@@ -37,7 +37,7 @@ namespace WitchMendokusai.EditorTools
 				for (int index = 0; index < 6; index++)
 				{
 					float positionX = 15f + index * 12f;
-					Box(root, "Gallery pillar " + index, new Vector3(positionX, 2f, 54f), new Vector3(1f, 4f, 1f), climb);
+					Box(root, "Gallery pillar " + index, new Vector3(positionX, 2f, 54f), new Vector3(1f, 4f, 1f), climb).AddComponent<CameraFadeObstacle>();
 				}
 				Box(root, "Turn wall", new Vector3(95f, 2f, 84f), new Vector3(1f, 4f, 25f), ground);
 				Vector3[] positions =

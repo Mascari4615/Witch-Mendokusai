@@ -90,7 +90,7 @@ namespace WitchMendokusai
 				return;
 			Vector3 direction = delta / desiredDistance;
 
-			float occludedDistance = SafeDistance(target, direction, probeRadius, desiredDistance);
+			float occludedDistance = SafeDistance(target, direction, probeRadius, desiredDistance, true);
 
 			if (stateByVcam.TryGetValue(vcam, out VcamState vcamState) == false)
 			{
@@ -183,7 +183,7 @@ namespace WitchMendokusai
 			}
 		}
 
-		private float SafeDistance(Vector3 target, Vector3 direction, float radius, float distance)
+		private float SafeDistance(Vector3 target, Vector3 direction, float radius, float distance, bool requestFade = false)
 		{
 			int count = Physics.SphereCastNonAlloc(target, radius, direction, HIT_BUFFER, distance, broadMask, triggerInteraction);
 			RaycastHit[] hits = HIT_BUFFER;
@@ -195,10 +195,22 @@ namespace WitchMendokusai
 			}
 			for (int index = 0; index < count; index++)
 			{
+				if (FadeInsteadOfPull(hits[index].collider, requestFade))
+					continue;
 				if (hits[index].collider.GetComponentInParent<GroundSurface>() != null)
 					distance = Mathf.Min(distance, Mathf.Max(0f, hits[index].distance - collisionPadding));
 			}
 			return distance;
+		}
+
+		private static bool FadeInsteadOfPull(Collider surface, bool requestFade)
+		{
+			CameraFadeObstacle obstacle = surface.GetComponent<CameraFadeObstacle>();
+			if (obstacle == null || obstacle.CanFade == false)
+				return false;
+			if (requestFade)
+				obstacle.RequestFade();
+			return true;
 		}
 
 		private Vector3 ResolveTarget(Vector3 target, float radius)
@@ -224,6 +236,8 @@ namespace WitchMendokusai
 				for (int index = 0; index < count; index++)
 				{
 					Collider surface = overlaps[index];
+					if (FadeInsteadOfPull(surface, true))
+						continue;
 					if (surface.GetComponentInParent<GroundSurface>() == null)
 						continue;
 					// 비활성 콜라이더의 침투 결과는 false. 계산 동안만 활성화, 물리 tick에는 비활성

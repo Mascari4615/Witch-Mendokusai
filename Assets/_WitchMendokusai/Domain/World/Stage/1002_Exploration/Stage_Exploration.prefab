@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6543531643739225182}
   - component: {fileID: 2467093560424370408}
   - component: {fileID: 3019294175043099}
+  - component: {fileID: 3765642808926581748}
   m_Layer: 0
   m_Name: Gallery pillar 2
   m_TagString: Untagged
@@ -126,6 +127,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: WM.Core::WitchMendokusai.GroundSurface
   isWalkable: 1
+--- !u!114 &3765642808926581748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3390794612403447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44a136cfd3044d43b981367f7e872d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: WM.Core::WitchMendokusai.CameraFadeObstacle
+  obscuredOpacity: 0.15
+  holdTime: 0.1
+  restoreTime: 0.25
 --- !u!1 &209731480324887560
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,6 +669,7 @@ GameObject:
   - component: {fileID: 5481742120658798980}
   - component: {fileID: 5472074754986304772}
   - component: {fileID: 570646928267740939}
+  - component: {fileID: 4943916131887728627}
   m_Layer: 0
   m_Name: Gallery pillar 4
   m_TagString: Untagged
@@ -766,6 +783,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: WM.Core::WitchMendokusai.GroundSurface
   isWalkable: 1
+--- !u!114 &4943916131887728627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443494512749063209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44a136cfd3044d43b981367f7e872d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: WM.Core::WitchMendokusai.CameraFadeObstacle
+  obscuredOpacity: 0.15
+  holdTime: 0.1
+  restoreTime: 0.25
 --- !u!1 &1470412825504984683
 GameObject:
   m_ObjectHideFlags: 0
@@ -1535,6 +1567,7 @@ GameObject:
   - component: {fileID: 8712191523700985572}
   - component: {fileID: 8140102126336730993}
   - component: {fileID: 4356040372861665319}
+  - component: {fileID: 8994616998301005192}
   m_Layer: 0
   m_Name: Gallery pillar 1
   m_TagString: Untagged
@@ -1648,6 +1681,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: WM.Core::WitchMendokusai.GroundSurface
   isWalkable: 1
+--- !u!114 &8994616998301005192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3397902965110910193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44a136cfd3044d43b981367f7e872d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: WM.Core::WitchMendokusai.CameraFadeObstacle
+  obscuredOpacity: 0.15
+  holdTime: 0.1
+  restoreTime: 0.25
 --- !u!1 &3574418709590266071
 GameObject:
   m_ObjectHideFlags: 0
@@ -2899,6 +2947,7 @@ GameObject:
   - component: {fileID: 4241764027074283636}
   - component: {fileID: 55574749436061970}
   - component: {fileID: 8842901072676545575}
+  - component: {fileID: 8290183967481313338}
   m_Layer: 0
   m_Name: Gallery pillar 0
   m_TagString: Untagged
@@ -3012,6 +3061,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: WM.Core::WitchMendokusai.GroundSurface
   isWalkable: 1
+--- !u!114 &8290183967481313338
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6042645517829385109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44a136cfd3044d43b981367f7e872d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: WM.Core::WitchMendokusai.CameraFadeObstacle
+  obscuredOpacity: 0.15
+  holdTime: 0.1
+  restoreTime: 0.25
 --- !u!1 &6131683640675872042
 GameObject:
   m_ObjectHideFlags: 0
@@ -3025,6 +3089,7 @@ GameObject:
   - component: {fileID: 2224001921623791239}
   - component: {fileID: 1592501615747828125}
   - component: {fileID: 4730802962593058471}
+  - component: {fileID: 3297688433436600904}
   m_Layer: 0
   m_Name: Gallery pillar 5
   m_TagString: Untagged
@@ -3138,6 +3203,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: WM.Core::WitchMendokusai.GroundSurface
   isWalkable: 1
+--- !u!114 &3297688433436600904
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6131683640675872042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44a136cfd3044d43b981367f7e872d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: WM.Core::WitchMendokusai.CameraFadeObstacle
+  obscuredOpacity: 0.15
+  holdTime: 0.1
+  restoreTime: 0.25
 --- !u!1 &6494157005570492491
 GameObject:
   m_ObjectHideFlags: 0
@@ -3752,6 +3832,7 @@ GameObject:
   - component: {fileID: 9095138255668907962}
   - component: {fileID: 7758680364309473653}
   - component: {fileID: 2095204522742267566}
+  - component: {fileID: 2252748775484894918}
   m_Layer: 0
   m_Name: Gallery pillar 3
   m_TagString: Untagged
@@ -3865,6 +3946,21 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: WM.Core::WitchMendokusai.GroundSurface
   isWalkable: 1
+--- !u!114 &2252748775484894918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8195259181672926913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f44a136cfd3044d43b981367f7e872d6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: WM.Core::WitchMendokusai.CameraFadeObstacle
+  obscuredOpacity: 0.15
+  holdTime: 0.1
+  restoreTime: 0.25
 --- !u!1 &8243142946116540871
 GameObject:
   m_ObjectHideFlags: 0
