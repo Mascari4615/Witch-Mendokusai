@@ -24,6 +24,7 @@ namespace WitchMendokusai.Idle.UI
 		private readonly List<Button> wornCells = new List<Button>();
 		private readonly IdleItem[] worn = new IdleItem[IdleGear.SLOT_COUNT];
 		private readonly Label dollName;
+		private readonly VisualElement dollPortrait;
 		private readonly Label[] statValues;
 		private readonly Label[] statLevels;
 		private readonly Button[,] statButtons;
@@ -72,6 +73,7 @@ namespace WitchMendokusai.Idle.UI
 			}
 
 			dollName = page.RequireQ<Label>("doll-name");
+			dollPortrait = page.RequireQ<VisualElement>("doll-portrait");
 			statFeedback = page.RequireQ<Label>("stat-feedback");
 			statFeedback.style.visibility = Visibility.Hidden;
 			for (int stat = 0; stat < content.StatCount; stat++)
@@ -107,8 +109,9 @@ namespace WitchMendokusai.Idle.UI
 			RenderParty(snapshot);
 			int heroId = selectedHeroId();
 			dollName.text = heroId >= 0
-				? content.GrowthTitle(IdleHeroes.KindOf(heroId).Name)
+				? IdleHeroes.KindOf(heroId).Name
 				: content.EmptySeatText;
+			heroVisualPresenter.SetPortrait(dollPortrait, heroId);
 			RenderStats(heroId);
 			RenderWorn(heroId);
 		}

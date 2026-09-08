@@ -29,7 +29,7 @@ namespace WitchMendokusai.Idle.UI
 				int captured = index;
 				Button tab = tabs.RequireQ<Button>("tab-" + index);
 				tab.clicked += () => openTab(captured);
-				tab.text = content.TabButtonText(index);
+				tab.text = content.TabName(index);
 				tab.style.display = content.IsTabVisible(index) ? DisplayStyle.Flex : DisplayStyle.None;
 				tabButtons.Add(tab);
 			}
@@ -60,6 +60,7 @@ namespace WitchMendokusai.Idle.UI
 
 		public void ShowPage(int index)
 		{
+			side.EnableInClassList("idle-side--doll", index == (int)ManagementPage.Doll);
 			for (int pageIndex = 0; pageIndex < pages.Length; pageIndex++)
 			{
 				pages[pageIndex].style.display = pageIndex == index ? DisplayStyle.Flex : DisplayStyle.None;

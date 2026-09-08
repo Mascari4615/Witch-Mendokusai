@@ -68,6 +68,11 @@ namespace WitchMendokusai.Idle.UI
 		public void Dispose()
 		{
 			root.UnregisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+			Camera main = Camera.main;
+			if (main != null)
+			{
+				main.ResetProjectionMatrix();
+			}
 		}
 
 		private void OnGeometryChanged(GeometryChangedEvent moment)
@@ -84,9 +89,10 @@ namespace WitchMendokusai.Idle.UI
 				return;
 			}
 
+			main.rect = new Rect(0f, 0f, 1f, 1f);
+			main.ResetProjectionMatrix();
 			if (ContentVisible == false)
 			{
-				main.rect = new Rect(0f, 0f, 1f, 1f);
 				return;
 			}
 
@@ -101,7 +107,17 @@ namespace WitchMendokusai.Idle.UI
 				}
 			}
 
-			main.rect = new Rect(0f, 0f, share, 1f);
+			// 전투 중심은 왼쪽 영역에 유지, 오른쪽 패널 사이까지 전장 렌더
+			Matrix4x4 projection = main.projectionMatrix;
+			if (main.orthographic)
+			{
+				projection.m03 -= 1f - share;
+			}
+			else
+			{
+				projection.m02 += 1f - share;
+			}
+			main.projectionMatrix = projection;
 		}
 
 		private void ApplySafeArea()

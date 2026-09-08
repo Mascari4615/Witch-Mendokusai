@@ -1,0 +1,202 @@
+/* 인형 중심의 분리 패널. 구매 동작은 기존 행별 3개 유지 */
+.idle-side {
+    background-color: transparent;
+    border-left-width: 0;
+    padding: 18px 20px 18px 8px;
+}
+
+.idle-tabs {
+    padding: 0 8px;
+    margin-bottom: 18px;
+    background-color: rgb(22, 25, 28);
+    border-bottom-width: 0;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.idle-tabs .idle-tab {
+    height: 64px;
+    background-color: transparent;
+    color: rgb(185, 191, 199);
+    border-bottom-width: 3px;
+    border-bottom-color: transparent;
+    border-top-width: 0;
+    font-size: 24px;
+}
+
+.idle-tabs .idle-tab:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.idle-tabs .idle-tab--on {
+    color: rgb(245, 246, 248);
+    border-bottom-color: rgb(245, 175, 16);
+}
+
+.idle-panel-head,
+.idle-page {
+    background-color: rgba(22, 25, 28, 0.94);
+}
+
+.idle-side--doll .idle-panel-head {
+    display: none;
+}
+
+.idle-side .idle-doll-page {
+    padding: 0;
+    background-color: transparent;
+}
+
+.idle-surface {
+    background-color: rgb(22, 25, 28);
+    border-radius: 8px;
+}
+
+.idle-profile {
+    position: relative;
+    height: 304px;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+    padding: 18px;
+}
+
+.idle-doll-portrait {
+    position: absolute;
+    left: 0;
+    top: -12px;
+    width: 270px;
+    height: 316px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.idle-profile-controls {
+    margin-left: 260px;
+    flex-grow: 1;
+}
+
+.idle-doll-name {
+    font-size: 36px;
+    -unity-font-style: bold;
+    color: rgb(245, 246, 248);
+    margin-bottom: 10px;
+}
+
+.idle-profile .idle-party {
+    margin: 0 0 16px 0;
+}
+
+.idle-profile .idle-party-seat {
+    height: 100px;
+    min-width: 0;
+    flex-basis: 0;
+    margin: 0 4px 0 0;
+    padding: 0;
+    border-width: 1px;
+    border-color: rgb(65, 71, 79);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.idle-profile .idle-party-seat--geared,
+.idle-profile .idle-party-seat--picking {
+    border-color: rgb(245, 175, 16);
+    background-color: rgba(245, 175, 16, 0.08);
+}
+
+.idle-profile .idle-party-portrait {
+    width: 64px;
+    height: 64px;
+    top: 4px;
+}
+
+.idle-profile .idle-party-label {
+    font-size: 18px;
+    left: 0;
+    right: 0;
+}
+
+.idle-profile .idle-worn {
+    margin: 0;
+}
+
+.idle-profile .idle-worn-cell {
+    width: auto;
+    flex-grow: 1;
+    flex-basis: 0;
+    min-width: 0;
+    height: 84px;
+    margin: 0 4px 0 0;
+    padding: 0;
+    font-size: 18px;
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.idle-profile .idle-gear-tier-badge {
+    font-size: 18px;
+}
+
+.idle-growth {
+    padding: 16px;
+}
+
+.idle-growth-title {
+    font-size: 26px;
+    color: rgb(239, 242, 246);
+    -unity-font-style: bold;
+    margin-bottom: 12px;
+}
+
+.idle-growth .idle-stat-row {
+    min-height: 68px;
+    margin-bottom: 0;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.idle-growth .idle-stat-name { width: 112px; flex-shrink: 0; }
+.idle-growth .idle-stat-value { width: 108px; color: rgb(245, 246, 248); flex-shrink: 0; }
+.idle-growth .idle-stat-level { width: 68px; font-size: 18px; flex-shrink: 0; }
+.idle-growth .idle-stat-buy { flex-grow: 1; flex-basis: 0; width: auto; min-width: 84px; margin-left: 6px; }
+
+.idle-growth .idle-stat-buy--ready {
+    background-color: rgba(245, 175, 16, 0.07);
+    border-width: 1px;
+    border-color: rgb(121, 100, 57);
+    color: rgb(242, 206, 137);
+}
+
+.idle-growth .idle-stat-buy--ready:hover {
+    background-color: rgba(245, 175, 16, 0.2);
+    border-color: rgb(245, 175, 16);
+}
+
+.idle-growth .idle-stat-buy--raised {
+    background-color: rgb(245, 175, 16);
+    color: rgb(17, 17, 17);
+}
+
+.idle-growth .idle-stat-label--raised { color: rgb(245, 175, 16); }
+.idle-growth .idle-stat-rows { margin-bottom: 0; }
+
+.idle-hand {
+    padding: 16px 20px;
+    background-color: rgba(22, 25, 28, 0.96);
+    border-radius: 8px;
+}
+
+.idle-hand .idle-cost {
+    width: 100%;
+}
+
+.idle-hand .idle-skill-auto {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.idle-modal-panel .idle-tab--close {
+    flex-basis: auto;
+    flex-shrink: 0;
+    margin-left: auto;
+}
