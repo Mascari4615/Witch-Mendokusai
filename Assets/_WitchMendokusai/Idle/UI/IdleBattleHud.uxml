@@ -37,6 +37,7 @@
                 <ui:VisualElement class="idle-settings-icon" />
             </ui:Button>
         </ui:VisualElement>
+        <ui:Button name="dungeon-leave" class="idle-chip-dark idle-dungeon-leave" />
         <ui:VisualElement name="enemy-bar" class="idle-box idle-enemy">
             <ui:Label name="enemy-label" class="idle-enemy-label" />
             <ui:VisualElement class="idle-enemy-gauge"><ui:VisualElement name="enemy-fill" class="idle-enemy-fill" /></ui:VisualElement>

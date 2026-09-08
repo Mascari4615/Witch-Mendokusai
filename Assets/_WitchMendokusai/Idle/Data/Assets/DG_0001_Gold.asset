@@ -14,9 +14,172 @@ MonoBehaviour:
   m_EditorClassIdentifier: WM.Idle::WitchMendokusai.Idle.DungeonSO
   kind: 0
   open: 1
-  timeLimitSeconds: 90
-  waves: 0
-  goldSecondsPerKill: 30
-  sweepGoldSeconds: 900
-  shards: 0
-  gearCount: 0
+  tiers:
+  - stages:
+    - level: 1
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 5
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 9
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 13
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 17
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+  - stages:
+    - level: 21
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 25
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 29
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 33
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 37
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+  - stages:
+    - level: 41
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 45
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 49
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 53
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0
+    - level: 57
+      healthMultiplier: 1
+      damageMultiplier: 1
+      timeLimitSeconds: 90
+      waves: 0
+      waveSize: 3
+      goldSecondsPerKill: 30
+      sweepGoldSeconds: 900
+      shards: 0
+      gearCount: 0
+      gearTier: 0

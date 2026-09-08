@@ -17,7 +17,7 @@ namespace WitchMendokusai.DomainSDK.Idle
         IIntentSink<IdleBuyProducerIntent>, IIntentSink<IdleMergeIntent>, IIntentSink<IdleEquipIntent>,
         IIntentSink<IdleSalvageIntent>, IIntentSink<IdleLockItemIntent>, IIntentSink<IdleSortBagIntent>,
         IIntentSink<IdlePullBatchIntent>, IIntentSink<IdleOpenFreeBoxIntent>,
-        IIntentSink<IdleEnterDungeonIntent>, IIntentSink<IdleSweepDungeonIntent>,
+        IIntentSink<IdleEnterDungeonIntent>, IIntentSink<IdleLeaveDungeonIntent>, IIntentSink<IdleSweepDungeonIntent>,
         IIntentSink<IdleCastCardIntent>, IIntentSink<IdleNextStageIntent>
     {
         private readonly IdleState state;

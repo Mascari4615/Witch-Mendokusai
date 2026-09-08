@@ -20,6 +20,7 @@ namespace WitchMendokusai.Idle.UI
 		private readonly VisualElement waveDots;
 		private readonly Label waveLabel;
 		private readonly Label dungeonTimer;
+		private readonly Button dungeonLeave;
 		private readonly Button stepBack;
 		private readonly Button stepForward;
 		private readonly Label stepLabel;
@@ -47,6 +48,7 @@ namespace WitchMendokusai.Idle.UI
 			Action toggleSplit,
 			Action openSettings,
 			Action toggleAutoCast,
+			Action leaveDungeon,
 			Action<VisualElement, Func<string>> hookTooltip)
 		{
 			this.battle = battle;
@@ -61,6 +63,9 @@ namespace WitchMendokusai.Idle.UI
 			waveLabel = battle.RequireQ<Label>("wave-label");
 			dungeonTimer = battle.RequireQ<Label>("dungeon-timer");
 			dungeonTimer.style.display = DisplayStyle.None;
+			dungeonLeave = battle.RequireQ<Button>("dungeon-leave");
+			dungeonLeave.style.display = DisplayStyle.None;
+			dungeonLeave.clicked += leaveDungeon;
 			stepBack = battle.RequireQ<Button>("step-back");
 			stepForward = battle.RequireQ<Button>("step-forward");
 			stepLabel = battle.RequireQ<Label>("step-label");
@@ -113,14 +118,17 @@ namespace WitchMendokusai.Idle.UI
 			RenderDungeon(snapshot);
 		}
 
-		/// <summary>던전 판 도는 동안만 이름과 남은 시간 (changes/idle-dungeon-run)</summary>
+		/// <summary>던전 판 도는 동안만 칸 이름과 남은 시간, 나가기 (changes/idle-dungeon-run v2)</summary>
 		private void RenderDungeon(IdleSnapshot snapshot)
 		{
 			IdleDungeonRunView run = snapshot.DungeonRun;
-			dungeonTimer.style.display = run.Active ? DisplayStyle.Flex : DisplayStyle.None;
+			DisplayStyle shown = run.Active ? DisplayStyle.Flex : DisplayStyle.None;
+			dungeonTimer.style.display = shown;
+			dungeonLeave.style.display = shown;
 			if (run.Active)
 			{
-				dungeonTimer.text = content.DungeonRunText(content.DungeonName(run.Kind), run.SecondsLeft);
+				dungeonTimer.text = content.DungeonRunText(content.DungeonCellText(run.Kind, run.Difficulty, run.Stage), run.SecondsLeft);
+				dungeonLeave.text = content.DungeonLeaveText;
 			}
 		}
 

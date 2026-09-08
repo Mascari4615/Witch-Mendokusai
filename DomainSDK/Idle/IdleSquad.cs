@@ -108,12 +108,23 @@ namespace WitchMendokusai.DomainSDK.Idle
 		/// </summary>
 		public static bool Standing(IdleState state, int seat)
 		{
+			return Standing(state, state.MainArena, seat);
+		}
+
+		/// <summary>그 전장에서 이 자리가 서 있나. 던전 전장은 입장 때 채운 자기 체력만 봄</summary>
+		public static bool Standing(IdleState state, in IdleArena arena, int seat)
+		{
 			if (SeatTaken(state, seat) == false)
 			{
 				return false;
 			}
 
-			return state.SeatsReady == false || state.SeatHealth[seat] > 0d;
+			if (arena.Dungeon == false && state.SeatsReady == false)
+			{
+				return true;
+			}
+
+			return arena.SeatHealth[seat] > 0d;
 		}
 
 		/// <summary>서 있는 자리 수.</summary>
@@ -367,10 +378,21 @@ namespace WitchMendokusai.DomainSDK.Idle
 				return;
 			}
 
+			HealOnKills(state, tuning, state.MainArena, kills);
+		}
+
+		/// <summary>그 전장의 서 있는 자리에 처치당 회복. 던전은 던전 체력에만</summary>
+		public static void HealOnKills(IdleState state, IdleTuning tuning, in IdleArena arena, long kills)
+		{
+			if (kills <= 0L)
+			{
+				return;
+			}
+
 			for (int seat = 0; seat < SEAT_COUNT; seat++)
 			{
 				// 쓰러진 자리는 회복이 아니라 <b>부활</b>을 기다린다 — 두 길이 섞이면 부활이 뜻을 잃는다.
-				if (Standing(state, seat) == false)
+				if (Standing(state, arena, seat) == false)
 				{
 					continue;
 				}
@@ -378,8 +400,8 @@ namespace WitchMendokusai.DomainSDK.Idle
 				double max = MaxHealthOf(state, tuning, seat);
 				int heroId = state.Party[seat];
 				double share = IdleHeroes.HealPerKillShareOf(state, tuning, heroId);
-				double healed = state.SeatHealth[seat] + max * share * kills;
-				state.SeatHealth[seat] = healed > max ? max : healed;
+				double healed = arena.SeatHealth[seat] + max * share * kills;
+				arena.SeatHealth[seat] = healed > max ? max : healed;
 			}
 		}
 
@@ -387,16 +409,26 @@ namespace WitchMendokusai.DomainSDK.Idle
 		public static void HealAll(IdleState state, IdleTuning tuning)
 		{
 			state.EnsureSeatRoom(tuning);
+			HealAll(state, tuning, state.MainArena);
+		}
 
+		/// <summary>그 전장의 전원을 만렙 체력으로. 던전 입장 때 던전 체력을 채우는 자리</summary>
+		public static void HealAll(IdleState state, IdleTuning tuning, in IdleArena arena)
+		{
 			for (int seat = 0; seat < SEAT_COUNT; seat++)
 			{
-				state.SeatHealth[seat] = MaxHealthOf(state, tuning, seat);
-				state.SeatReviveSeconds[seat] = 0d;
+				arena.SeatHealth[seat] = MaxHealthOf(state, tuning, seat);
+				arena.SeatReviveSeconds[seat] = 0d;
 			}
 		}
 
 		/// <summary>이 자리의 남은 체력 비율(0~1) — 화면이 막대로 그릴 재료. 묻기만 한다.</summary>
 		public static double HealthRatioOf(IdleState state, IdleTuning tuning, int seat)
+		{
+			return HealthRatioOf(state, tuning, state.MainArena, seat);
+		}
+
+		public static double HealthRatioOf(IdleState state, IdleTuning tuning, in IdleArena arena, int seat)
 		{
 			if (SeatTaken(state, seat) == false)
 			{
@@ -404,7 +436,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 			}
 
 			// 아직 안 세운 판은 만렙으로 보인다 — 사진이 판을 세우지 않게.
-			if (state.SeatsReady == false)
+			if (arena.Dungeon == false && state.SeatsReady == false)
 			{
 				return 1d;
 			}
@@ -415,19 +447,24 @@ namespace WitchMendokusai.DomainSDK.Idle
 				return 0d;
 			}
 
-			double ratio = state.SeatHealth[seat] / max;
+			double ratio = arena.SeatHealth[seat] / max;
 			return ratio < 0d ? 0d : (ratio > 1d ? 1d : ratio);
 		}
 
 		/// <summary>부활까지 얼마나 찼나(0~1) — 쓰러진 자리에만 뜻이 있다.</summary>
 		public static double ReviveRatioOf(IdleState state, IdleTuning tuning, int seat)
 		{
+			return ReviveRatioOf(state, tuning, state.MainArena, seat);
+		}
+
+		public static double ReviveRatioOf(IdleState state, IdleTuning tuning, in IdleArena arena, int seat)
+		{
 			if (tuning.ReviveSeconds <= 0d)
 			{
 				return 0d;
 			}
 
-			double ratio = state.SeatReviveSeconds[seat] / tuning.ReviveSeconds;
+			double ratio = arena.SeatReviveSeconds[seat] / tuning.ReviveSeconds;
 			return ratio < 0d ? 0d : (ratio > 1d ? 1d : ratio);
 		}
 	}

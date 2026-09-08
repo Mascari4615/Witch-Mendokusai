@@ -68,7 +68,7 @@ namespace WitchMendokusai.DomainSDK.Idle
         /// <summary>살아 있는 던전 판 (changes/idle-dungeon-run). 저장 안 함. 껐다 켜면 판은 사라지고 얻은 것은 남음</summary>
         public IdleDungeonRun Dungeon { get; } = new IdleDungeonRun();
 
-        /// <summary>한 번이라도 끝까지 깬 던전. 종류마다 비트 하나. 소탕이 열리는 조건</summary>
+        /// <summary>한 번이라도 끝까지 깬 던전 칸. 던전 4 x 난이도 3 x 스테이지 5 로 비트 60. 소탕과 다음 칸 해금의 조건</summary>
         public long DungeonCleared { get; set; }
 
         /// <summary>마지막으로 끝난 판의 결과. 화면 팝업용. 번호가 바뀌면 새 결과</summary>
@@ -310,6 +310,12 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         /// <summary>라이브 전투의 위치 층 (combat.md). 저장 안 함</summary>
         public IdleBattle Battle { get; } = new IdleBattle();
+
+        /// <summary>본판 전장 손잡이. 배열은 EnsureSeatRoom 과 Load 가 바꿀 수 있어 부를 때마다 새로 잡음</summary>
+        public IdleArena MainArena => new IdleArena(Battle, SeatHealth, SeatReviveSeconds, false);
+
+        /// <summary>보고 있는 전장. 던전 판이 살아 있으면 던전, 아니면 본판 (changes/idle-dungeon-run v2)</summary>
+        public IdleArena ActiveArena => Dungeon.Active ? Dungeon.Arena : MainArena;
 
         /// <summary>실측이 있는 가장 깊은 구역. 0 이면 실측 없음</summary>
         public int MeasuredStage { get; set; }

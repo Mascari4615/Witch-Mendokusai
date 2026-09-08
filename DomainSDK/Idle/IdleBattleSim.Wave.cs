@@ -6,9 +6,9 @@ namespace WitchMendokusai.DomainSDK.Idle
     public static partial class IdleBattleSim
     {
         /// <summary>죽은 적 정리와 처치 반영. 반환은 처치 수</summary>
-        private static long ClearDead(IdleState state, IdleTuning tuning)
+        private static long ClearDead(IdleState state, IdleTuning tuning, in IdleArena arena)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
             long kills = 0L;
 
             for (int at = battle.Foes.Count - 1; at >= 0; at--)
@@ -22,13 +22,10 @@ namespace WitchMendokusai.DomainSDK.Idle
                 battle.Foes.RemoveAt(at);
                 kills++;
 
-                if (state.Dungeon.Active)
+                if (arena.Dungeon)
                 {
-                    // 던전 안 처치. 구역 셈은 멈추고 판 규칙만 (changes/idle-dungeon-run)
-                    state.Kills += 1L;
-                    IdleDrops.Accrue(state, tuning, 1L, state.Stage);
-                    IdleSquad.HealOnKills(state, tuning, 1L);
-                    if (IdleDungeons.OnKill(state, tuning, boss))
+                    // 던전 안 처치. 구역 셈은 없고 칸 규칙만 (changes/idle-dungeon-run v2)
+                    if (OnDungeonKill(state, tuning, arena, boss))
                     {
                         battle.Foes.Clear();
                         break;
@@ -46,19 +43,26 @@ namespace WitchMendokusai.DomainSDK.Idle
                 }
             }
 
-            if (kills > 0L && state.Dungeon.Active && battle.Foes.Count == 0)
+            if (kills > 0L && arena.Dungeon && state.Dungeon.Active && battle.Foes.Count == 0)
             {
                 // 던전 웨이브 하나를 다 잡음. 장비 던전은 여기서 장비, 마지막이면 끝
-                if (IdleDungeons.OnWaveCleared(state, tuning))
-                {
-                    battle.Foes.Clear();
-                }
+                IdleDungeons.OnWaveCleared(state, tuning);
             }
 
             return kills;
         }
 
-        /// <summary>처치 하나. 구역 판정은 지금 코어 <c>IdleModel.Resolve</c> 와 동일</summary>
+        /// <summary>던전 안 처치 하나. 드롭은 칸 구역 기준, 회복은 던전 체력에. 반환은 판이 끝났나</summary>
+        private static bool OnDungeonKill(IdleState state, IdleTuning tuning, in IdleArena arena, bool boss)
+        {
+            IdleDungeonStageSpec cell = IdleDungeons.CurrentCell(state, tuning);
+            state.Kills += 1L;
+            IdleDrops.Accrue(state, tuning, 1L, cell != null ? cell.Level : state.Stage);
+            IdleSquad.HealOnKills(state, tuning, arena, 1L);
+            return IdleDungeons.OnKill(state, tuning, boss);
+        }
+
+        /// <summary>본판 처치 하나. 구역 판정은 지금 코어 <c>IdleModel.Resolve</c> 와 동일</summary>
         private static void OnKill(IdleState state, IdleTuning tuning)
         {
             state.Kills += 1L;
@@ -91,14 +95,14 @@ namespace WitchMendokusai.DomainSDK.Idle
             }
         }
 
-        private static void Revive(IdleState state, IdleTuning tuning, double delta)
+        private static void Revive(IdleState state, IdleTuning tuning, in IdleArena arena, double delta)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
 
             double rear = double.PositiveInfinity;
             for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
             {
-                if (IdleSquad.Standing(state, seat) && battle.X[seat] < rear)
+                if (IdleSquad.Standing(state, arena, seat) && battle.X[seat] < rear)
                 {
                     rear = battle.X[seat];
                 }
@@ -106,17 +110,17 @@ namespace WitchMendokusai.DomainSDK.Idle
 
             for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
             {
-                if (IdleSquad.SeatTaken(state, seat) == false || state.SeatHealth[seat] > 0d)
+                if (IdleSquad.SeatTaken(state, seat) == false || arena.SeatHealth[seat] > 0d)
                 {
                     continue;
                 }
 
-                state.SeatReviveSeconds[seat] += delta;
+                arena.SeatReviveSeconds[seat] += delta;
 
-                if (state.SeatReviveSeconds[seat] + EPSILON >= tuning.ReviveSeconds)
+                if (arena.SeatReviveSeconds[seat] + EPSILON >= tuning.ReviveSeconds)
                 {
-                    state.SeatHealth[seat] = IdleSquad.MaxHealthOf(state, tuning, seat);
-                    state.SeatReviveSeconds[seat] = 0d;
+                    arena.SeatHealth[seat] = IdleSquad.MaxHealthOf(state, tuning, seat);
+                    arena.SeatReviveSeconds[seat] = 0d;
                     battle.Cooldown[seat] = 0d;
                     // 자기 줄 맨 뒤로 복귀
                     battle.X[seat] = double.IsInfinity(rear) ? 0d : rear - tuning.SeatBackStep;
@@ -126,11 +130,11 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         /// <summary>
         /// 구역별 실측 (combat.md 6). 같은 구역에서 <see cref="IdleTuning.MeasureSeconds"/> 를 채우면
-        /// 초당 처치 확정. 실측이 있는 가장 깊은 구역 것만 보존
+        /// 초당 처치 확정. 실측이 있는 가장 깊은 구역 것만 보존. 본판만
         /// </summary>
-        private static void Measure(IdleState state, IdleTuning tuning, double delta, long kills)
+        private static void Measure(IdleState state, IdleTuning tuning, in IdleArena arena, double delta, long kills)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
 
             if (battle.MeasureStage != state.Stage)
             {
@@ -158,12 +162,12 @@ namespace WitchMendokusai.DomainSDK.Idle
         }
 
         /// <summary>
-        /// 다음 웨이브를 부대 앞에. 구역의 마지막 하나는 보스 혼자.
+        /// 다음 웨이브를 부대 앞에. 본판은 구역의 마지막 하나가 보스 혼자, 던전은 칸 규칙 (IdleDungeons.WaveOf).
         /// 좌표는 부대 맨 뒤를 0 으로 재설정 (계속 커지지 않게)
         /// </summary>
-        private static void SpawnWave(IdleState state, IdleTuning tuning)
+        private static void SpawnWave(IdleState state, IdleTuning tuning, in IdleArena arena)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
 
             double rear = double.PositiveInfinity;
             double front = double.NegativeInfinity;
@@ -209,26 +213,33 @@ namespace WitchMendokusai.DomainSDK.Idle
 
             front -= rear;
 
-            int mobs = tuning.KillsPerStage - 1;
-            int left = mobs - state.KillsInStage;
-            bool bossWave = left <= 0;
-            int count = bossWave ? 1 : Math.Min(Math.Max(1, tuning.WaveSize), left);
+            bool bossWave;
+            int count;
+            int level;
+            double health;
+            double damagePerSecond;
 
-            if (state.Dungeon.Active)
+            if (arena.Dungeon)
             {
-                // 던전 웨이브. 보스 던전은 보스 하나, 나머지는 잡몹 한 무리. 구역 진행도와 무관
-                bossWave = state.Dungeon.Kind == IdleDungeonKind.Boss;
-                count = bossWave ? 1 : Math.Max(1, tuning.WaveSize);
+                IdleDungeons.WaveOf(state, tuning, out bossWave, out count, out level, out health, out damagePerSecond);
+            }
+            else
+            {
+                int mobs = tuning.KillsPerStage - 1;
+                int left = mobs - state.KillsInStage;
+                bossWave = left <= 0;
+                count = bossWave ? 1 : Math.Min(Math.Max(1, tuning.WaveSize), left);
+                level = state.Stage;
+                health = IdleModel.TargetHealthAt(state.Stage, tuning) * (bossWave ? tuning.BossHealthMultiplier : 1d);
+                damagePerSecond = IdleSquad.EnemyDamagePerSecond(state, tuning);
             }
 
-            IdleRandom dice = new IdleRandom(state.Stage * 7919L + battle.Wave * 104729L + 1L);
-            double health = IdleModel.TargetHealthAt(state.Stage, tuning);
-            double damagePerSecond = IdleSquad.EnemyDamagePerSecond(state, tuning);
+            IdleRandom dice = new IdleRandom(level * 7919L + battle.Wave * 104729L + 1L);
 
             for (int at = 0; at < count; at++)
             {
                 bool ranged = bossWave == false
-                    && state.Stage >= tuning.RangedFoeFromStage
+                    && level >= tuning.RangedFoeFromStage
                     && dice.NextDouble() < tuning.RangedFoeChance;
 
                 IdleFoe foe = new IdleFoe();
@@ -237,7 +248,7 @@ namespace WitchMendokusai.DomainSDK.Idle
                 foe.Kind = ranged ? IdleFoeKind.Ranged : IdleFoeKind.Melee;
                 foe.X = front + tuning.WaveSpawnDistance + at * tuning.WaveGapX;
                 foe.Y = at == 0 ? 0d : (at % 2 == 1 ? -tuning.WaveGapY : tuning.WaveGapY);
-                foe.MaxHealth = health * (bossWave ? tuning.BossHealthMultiplier : 1d);
+                foe.MaxHealth = health;
                 foe.Health = foe.MaxHealth;
                 foe.Range = ranged ? tuning.FoeRangedRange : tuning.FoeMeleeRange;
                 foe.Speed = bossWave ? tuning.BossMoveSpeed : tuning.FoeMoveSpeed;
@@ -251,4 +262,3 @@ namespace WitchMendokusai.DomainSDK.Idle
         }
     }
 }
-

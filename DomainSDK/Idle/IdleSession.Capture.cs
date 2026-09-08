@@ -62,7 +62,7 @@ namespace WitchMendokusai.DomainSDK.Idle
                 state.ClearedStage,
                 IdleSquad.EnemyDamagePerSecond(state, tuning),
                 state.HitsOnTarget,
-                state.Battle.OriginX,
+                state.ActiveArena.Battle.OriginX,
                 CaptureFighters(),
                 CaptureFoes(),
                 CaptureHits(),
@@ -86,31 +86,41 @@ namespace WitchMendokusai.DomainSDK.Idle
                 tuning.FreeBoxStones,
                 tuning.TicketsPerDay,
                 IdleDrops.MaxTierAt(state.Stage, state.Ascensions, tuning),
-                CaptureDungeonSpecs(),
+                CaptureDungeonCells(),
                 CaptureDungeonRun(),
                 state.LastDungeonResult,
                 state.DungeonResultSequence);
         }
 
-        private IdleDungeonSpecView[] dungeonSpecBuffer;
+        private IdleDungeonCellView[] dungeonCellBuffer;
 
-        private IdleDungeonSpecView[] CaptureDungeonSpecs()
+        /// <summary>던전 4 x 난이도 3 x 스테이지 5 칸 전부. 자리는 IdleDungeons.CellIndexOf</summary>
+        private IdleDungeonCellView[] CaptureDungeonCells()
         {
-            dungeonSpecBuffer ??= new IdleDungeonSpecView[IdleDungeons.COUNT];
-            for (int index = 0; index < IdleDungeons.COUNT; index++)
+            int total = IdleDungeons.COUNT * IdleDungeons.DIFFICULTY_COUNT * IdleDungeons.STAGE_COUNT;
+            dungeonCellBuffer ??= new IdleDungeonCellView[total];
+            for (int index = 0; index < total; index++)
             {
-                IdleDungeonKind kind = (IdleDungeonKind)index;
-                IdleDungeonSpec spec = IdleDungeons.SpecOf(tuning, kind);
-                dungeonSpecBuffer[index] = new IdleDungeonSpecView(kind, spec.Open, IdleDungeons.IsCleared(state, kind),
-                    spec.TimeLimitSeconds, spec.Waves, IdleDungeons.SweepGoldOf(state, tuning, kind), spec.Shards, spec.GearCount);
+                IdleDungeonKind kind = (IdleDungeonKind)(index / (IdleDungeons.DIFFICULTY_COUNT * IdleDungeons.STAGE_COUNT));
+                int difficulty = index / IdleDungeons.STAGE_COUNT % IdleDungeons.DIFFICULTY_COUNT;
+                int stage = index % IdleDungeons.STAGE_COUNT;
+                IdleDungeonStageSpec cell = IdleDungeons.CellOf(tuning, kind, difficulty, stage);
+                dungeonCellBuffer[index] = cell == null
+                    ? new IdleDungeonCellView(kind, difficulty, stage, false, false, false, 0, 0d, 0, 0d, 0L, 0L, 0)
+                    : new IdleDungeonCellView(kind, difficulty, stage, true,
+                        IdleDungeons.IsUnlocked(state, tuning, kind, difficulty, stage),
+                        IdleDungeons.IsCleared(state, kind, difficulty, stage),
+                        cell.Level, cell.TimeLimitSeconds, cell.Waves,
+                        IdleDungeons.SweepGoldOf(state, tuning, kind, cell), cell.Shards, cell.GearCount,
+                        IdleDungeons.GearTierOf(state, tuning, cell));
             }
-            return dungeonSpecBuffer;
+            return dungeonCellBuffer;
         }
 
         private IdleDungeonRunView CaptureDungeonRun()
         {
             IdleDungeonRun run = state.Dungeon;
-            return new IdleDungeonRunView(run.Active, run.Kind, run.SecondsLeft, run.TimeLimitSeconds,
+            return new IdleDungeonRunView(run.Active, run.Kind, run.Difficulty, run.Stage, run.SecondsLeft, run.TimeLimitSeconds,
                 run.WavesCleared, run.Waves, run.Kills, run.Gold, run.Shards, run.Gear);
         }
 
@@ -122,6 +132,8 @@ namespace WitchMendokusai.DomainSDK.Idle
         /// </summary>
         private IdleSeatView[] CaptureSeats()
         {
+            // 보고 있는 전장의 체력. 던전 판이 살아 있으면 던전 체력 (본판 체력은 뒤에서 제 길)
+            IdleArena arena = state.ActiveArena;
             IdleSeatView[] made = Room(ref seatBuffer, IdleSquad.SEAT_COUNT);
 
             for (int seat = 0; seat < made.Length; seat++)
@@ -135,9 +147,9 @@ namespace WitchMendokusai.DomainSDK.Idle
                 made[seat] = new IdleSeatView(
                     seat,
                     taken,
-                    IdleSquad.Standing(state, seat),
-                    IdleSquad.HealthRatioOf(state, tuning, seat),
-                    IdleSquad.ReviveRatioOf(state, tuning, seat),
+                    IdleSquad.Standing(state, arena, seat),
+                    IdleSquad.HealthRatioOf(state, tuning, arena, seat),
+                    IdleSquad.ReviveRatioOf(state, tuning, arena, seat),
                     id,
                     grade);
             }
@@ -147,7 +159,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         private IdleFighterView[] CaptureFighters()
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = state.ActiveArena.Battle;
             IdleFighterView[] made = Room(ref fighterBuffer, IdleSquad.SEAT_COUNT);
 
             for (int seat = 0; seat < made.Length; seat++)
@@ -166,7 +178,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         private IdleFoeView[] CaptureFoes()
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = state.ActiveArena.Battle;
             IdleFoeView[] made = Room(ref foeBuffer, battle.Ready ? battle.Foes.Count : 0);
 
             for (int at = 0; at < made.Length; at++)
@@ -180,7 +192,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         private IdleHit[] CaptureHits()
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = state.ActiveArena.Battle;
             IdleHit[] made = Room(ref hitBuffer, battle.Hits.Count);
 
             for (int at = 0; at < made.Length; at++)
@@ -391,8 +403,8 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         private double RemainingHealthRatio()
         {
-            // 라이브 전장이 있으면 맨 앞 적 (x 최소) 의 남은 체력
-            IdleBattle battle = state.Battle;
+            // 라이브 전장이 있으면 맨 앞 적 (x 최소) 의 남은 체력. 보고 있는 전장 기준
+            IdleBattle battle = state.ActiveArena.Battle;
             if (battle.Ready && battle.Foes.Count > 0)
             {
                 IdleFoe nearest = null;

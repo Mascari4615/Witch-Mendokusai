@@ -6,6 +6,8 @@
             <ui:Label name="dungeon-name" class="idle-dungeon-name" />
             <ui:Label name="dungeon-ticket" class="idle-dungeon-ticket" />
         </ui:VisualElement>
+        <ui:VisualElement name="dungeon-difficulties" class="idle-dungeon-tabs" />
+        <ui:VisualElement name="dungeon-stages" class="idle-dungeon-tabs" />
         <ui:Label name="dungeon-reward" class="idle-row-note" />
         <ui:Label name="dungeon-refill" class="idle-row-note" />
         <ui:VisualElement class="idle-dungeon-buttons">

@@ -24,6 +24,7 @@ namespace WitchMendokusai.Idle
 		[SerializeField] private string[] heroGradeNames = Array.Empty<string>();
 		[SerializeField] private string[] cardNames = Array.Empty<string>();
 		[SerializeField] private string[] dungeonNames = Array.Empty<string>();
+		[SerializeField] private string[] dungeonDifficultyNames = Array.Empty<string>();
 		[SerializeField] private string prestigeAdviceFormat;
 		[SerializeField] private string buyProducerAdvice;
 		[SerializeField] private string raiseAdvice;
@@ -76,6 +77,11 @@ namespace WitchMendokusai.Idle
 		[SerializeField] private string dungeonGearRewardFormat;
 		[SerializeField] private string dungeonFeedbackFormat;
 		[SerializeField] private string dungeonRunFormat;
+		[SerializeField] private string dungeonStageFormat;
+		[SerializeField] private string dungeonCellFormat;
+		[SerializeField] private string dungeonLevelFormat;
+		[SerializeField] private string dungeonLockedText;
+		[SerializeField] private string dungeonLeaveText;
 		[SerializeField] private string dungeonResultClearedText;
 		[SerializeField] private string dungeonResultFailedText;
 		[SerializeField] private string awaySpanFormat;
@@ -199,6 +205,8 @@ namespace WitchMendokusai.Idle
 		public string GradeName(IdleHeroGrade grade) => heroGradeNames[(int)grade];
 		public string CardName(IdleCardKind kind) => cardNames[(int)kind];
 		public string DungeonName(IdleDungeonKind kind) => dungeonNames[(int)kind];
+
+		public string DungeonDifficultyName(int difficulty) => dungeonDifficultyNames[difficulty];
 		public int StatUpgradeAmount(int index) => statUpgradeAmounts[index];
 		public int IndexOfStatUpgradeAmount(int amount) => Array.IndexOf(statUpgradeAmounts, amount);
 		public string BattleGradeText(int tier, int ceiling) => string.Format(battleGradeFormat, tier, ceiling);
@@ -256,6 +264,12 @@ namespace WitchMendokusai.Idle
 				return false;
 			}
 
+			if (dungeonDifficultyNames.Length != IdleDungeons.DIFFICULTY_COUNT)
+			{
+				error = "dungeonDifficultyNames does not match IdleDungeons.DIFFICULTY_COUNT";
+				return false;
+			}
+
 			string[] requiredText =
 			{
 				prestigeAdviceFormat, buyProducerAdvice, raiseAdvice, mergeAdvice, wearAdvice, pullAdvice,
@@ -269,6 +283,7 @@ namespace WitchMendokusai.Idle
 				dungeonTicketFormat, dungeonRefillFormat, dungeonEnterText, dungeonSweepFormat, dungeonClosedText,
 				dungeonGoldRewardFormat, dungeonBossRewardFormat, dungeonGearRewardFormat, dungeonFeedbackFormat,
 				dungeonRunFormat, dungeonResultClearedText, dungeonResultFailedText,
+				dungeonStageFormat, dungeonCellFormat, dungeonLevelFormat, dungeonLockedText, dungeonLeaveText,
 				awayWarningFormat, selectHeroBeforeGearText, appraiseUnavailableFormat, appraiseAvailableFormat,
 				discoverySummaryFormat, discoveryOwnedHeroFormat, discoveryHiddenHeroFormat, bagUpgradeFormat, bagUpgradeMaxText,
 				bagResetNoteFormat, pullAvailableFormat, pullNoStoneFormat, pullNoGoldFormat, pullOddsFormat,

@@ -36,15 +36,15 @@ namespace WitchMendokusai.DomainSDK.Idle
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
-        private static void MoveDolls(IdleState state, IdleTuning tuning, double delta)
+        private static void MoveDolls(IdleState state, IdleTuning tuning, in IdleArena arena, double delta)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
 
             for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
             {
                 battle.Moving[seat] = false;
 
-                if (IdleSquad.Standing(state, seat) == false)
+                if (IdleSquad.Standing(state, arena, seat) == false)
                 {
                     battle.Target[seat] = -1L;
                     continue;
@@ -83,9 +83,9 @@ namespace WitchMendokusai.DomainSDK.Idle
             }
         }
 
-        private static void MoveFoes(IdleState state, IdleTuning tuning, double delta, int front)
+        private static void MoveFoes(IdleTuning tuning, in IdleArena arena, double delta, int front)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
             double frontX = battle.X[front];
             double frontY = battle.Y[front];
 
@@ -114,4 +114,3 @@ namespace WitchMendokusai.DomainSDK.Idle
         }
     }
 }
-

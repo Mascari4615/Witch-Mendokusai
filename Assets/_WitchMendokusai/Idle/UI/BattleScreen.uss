@@ -1828,3 +1828,45 @@
 .idle-dungeon-timer {
 	color: rgb(245, 175, 16);
 }
+
+.idle-dungeon-tabs {
+	flex-direction: row;
+	flex-wrap: wrap;
+	margin-top: 6px;
+}
+
+.idle-dungeon-tab {
+	min-width: 88px;
+	height: 44px;
+	margin-right: 6px;
+	margin-bottom: 6px;
+	font-size: 18px;
+	color: rgb(190, 190, 182);
+	background-color: rgba(255, 255, 255, 0.06);
+	border-width: 1px;
+	border-color: rgba(255, 255, 255, 0.12);
+}
+
+.idle-dungeon-tab--on {
+	color: rgb(20, 20, 20);
+	background-color: rgb(245, 175, 16);
+}
+
+.idle-dungeon-tab--cleared {
+	border-color: rgb(245, 175, 16);
+}
+
+.idle-dungeon-tab--locked {
+	opacity: 0.35;
+}
+
+.idle-dungeon-leave {
+	position: absolute;
+	right: 20px;
+	top: 74px;
+	height: 44px;
+	padding: 0 18px;
+	font-size: 18px;
+	-unity-font-style: bold;
+	color: rgb(245, 175, 16);
+}

@@ -171,8 +171,8 @@ namespace WitchMendokusai.DomainSDK.Idle
         /// <summary>던전 보상 장비의 등급 (지금 갈 수 있는 최고 등급)</summary>
         public int DungeonGearTier { get; }
 
-        /// <summary>던전 4종의 규칙과 소탕 몫. 줄에 적는다 (changes/idle-dungeon-run)</summary>
-        public IdleDungeonSpecView[] DungeonSpecs { get; }
+        /// <summary>던전 칸 전부 (던전 4 x 난이도 3 x 스테이지 5). 자리는 IdleDungeons.CellIndexOf (changes/idle-dungeon-run v2)</summary>
+        public IdleDungeonCellView[] DungeonCells { get; }
 
         /// <summary>살아 있는 던전 판. HUD 가 남은 시간을 적는다</summary>
         public IdleDungeonRunView DungeonRun { get; }
@@ -300,12 +300,12 @@ namespace WitchMendokusai.DomainSDK.Idle
             int pullBatchCount, double pullBatchCost, long pullBatchStoneCost, bool canPullBatch,
             IdleHeroGrade pullBatchFloorGrade, int pickupHeroId, double pickupWeight, double pickupSecondsLeft,
             bool freeBoxReady, double freeBoxSecondsLeft, long freeBoxStones,
-            long ticketsPerDay, int dungeonGearTier, IdleDungeonSpecView[] dungeonSpecs, IdleDungeonRunView dungeonRun,
+            long ticketsPerDay, int dungeonGearTier, IdleDungeonCellView[] dungeonCells, IdleDungeonRunView dungeonRun,
             IdleDungeonResult lastDungeonResult, long dungeonResultSequence)
         {
             TicketsPerDay = ticketsPerDay;
             DungeonGearTier = dungeonGearTier;
-            DungeonSpecs = dungeonSpecs;
+            DungeonCells = dungeonCells;
             DungeonRun = dungeonRun;
             LastDungeonResult = lastDungeonResult;
             DungeonResultSequence = dungeonResultSequence;

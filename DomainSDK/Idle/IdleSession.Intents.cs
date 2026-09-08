@@ -78,25 +78,36 @@ namespace WitchMendokusai.DomainSDK.Idle
         }
 
         /// <summary>던전 한 판 시작 (changes/idle-dungeon-run). 보상은 안에서 싸워 얻고 결과는 사진의 LastDungeonResult</summary>
-        public bool TryEnterDungeon(IdleDungeonKind kind)
+        public bool TryEnterDungeon(IdleDungeonKind kind, int difficulty, int stage)
         {
-            return IdleDungeons.TryStart(state, tuning, kind);
+            return IdleDungeons.TryStart(state, tuning, kind, difficulty, stage);
+        }
+
+        /// <summary>던전에서 나옴. 얻은 것은 들고, 판은 실패로 (소탕 안 열림)</summary>
+        public bool TryLeaveDungeon()
+        {
+            return IdleDungeons.Leave(state, tuning);
         }
 
         /// <summary>남은 입장권을 한 번에 (소탕). 한 번 깬 던전만</summary>
-        public bool TrySweepDungeon(IdleDungeonKind kind, out IdleDungeonReward reward)
+        public bool TrySweepDungeon(IdleDungeonKind kind, int difficulty, int stage, out IdleDungeonReward reward)
         {
-            return IdleDungeons.TrySweep(state, tuning, kind, out reward);
+            return IdleDungeons.TrySweep(state, tuning, kind, difficulty, stage, out reward);
         }
 
         public bool Send(IdleEnterDungeonIntent intent)
         {
-            return IdleDungeons.TryStart(state, tuning, intent.Kind);
+            return IdleDungeons.TryStart(state, tuning, intent.Kind, intent.Difficulty, intent.Stage);
+        }
+
+        public bool Send(IdleLeaveDungeonIntent intent)
+        {
+            return IdleDungeons.Leave(state, tuning);
         }
 
         public bool Send(IdleSweepDungeonIntent intent)
         {
-            return IdleDungeons.TrySweep(state, tuning, intent.Kind, out IdleDungeonReward _);
+            return IdleDungeons.TrySweep(state, tuning, intent.Kind, intent.Difficulty, intent.Stage, out IdleDungeonReward _);
         }
 
         /// <summary>무료 상자를 연다. 받은 뽑기 재화를 돌려준다</summary>

@@ -11,7 +11,7 @@ namespace WitchMendokusai.Idle.UI
 		{
 			popup.style.display = DisplayStyle.Flex;
 			popup.RegisterCallback<PointerDownEvent>(moment => moment.StopPropagation());
-			popup.RequireQ<Label>("dungeon-result-title").text = content.DungeonName(result.Kind);
+			popup.RequireQ<Label>("dungeon-result-title").text = content.DungeonCellText(result.Kind, result.Difficulty, result.Stage);
 			popup.RequireQ<Label>("dungeon-result-status").text = content.DungeonResultStatusText(result.Cleared);
 			popup.RequireQ<Label>("dungeon-result-span").text = content.DescribeSpan(result.SecondsSpent);
 			popup.RequireQ<Label>("kills-value").text = content.GainText(BigNumberText.Format(result.Kills));

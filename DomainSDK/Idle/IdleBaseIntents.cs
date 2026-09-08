@@ -13,25 +13,42 @@ namespace WitchMendokusai.DomainSDK.Idle
         }
     }
 
-    /// <summary>「이 던전에 한 판 들어간다」. 입장권 한 장</summary>
+    /// <summary>「이 던전의 이 칸에 한 판 들어간다」. 입장권 한 장</summary>
     public readonly struct IdleEnterDungeonIntent : IGameIntent
     {
         public IdleDungeonKind Kind { get; }
 
-        public IdleEnterDungeonIntent(IdleDungeonKind kind)
+        public int Difficulty { get; }
+
+        public int Stage { get; }
+
+        public IdleEnterDungeonIntent(IdleDungeonKind kind, int difficulty, int stage)
         {
             Kind = kind;
+            Difficulty = difficulty;
+            Stage = stage;
         }
     }
 
-    /// <summary>「남은 입장권을 한 번에 쓴다」 (소탕)</summary>
+    /// <summary>「던전에서 나온다」. 얻은 것은 들고, 판은 실패로</summary>
+    public readonly struct IdleLeaveDungeonIntent : IGameIntent
+    {
+    }
+
+    /// <summary>「이 칸에 남은 입장권을 한 번에 쓴다」 (소탕). 깬 칸만</summary>
     public readonly struct IdleSweepDungeonIntent : IGameIntent
     {
         public IdleDungeonKind Kind { get; }
 
-        public IdleSweepDungeonIntent(IdleDungeonKind kind)
+        public int Difficulty { get; }
+
+        public int Stage { get; }
+
+        public IdleSweepDungeonIntent(IdleDungeonKind kind, int difficulty, int stage)
         {
             Kind = kind;
+            Difficulty = difficulty;
+            Stage = stage;
         }
     }
 

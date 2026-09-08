@@ -70,9 +70,23 @@ namespace WitchMendokusai.Idle
 		public string DungeonFeedbackText(string name, int runs, string got) =>
 			string.Format(dungeonFeedbackFormat, name, runs, got);
 
-		/// <summary>판 도는 동안 HUD. 던전 이름과 남은 시간</summary>
-		public string DungeonRunText(string name, double secondsLeft) =>
-			string.Format(dungeonRunFormat, name, DescribeSpan(secondsLeft));
+		/// <summary>판 도는 동안 HUD. 칸 이름과 남은 시간</summary>
+		public string DungeonRunText(string cellName, double secondsLeft) =>
+			string.Format(dungeonRunFormat, cellName, DescribeSpan(secondsLeft));
+
+		/// <summary>스테이지 번호 글자 (1부터)</summary>
+		public string DungeonStageText(int stage) => string.Format(dungeonStageFormat, stage + 1);
+
+		/// <summary>칸 이름. 던전, 난이도, 스테이지</summary>
+		public string DungeonCellText(IdleDungeonKind kind, int difficulty, int stage) =>
+			string.Format(dungeonCellFormat, DungeonName(kind), DungeonDifficultyName(difficulty), DungeonStageText(stage));
+
+		/// <summary>칸의 적 세기 (본판 구역 환산)</summary>
+		public string DungeonLevelText(int level) => string.Format(dungeonLevelFormat, level);
+
+		public string DungeonLockedText => dungeonLockedText;
+
+		public string DungeonLeaveText => dungeonLeaveText;
 
 		public string DungeonResultStatusText(bool cleared) => cleared ? dungeonResultClearedText : dungeonResultFailedText;
 

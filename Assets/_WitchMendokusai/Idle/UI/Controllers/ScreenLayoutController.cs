@@ -12,6 +12,7 @@ namespace WitchMendokusai.Idle.UI
 		private readonly BattleHudController battleHud;
 		private readonly UIContentSO content;
 		private bool split;
+		private bool dungeon;
 
 		public ScreenLayoutController(
 			VisualElement root,
@@ -27,7 +28,20 @@ namespace WitchMendokusai.Idle.UI
 			root.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
 		}
 
-		public bool ContentVisible => split;
+		/// <summary>관리 열이 보이나. 던전 판 동안은 전투 창만 (사용자 2026-09-08)</summary>
+		public bool ContentVisible => split && dungeon == false;
+
+		/// <summary>던전 판 들어가고 나옴. 분할 설정은 건드리지 않고 판 동안만 전투 창만</summary>
+		public void SetDungeon(bool inside, int openTab)
+		{
+			if (dungeon == inside)
+			{
+				return;
+			}
+
+			dungeon = inside;
+			Apply(openTab);
+		}
 
 		public void OpenSide(int openTab)
 		{
@@ -45,8 +59,8 @@ namespace WitchMendokusai.Idle.UI
 
 		public void Apply(int openTab)
 		{
-			sidePanel.Apply(openTab, split);
-			battleHud.SetSplit(split);
+			sidePanel.Apply(openTab, ContentVisible);
+			battleHud.SetSplit(ContentVisible);
 			AimCamera();
 			ApplySafeArea();
 		}
@@ -70,7 +84,7 @@ namespace WitchMendokusai.Idle.UI
 				return;
 			}
 
-			if (split == false)
+			if (ContentVisible == false)
 			{
 				main.rect = new Rect(0f, 0f, 1f, 1f);
 				return;

@@ -17,21 +17,29 @@ namespace WitchMendokusai.DomainSDK.Idle
 	}
 
 	/// <summary>
-	/// 던전 입장권 (economy.md 3, 4). 재화가 아니라 <b>하루 몇 번</b> 이라는 울타리.
+	/// 던전 입장권 (economy.md 3, 4) 과 던전 안 판 (changes/idle-dungeon-run v2)
 	///
-	/// ★ 재화로 만들면 모아 두었다 몰아 쓰는 것이 늘 정답이 되어 매일 들어올 이유가 사라짐.
-	///   그래서 날이 바뀌면 <b>상한까지 채우고 끝</b>, 안 쓴 날치는 안 쌓임
+	/// ★ 입장권은 재화가 아니라 <b>하루 몇 번</b> 이라는 울타리. 재화로 만들면 모아 두었다 몰아 쓰는 것이
+	///   늘 정답이 되어 매일 들어올 이유가 사라짐. 그래서 날이 바뀌면 <b>상한까지 채우고 끝</b>, 안 쓴 날치는 안 쌓임
 	///
 	/// ★ 날 경계는 <c>DayResetOffsetSeconds</c> 로 옮긴다. 자정에 끊으면 아직 노는 사람이 하루를
 	///   두 번 겪는다. 수집형이 새벽에 끊는 이유 (기본값은 KST 05:00, 판정 대기)
 	///
 	/// ★ 판정에 실시각을 쓰는 유일한 층. 나머지는 전부 흐른 초로 돈다. 그래서 여기만
 	///   <c>nowUnixSeconds</c> 를 받고, 오프라인 정산과 같은 자리에서 부른다 (IdleSession.CatchUp)
+	///
+	/// ★ 판은 본판 위에 따로 도는 두 번째 전장 (사용자 2026-09-08). 본판은 그대로 다 돌고,
+	///   던전은 자기 전장과 자기 체력으로. 세기는 칸의 절대값, 보상은 칸의 고정량
 	/// </summary>
 	public static class IdleDungeons
 	{
 		/// <summary>던전 수. 화면과 시험이 이 수로 돈다</summary>
 		public const int COUNT = 4;
+
+		/// <summary>던전마다 난이도 수와 난이도마다 스테이지 수 (사용자 2026-09-08). 깬 칸 마스크의 비트 자리</summary>
+		public const int DIFFICULTY_COUNT = 3;
+
+		public const int STAGE_COUNT = 5;
 
 		private const long SECONDS_PER_DAY = 86400L;
 
@@ -147,37 +155,110 @@ namespace WitchMendokusai.DomainSDK.Idle
 			return SpecOf(tuning, kind).Open;
 		}
 
-		/// <summary>한 번이라도 끝까지 깬 던전인가. 소탕이 열리는 조건 (사용자 2026-09-08)</summary>
-		public static bool IsCleared(IdleState state, IdleDungeonKind kind)
+		/// <summary>그 칸의 규칙. 던전이 닫혔거나 칸이 없으면 null</summary>
+		public static IdleDungeonStageSpec CellOf(IdleTuning tuning, IdleDungeonKind kind, int difficulty, int stage)
 		{
-			return (state.DungeonCleared & (1L << (int)kind)) != 0L;
+			IdleDungeonSpec spec = SpecOf(tuning, kind);
+			return spec.Open ? spec.CellOf(difficulty, stage) : null;
 		}
 
-		/// <summary>
-		/// 한 판 입장 (changes/idle-dungeon-run). 입장권 한 장에 <b>판 시작</b>. 보상은 안에서 싸워 얻음
-		///
-		/// ★ 이미 판이 살아 있으면 안 됨. 던전 안에서 던전을 못 감
-		/// ★ 시작하면 전장 다시 세움 (battle.Ready 를 내림). 다음 틱에 던전 웨이브 생김
-		/// </summary>
-		public static bool TryStart(IdleState state, IdleTuning tuning, IdleDungeonKind kind)
+		/// <summary>칸의 일련 번호. 깬 칸 마스크의 비트 자리이자 사진의 DungeonCells 자리. 던전 4 x 난이도 3 x 스테이지 5 로 60</summary>
+		public static int CellIndexOf(IdleDungeonKind kind, int difficulty, int stage)
 		{
-			if (state.Dungeon.Active || IsOpen(tuning, kind) == false || TrySpend(state, kind) == false)
+			return ((int)kind * DIFFICULTY_COUNT + difficulty) * STAGE_COUNT + stage;
+		}
+
+		private static int BitOf(IdleDungeonKind kind, int difficulty, int stage)
+		{
+			return CellIndexOf(kind, difficulty, stage);
+		}
+
+		/// <summary>한 번이라도 끝까지 깬 칸인가. 소탕이 열리는 조건 (사용자 2026-09-08)</summary>
+		public static bool IsCleared(IdleState state, IdleDungeonKind kind, int difficulty, int stage)
+		{
+			if (difficulty < 0 || difficulty >= DIFFICULTY_COUNT || stage < 0 || stage >= STAGE_COUNT)
 			{
 				return false;
 			}
 
+			return (state.DungeonCleared & (1L << BitOf(kind, difficulty, stage))) != 0L;
+		}
+
+		/// <summary>
+		/// 들어갈 수 있는 칸인가. 앞 스테이지를 깨야 다음, 앞 난이도의 마지막을 깨야 다음 난이도 (refs/dungeons.md 2)
+		/// </summary>
+		public static bool IsUnlocked(IdleState state, IdleTuning tuning, IdleDungeonKind kind, int difficulty, int stage)
+		{
 			IdleDungeonSpec spec = SpecOf(tuning, kind);
+			if (spec.Open == false || difficulty >= DIFFICULTY_COUNT || stage >= STAGE_COUNT || spec.CellOf(difficulty, stage) == null)
+			{
+				return false;
+			}
+
+			if (stage > 0)
+			{
+				return IsCleared(state, kind, difficulty, stage - 1);
+			}
+
+			if (difficulty == 0)
+			{
+				return true;
+			}
+
+			int lastOfPrevious = spec.StagesOf(difficulty - 1) - 1;
+			return lastOfPrevious >= 0 && IsCleared(state, kind, difficulty - 1, lastOfPrevious);
+		}
+
+		/// <summary>
+		/// 한 판 입장 (changes/idle-dungeon-run v2). 입장권 한 장에 <b>판 시작</b>. 보상은 안에서 싸워 얻음
+		///
+		/// ★ 이미 판이 살아 있으면 안 됨. 던전 안에서 던전을 못 감
+		/// ★ 본판 전장은 손대지 않음. 던전은 자기 전장과 자기 체력 (입장 때 만렙) 으로 따로 돔
+		/// </summary>
+		public static bool TryStart(IdleState state, IdleTuning tuning, IdleDungeonKind kind, int difficulty, int stage)
+		{
+			if (state.Dungeon.Active || IsUnlocked(state, tuning, kind, difficulty, stage) == false || TrySpend(state, kind) == false)
+			{
+				return false;
+			}
+
+			IdleDungeonStageSpec cell = CellOf(tuning, kind, difficulty, stage);
 			IdleDungeonRun run = state.Dungeon;
 			run.Clear();
 			run.Active = true;
 			run.Kind = kind;
-			run.TimeLimitSeconds = spec.TimeLimitSeconds;
-			run.SecondsLeft = spec.TimeLimitSeconds;
-			run.Waves = spec.Waves;
+			run.Difficulty = difficulty;
+			run.Stage = stage;
+			run.TimeLimitSeconds = cell.TimeLimitSeconds;
+			run.SecondsLeft = cell.TimeLimitSeconds;
+			run.Waves = cell.Waves;
 
-			IdleSquad.HealAll(state, tuning);
-			state.Battle.Ready = false;
+			state.EnsureSeatRoom(tuning);
+			IdleSquad.HealAll(state, tuning, run.Arena);
 			return true;
+		}
+
+		/// <summary>지금 판의 칸 규칙. 판이 없으면 null</summary>
+		public static IdleDungeonStageSpec CurrentCell(IdleState state, IdleTuning tuning)
+		{
+			IdleDungeonRun run = state.Dungeon;
+			return run.Active ? CellOf(tuning, run.Kind, run.Difficulty, run.Stage) : null;
+		}
+
+		/// <summary>던전 전장의 다음 웨이브. 세기는 칸의 본판 구역 환산 (절대값), 보스 던전은 보스 하나</summary>
+		public static void WaveOf(IdleState state, IdleTuning tuning, out bool boss, out int count, out int level,
+			out double health, out double damagePerSecond)
+		{
+			IdleDungeonRun run = state.Dungeon;
+			IdleDungeonStageSpec cell = CurrentCell(state, tuning);
+			boss = run.Kind == IdleDungeonKind.Boss;
+			level = cell != null && cell.Level > 0 ? cell.Level : 1;
+			int size = cell != null && cell.WaveSize > 0 ? cell.WaveSize : tuning.WaveSize;
+			count = boss ? 1 : (size > 0 ? size : 1);
+			double healthMultiplier = cell != null && cell.HealthMultiplier > 0d ? cell.HealthMultiplier : 1d;
+			double damageMultiplier = cell != null && cell.DamageMultiplier > 0d ? cell.DamageMultiplier : 1d;
+			health = IdleModel.TargetHealthAt(level, tuning) * healthMultiplier * (boss ? tuning.BossHealthMultiplier : 1d);
+			damagePerSecond = tuning.EnemyDamageByStage.At(level - 1) * damageMultiplier;
 		}
 
 		/// <summary>시간이 흐름. 시간 제한이 있고 다 됐으면 끝 (재화 던전은 그때가 클리어). 반환은 끝났나</summary>
@@ -204,26 +285,27 @@ namespace WitchMendokusai.DomainSDK.Idle
 		public static bool OnKill(IdleState state, IdleTuning tuning, bool boss)
 		{
 			IdleDungeonRun run = state.Dungeon;
-			if (run.Active == false)
+			IdleDungeonStageSpec cell = CurrentCell(state, tuning);
+			if (run.Active == false || cell == null)
 			{
 				return false;
 			}
 
 			run.Kills += 1L;
-			IdleDungeonSpec spec = SpecOf(tuning, run.Kind);
 
-			if (run.Kind == IdleDungeonKind.Gold && spec.GoldSecondsPerKill > 0d)
+			if (run.Kind == IdleDungeonKind.Gold && cell.GoldSecondsPerKill > 0d)
 			{
-				double gold = IdleModel.IncomePerSecond(state, tuning) * spec.GoldSecondsPerKill;
+				double gold = IdleModel.IncomePerSecond(state, tuning) * cell.GoldSecondsPerKill;
 				state.Resource += gold;
 				run.Gold += gold;
 			}
 
 			if (run.Kind == IdleDungeonKind.Boss && boss)
 			{
-				run.Shards += spec.Shards > 0L ? spec.Shards : 0L;
-				state.PrestigeShards += spec.Shards > 0L ? spec.Shards : 0L;
-				run.Gear += IdleGear.Stow(state, tuning, GearTierOf(state, tuning), spec.GearCount);
+				long shards = cell.Shards > 0L ? cell.Shards : 0L;
+				run.Shards += shards;
+				state.PrestigeShards += shards;
+				run.Gear += IdleGear.Stow(state, tuning, GearTierOf(state, tuning, cell), cell.GearCount);
 				EndRun(state, tuning, true);
 				return true;
 			}
@@ -235,7 +317,8 @@ namespace WitchMendokusai.DomainSDK.Idle
 		public static bool OnWaveCleared(IdleState state, IdleTuning tuning)
 		{
 			IdleDungeonRun run = state.Dungeon;
-			if (run.Active == false)
+			IdleDungeonStageSpec cell = CurrentCell(state, tuning);
+			if (run.Active == false || cell == null)
 			{
 				return false;
 			}
@@ -244,8 +327,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
 			if (run.Kind == IdleDungeonKind.Gear)
 			{
-				IdleDungeonSpec spec = SpecOf(tuning, run.Kind);
-				run.Gear += IdleGear.Stow(state, tuning, GearTierOf(state, tuning), spec.GearCount);
+				run.Gear += IdleGear.Stow(state, tuning, GearTierOf(state, tuning, cell), cell.GearCount);
 
 				if (run.Waves > 0 && run.WavesCleared >= run.Waves)
 				{
@@ -257,9 +339,21 @@ namespace WitchMendokusai.DomainSDK.Idle
 			return false;
 		}
 
+		/// <summary>사람이 나감. 얻은 것 들고 즉시 복귀, 판은 실패로 셈 (소탕 안 열림)</summary>
+		public static bool Leave(IdleState state, IdleTuning tuning)
+		{
+			if (state.Dungeon.Active == false)
+			{
+				return false;
+			}
+
+			EndRun(state, tuning, false);
+			return true;
+		}
+
 		/// <summary>
-		/// 판 끝. 얻은 것은 이미 상태에 들어가 있음. 결과를 남기고 전장을 원래 구역으로 (사용자 2026-09-08: 나가면 원래 구역 + 결과 팝업)
-		/// 깼으면 소탕이 열림. 전멸이나 시간 끝 (재화 제외) 은 그때까지 얻은 것만
+		/// 판 끝. 얻은 것은 이미 상태에 들어가 있음. 결과를 남기고 판을 지움. 본판 전장은 그대로 (뒤에서 계속 돌았음)
+		/// 깼으면 그 칸의 소탕이 열림. 전멸, 나가기, 시간 끝 (재화 제외) 은 그때까지 얻은 것만
 		/// </summary>
 		public static void EndRun(IdleState state, IdleTuning tuning, bool cleared)
 		{
@@ -270,53 +364,54 @@ namespace WitchMendokusai.DomainSDK.Idle
 			}
 
 			double spent = run.TimeLimitSeconds > 0d ? run.TimeLimitSeconds - run.SecondsLeft : 0d;
-			state.LastDungeonResult = new IdleDungeonResult(run.Kind, cleared, spent, run.Kills, run.WavesCleared, run.Gold, run.Shards, run.Gear);
+			state.LastDungeonResult = new IdleDungeonResult(run.Kind, run.Difficulty, run.Stage, cleared, spent,
+				run.Kills, run.WavesCleared, run.Gold, run.Shards, run.Gear);
 			state.DungeonResultSequence += 1L;
 
-			if (cleared)
+			if (cleared && run.Difficulty < DIFFICULTY_COUNT && run.Stage < STAGE_COUNT)
 			{
-				state.DungeonCleared |= 1L << (int)run.Kind;
+				state.DungeonCleared |= 1L << BitOf(run.Kind, run.Difficulty, run.Stage);
 			}
 
 			run.Clear();
-			IdleSquad.HealAll(state, tuning);
-			state.Battle.Ready = false;
 		}
 
-		/// <summary>던전이 주는 장비 등급. 지금 구역의 최고 등급</summary>
-		public static int GearTierOf(IdleState state, IdleTuning tuning)
+		/// <summary>칸이 주는 장비 등급. 표에 없으면 칸 구역의 최고 등급 (천장은 환생 횟수)</summary>
+		public static int GearTierOf(IdleState state, IdleTuning tuning, IdleDungeonStageSpec cell)
 		{
-			return IdleDrops.MaxTierAt(state.Stage, state.Ascensions, tuning);
+			return cell.GearTier > 0 ? cell.GearTier : IdleDrops.MaxTierAt(cell.Level, state.Ascensions, tuning);
 		}
 
-		/// <summary>소탕 한 판이 주는 골드 (재화 던전). 화면이 줄에 적을 때도 같은 셈</summary>
-		public static double SweepGoldOf(IdleState state, IdleTuning tuning, IdleDungeonKind kind)
+		/// <summary>소탕 한 판이 주는 골드 (재화 던전). 화면이 칸에 적을 때도 같은 셈</summary>
+		public static double SweepGoldOf(IdleState state, IdleTuning tuning, IdleDungeonKind kind, IdleDungeonStageSpec cell)
 		{
-			IdleDungeonSpec spec = SpecOf(tuning, kind);
-			return kind == IdleDungeonKind.Gold ? IdleModel.IncomePerSecond(state, tuning) * spec.SweepGoldSeconds : 0d;
+			return kind == IdleDungeonKind.Gold && cell != null
+				? IdleModel.IncomePerSecond(state, tuning) * cell.SweepGoldSeconds
+				: 0d;
 		}
 
 		/// <summary>
-		/// 남은 입장권을 한 번에 쓴다 (소탕). 한 번이라도 깬 던전만 (사용자 2026-09-08). 한 판은 풀 클리어 몫
+		/// 남은 입장권을 한 번에 쓴다 (소탕). 한 번이라도 깬 칸만 (사용자 2026-09-08). 한 판은 그 칸 풀 클리어 몫
 		///
 		/// ★ 무작위 없음. 사람이 누를 때만 도는 자리지만 보상까지 굴리면 저장을 껐다 켜서 다시 뽑는 길이 생김
 		/// ★ 가방이 차면 장비는 그만 들어오지만 골드와 조각은 계속 들어옴
 		/// </summary>
-		public static bool TrySweep(IdleState state, IdleTuning tuning, IdleDungeonKind kind, out IdleDungeonReward reward)
+		public static bool TrySweep(IdleState state, IdleTuning tuning, IdleDungeonKind kind, int difficulty, int stage,
+			out IdleDungeonReward reward)
 		{
 			reward = new IdleDungeonReward(kind, 0, 0d, 0L, 0);
+			IdleDungeonStageSpec cell = CellOf(tuning, kind, difficulty, stage);
 
-			if (state.Dungeon.Active || IsOpen(tuning, kind) == false || IsCleared(state, kind) == false)
+			if (state.Dungeon.Active || cell == null || IsCleared(state, kind, difficulty, stage) == false)
 			{
 				return false;
 			}
 
-			IdleDungeonSpec spec = SpecOf(tuning, kind);
 			int runs = 0;
 			double gold = 0d;
 			long shards = 0L;
 			int gear = 0;
-			int tier = GearTierOf(state, tuning);
+			int tier = GearTierOf(state, tuning, cell);
 
 			while (TrySpend(state, kind))
 			{
@@ -324,17 +419,17 @@ namespace WitchMendokusai.DomainSDK.Idle
 				switch (kind)
 				{
 					case IdleDungeonKind.Gold:
-						double got = SweepGoldOf(state, tuning, kind);
+						double got = SweepGoldOf(state, tuning, kind, cell);
 						state.Resource += got;
 						gold += got;
 						break;
 					case IdleDungeonKind.Boss:
-						shards += spec.Shards > 0L ? spec.Shards : 0L;
-						state.PrestigeShards += spec.Shards > 0L ? spec.Shards : 0L;
-						gear += IdleGear.Stow(state, tuning, tier, spec.GearCount);
+						shards += cell.Shards > 0L ? cell.Shards : 0L;
+						state.PrestigeShards += cell.Shards > 0L ? cell.Shards : 0L;
+						gear += IdleGear.Stow(state, tuning, tier, cell.GearCount);
 						break;
 					case IdleDungeonKind.Gear:
-						gear += IdleGear.Stow(state, tuning, tier, spec.GearCount * (spec.Waves > 0 ? spec.Waves : 1));
+						gear += IdleGear.Stow(state, tuning, tier, cell.GearCount * (cell.Waves > 0 ? cell.Waves : 1));
 						break;
 				}
 			}

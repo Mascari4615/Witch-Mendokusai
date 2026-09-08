@@ -5,13 +5,13 @@ namespace WitchMendokusai.DomainSDK.Idle
     // IdleBattleSim.cs 의 Strike 조각. 같은 클래스의 partial. 상태(필드)는 원본 파일을 본다. 타격.
     public static partial class IdleBattleSim
     {
-        private static void StrikeByDolls(IdleState state, IdleTuning tuning, double delta)
+        private static void StrikeByDolls(IdleState state, IdleTuning tuning, in IdleArena arena, double delta)
         {
-            IdleBattle battle = state.Battle;
+            IdleBattle battle = arena.Battle;
 
             for (int seat = 0; seat < IdleSquad.SEAT_COUNT; seat++)
             {
-                if (IdleSquad.Standing(state, seat) == false)
+                if (IdleSquad.Standing(state, arena, seat) == false)
                 {
                     continue;
                 }
@@ -43,7 +43,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
                     battle.Cooldown[seat] += interval;
                     target.Health -= damage;
-                    state.HitsOnTarget += 1L;
+                    CountHit(state, arena);
                     battle.Hits.Add(new IdleHit(seat, target.Index, damage, false));
 
                     if (target.Health <= 0d)
@@ -55,9 +55,18 @@ namespace WitchMendokusai.DomainSDK.Idle
             }
         }
 
-        private static void StrikeByFoes(IdleState state, IdleTuning tuning, double delta)
+        /// <summary>본판 타격 수 (HitsOnTarget) 는 구역 대상 게이지용. 던전 타격은 안 셈</summary>
+        private static void CountHit(IdleState state, in IdleArena arena)
         {
-            IdleBattle battle = state.Battle;
+            if (arena.Dungeon == false)
+            {
+                state.HitsOnTarget += 1L;
+            }
+        }
+
+        private static void StrikeByFoes(IdleState state, IdleTuning tuning, in IdleArena arena, double delta)
+        {
+            IdleBattle battle = arena.Battle;
 
             for (int at = 0; at < battle.Foes.Count; at++)
             {
@@ -71,7 +80,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
                 for (int guard = 0; guard < MAX_HITS_PER_TICK && foe.Cooldown <= EPSILON; guard++)
                 {
-                    int front = FrontSeat(state);
+                    int front = FrontSeat(state, arena);
                     if (front < 0)
                     {
                         foe.Cooldown = 0d;
@@ -87,13 +96,13 @@ namespace WitchMendokusai.DomainSDK.Idle
 
                     foe.Cooldown += foe.AttackSeconds;
                     double received = IdleSquad.DamageTakenBySeat(state, tuning, front, foe.Damage);
-                    state.SeatHealth[front] -= received;
+                    arena.SeatHealth[front] -= received;
                     battle.Hits.Add(new IdleHit(front, foe.Index, received, true));
 
-                    if (state.SeatHealth[front] <= EPSILON)
+                    if (arena.SeatHealth[front] <= EPSILON)
                     {
-                        state.SeatHealth[front] = 0d;
-                        state.SeatReviveSeconds[front] = 0d;
+                        arena.SeatHealth[front] = 0d;
+                        arena.SeatReviveSeconds[front] = 0d;
                     }
                 }
             }
@@ -101,11 +110,12 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         /// <summary>
         /// 사거리 무시 즉시 <paramref name="seconds"/> 초치 타격 (일제 사격, 손 때리기).
-        /// 시간 진행 없음. 목표는 가장 가까운 적
+        /// 시간 진행 없음. 목표는 가장 가까운 적. 전장은 보고 있는 것 (던전 판이 살아 있으면 던전)
         /// </summary>
         public static void StrikeFor(IdleState state, IdleTuning tuning, double seconds)
         {
-            IdleBattle battle = state.Battle;
+            IdleArena arena = state.ActiveArena;
+            IdleBattle battle = arena.Battle;
             if (seconds <= 0d || battle.Ready == false)
             {
                 return;
@@ -116,7 +126,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
             for (int seat = 0; seat < IdleSquad.SEAT_COUNT && hits > 0L; seat++)
             {
-                if (IdleSquad.Standing(state, seat) == false)
+                if (IdleSquad.Standing(state, arena, seat) == false)
                 {
                     continue;
                 }
@@ -130,12 +140,12 @@ namespace WitchMendokusai.DomainSDK.Idle
                     }
 
                     target.Health -= damage;
-                    state.HitsOnTarget += 1L;
+                    CountHit(state, arena);
                     battle.Hits.Add(new IdleHit(seat, target.Index, damage, false));
 
                     if (target.Health <= 0d)
                     {
-                        ClearDead(state, tuning);
+                        ClearDead(state, tuning, arena);
                     }
                 }
 
@@ -143,15 +153,16 @@ namespace WitchMendokusai.DomainSDK.Idle
                 break;
             }
 
-            if (battle.StageSeen != state.Stage)
+            if (arena.Dungeon == false && battle.StageSeen != state.Stage)
             {
-                Reset(state, tuning);
+                Reset(state, tuning, arena);
             }
         }
 
         public static bool StrikeForTarget(IdleState state, IdleTuning tuning, double seconds, long foeIndex)
         {
-            IdleBattle battle = state.Battle;
+            IdleArena arena = state.ActiveArena;
+            IdleBattle battle = arena.Battle;
             IdleFoe target = battle.FoeOf(foeIndex);
             if (seconds <= 0d || battle.Ready == false || target == null || target.Health <= 0d)
             {
@@ -160,7 +171,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
             double damage = IdleModel.DamageOf(state, tuning);
             long hits = (long)(IdleModel.AttackSpeedOf(state, tuning) * seconds + EPSILON);
-            int seat = FrontSeat(state);
+            int seat = FrontSeat(state, arena);
             if (seat < 0 || hits <= 0L)
             {
                 return false;
@@ -169,22 +180,21 @@ namespace WitchMendokusai.DomainSDK.Idle
             for (long at = 0; at < hits && target.Health > 0d; at++)
             {
                 target.Health -= damage;
-                state.HitsOnTarget += 1L;
+                CountHit(state, arena);
                 battle.Hits.Add(new IdleHit(seat, target.Index, damage, false));
             }
 
             if (target.Health <= 0d)
             {
-                ClearDead(state, tuning);
+                ClearDead(state, tuning, arena);
             }
 
-            if (battle.StageSeen != state.Stage)
+            if (arena.Dungeon == false && battle.StageSeen != state.Stage)
             {
-                Reset(state, tuning);
+                Reset(state, tuning, arena);
             }
 
             return true;
         }
     }
 }
-

@@ -192,6 +192,7 @@ namespace WitchMendokusai.Idle.UI
 				ToggleSplit,
 				() => auxiliaryPopupCoordinator.OpenSettings(),
 				battleActionController.ToggleAutoCast,
+				LeaveDungeon,
 				tooltipController.Bind);
 			cardHandController = new CardHandController(
 				battle,
@@ -276,6 +277,16 @@ namespace WitchMendokusai.Idle.UI
 				RequestRender,
 				SayOnce,
 				settings.NoteSeconds);
+		}
+
+		/// <summary>HUD 나가기. 얻은 것 들고 즉시 복귀, 판은 실패 (사용자 2026-09-08)</summary>
+		private void LeaveDungeon()
+		{
+			if (session.TryLeaveDungeon())
+			{
+				writeDown();
+				RequestRender();
+			}
 		}
 
 		/// <summary>던전 판이 끝나면 (결과 번호가 바뀌면) 결과 팝업 한 번. 첫 사진은 기준만 잡음</summary>
@@ -380,6 +391,7 @@ namespace WitchMendokusai.Idle.UI
 
 			WatchStage(snapshot);
 			WatchDungeonResult(snapshot);
+			screenLayoutController.SetDungeon(snapshot.DungeonRun.Active, (int)OpenedPage);
 			battleHudController.Render(snapshot);
 			auxiliaryPopupCoordinator.Render(snapshot);
 			cardHandController.Render(snapshot);

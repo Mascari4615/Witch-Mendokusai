@@ -80,6 +80,10 @@ MonoBehaviour:
   - 보스 던전
   - 장비 던전
   - 스킬 던전
+  dungeonDifficultyNames:
+  - 보통
+  - 어려움
+  - 지옥
   prestigeAdviceFormat: 연구소. 환생할 때다 (+{0})
   buyProducerAdvice: 투자. 살 것이 있다
   raiseAdvice: 인형. 올릴 것이 있다
@@ -132,6 +136,11 @@ MonoBehaviour:
   dungeonGearRewardFormat: 'T{1} 장비 {0}'
   dungeonFeedbackFormat: '{0} {1}판. {2}'
   dungeonRunFormat: '{0}  {1} 남음'
+  dungeonStageFormat: '{0}단계'
+  dungeonCellFormat: '{0} {1} {2}'
+  dungeonLevelFormat: '적 세기 {0}구역'
+  dungeonLockedText: 앞 단계를 먼저
+  dungeonLeaveText: 나가기
   dungeonResultClearedText: 클리어
   dungeonResultFailedText: 실패
   awaySpanFormat: '{0} 동안 작전이 계속됐습니다'
