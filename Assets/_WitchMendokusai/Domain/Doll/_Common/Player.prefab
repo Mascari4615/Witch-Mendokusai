@@ -1797,6 +1797,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f67cc09feccff944bfd88c4f9bfe2d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WitchMendokusai.UnitMovement
+  groundMovementTuning:
+    enabled: 1
+    acceleration: 18
+    deceleration: 24
+    airAcceleration: 6
+    crouchSpeedMultiplier: 0.4
+    crouchHeightFraction: 0.6
   jumpForce: 5.6
   fallGravityMultiplier: 2.2
   lowJumpGravityMultiplier: 3.1

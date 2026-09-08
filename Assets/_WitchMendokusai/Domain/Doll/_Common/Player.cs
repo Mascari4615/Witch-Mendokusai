@@ -98,6 +98,18 @@ namespace WitchMendokusai
 			EventBusBridge.Unsubscribe<CameraPerspectiveChangedEvent>(OnCameraPerspectiveChanged);
 		}
 
+		private void OnApplicationFocus(bool hasFocus)
+		{
+			if (hasFocus == false && Object != null)
+				Object.UnitMovement.CancelMovementInput();
+		}
+
+		private void OnDisable()
+		{
+			if (Object != null)
+				Object.UnitMovement.CancelMovementInput();
+		}
+
 		private void OnJumpRequested(PlayerJumpRequestedEvent evt) => TryJump();
 		private void OnJumpReleased(PlayerJumpReleasedEvent evt) => StopJump();
 		private void OnSkillUseRequested(PlayerSkillUseRequestedEvent evt) => TryUseSkill(evt.SkillIndex);
@@ -153,7 +165,7 @@ namespace WitchMendokusai
 
 		private void CalcMoveDirection()
 		{
-			Object.UnitMovement.SetMoveDirection(inputManager.MoveInput);
+			Object.UnitMovement.SetAnalogMoveDirection(inputManager.MoveInput);
 		}
 
 		public void SetSprinting(bool isSprinting)
@@ -163,7 +175,7 @@ namespace WitchMendokusai
 
 		public void SetCrouching(bool isCrouching)
 		{
-			UnitStat[UnitStatType.IS_CROUCHING] = isCrouching ? 1 : 0;
+			Object.UnitMovement.SetCrouching(isCrouching);
 		}
 	}
 }

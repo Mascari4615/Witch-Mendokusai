@@ -11,11 +11,13 @@ namespace WitchMendokusai
 	{
 		private readonly UnitObject unitObject;
 		private readonly float sprintSpeedMultiplier;
+		private readonly GroundMovementTuning tuning;
 
-		public InputContributor(UnitObject unitObject, float sprintSpeedMultiplier)
+		public InputContributor(UnitObject unitObject, float sprintSpeedMultiplier, GroundMovementTuning tuning = null)
 		{
 			this.unitObject = unitObject;
 			this.sprintSpeedMultiplier = sprintSpeedMultiplier;
+			this.tuning = tuning;
 		}
 
 		public void Contribute(MotorContext context, float deltaTime)
@@ -34,8 +36,17 @@ namespace WitchMendokusai
 			float horizontalSpeed = GetHorizontalSpeed();
 			Vector3 direction = context.MoveDirection;
 
-			context.Velocity.x = direction.x * horizontalSpeed;
-			context.Velocity.z = direction.z * horizontalSpeed;
+			Vector3 targetVelocity = new(direction.x * horizontalSpeed, 0f, direction.z * horizontalSpeed);
+			if (tuning != null && tuning.Enabled)
+			{
+				Vector3 currentVelocity = new(context.Velocity.x, 0f, context.Velocity.z);
+				float acceleration = context.GroundState == MotorGroundState.Grounded
+					? (direction.sqrMagnitude > 0f ? tuning.Acceleration : tuning.Deceleration)
+					: tuning.AirAcceleration;
+				targetVelocity = Vector3.MoveTowards(currentVelocity, targetVelocity, acceleration * deltaTime);
+			}
+			context.Velocity.x = targetVelocity.x;
+			context.Velocity.z = targetVelocity.z;
 		}
 
 		/// <summary>
@@ -49,6 +60,8 @@ namespace WitchMendokusai
 		private float GetHorizontalSpeed()
 		{
 			float moveSpeed = unitObject.UnitStat[UnitStatType.MOVEMENT_SPEED] / STAT_PER_UNIT_PER_SECOND;
+			if (tuning != null && tuning.Enabled && unitObject.UnitStat[UnitStatType.IS_CROUCHING] > 0)
+				return moveSpeed * tuning.CrouchSpeedMultiplier;
 			if (unitObject.UnitStat[UnitStatType.IS_SPRINTING] > 0)
 				moveSpeed *= sprintSpeedMultiplier;
 

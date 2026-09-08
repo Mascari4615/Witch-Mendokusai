@@ -22,7 +22,8 @@ namespace WitchMendokusai
 		// 조작감을 정하는 수치는 MotorTuning 으로 나갔다.
 		private const int MAX_SLIDE_ITERATIONS = 4;
 		private const float CAPSULE_SHRINK = 0.99f;
-		private const float MIN_REMAINING_SQR = 0.0001f;
+		// 0.1mm 이하만 생략. 1cm 임계값은 느린 스틱 이동을 매 tick 버림
+		private const float MIN_REMAINING_SQR = 0.00000001f;
 		private const int MAX_DEPENETRATION_ITERATIONS = 4;
 		private const float MIN_CREASE_SIN_SQR = 0.01f;      // 두 wall normal 외적 크기 제곱이 이 값 이상이면 crease 처리
 		private const float MIN_STEP_MAGNITUDE = 0.001f;     // step offset 시도할 잔여 horizontal 이동 최소량

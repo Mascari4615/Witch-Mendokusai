@@ -22,6 +22,7 @@ namespace WitchMendokusai
 		// Move tuning.
 		[Header("Move Tuning")]
 		[SerializeField] private float sprintSpeedMultiplier = 2f;
+		[SerializeField] private GroundMovementTuning groundMovementTuning = new();
 
 		// 캐릭터가 지형을 어떻게 밟는지 — 오를 수 있는 턱 높이 / 걸을 수 있는 경사 / 계단 따라 붙는 거리 등.
 		// 지형 제작의 암묵 규칙이 되는 값들이라 prefab 별로 다르게 줄 수 있어야 한다 (TASK-WM-199).
@@ -47,6 +48,8 @@ namespace WitchMendokusai
 		private Motor motor;
 		private JumpContributor jumpContributor;
 		private ExternalImpulseContributor externalImpulse;
+		private CapsulePosture posture;
+		private bool crouchRequested;
 
 		// Hit-stop — motor tick skip 동안 victim 만 멈춤. timescale 안 건드림.
 		private float pauseRemaining;
@@ -103,6 +106,7 @@ namespace WitchMendokusai
 			unitRigidBody = GetComponent<Rigidbody>();
 			unitObject = GetComponent<UnitObject>();
 			unitCapsule = GetComponent<CapsuleCollider>();
+			posture = new CapsulePosture(unitCapsule);
 
 			// Kinematic 캐릭터 — 위치 결정권은 Motor에. Rigidbody는 충돌 트리거 송신용.
 			unitRigidBody.isKinematic = true;
@@ -117,7 +121,7 @@ namespace WitchMendokusai
 			// IsExternallyDriven=true 표시. Input은 그 플래그 보고 자기 기여 보류.
 			externalImpulse = new ExternalImpulseContributor();
 			motor.AddContributor(externalImpulse);
-			motor.AddContributor(new InputContributor(unitObject, sprintSpeedMultiplier));
+			motor.AddContributor(new InputContributor(unitObject, sprintSpeedMultiplier, groundMovementTuning));
 			motor.AddContributor(new GravityContributor());
 
 			jumpContributor = new JumpContributor(
@@ -155,6 +159,11 @@ namespace WitchMendokusai
 			MotorContext context = motor.Context;
 			context.MoveDirection = MoveDirectionWorld;
 			context.BlockedByExternal = IsMovementBlocked();
+			if (groundMovementTuning.Enabled)
+			{
+				posture.SetCrouching(crouchRequested, groundMovementTuning.CrouchHeightFraction);
+				unitObject.UnitStat[UnitStatType.IS_CROUCHING] = posture.IsCrouching ? 1 : 0;
+			}
 
 			motor.Tick(Time.fixedDeltaTime);
 
@@ -168,18 +177,23 @@ namespace WitchMendokusai
 
 		public void SetMoveDirection(Vector3 input) => SetMoveDirection(new Vector2(input.x, input.z));
 
-		public void SetMoveDirection(Vector2 input)
+		public void SetMoveDirection(Vector2 input) => SetInputDirection(input.normalized);
+
+		// 플레이어 스틱 크기 보존. AI 방향 명령은 기존 단위 벡터 계약 유지
+		public void SetAnalogMoveDirection(Vector2 input) => SetInputDirection(Vector2.ClampMagnitude(input, 1f));
+
+		private void SetInputDirection(Vector2 input)
 		{
 			float horizontalInput = input.x;
 			float verticalInput = input.y;
 
-			MoveDirectionLocal = new Vector3(horizontalInput, 0f, verticalInput).normalized;
-			MoveDirectionWorld = ((horizontalInput * transform.right) + (verticalInput * transform.forward)).normalized;
+			MoveDirectionLocal = new Vector3(horizontalInput, 0f, verticalInput);
+			MoveDirectionWorld = (horizontalInput * transform.right) + (verticalInput * transform.forward);
 
 			unitObject.SpriteRenderer.flipX = (horizontalInput == 0f) ? unitObject.SpriteRenderer.flipX : (horizontalInput < 0f);
 
 			if (horizontalInput != 0f || verticalInput != 0f)
-				UpdateLookDirection(MoveDirectionWorld);
+				UpdateLookDirection(MoveDirectionWorld.normalized);
 		}
 
 		private void UpdateLookDirection(Vector3 newDirection)
@@ -225,6 +239,22 @@ namespace WitchMendokusai
 		public void StopJump()
 		{
 			jumpContributor.ReleaseJump();
+		}
+
+		public void SetCrouching(bool requested)
+		{
+			crouchRequested = requested;
+			if (groundMovementTuning.Enabled == false)
+				unitObject.UnitStat[UnitStatType.IS_CROUCHING] = requested ? 1 : 0;
+		}
+
+		public void CancelMovementInput()
+		{
+			MoveDirectionLocal = Vector3.zero;
+			MoveDirectionWorld = Vector3.zero;
+			unitObject.UnitStat[UnitStatType.IS_SPRINTING] = 0;
+			SetCrouching(false);
+			jumpContributor.CancelInput();
 		}
 
 		/// <summary>

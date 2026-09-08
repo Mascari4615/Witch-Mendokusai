@@ -37,23 +37,9 @@ namespace WitchMendokusai
 				return;
 			}
 
-			Keyboard kb = Keyboard.current;
-			float h = 0f;
-			float v = 0f;
-			if (kb != null)
-			{
-				if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) h += 1f;
-				if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) h -= 1f;
-				if (kb.wKey.isPressed || kb.upArrowKey.isPressed) v += 1f;
-				if (kb.sKey.isPressed || kb.downArrowKey.isPressed) v -= 1f;
-			}
-
-			if (h == 0)
-				h = JoystickBridge.GetX();
-			if (v == 0)
-				v = JoystickBridge.GetY();
-
-			MoveInput = new Vector2(h, v).normalized;
+			Vector2 deviceInput = inputActionAsset["Player/Move"].ReadValue<Vector2>();
+			Vector2 touchInput = new(JoystickBridge.GetX(), JoystickBridge.GetY());
+			MoveInput = Vector2.ClampMagnitude(deviceInput.sqrMagnitude >= touchInput.sqrMagnitude ? deviceInput : touchInput, 1f);
 		}
 
 		private void UpdateCameraRotateInput()

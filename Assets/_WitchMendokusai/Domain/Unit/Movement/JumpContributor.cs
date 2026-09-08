@@ -73,6 +73,12 @@ namespace WitchMendokusai
 			isJumpHeld = false;
 		}
 
+		public void CancelInput()
+		{
+			jumpBufferTimer = 0f;
+			isJumpHeld = false;
+		}
+
 		public float ConsumeLandedImpact()
 		{
 			hasPendingLanded = false;
@@ -83,6 +89,8 @@ namespace WitchMendokusai
 		{
 			bool isGrounded = context.GroundState == MotorGroundState.Grounded;
 			float verticalVelocity = context.Velocity.y;
+			if (context.BlockedByExternal || unitObject.UnitStat[UnitStatType.DEAD] > 0)
+				CancelInput();
 
 			coyoteTimer = isGrounded ? coyoteTime : Mathf.Max(0f, coyoteTimer - deltaTime);
 			jumpBufferTimer = Mathf.Max(0f, jumpBufferTimer - deltaTime);
