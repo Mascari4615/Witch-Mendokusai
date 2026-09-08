@@ -114,5 +114,8 @@ namespace WitchMendokusai.DomainSDK.Idle
         /// <summary>오프라인 실측 근사 (combat.md 6)</summary>
         public int MeasuredStage;
         public double MeasuredKillsPerSecond;
+
+        /// <summary>한 번이라도 깬 던전 (비트). 소탕 조건 (changes/idle-dungeon-run)</summary>
+        public long DungeonCleared;
     }
 }

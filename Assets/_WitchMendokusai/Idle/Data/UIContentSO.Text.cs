@@ -70,6 +70,12 @@ namespace WitchMendokusai.Idle
 		public string DungeonFeedbackText(string name, int runs, string got) =>
 			string.Format(dungeonFeedbackFormat, name, runs, got);
 
+		/// <summary>판 도는 동안 HUD. 던전 이름과 남은 시간</summary>
+		public string DungeonRunText(string name, double secondsLeft) =>
+			string.Format(dungeonRunFormat, name, DescribeSpan(secondsLeft));
+
+		public string DungeonResultStatusText(bool cleared) => cleared ? dungeonResultClearedText : dungeonResultFailedText;
+
 		public string AwaySpanText(double seconds) => string.Format(awaySpanFormat, DescribeSpan(seconds));
 
 		public string AwayWarningText(double capSeconds, double lostSeconds) =>

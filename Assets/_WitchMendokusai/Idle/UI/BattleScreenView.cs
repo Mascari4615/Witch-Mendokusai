@@ -44,6 +44,8 @@ namespace WitchMendokusai.Idle.UI
 		private float veilLeft;
 		private int veilStage = -1;
 		/// <summary>화면 알림. 설정 팝업 로그와 <b>같은 말</b>을 전투 창에도 띄운다</summary>
+		private VisualElement dungeonResultPopup;
+		private long shownDungeonResult = -1L;
 		private Label battleNote;
 		private float battleNoteLeft;
 		private EventCallback<NavigationCancelEvent> onCancel;
@@ -110,6 +112,7 @@ namespace WitchMendokusai.Idle.UI
 			BuildAuxiliaryPopups();
 			BuildSelectionPopups();
 			auxiliaryPopupCoordinator.ShowAway(UsePopup("away-popup-host"), away);
+			dungeonResultPopup = UsePopup("dungeon-popup-host");
 			HookCancel();
 
 			if (stage != null)
@@ -275,6 +278,24 @@ namespace WitchMendokusai.Idle.UI
 				settings.NoteSeconds);
 		}
 
+		/// <summary>던전 판이 끝나면 (결과 번호가 바뀌면) 결과 팝업 한 번. 첫 사진은 기준만 잡음</summary>
+		private void WatchDungeonResult(IdleSnapshot snapshot)
+		{
+			if (shownDungeonResult < 0L)
+			{
+				shownDungeonResult = snapshot.DungeonResultSequence;
+				return;
+			}
+
+			if (snapshot.DungeonResultSequence == shownDungeonResult)
+			{
+				return;
+			}
+
+			shownDungeonResult = snapshot.DungeonResultSequence;
+			DungeonResultPresenter.Bind(dungeonResultPopup, snapshot.LastDungeonResult, content);
+		}
+
 		private VisualElement UsePopup(string hostName)
 		{
 			VisualElement host = root.RequireQ<VisualElement>(hostName);
@@ -358,6 +379,7 @@ namespace WitchMendokusai.Idle.UI
 			}
 
 			WatchStage(snapshot);
+			WatchDungeonResult(snapshot);
 			battleHudController.Render(snapshot);
 			auxiliaryPopupCoordinator.Render(snapshot);
 			cardHandController.Render(snapshot);

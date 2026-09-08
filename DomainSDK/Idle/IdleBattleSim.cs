@@ -146,6 +146,13 @@ namespace WitchMendokusai.DomainSDK.Idle
         {
             IdleBattle battle = state.Battle;
 
+            // 던전 판은 시간이 정함. 끝나면 전장을 원래 구역으로 다시 세움
+            if (IdleDungeons.TickRun(state, tuning, delta))
+            {
+                Reset(state, tuning);
+                return 0L;
+            }
+
             if (battle.Foes.Count == 0)
             {
                 SpawnWave(state, tuning);
@@ -164,10 +171,25 @@ namespace WitchMendokusai.DomainSDK.Idle
 
             long kills = ClearDead(state, tuning);
 
+            if (state.Dungeon.Active == false && battle.Ready == false)
+            {
+                // 던전 판이 처치로 끝남 (보스, 마지막 웨이브). 원래 구역으로
+                Reset(state, tuning);
+                return kills;
+            }
+
             if (FrontSeat(state) < 0)
             {
-                // 전멸. 지금 코어의 실패 규칙 그대로 물러나 반복
-                IdleSquad.FallBack(state, tuning);
+                if (state.Dungeon.Active)
+                {
+                    // 던전 전멸. 얻은 것만 들고 나감 (사용자 2026-09-08). 구역 후퇴 없음
+                    IdleDungeons.EndRun(state, tuning, false);
+                }
+                else
+                {
+                    // 전멸. 지금 코어의 실패 규칙 그대로 물러나 반복
+                    IdleSquad.FallBack(state, tuning);
+                }
                 Reset(state, tuning);
                 return kills;
             }

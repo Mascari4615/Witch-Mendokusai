@@ -10,6 +10,7 @@
             <ui:Label name="op-name" class="idle-op-name" />
             <ui:VisualElement name="wave-dots" class="idle-wave" />
             <ui:Label name="wave-label" class="idle-op-cap" />
+            <ui:Label name="dungeon-timer" class="idle-op-cap idle-dungeon-timer" />
         </ui:VisualElement>
         <ui:VisualElement class="idle-step-row">
             <ui:VisualElement class="idle-chip-dark idle-stepper">

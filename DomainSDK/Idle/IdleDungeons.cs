@@ -117,78 +117,226 @@ namespace WitchMendokusai.DomainSDK.Idle
 			return nextBoundary - nowUnixSeconds;
 		}
 
+		/// <summary>던전 규칙. 값은 SO 가 준 IdleTuning.Dungeons, 없으면 코드 기본값</summary>
+		public static IdleDungeonSpec SpecOf(IdleTuning tuning, IdleDungeonKind kind)
+		{
+			IdleDungeonSpec[] specs = tuning.Dungeons;
+			if (specs != null)
+			{
+				for (int index = 0; index < specs.Length; index++)
+				{
+					if (specs[index] != null && specs[index].Kind == kind)
+					{
+						return specs[index];
+					}
+				}
+			}
+
+			IdleDungeonSpec[] defaults = IdleDungeonSpec.Defaults();
+			return defaults[(int)kind];
+		}
+
 		/// <summary>
 		/// 그 던전이 지금 열려 있나. 스킬 던전은 스킬 재료가 아직 없어 닫혀 있음 (economy.md 표 2)
 		///
 		/// ★ 화면이 이유를 말하려면 여닫힘과 입장권을 따로 물어야 함. 입장권이 0 인 것과
 		///   아직 안 만든 것은 사람에게 다른 말
 		/// </summary>
-		public static bool IsOpen(IdleDungeonKind kind)
+		public static bool IsOpen(IdleTuning tuning, IdleDungeonKind kind)
 		{
-			return kind != IdleDungeonKind.Skill;
+			return SpecOf(tuning, kind).Open;
+		}
+
+		/// <summary>한 번이라도 끝까지 깬 던전인가. 소탕이 열리는 조건 (사용자 2026-09-08)</summary>
+		public static bool IsCleared(IdleState state, IdleDungeonKind kind)
+		{
+			return (state.DungeonCleared & (1L << (int)kind)) != 0L;
 		}
 
 		/// <summary>
-		/// 한 판 입장 (economy.md 표 2). 입장권 한 장을 쓰고 그 던전 보상을 줌
+		/// 한 판 입장 (changes/idle-dungeon-run). 입장권 한 장에 <b>판 시작</b>. 보상은 안에서 싸워 얻음
 		///
-		/// ★ 무작위 없음. 사람이 누를 때만 도는 자리지만 보상까지 굴리면 저장을 껐다 켜서
-		///   다시 뽑는 길이 생김. 던전은 <b>고정 보상</b>이고 재미는 어디를 갈지 고르는 데 둠
-		/// ★ 골드는 지금 초당 수입에 견줌. 단계가 오르면 던전도 같이 커져야 늘 갈 이유가 생김
+		/// ★ 이미 판이 살아 있으면 안 됨. 던전 안에서 던전을 못 감
+		/// ★ 시작하면 전장 다시 세움 (battle.Ready 를 내림). 다음 틱에 던전 웨이브 생김
 		/// </summary>
-		public static bool TryEnter(IdleState state, IdleTuning tuning, IdleDungeonKind kind, out IdleDungeonReward reward)
+		public static bool TryStart(IdleState state, IdleTuning tuning, IdleDungeonKind kind)
 		{
-			reward = default;
-
-			if (IsOpen(kind) == false || TrySpend(state, kind) == false)
+			if (state.Dungeon.Active || IsOpen(tuning, kind) == false || TrySpend(state, kind) == false)
 			{
 				return false;
 			}
 
-			double gold = 0d;
-			long shards = 0L;
-			int gear = 0;
-			int tier = IdleDrops.MaxTierAt(state.Stage, state.Ascensions, tuning);
+			IdleDungeonSpec spec = SpecOf(tuning, kind);
+			IdleDungeonRun run = state.Dungeon;
+			run.Clear();
+			run.Active = true;
+			run.Kind = kind;
+			run.TimeLimitSeconds = spec.TimeLimitSeconds;
+			run.SecondsLeft = spec.TimeLimitSeconds;
+			run.Waves = spec.Waves;
 
-			switch (kind)
-			{
-				case IdleDungeonKind.Gold:
-					gold = IdleModel.IncomePerSecond(state, tuning) * tuning.DungeonGoldSeconds;
-					state.Resource += gold;
-					break;
-				case IdleDungeonKind.Boss:
-					shards = tuning.DungeonBossShards > 0L ? tuning.DungeonBossShards : 0L;
-					state.PrestigeShards += shards;
-					gear = IdleGear.Stow(state, tuning, tier, tuning.DungeonBossGear);
-					break;
-				case IdleDungeonKind.Gear:
-					gear = IdleGear.Stow(state, tuning, tier, tuning.DungeonGearCount);
-					break;
-			}
-
-			reward = new IdleDungeonReward(kind, 1, gold, shards, gear);
+			IdleSquad.HealAll(state, tuning);
+			state.Battle.Ready = false;
 			return true;
 		}
 
+		/// <summary>시간이 흐름. 시간 제한이 있고 다 됐으면 끝 (재화 던전은 그때가 클리어). 반환은 끝났나</summary>
+		public static bool TickRun(IdleState state, IdleTuning tuning, double delta)
+		{
+			IdleDungeonRun run = state.Dungeon;
+			if (run.Active == false || run.TimeLimitSeconds <= 0d)
+			{
+				return false;
+			}
+
+			run.SecondsLeft -= delta;
+			if (run.SecondsLeft > 0d)
+			{
+				return false;
+			}
+
+			run.SecondsLeft = 0d;
+			EndRun(state, tuning, run.Kind == IdleDungeonKind.Gold);
+			return true;
+		}
+
+		/// <summary>던전 안 처치 하나. 재화 던전은 처치마다 골드. 보스를 잡으면 조각과 장비를 주고 끝. 반환은 끝났나</summary>
+		public static bool OnKill(IdleState state, IdleTuning tuning, bool boss)
+		{
+			IdleDungeonRun run = state.Dungeon;
+			if (run.Active == false)
+			{
+				return false;
+			}
+
+			run.Kills += 1L;
+			IdleDungeonSpec spec = SpecOf(tuning, run.Kind);
+
+			if (run.Kind == IdleDungeonKind.Gold && spec.GoldSecondsPerKill > 0d)
+			{
+				double gold = IdleModel.IncomePerSecond(state, tuning) * spec.GoldSecondsPerKill;
+				state.Resource += gold;
+				run.Gold += gold;
+			}
+
+			if (run.Kind == IdleDungeonKind.Boss && boss)
+			{
+				run.Shards += spec.Shards > 0L ? spec.Shards : 0L;
+				state.PrestigeShards += spec.Shards > 0L ? spec.Shards : 0L;
+				run.Gear += IdleGear.Stow(state, tuning, GearTierOf(state, tuning), spec.GearCount);
+				EndRun(state, tuning, true);
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>던전 안 웨이브 하나를 다 잡음. 장비 던전은 웨이브마다 장비, 다 밀면 끝. 반환은 끝났나</summary>
+		public static bool OnWaveCleared(IdleState state, IdleTuning tuning)
+		{
+			IdleDungeonRun run = state.Dungeon;
+			if (run.Active == false)
+			{
+				return false;
+			}
+
+			run.WavesCleared += 1;
+
+			if (run.Kind == IdleDungeonKind.Gear)
+			{
+				IdleDungeonSpec spec = SpecOf(tuning, run.Kind);
+				run.Gear += IdleGear.Stow(state, tuning, GearTierOf(state, tuning), spec.GearCount);
+
+				if (run.Waves > 0 && run.WavesCleared >= run.Waves)
+				{
+					EndRun(state, tuning, true);
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		/// <summary>
-		/// 남은 입장권을 한 번에 쓴다 (소탕). 한 판씩 들어간 것과 결과가 같아야 함
+		/// 판 끝. 얻은 것은 이미 상태에 들어가 있음. 결과를 남기고 전장을 원래 구역으로 (사용자 2026-09-08: 나가면 원래 구역 + 결과 팝업)
+		/// 깼으면 소탕이 열림. 전멸이나 시간 끝 (재화 제외) 은 그때까지 얻은 것만
+		/// </summary>
+		public static void EndRun(IdleState state, IdleTuning tuning, bool cleared)
+		{
+			IdleDungeonRun run = state.Dungeon;
+			if (run.Active == false)
+			{
+				return;
+			}
+
+			double spent = run.TimeLimitSeconds > 0d ? run.TimeLimitSeconds - run.SecondsLeft : 0d;
+			state.LastDungeonResult = new IdleDungeonResult(run.Kind, cleared, spent, run.Kills, run.WavesCleared, run.Gold, run.Shards, run.Gear);
+			state.DungeonResultSequence += 1L;
+
+			if (cleared)
+			{
+				state.DungeonCleared |= 1L << (int)run.Kind;
+			}
+
+			run.Clear();
+			IdleSquad.HealAll(state, tuning);
+			state.Battle.Ready = false;
+		}
+
+		/// <summary>던전이 주는 장비 등급. 지금 구역의 최고 등급</summary>
+		public static int GearTierOf(IdleState state, IdleTuning tuning)
+		{
+			return IdleDrops.MaxTierAt(state.Stage, state.Ascensions, tuning);
+		}
+
+		/// <summary>소탕 한 판이 주는 골드 (재화 던전). 화면이 줄에 적을 때도 같은 셈</summary>
+		public static double SweepGoldOf(IdleState state, IdleTuning tuning, IdleDungeonKind kind)
+		{
+			IdleDungeonSpec spec = SpecOf(tuning, kind);
+			return kind == IdleDungeonKind.Gold ? IdleModel.IncomePerSecond(state, tuning) * spec.SweepGoldSeconds : 0d;
+		}
+
+		/// <summary>
+		/// 남은 입장권을 한 번에 쓴다 (소탕). 한 번이라도 깬 던전만 (사용자 2026-09-08). 한 판은 풀 클리어 몫
 		///
-		/// ★ 가방이 차면 장비는 그만 들어오지만 골드와 조각은 계속 들어옴. 한 판씩 눌렀을 때와 같음
+		/// ★ 무작위 없음. 사람이 누를 때만 도는 자리지만 보상까지 굴리면 저장을 껐다 켜서 다시 뽑는 길이 생김
+		/// ★ 가방이 차면 장비는 그만 들어오지만 골드와 조각은 계속 들어옴
 		/// </summary>
 		public static bool TrySweep(IdleState state, IdleTuning tuning, IdleDungeonKind kind, out IdleDungeonReward reward)
 		{
 			reward = new IdleDungeonReward(kind, 0, 0d, 0L, 0);
 
+			if (state.Dungeon.Active || IsOpen(tuning, kind) == false || IsCleared(state, kind) == false)
+			{
+				return false;
+			}
+
+			IdleDungeonSpec spec = SpecOf(tuning, kind);
 			int runs = 0;
 			double gold = 0d;
 			long shards = 0L;
 			int gear = 0;
+			int tier = GearTierOf(state, tuning);
 
-			while (TryEnter(state, tuning, kind, out IdleDungeonReward one))
+			while (TrySpend(state, kind))
 			{
 				runs++;
-				gold += one.Gold;
-				shards += one.Shards;
-				gear += one.Gear;
+				switch (kind)
+				{
+					case IdleDungeonKind.Gold:
+						double got = SweepGoldOf(state, tuning, kind);
+						state.Resource += got;
+						gold += got;
+						break;
+					case IdleDungeonKind.Boss:
+						shards += spec.Shards > 0L ? spec.Shards : 0L;
+						state.PrestigeShards += spec.Shards > 0L ? spec.Shards : 0L;
+						gear += IdleGear.Stow(state, tuning, tier, spec.GearCount);
+						break;
+					case IdleDungeonKind.Gear:
+						gear += IdleGear.Stow(state, tuning, tier, spec.GearCount * (spec.Waves > 0 ? spec.Waves : 1));
+						break;
+				}
 			}
 
 			if (runs == 0)

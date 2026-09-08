@@ -18,8 +18,24 @@ namespace WitchMendokusai.DomainSDK.Idle
                     continue;
                 }
 
+                bool boss = battle.Foes[at].Boss;
                 battle.Foes.RemoveAt(at);
                 kills++;
+
+                if (state.Dungeon.Active)
+                {
+                    // 던전 안 처치. 구역 셈은 멈추고 판 규칙만 (changes/idle-dungeon-run)
+                    state.Kills += 1L;
+                    IdleDrops.Accrue(state, tuning, 1L, state.Stage);
+                    IdleSquad.HealOnKills(state, tuning, 1L);
+                    if (IdleDungeons.OnKill(state, tuning, boss))
+                    {
+                        battle.Foes.Clear();
+                        break;
+                    }
+                    continue;
+                }
+
                 OnKill(state, tuning);
 
                 if (battle.StageSeen != state.Stage)
@@ -27,6 +43,15 @@ namespace WitchMendokusai.DomainSDK.Idle
                     // 구역 클리어. 남은 적은 무의미. Tick 끝에서 Reset
                     battle.Foes.Clear();
                     break;
+                }
+            }
+
+            if (kills > 0L && state.Dungeon.Active && battle.Foes.Count == 0)
+            {
+                // 던전 웨이브 하나를 다 잡음. 장비 던전은 여기서 장비, 마지막이면 끝
+                if (IdleDungeons.OnWaveCleared(state, tuning))
+                {
+                    battle.Foes.Clear();
                 }
             }
 
@@ -188,6 +213,13 @@ namespace WitchMendokusai.DomainSDK.Idle
             int left = mobs - state.KillsInStage;
             bool bossWave = left <= 0;
             int count = bossWave ? 1 : Math.Min(Math.Max(1, tuning.WaveSize), left);
+
+            if (state.Dungeon.Active)
+            {
+                // 던전 웨이브. 보스 던전은 보스 하나, 나머지는 잡몹 한 무리. 구역 진행도와 무관
+                bossWave = state.Dungeon.Kind == IdleDungeonKind.Boss;
+                count = bossWave ? 1 : Math.Max(1, tuning.WaveSize);
+            }
 
             IdleRandom dice = new IdleRandom(state.Stage * 7919L + battle.Wave * 104729L + 1L);
             double health = IdleModel.TargetHealthAt(state.Stage, tuning);

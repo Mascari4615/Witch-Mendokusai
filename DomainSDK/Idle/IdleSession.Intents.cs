@@ -77,13 +77,13 @@ namespace WitchMendokusai.DomainSDK.Idle
             return IdleGacha.TryPullBatch(state, tuning, PickupNow(), new System.Collections.Generic.List<IdleHeroPull>());
         }
 
-        /// <summary>던전 한 판. 받은 것을 돌려준다</summary>
-        public bool TryEnterDungeon(IdleDungeonKind kind, out IdleDungeonReward reward)
+        /// <summary>던전 한 판 시작 (changes/idle-dungeon-run). 보상은 안에서 싸워 얻고 결과는 사진의 LastDungeonResult</summary>
+        public bool TryEnterDungeon(IdleDungeonKind kind)
         {
-            return IdleDungeons.TryEnter(state, tuning, kind, out reward);
+            return IdleDungeons.TryStart(state, tuning, kind);
         }
 
-        /// <summary>남은 입장권을 한 번에 (소탕)</summary>
+        /// <summary>남은 입장권을 한 번에 (소탕). 한 번 깬 던전만</summary>
         public bool TrySweepDungeon(IdleDungeonKind kind, out IdleDungeonReward reward)
         {
             return IdleDungeons.TrySweep(state, tuning, kind, out reward);
@@ -91,7 +91,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
         public bool Send(IdleEnterDungeonIntent intent)
         {
-            return IdleDungeons.TryEnter(state, tuning, intent.Kind, out IdleDungeonReward _);
+            return IdleDungeons.TryStart(state, tuning, intent.Kind);
         }
 
         public bool Send(IdleSweepDungeonIntent intent)

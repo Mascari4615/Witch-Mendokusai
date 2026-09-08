@@ -75,6 +75,9 @@ namespace WitchMendokusai.Idle
 		[SerializeField] private string dungeonBossRewardFormat;
 		[SerializeField] private string dungeonGearRewardFormat;
 		[SerializeField] private string dungeonFeedbackFormat;
+		[SerializeField] private string dungeonRunFormat;
+		[SerializeField] private string dungeonResultClearedText;
+		[SerializeField] private string dungeonResultFailedText;
 		[SerializeField] private string awaySpanFormat;
 		[SerializeField] private string awayWarningFormat;
 		[SerializeField] private string selectHeroBeforeGearText;
@@ -265,6 +268,7 @@ namespace WitchMendokusai.Idle
 				appraisedEquippedGearText, potentialFormat, gearPotentialFormat, dungeonRowFormat, awaySpanFormat,
 				dungeonTicketFormat, dungeonRefillFormat, dungeonEnterText, dungeonSweepFormat, dungeonClosedText,
 				dungeonGoldRewardFormat, dungeonBossRewardFormat, dungeonGearRewardFormat, dungeonFeedbackFormat,
+				dungeonRunFormat, dungeonResultClearedText, dungeonResultFailedText,
 				awayWarningFormat, selectHeroBeforeGearText, appraiseUnavailableFormat, appraiseAvailableFormat,
 				discoverySummaryFormat, discoveryOwnedHeroFormat, discoveryHiddenHeroFormat, bagUpgradeFormat, bagUpgradeMaxText,
 				bagResetNoteFormat, pullAvailableFormat, pullNoStoneFormat, pullNoGoldFormat, pullOddsFormat,

@@ -65,6 +65,17 @@ namespace WitchMendokusai.DomainSDK.Idle
         /// <summary>입장권을 마지막으로 채운 날 번호. 날이 바뀌었나를 이걸로 안다</summary>
         public long TicketDay { get; set; }
 
+        /// <summary>살아 있는 던전 판 (changes/idle-dungeon-run). 저장 안 함. 껐다 켜면 판은 사라지고 얻은 것은 남음</summary>
+        public IdleDungeonRun Dungeon { get; } = new IdleDungeonRun();
+
+        /// <summary>한 번이라도 끝까지 깬 던전. 종류마다 비트 하나. 소탕이 열리는 조건</summary>
+        public long DungeonCleared { get; set; }
+
+        /// <summary>마지막으로 끝난 판의 결과. 화면 팝업용. 번호가 바뀌면 새 결과</summary>
+        public IdleDungeonResult LastDungeonResult { get; set; }
+
+        public long DungeonResultSequence { get; set; }
+
         /// <summary>무료 상자를 마지막으로 연 날 번호. 정본은 <see cref="IdleFreeBox"/></summary>
         public long FreeBoxDay { get; set; }
 

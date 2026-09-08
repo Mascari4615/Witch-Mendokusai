@@ -10,6 +10,7 @@ namespace WitchMendokusai.Idle.UI
 	/// 던전 탭 (layout.md 표 3). 4종 줄. 줄마다 보상, 입장권 n/n, 입장, 소탕
 	///
 	/// ★ 규칙은 한 줄도 없음. 보상 수치와 여닫힘은 전부 사진에서 읽고, 누르면 세션에 보냄
+	/// ★ 입장은 판을 연다 (changes/idle-dungeon-run). 판 도는 동안은 둘 다 잠김. 소탕은 한 번 깬 던전만
 	/// </summary>
 	public sealed class DungeonPageController
 	{
@@ -75,41 +76,43 @@ namespace WitchMendokusai.Idle.UI
 				IdleDungeonKind kind = (IdleDungeonKind)index;
 				Row row = rows[index];
 				long left = index < snapshot.Tickets.Length ? snapshot.Tickets[index] : 0L;
-				bool open = IdleDungeons.IsOpen(kind);
+				IdleDungeonSpecView spec = snapshot.DungeonSpecs[index];
+				bool idle = snapshot.DungeonRun.Active == false;
 
 				row.Name.text = content.DungeonName(kind);
 				row.Ticket.text = content.DungeonTicketText(left, snapshot.TicketsPerDay);
-				row.Reward.text = open ? RewardText(kind, snapshot) : content.DungeonClosedText;
+				row.Reward.text = spec.Open ? RewardText(spec, snapshot.DungeonGearTier) : content.DungeonClosedText;
 				row.Refill.text = left < snapshot.TicketsPerDay ? content.DungeonRefillText(span) : string.Empty;
 				row.Enter.text = content.DungeonEnterText;
 				row.Sweep.text = content.DungeonSweepText(left);
-				row.Enter.SetEnabled(open && left > 0L);
-				row.Sweep.SetEnabled(open && left > 0L);
+				row.Enter.SetEnabled(spec.Open && left > 0L && idle);
+				row.Sweep.SetEnabled(spec.Open && left > 0L && idle && spec.Cleared);
 			}
 		}
 
-		/// <summary>그 던전이 한 판에 주는 것. 수치는 사진이 실어 온다</summary>
-		private string RewardText(IdleDungeonKind kind, IdleSnapshot snapshot)
+		/// <summary>그 던전을 끝까지 깨면 주는 것 (소탕 한 판 몫). 수치는 사진이 실어 온다</summary>
+		private string RewardText(IdleDungeonSpecView spec, int tier)
 		{
-			switch (kind)
+			switch (spec.Kind)
 			{
 				case IdleDungeonKind.Gold:
-					return content.DungeonGoldRewardText(BigNumberText.Format(snapshot.DungeonGold));
+					return content.DungeonGoldRewardText(BigNumberText.Format(spec.SweepGold));
 				case IdleDungeonKind.Boss:
-					return content.DungeonBossRewardText(
-						snapshot.DungeonBossShards, snapshot.DungeonBossGear, snapshot.DungeonGearTier);
+					return content.DungeonBossRewardText(spec.Shards, spec.GearCount, tier);
 				case IdleDungeonKind.Gear:
-					return content.DungeonGearRewardText(snapshot.DungeonGearCount, snapshot.DungeonGearTier);
+					return content.DungeonGearRewardText(spec.GearCount * (spec.Waves > 0 ? spec.Waves : 1), tier);
 				default:
 					return content.DungeonClosedText;
 			}
 		}
 
+		/// <summary>판 열기. 보상은 안에서 싸워 얻고 결과는 판이 끝날 때 팝업</summary>
 		private void Enter(IdleDungeonKind kind)
 		{
-			if (session.TryEnterDungeon(kind, out IdleDungeonReward reward))
+			if (session.TryEnterDungeon(kind))
 			{
-				Say(reward);
+				writeDown();
+				requestRender();
 			}
 		}
 

@@ -19,6 +19,7 @@ namespace WitchMendokusai.Idle.UI
 		private readonly Label opName;
 		private readonly VisualElement waveDots;
 		private readonly Label waveLabel;
+		private readonly Label dungeonTimer;
 		private readonly Button stepBack;
 		private readonly Button stepForward;
 		private readonly Label stepLabel;
@@ -58,6 +59,8 @@ namespace WitchMendokusai.Idle.UI
 			opName = battle.RequireQ<Label>("op-name");
 			waveDots = battle.RequireQ<VisualElement>("wave-dots");
 			waveLabel = battle.RequireQ<Label>("wave-label");
+			dungeonTimer = battle.RequireQ<Label>("dungeon-timer");
+			dungeonTimer.style.display = DisplayStyle.None;
 			stepBack = battle.RequireQ<Button>("step-back");
 			stepForward = battle.RequireQ<Button>("step-forward");
 			stepLabel = battle.RequireQ<Label>("step-label");
@@ -107,6 +110,18 @@ namespace WitchMendokusai.Idle.UI
 				snapshot.CostMax > 0d ? (float)(snapshot.Cost / snapshot.CostMax * 100d) : 0f,
 				LengthUnit.Percent));
 			RenderEnemy(snapshot);
+			RenderDungeon(snapshot);
+		}
+
+		/// <summary>던전 판 도는 동안만 이름과 남은 시간 (changes/idle-dungeon-run)</summary>
+		private void RenderDungeon(IdleSnapshot snapshot)
+		{
+			IdleDungeonRunView run = snapshot.DungeonRun;
+			dungeonTimer.style.display = run.Active ? DisplayStyle.Flex : DisplayStyle.None;
+			if (run.Active)
+			{
+				dungeonTimer.text = content.DungeonRunText(content.DungeonName(run.Kind), run.SecondsLeft);
+			}
 		}
 
 		public void SetAlternateScene(bool shown, string caption)

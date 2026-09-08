@@ -15,6 +15,7 @@
     <ui:Template name="OddsPopup" src="project://database/Assets/_WitchMendokusai/Idle/UI/IdleOddsPopup.uxml?fileID=9197481963319205126&amp;guid=706f80df95354e4fb3f01bd395a5ecdb&amp;type=3#IdleOddsPopup" />
     <ui:Template name="GachaPopup" src="project://database/Assets/_WitchMendokusai/Idle/UI/IdleGachaPopup.uxml?fileID=9197481963319205126&amp;guid=b26b8f099348475aa2715292adfbf471&amp;type=3#IdleGachaPopup" />
     <ui:Template name="AwayPopup" src="project://database/Assets/_WitchMendokusai/Idle/UI/IdleAwayPopup.uxml?fileID=9197481963319205126&amp;guid=d07ad25fc4f843bab114d287fb838410&amp;type=3#IdleAwayPopup" />
+    <ui:Template name="DungeonPopup" src="project://database/Assets/_WitchMendokusai/Idle/UI/IdleDungeonPopup.uxml?fileID=9197481963319205126&amp;guid=d7c6a6672a9e4ffb80f00a390ffea4e9&amp;type=3#IdleDungeonPopup" />
     <Style src="BattleScreen.uss" />
     <ui:VisualElement name="shell" class="idle-root">
         <ui:VisualElement name="battle" class="idle-battle">
@@ -60,6 +61,7 @@
     <ui:Instance template="OddsPopup" name="odds-popup-host" class="idle-layer" picking-mode="Ignore" />
     <ui:Instance template="GachaPopup" name="gacha-popup-host" class="idle-layer" picking-mode="Ignore" />
     <ui:Instance template="AwayPopup" name="away-popup-host" class="idle-layer" picking-mode="Ignore" />
+    <ui:Instance template="DungeonPopup" name="dungeon-popup-host" class="idle-layer" picking-mode="Ignore" />
     <ui:VisualElement name="stage-veil" class="idle-stage-veil" picking-mode="Ignore" />
     <ui:Label name="tooltip" class="idle-tooltip idle-hidden" picking-mode="Ignore" />
 </ui:UXML>

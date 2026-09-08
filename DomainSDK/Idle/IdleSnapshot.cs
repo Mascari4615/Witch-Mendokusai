@@ -171,17 +171,19 @@ namespace WitchMendokusai.DomainSDK.Idle
         /// <summary>던전 보상 장비의 등급 (지금 갈 수 있는 최고 등급)</summary>
         public int DungeonGearTier { get; }
 
-        /// <summary>재화 던전 한 판이 주는 골드</summary>
-        public double DungeonGold { get; }
+        /// <summary>던전 4종의 규칙과 소탕 몫. 줄에 적는다 (changes/idle-dungeon-run)</summary>
+        public IdleDungeonSpecView[] DungeonSpecs { get; }
 
-        /// <summary>보스 던전 한 판이 주는 환생 조각</summary>
-        public long DungeonBossShards { get; }
+        /// <summary>살아 있는 던전 판. HUD 가 남은 시간을 적는다</summary>
+        public IdleDungeonRunView DungeonRun { get; }
 
-        /// <summary>보스 던전 한 판이 주는 장비 수</summary>
-        public long DungeonBossGear { get; }
+        /// <summary>마지막으로 끝난 판. 번호가 바뀌면 팝업 한 번</summary>
+        public IdleDungeonResult LastDungeonResult { get; }
 
-        /// <summary>장비 던전 한 판이 주는 장비 수</summary>
-        public long DungeonGearCount { get; }
+        public long DungeonResultSequence { get; }
+
+
+
 
         /// <summary>
         /// 등급이 나올 확률 — 위에서부터 레전드·에픽·레어(나머지는 일반).
@@ -298,15 +300,15 @@ namespace WitchMendokusai.DomainSDK.Idle
             int pullBatchCount, double pullBatchCost, long pullBatchStoneCost, bool canPullBatch,
             IdleHeroGrade pullBatchFloorGrade, int pickupHeroId, double pickupWeight, double pickupSecondsLeft,
             bool freeBoxReady, double freeBoxSecondsLeft, long freeBoxStones,
-            long ticketsPerDay, int dungeonGearTier, double dungeonGold, long dungeonBossShards,
-            long dungeonBossGear, long dungeonGearCount)
+            long ticketsPerDay, int dungeonGearTier, IdleDungeonSpecView[] dungeonSpecs, IdleDungeonRunView dungeonRun,
+            IdleDungeonResult lastDungeonResult, long dungeonResultSequence)
         {
             TicketsPerDay = ticketsPerDay;
             DungeonGearTier = dungeonGearTier;
-            DungeonGold = dungeonGold;
-            DungeonBossShards = dungeonBossShards;
-            DungeonBossGear = dungeonBossGear;
-            DungeonGearCount = dungeonGearCount;
+            DungeonSpecs = dungeonSpecs;
+            DungeonRun = dungeonRun;
+            LastDungeonResult = lastDungeonResult;
+            DungeonResultSequence = dungeonResultSequence;
             PullBatchCount = pullBatchCount;
             PullBatchCost = pullBatchCost;
             PullBatchStoneCost = pullBatchStoneCost;

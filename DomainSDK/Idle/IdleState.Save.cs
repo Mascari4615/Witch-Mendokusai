@@ -61,6 +61,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
                 MeasuredStage = MeasuredStage,
                 MeasuredKillsPerSecond = MeasuredKillsPerSecond,
+                DungeonCleared = DungeonCleared,
             };
         }
 
@@ -280,6 +281,7 @@ namespace WitchMendokusai.DomainSDK.Idle
 
             MeasuredStage = NotBelowZero(saveData.MeasuredStage);
             MeasuredKillsPerSecond = Sane(saveData.MeasuredKillsPerSecond);
+            DungeonCleared = saveData.DungeonCleared;
 
             // 자리 0 시절 저장은 인형 0명 가능. 시작 인형 지급
             IdleHeroes.EnsureStarter(this);

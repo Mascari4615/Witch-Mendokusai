@@ -1,0 +1,30 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="BattleScreen.uss" />
+    <ui:VisualElement name="popup" class="idle-away-shade idle-hidden">
+        <ui:VisualElement class="idle-box idle-away-card">
+            <ui:Label text="DUNGEON" class="idle-cap idle-away-cap" />
+            <ui:Label name="dungeon-result-title" class="idle-away-title" />
+            <ui:Label name="dungeon-result-status" class="idle-away-span" />
+            <ui:Label name="dungeon-result-span" class="idle-away-span" />
+            <ui:VisualElement class="idle-away-rewards">
+                <ui:VisualElement class="idle-away-reward">
+                    <ui:Label text="처치" class="idle-away-reward-name" />
+                    <ui:Label name="kills-value" class="idle-away-reward-value" />
+                </ui:VisualElement>
+                <ui:VisualElement class="idle-away-reward">
+                    <ui:Label text="골드" class="idle-away-reward-name" />
+                    <ui:Label name="gold-value" class="idle-away-reward-value" />
+                </ui:VisualElement>
+                <ui:VisualElement class="idle-away-reward">
+                    <ui:Label text="환생 조각" class="idle-away-reward-name" />
+                    <ui:Label name="shards-value" class="idle-away-reward-value" />
+                </ui:VisualElement>
+                <ui:VisualElement class="idle-away-reward">
+                    <ui:Label text="장비" class="idle-away-reward-name" />
+                    <ui:Label name="gear-value" class="idle-away-reward-value" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Button name="dungeon-result-close" text="확인" class="idle-away-close" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

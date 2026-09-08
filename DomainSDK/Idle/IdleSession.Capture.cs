@@ -86,10 +86,32 @@ namespace WitchMendokusai.DomainSDK.Idle
                 tuning.FreeBoxStones,
                 tuning.TicketsPerDay,
                 IdleDrops.MaxTierAt(state.Stage, state.Ascensions, tuning),
-                IdleModel.IncomePerSecond(state, tuning) * tuning.DungeonGoldSeconds,
-                tuning.DungeonBossShards,
-                tuning.DungeonBossGear,
-                tuning.DungeonGearCount);
+                CaptureDungeonSpecs(),
+                CaptureDungeonRun(),
+                state.LastDungeonResult,
+                state.DungeonResultSequence);
+        }
+
+        private IdleDungeonSpecView[] dungeonSpecBuffer;
+
+        private IdleDungeonSpecView[] CaptureDungeonSpecs()
+        {
+            dungeonSpecBuffer ??= new IdleDungeonSpecView[IdleDungeons.COUNT];
+            for (int index = 0; index < IdleDungeons.COUNT; index++)
+            {
+                IdleDungeonKind kind = (IdleDungeonKind)index;
+                IdleDungeonSpec spec = IdleDungeons.SpecOf(tuning, kind);
+                dungeonSpecBuffer[index] = new IdleDungeonSpecView(kind, spec.Open, IdleDungeons.IsCleared(state, kind),
+                    spec.TimeLimitSeconds, spec.Waves, IdleDungeons.SweepGoldOf(state, tuning, kind), spec.Shards, spec.GearCount);
+            }
+            return dungeonSpecBuffer;
+        }
+
+        private IdleDungeonRunView CaptureDungeonRun()
+        {
+            IdleDungeonRun run = state.Dungeon;
+            return new IdleDungeonRunView(run.Active, run.Kind, run.SecondsLeft, run.TimeLimitSeconds,
+                run.WavesCleared, run.Waves, run.Kills, run.Gold, run.Shards, run.Gear);
         }
 
         /// <summary>

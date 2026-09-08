@@ -17,7 +17,7 @@ namespace WitchMendokusai.Tests.Idle
 				"tab-4", "tab-5", "tab-6", "panel-title", "panel-caption", "panel-body",
 				"doll-page-host", "item-page-host", "discovery-page-host", "shop-page-host", "lab-page-host",
 				"dungeon-page-host", "invest-page-host", "map-popup-host", "gear-popup-host", "hero-popup-host",
-				"gold-popup-host", "settings-popup-host", "away-popup-host", "tooltip");
+				"gold-popup-host", "settings-popup-host", "away-popup-host", "dungeon-popup-host", "tooltip");
 		}
 
 		[Test]
@@ -116,6 +116,13 @@ namespace WitchMendokusai.Tests.Idle
 		{
 			AssertElements("IdleAwayPopup.uxml", "popup", "away-span", "gold-value", "kills-value",
 				"stages-value", "items-value", "away-warning", "away-close");
+		}
+
+		[Test]
+		public void DungeonPopupExposesBindingPoints()
+		{
+			AssertElements("IdleDungeonPopup.uxml", "popup", "dungeon-result-title", "dungeon-result-status",
+				"dungeon-result-span", "kills-value", "gold-value", "shards-value", "gear-value", "dungeon-result-close");
 		}
 
 		private static void AssertElements(string assetName, params string[] elementNames)
