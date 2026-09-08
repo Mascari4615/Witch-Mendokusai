@@ -19,9 +19,11 @@ namespace WitchMendokusai.EditorTools
 		private static bool mantled;
 		private static bool glided;
 		private static bool canopy;
+		private static float routeOffset;
+		private static double recoveryStableUntil;
 		public static string Result { get; private set; } = "Not run";
 
-		public static void Start(double timeoutSeconds = 90)
+		public static void Start(double timeoutSeconds = 90, float lateralOffset = 0f)
 		{
 			if (EditorApplication.isPlaying == false || PlayerProvider.Instance == null || StageManager.Instance == null)
 				throw new InvalidOperationException("World Play에서 실행");
@@ -33,6 +35,7 @@ namespace WitchMendokusai.EditorTools
 				throw new InvalidOperationException("시험 Stage 밖에서 시작");
 			keyboard = InputSystem.AddDevice<Keyboard>("TraversalVerifyKeyboard");
 			phase = 0;
+			routeOffset = lateralOffset;
 			climbed = mantled = glided = canopy = false;
 			deadline = EditorApplication.timeSinceStartup + timeoutSeconds;
 			Result = "Running";
@@ -72,7 +75,10 @@ namespace WitchMendokusai.EditorTools
 					canopy |= player.transform.Find("TraversalGlider").gameObject.activeSelf;
 					Result = $"Running phase={phase}, local={local}, mode={movement.Traversal.Mode}, checkpoint={course.CheckpointIndex}, recover={course.RecoveryCount}";
 					if (phase == 0 && course.transform.position.y >= 100f)
+					{
+						movement.Teleport(course.CheckpointPosition + course.transform.right * routeOffset);
 						phase = 1;
+					}
 					if (phase == 1)
 					{
 						forward = true;
@@ -105,6 +111,14 @@ namespace WitchMendokusai.EditorTools
 					{
 						Require(Vector3.Distance(movement.Position, course.CheckpointPosition) < 0.3f, "마지막 체크포인트 복귀");
 						Require(movement.Traversal.Mode == TraversalMode.None && movement.Traversal.Stamina == 100f, "복귀 시 상태 초기화");
+						recoveryStableUntil = EditorApplication.timeSinceStartup + 1;
+						phase = 8;
+					}
+					else if (phase == 8)
+					{
+						Require(course.RecoveryCount == 2 && Vector3.Distance(movement.Position, course.CheckpointPosition) < 0.3f, "복귀 후 위치 유지");
+						if (EditorApplication.timeSinceStartup < recoveryStableUntil)
+							return;
 						course.Return();
 						phase = 5;
 					}

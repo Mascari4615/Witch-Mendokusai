@@ -29,13 +29,13 @@ namespace WitchMendokusai.EditorTools
 			{
 				root.AddComponent<StageObject>();
 				TraversalCourse course = root.AddComponent<TraversalCourse>();
-				Box(root, "Start", new Vector3(0f, -0.5f, 5f), new Vector3(12f, 1f, 16f), ground);
+				GameObject start = Box(root, "Start", new Vector3(0f, -0.5f, 5f), new Vector3(12f, 1f, 16f), ground);
 				Box(root, "Low ceiling", new Vector3(-3f, 0.9f, 5f), new Vector3(3f, 0.25f, 4f), goal);
 				for (int i = 0; i < 3; i++)
 					Box(root, "Step " + i, new Vector3(3f, 0.1f * (i + 1), 3f + i), new Vector3(3f, 0.2f * (i + 1), 1f), ground);
 				Box(root, "Climb wall", new Vector3(0f, 3f, 14f), new Vector3(8f, 6f, 2f), climb).AddComponent<ClimbableSurface>();
-				Box(root, "Takeoff", new Vector3(0f, 5.5f, 18f), new Vector3(8f, 1f, 8f), ground);
-				Box(root, "Landing", new Vector3(0f, -0.5f, 40f), new Vector3(12f, 1f, 12f), goal);
+				GameObject takeoff = Box(root, "Takeoff", new Vector3(0f, 5.5f, 18f), new Vector3(8f, 1f, 8f), ground);
+				GameObject landing = Box(root, "Landing", new Vector3(0f, -0.5f, 40f), new Vector3(12f, 1f, 12f), goal);
 				Box(root, "Blocked wall", new Vector3(5f, 1.5f, 10f), new Vector3(1f, 3f, 4f), ground);
 				Transform[] checkpoints =
 				{
@@ -52,6 +52,11 @@ namespace WitchMendokusai.EditorTools
 				checkpointData.arraySize = checkpoints.Length;
 				for (int i = 0; i < checkpoints.Length; i++)
 					checkpointData.GetArrayElementAtIndex(i).objectReferenceValue = checkpoints[i];
+				Collider[] platforms = { start.GetComponent<Collider>(), takeoff.GetComponent<Collider>(), landing.GetComponent<Collider>() };
+				SerializedProperty platformData = courseData.FindProperty("checkpointPlatforms");
+				platformData.arraySize = platforms.Length;
+				for (int i = 0; i < platforms.Length; i++)
+					platformData.GetArrayElementAtIndex(i).objectReferenceValue = platforms[i];
 				courseData.FindProperty("hudStyle").objectReferenceValue = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/_WitchMendokusai/Domain/World/Stage/TraversalCourse.uss");
 				courseData.ApplyModifiedPropertiesWithoutUndo();
 				root.SetActive(true);
@@ -67,6 +72,7 @@ namespace WitchMendokusai.EditorTools
 				stage.Description = "지상 이동, 6m 등반, 12m 활공 간격, 체크포인트 복귀";
 				SerializedObject stageData = new(stage);
 				stageData.FindProperty("<Type>k__BackingField").enumValueIndex = 0;
+				stageData.FindProperty("<ShareWorldPosition>k__BackingField").boolValue = false;
 				stageData.FindProperty("<Prefab>k__BackingField").objectReferenceValue = prefab.GetComponent<StageObject>();
 				stageData.ApplyModifiedPropertiesWithoutUndo();
 				EditorUtility.SetDirty(stage);

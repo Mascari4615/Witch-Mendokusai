@@ -12,5 +12,6 @@ namespace WitchMendokusai
 	{
 		[field: SerializeField] public StageType Type { get; private set; }
 		[field: SerializeField] public StageObject Prefab { get; private set; }
+		[field: SerializeField] public bool ShareWorldPosition { get; private set; } = true;
 	}
 }

@@ -18,12 +18,18 @@ namespace WitchMendokusai
 
         private sealed class Probe : ILocalPlayerProbe, ILocalPlayerPull
         {
+            // 로컬 Stage의 좌표 송신과 서버 보정 모두 차단. 귀환 시 현재 Stage 정책으로 복원
+            private bool SharesPosition => StageManager.TryGetExistingInstance(out StageManager stages) &&
+                stages.CurStage != null && stages.CurStage.ShareWorldPosition;
+
             /// <summary>
             /// 세계가 아는 자리로 옮긴다 (TASK-WM-217). <b>높이는 안 건드린다</b> —
             /// 세계는 y 를 모르고, 건드리면 땅에 박히거나 공중에 뜬다.
             /// </summary>
             public void PullTo(float x, float z)
             {
+                if (SharesPosition == false)
+                    return;
                 if (PlayerProvider.TryGetExistingInstance(out PlayerProvider provider) == false)
                 {
                     return;
@@ -44,6 +50,9 @@ namespace WitchMendokusai
                 y = 0f;
                 z = 0f;
                 yaw = 0f;
+
+                if (SharesPosition == false)
+                    return false;
 
                 if (PlayerProvider.TryGetExistingInstance(out PlayerProvider provider) == false)
                 {
