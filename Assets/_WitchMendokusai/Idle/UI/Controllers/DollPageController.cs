@@ -20,6 +20,7 @@ namespace WitchMendokusai.Idle.UI
 		private readonly Action requestRender;
 		private readonly Action playGood;
 		private readonly List<Button> partyButtons = new List<Button>();
+		private IdleSnapshot lastSnapshot;
 		private readonly List<Button> wornCells = new List<Button>();
 		private readonly IdleItem[] worn = new IdleItem[IdleGear.SLOT_COUNT];
 		private readonly Label dollName;
@@ -65,6 +66,8 @@ namespace WitchMendokusai.Idle.UI
 				int captured = slot;
 				Button seat = page.RequireQ<Button>("seat-" + slot);
 				seat.clicked += () => selectPartySeat(captured);
+				// 칸에는 이름만. 별, 레벨, 축은 툴팁으로 (선택 팝업과 같은 문구)
+				hookTooltip(seat, () => SeatTip(captured));
 				partyButtons.Add(seat);
 			}
 
@@ -110,8 +113,29 @@ namespace WitchMendokusai.Idle.UI
 			RenderWorn(heroId);
 		}
 
+		private string SeatTip(int slot)
+		{
+			if (lastSnapshot.Party == null || slot >= lastSnapshot.Party.Length || lastSnapshot.Party[slot] < 0)
+			{
+				return content.EmptySeatText;
+			}
+
+			int heroId = lastSnapshot.Party[slot];
+			for (int index = 0; index < lastSnapshot.Heroes.Length; index++)
+			{
+				IdleHeroView hero = lastSnapshot.Heroes[index];
+				if (hero.Id == heroId)
+				{
+					return content.HeroChoiceText(hero.Name, hero.Stars, hero.Level, content.AxisName(hero.Axis));
+				}
+			}
+
+			return content.EmptySeatText;
+		}
+
 		private void RenderParty(IdleSnapshot snapshot)
 		{
+			lastSnapshot = snapshot;
 			int selectingSeat = selectingPartySeat();
 			int gearSeat = selectedGearSeat();
 			for (int slot = 0; slot < partyButtons.Count; slot++)

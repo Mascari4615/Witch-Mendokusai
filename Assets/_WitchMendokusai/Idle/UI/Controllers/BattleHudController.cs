@@ -11,6 +11,7 @@ namespace WitchMendokusai.Idle.UI
 		private readonly VisualElement battle;
 		private readonly VisualTreeAsset waveDotAsset;
 		private readonly UIContentSO content;
+		private double lastIncomePerSecond;
 		private readonly Func<int, bool> canGoToStage;
 		private readonly VisualElement sceneCover;
 		private readonly Label sceneCoverLabel;
@@ -44,7 +45,8 @@ namespace WitchMendokusai.Idle.UI
 			Action openGold,
 			Action toggleSplit,
 			Action openSettings,
-			Action toggleAutoCast)
+			Action toggleAutoCast,
+			Action<VisualElement, Func<string>> hookTooltip)
 		{
 			this.battle = battle;
 			this.waveDotAsset = waveDotAsset;
@@ -62,6 +64,8 @@ namespace WitchMendokusai.Idle.UI
 			repeatButton = battle.RequireQ<Button>("repeat-button");
 			Button goldChip = battle.RequireQ<Button>("gold-chip");
 			goldValue = goldChip.RequireQ<Label>("gold-value");
+			// 칩은 잔액만 보여줌. 초당 수입은 툴팁으로 (마우스 호버, 손가락은 눌러서)
+			hookTooltip(goldChip, () => content.GoldIncomeText(BigNumberText.Format(lastIncomePerSecond)));
 			splitButton = battle.RequireQ<Button>("split-button");
 			Button settingsButton = battle.RequireQ<Button>("settings-button");
 			enemyBar = battle.RequireQ<VisualElement>("enemy-bar");
@@ -96,6 +100,7 @@ namespace WitchMendokusai.Idle.UI
 			repeatButton.text = content.RepeatText(repeating);
 			repeatButton.EnableInClassList("idle-toggle--on", repeating);
 			goldValue.text = BigNumberText.Format(snapshot.Resource);
+			lastIncomePerSecond = snapshot.IncomePerSecond;
 			autoCastButton.EnableInClassList("idle-icon-button--on", snapshot.AutoCast);
 			costLabel.text = content.CostText(snapshot.Cost, snapshot.CostMax);
 			costFill.style.width = new StyleLength(new Length(

@@ -188,7 +188,8 @@ namespace WitchMendokusai.Idle.UI
 				() => auxiliaryPopupCoordinator.OpenGold(),
 				ToggleSplit,
 				() => auxiliaryPopupCoordinator.OpenSettings(),
-				battleActionController.ToggleAutoCast);
+				battleActionController.ToggleAutoCast,
+				tooltipController.Bind);
 			cardHandController = new CardHandController(
 				battle,
 				viewAssets.Card,
