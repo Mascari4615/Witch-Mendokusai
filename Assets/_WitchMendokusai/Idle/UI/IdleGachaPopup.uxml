@@ -3,7 +3,7 @@
     <Style src="BattleScreen.uss" />
     <ui:VisualElement name="popup" class="idle-modal-shade idle-gacha-popup idle-hidden">
         <ui:VisualElement name="gacha-burst" class="idle-gacha-burst" picking-mode="Ignore" />
-        <ui:VisualElement class="idle-gacha-panel">
+        <ui:VisualElement class="idle-gacha-panel idle-dialog">
             <ui:Label name="gacha-title" class="idle-gacha-title" />
             <ui:VisualElement name="gacha-grid" class="idle-gacha-grid" />
             <ui:Label name="gacha-summary" class="idle-gacha-summary" />

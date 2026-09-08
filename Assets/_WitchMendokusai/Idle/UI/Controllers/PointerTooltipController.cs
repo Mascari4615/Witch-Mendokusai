@@ -23,11 +23,18 @@ namespace WitchMendokusai.Idle.UI
 		private readonly Layout layout;
 		private int version;
 		private int touchPointer = -1;
+		private Vector2 lastPosition;
+		private bool lastTouch;
+		private bool shown;
 
 		public PointerTooltipController(Label tooltip, Layout layout)
 		{
 			this.tooltip = tooltip;
 			this.layout = layout;
+			tooltip.pickingMode = PickingMode.Ignore;
+			tooltip.RegisterCallback<GeometryChangedEvent>(OnGeometryChanged);
+			tooltip.parent?.RegisterCallback<PointerUpEvent>(OnPointerUp, TrickleDown.TrickleDown);
+			tooltip.parent?.RegisterCallback<PointerCancelEvent>(OnPointerCancel, TrickleDown.TrickleDown);
 		}
 
 		public void Bind(VisualElement target, Func<string> text)
@@ -80,6 +87,7 @@ namespace WitchMendokusai.Idle.UI
 
 		private void Show(string text)
 		{
+			shown = string.IsNullOrEmpty(text) == false;
 			if (string.IsNullOrEmpty(text))
 			{
 				tooltip.style.display = DisplayStyle.None;
@@ -87,12 +95,14 @@ namespace WitchMendokusai.Idle.UI
 			}
 
 			tooltip.text = text;
+			tooltip.style.height = StyleKeyword.Auto;
 			tooltip.style.display = DisplayStyle.Flex;
 			tooltip.BringToFront();
 		}
 
 		private void Hide()
 		{
+			shown = false;
 			version++;
 			touchPointer = -1;
 			tooltip.style.display = DisplayStyle.None;
@@ -100,6 +110,13 @@ namespace WitchMendokusai.Idle.UI
 
 		private void Move(Vector2 at, bool touch)
 		{
+			lastPosition = at;
+			lastTouch = touch;
+			if (shown == false)
+			{
+				return;
+			}
+
 			VisualElement owner = tooltip.parent;
 			Vector2 local = owner != null ? owner.WorldToLocal(at) : at;
 			float rootWidth = owner != null ? owner.resolvedStyle.width : layout.RootFallbackSize.x;
@@ -109,6 +126,42 @@ namespace WitchMendokusai.Idle.UI
 			Vector2 placed = Place(local, new Vector2(tipWidth, tipHeight), new Vector2(rootWidth, rootHeight), touch, layout);
 			tooltip.style.left = placed.x;
 			tooltip.style.top = placed.y;
+		}
+
+		private void OnGeometryChanged(GeometryChangedEvent moment)
+		{
+			if (shown && moment.oldRect.size != moment.newRect.size)
+			{
+				float width = tooltip.contentRect.width;
+				if (width > 0f)
+				{
+					float textHeight = tooltip.MeasureTextSize(tooltip.text, width, VisualElement.MeasureMode.Exactly,
+						0f, VisualElement.MeasureMode.Undefined).y;
+					float height = Mathf.Ceil(textHeight + tooltip.resolvedStyle.paddingTop + tooltip.resolvedStyle.paddingBottom
+						+ tooltip.resolvedStyle.borderTopWidth + tooltip.resolvedStyle.borderBottomWidth);
+					if (Mathf.Abs(height - tooltip.resolvedStyle.height) > 1f)
+					{
+						tooltip.style.height = height;
+					}
+				}
+				Move(lastPosition, lastTouch);
+			}
+		}
+
+		private void OnPointerUp(PointerUpEvent moment)
+		{
+			if (moment.pointerId == touchPointer)
+			{
+				Hide();
+			}
+		}
+
+		private void OnPointerCancel(PointerCancelEvent moment)
+		{
+			if (moment.pointerId == touchPointer)
+			{
+				Hide();
+			}
 		}
 
 		/// <summary>

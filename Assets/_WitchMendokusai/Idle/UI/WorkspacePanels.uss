@@ -1,0 +1,171 @@
+/* C2 계열 탭, 선택 창, 정보 창, 툴팁의 공통 표현 */
+.idle-side .idle-panel-head {
+    background-color: rgb(22, 25, 28);
+    border-width: 0;
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+}
+.idle-side .idle-panel-title { font-size: 30px; }
+.idle-side #panel-caption { display: none; }
+.idle-side .idle-workspace-page { padding: 0; background-color: transparent; }
+.idle-section {
+    padding: 18px;
+    margin-bottom: 16px;
+    background-color: rgb(22, 25, 28);
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+.idle-section .idle-cap { color: rgb(173, 181, 192); letter-spacing: 0; }
+.idle-section .idle-row-note { color: rgb(173, 181, 192); font-size: 22px; }
+.idle-section .idle-row-title { font-size: 24px; }
+.idle-side .idle-row-button {
+    background-color: rgb(36, 41, 48);
+    border-color: rgb(67, 75, 86);
+    border-width: 1px;
+    border-radius: 4px;
+    font-size: 23px;
+    min-height: 56px;
+}
+.idle-side .idle-row-button--strong {
+    color: rgb(247, 210, 140);
+    background-color: rgb(66, 52, 29);
+    border-color: rgb(130, 102, 51);
+}
+.idle-side .idle-row-button:hover {
+    background-color: rgb(53, 59, 68);
+    border-color: rgb(170, 180, 193);
+}
+.idle-side .idle-row-button--strong:hover {
+    background-color: rgb(93, 68, 28);
+    border-color: rgb(245, 175, 16);
+}
+.idle-side .idle-subtabs { margin-bottom: 16px; padding: 8px 12px; }
+.idle-side .idle-subtab {
+    background-color: transparent;
+    color: rgb(176, 184, 196);
+    border-width: 0;
+    border-bottom-width: 3px;
+    border-bottom-color: transparent;
+    font-size: 24px;
+}
+.idle-side .idle-subtab--on { color: rgb(245, 246, 248); border-bottom-color: rgb(245, 175, 16); }
+.idle-side .idle-subtab:hover { background-color: rgb(36, 41, 48); }
+.idle-section .idle-forge-grid { width: 62%; flex-shrink: 0; }
+.idle-section .idle-forge-cell { width: 31%; min-width: 0; height: 84px; margin: 3px 1%; font-size: 20px; }
+.idle-section .idle-forge-outcome { flex-grow: 1; margin-left: 8px; }
+.idle-section .idle-forge-arrow { margin-right: 6px; font-size: 26px; }
+.idle-section .idle-forge-cell--result { width: 100px; height: 104px; }
+.idle-section .idle-bag-cell {
+    width: 11.5%;
+    min-width: 0;
+    flex-shrink: 0;
+    height: 84px;
+    margin: 4px 0.5%;
+    background-color: rgb(31, 36, 43);
+    border-radius: 4px;
+}
+.idle-section .idle-gear-visual { left: 5px; right: 5px; top: 4px; bottom: 22px; }
+.idle-section .idle-gear-tier-badge { font-size: 15px; left: 3px; }
+.idle-section .idle-gear-potential { font-size: 13px; right: 3px; }
+.idle-section .idle-bag-lock { right: 2px; top: 2px; }
+.idle-section .idle-shop-banner { background-color: transparent; border-width: 0; padding: 0 0 16px 0; }
+.idle-section .idle-banner-title { font-size: 32px; }
+.idle-section .idle-shop-pickup-label { font-size: 23px; color: rgb(234, 207, 155); }
+.idle-section .idle-shop-pity-label { font-size: 22px; }
+.idle-section .idle-shop-section-cap { margin-top: 0; }
+.idle-side .idle-dungeon-row {
+    background-color: rgb(22, 25, 28);
+    padding: 20px;
+    margin-bottom: 16px;
+    border-width: 0;
+    border-radius: 8px;
+}
+.idle-side .idle-dungeon-name { font-size: 28px; }
+.idle-side .idle-dungeon-ticket { font-size: 22px; }
+.idle-side .idle-dungeon-row .idle-row-note { font-size: 22px; color: rgb(173, 181, 192); }
+.idle-side .idle-dungeon-tab { border-radius: 4px; }
+.idle-side .idle-dungeon-tab--on { background-color: rgb(66, 52, 29); color: rgb(247, 210, 140); border-color: rgb(245, 175, 16); }
+
+/* 창 크기는 용도별 유지, 표면과 헤더 및 닫기 규칙 공유 */
+.idle-modal-shade .idle-dialog,
+.idle-away-shade .idle-dialog {
+    background-color: rgb(22, 25, 28);
+    border-width: 1px;
+    border-color: rgb(67, 75, 86);
+    border-radius: 12px;
+    color: rgb(239, 242, 246);
+}
+.idle-dialog .idle-panel-head {
+    background-color: transparent;
+    padding: 0 0 16px 0;
+    margin-bottom: 12px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(58, 65, 75);
+}
+.idle-dialog .idle-panel-title { font-size: 32px; flex-shrink: 1; min-width: 0; }
+.idle-dialog .idle-tab--close {
+    width: 56px;
+    height: 56px;
+    flex-basis: auto;
+    flex-shrink: 0;
+    margin-left: auto;
+    background-color: rgb(36, 41, 48);
+    border-radius: 4px;
+    color: rgb(233, 238, 244);
+    font-size: 28px;
+}
+.idle-dialog .idle-tab--close:hover { background-color: rgb(66, 74, 86); }
+.idle-dialog .idle-row-note { font-size: 23px; color: rgb(176, 185, 197); }
+.idle-dialog .idle-modal-scroll .unity-scroll-view__content-container { width: 100%; }
+.idle-dialog .idle-choice-grid { width: 100%; }
+.idle-dialog .idle-choice-card {
+    width: 24%;
+    min-width: 0;
+    flex-shrink: 0;
+    height: 80px;
+    margin: 4px 0.5%;
+    border-radius: 6px;
+    background-color: rgb(31, 36, 43);
+}
+.idle-dialog .idle-choice-icon { width: 60px; height: 68px; margin-right: 10px; }
+.idle-dialog .idle-choice-label { min-width: 0; flex-shrink: 1; font-size: 21px; }
+.idle-dialog .idle-gear-card { width: 15.666%; min-height: 124px; padding: 8px; }
+.idle-dialog .idle-gear-card .idle-choice-icon { width: 68px; height: 80px; }
+.idle-dialog .idle-gear-card .idle-choice-label { font-size: 19px; }
+.idle-dialog .idle-choice-card--empty { background-color: rgb(17, 20, 24); border-color: rgb(39, 45, 52); }
+.idle-dialog .idle-choice-card--selected { border-color: rgb(245, 175, 16); background-color: rgb(54, 45, 29); }
+.idle-dialog .idle-modal-page-button { background-color: rgb(36, 41, 48); color: rgb(223, 230, 239); border-width: 0; border-radius: 4px; }
+.idle-dialog .idle-modal-page-button:disabled { opacity: 0.35; }
+.idle-dialog .idle-row-button { font-size: 24px; border-radius: 4px; background-color: rgb(36, 41, 48); border-color: rgb(67, 75, 86); }
+.idle-dialog .idle-row-button--strong { background-color: rgb(66, 52, 29); color: rgb(247, 210, 140); border-color: rgb(130, 102, 51); }
+.idle-dialog .idle-settings-section-title { margin-top: 20px; color: rgb(207, 215, 225); }
+.idle-dialog .idle-settings-speed { border-radius: 4px; background-color: rgb(36, 41, 48); }
+.idle-dialog .idle-settings-speed--selected { background-color: rgb(66, 52, 29); color: rgb(247, 210, 140); border-color: rgb(245, 175, 16); }
+.idle-dialog .idle-settings-wipe { color: rgb(227, 147, 143); border-color: rgb(104, 65, 67); }
+.idle-dialog .idle-settings-log { background-color: rgb(17, 20, 24); border-width: 0; border-radius: 6px; }
+.idle-dialog .idle-odds-row { font-size: 28px; padding: 12px; }
+.idle-dialog .idle-odds-note { color: rgb(176, 185, 197); font-size: 23px; }
+.idle-dialog .idle-away-title { font-size: 36px; }
+.idle-dialog .idle-away-reward { border-bottom-color: rgb(58, 65, 75); }
+.idle-dialog .idle-away-reward-name { color: rgb(176, 185, 197); }
+.idle-dialog .idle-away-reward-value { color: rgb(239, 242, 246); }
+.idle-dialog .idle-away-close,
+.idle-dialog .idle-gold-close { background-color: rgb(66, 52, 29); color: rgb(247, 210, 140); border-width: 1px; border-color: rgb(130, 102, 51); border-radius: 4px; min-height: 56px; }
+.idle-dialog .idle-gacha-title { font-size: 36px; }
+.idle-dialog .idle-gacha-summary { color: rgb(176, 185, 197); }
+
+.idle-tooltip {
+    width: 380px;
+    max-width: 90%;
+    padding: 16px 18px;
+    font-size: 23px;
+    white-space: normal;
+    color: rgb(239, 242, 246);
+    background-color: rgb(17, 20, 24);
+    border-width: 1px;
+    border-color: rgb(93, 105, 122);
+    border-left-width: 3px;
+    border-left-color: rgb(214, 167, 81);
+    border-radius: 6px;
+}

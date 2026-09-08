@@ -1,8 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="BattleScreen.uss" />
     <ui:VisualElement name="popup" class="idle-away-shade idle-hidden">
-        <ui:VisualElement class="idle-box idle-away-card">
-            <ui:Label text="DUNGEON" class="idle-cap idle-away-cap" />
+        <ui:VisualElement class="idle-box idle-away-card idle-dialog">
+
             <ui:Label name="dungeon-result-title" class="idle-away-title" />
             <ui:Label name="dungeon-result-status" class="idle-away-span" />
             <ui:Label name="dungeon-result-span" class="idle-away-span" />

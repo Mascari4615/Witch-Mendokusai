@@ -2,10 +2,10 @@
     <!-- 확률표 (layout.md 구현 순서 10). 등급별 확률, 천장, 픽업, 묶음 보장 -->
     <Style src="BattleScreen.uss" />
     <ui:VisualElement name="popup" class="idle-modal-shade idle-odds-popup idle-hidden">
-        <ui:VisualElement class="idle-box idle-odds-panel">
+        <ui:VisualElement class="idle-box idle-odds-panel idle-dialog">
             <ui:VisualElement class="idle-panel-head">
                 <ui:Label text="확률표" class="idle-panel-title" />
-                <ui:Label text="ODDS" class="idle-cap" />
+
                 <ui:Button name="odds-close" text="×" class="idle-tab idle-tab--close" />
             </ui:VisualElement>
             <ui:VisualElement class="idle-odds-rows">

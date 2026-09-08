@@ -18,6 +18,7 @@
     <ui:Template name="DungeonPopup" src="project://database/Assets/_WitchMendokusai/Idle/UI/IdleDungeonPopup.uxml?fileID=9197481963319205126&amp;guid=d7c6a6672a9e4ffb80f00a390ffea4e9&amp;type=3#IdleDungeonPopup" />
     <Style src="BattleScreen.uss" />
     <Style src="CharacterWorkspace.uss" />
+    <Style src="WorkspacePanels.uss" />
     <ui:VisualElement name="shell" class="idle-root">
         <ui:VisualElement name="battle" class="idle-battle">
             <ui:Instance template="BattleHud" name="battle-hud" class="idle-layer" picking-mode="Ignore" />

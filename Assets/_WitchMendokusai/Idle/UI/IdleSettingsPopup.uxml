@@ -1,10 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <Style src="BattleScreen.uss" />
     <ui:VisualElement name="popup" class="idle-modal-shade idle-settings-popup idle-hidden">
-        <ui:VisualElement class="idle-box idle-settings-panel">
+        <ui:VisualElement class="idle-box idle-settings-panel idle-dialog">
             <ui:VisualElement class="idle-panel-head">
                 <ui:Label text="설정" class="idle-panel-title" />
-                <ui:Label text="SETTINGS" class="idle-cap" />
+
                 <ui:Button name="settings-close" text="×" class="idle-tab idle-tab--close" />
             </ui:VisualElement>
             <ui:Label text="전투 배속" class="idle-settings-section-title" />
