@@ -30,7 +30,7 @@ namespace WitchMendokusai
 		[SerializeField] private float chatMoveDuration = 0.2f;
 
 		[Header("카메라 모드 매트릭스 (TASK-WM-163)")]
-		[Tooltip("전 vcam 부모 (Cameras holder) — pitch 적용 pivot. yaw 는 이 CameraManager 자신(yaw 루트)에 적용.")]
+		[Tooltip("전 vcam 부모 (Cameras holder). 월드 yaw/pitch 적용, 추적 기준점과 회전 분리.")]
 		[SerializeField] private Transform pitchPivot;
 		[Tooltip("1인칭 vcam (Phase 2 셋업). null 이면 perspective 토글은 스프라이트 숨김만 수행.")]
 		[SerializeField] private MCamera firstPersonCamera;
@@ -89,9 +89,8 @@ namespace WitchMendokusai
 		{
 			yaw = angles.x;
 			pitch = Mathf.Clamp(angles.y, minPitch, maxPitch);
-			transform.rotation = Quaternion.Euler(0f, yaw, 0f);
 			if (pitchPivot != null)
-				pitchPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+				pitchPivot.rotation = Quaternion.Euler(pitch, yaw, 0f);
 			suppressLookFrame = true;
 		}
 
@@ -201,19 +200,22 @@ namespace WitchMendokusai
 				pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
 				// MouseLook = 마우스 델타 1:1 즉시 반영 (Lerp 지연 X — "딱딱 안 움직임" fix WM-163).
-				// yaw = 루트 / pitch = pitchPivot(Cameras holder).
-				transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+				// 추적 기준점은 회전 금지. Constraint 평가 뒤 부모 회전에 의한 원점 공전 방지
 				if (pitchPivot != null)
-					pitchPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+					pitchPivot.rotation = Quaternion.Euler(pitch, yaw, 0f);
 			}
 			else
 			{
 				yaw += Time.deltaTime * yawKeySpeed * inputManager.CameraRotateInput;
 
 				// PointAndClick = Q/E 부드럽게 (기존 느낌). pitch 는 0 으로 복귀(vcam baked 각도 유지).
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, yaw, 0f), 1f - Mathf.Exp(-Time.deltaTime * pointClickYawSmooth));
 				if (pitchPivot != null)
-					pitchPivot.localRotation = Quaternion.Lerp(pitchPivot.localRotation, Quaternion.identity, 1f - Mathf.Exp(-Time.deltaTime * pitchSmooth));
+				{
+					Vector3 currentAngles = pitchPivot.eulerAngles;
+					float nextYaw = Mathf.LerpAngle(currentAngles.y, yaw, 1f - Mathf.Exp(-Time.deltaTime * pointClickYawSmooth));
+					float nextPitch = Mathf.LerpAngle(currentAngles.x, 0f, 1f - Mathf.Exp(-Time.deltaTime * pitchSmooth));
+					pitchPivot.rotation = Quaternion.Euler(nextPitch, nextYaw, 0f);
+				}
 			}
 
 			// 1인칭 = vcam 위치/회전을 직접 구동 (Cinemachine Follow/constraint 체인 우회 → jitter 근절).

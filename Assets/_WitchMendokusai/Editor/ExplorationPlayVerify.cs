@@ -39,7 +39,10 @@ namespace WitchMendokusai.EditorTools
 			previousStage = StageManager.Instance.CurStage;
 			previousPosition = PlayerProvider.Instance.CurrentObject.UnitMovement.Position;
 			// Use a temporary settings instance: automated input must not depend on editor focus.
-			savedInputSettings = InputSystem.settings;
+			// Input System 교체 시 비저장 기본 인스턴스 파괴. 복원용 값 사본 보존
+			savedInputSettings = EditorUtility.IsPersistent(InputSystem.settings)
+				? InputSystem.settings
+				: UnityEngine.Object.Instantiate(InputSystem.settings);
 			verificationInputSettings = UnityEngine.Object.Instantiate(savedInputSettings);
 			verificationInputSettings.hideFlags = HideFlags.HideAndDontSave;
 			verificationInputSettings.backgroundBehavior = InputSettings.BackgroundBehavior.IgnoreFocus;
