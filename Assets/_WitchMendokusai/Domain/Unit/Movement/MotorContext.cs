@@ -30,6 +30,8 @@ namespace WitchMendokusai
 
 		// 게임 컨디션 (typing / paused / dead 등) 으로 입력이 차단된 상태. InputContributor가 horizontal=0 set.
 		public bool BlockedByExternal;
+		public bool SuppressGrounding;
+		public bool FullBodySweep;
 
 		// ExternalImpulseContributor가 horizontal velocity를 채우는 중 (dash / knockback 등).
 		// Input은 자기 기여 보류, Jump는 점프 차단. ExternalImpulseContributor가 매 tick set/clear.

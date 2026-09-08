@@ -23,6 +23,7 @@ namespace WitchMendokusai
 		[Header("Move Tuning")]
 		[SerializeField] private float sprintSpeedMultiplier = 2f;
 		[SerializeField] private GroundMovementTuning groundMovementTuning = new();
+		[SerializeField] private TraversalTuning traversalTuning = new();
 
 		// 캐릭터가 지형을 어떻게 밟는지 — 오를 수 있는 턱 높이 / 걸을 수 있는 경사 / 계단 따라 붙는 거리 등.
 		// 지형 제작의 암묵 규칙이 되는 값들이라 prefab 별로 다르게 줄 수 있어야 한다 (TASK-WM-199).
@@ -50,6 +51,7 @@ namespace WitchMendokusai
 		private ExternalImpulseContributor externalImpulse;
 		private CapsulePosture posture;
 		private bool crouchRequested;
+		public TraversalController Traversal { get; private set; }
 
 		// Hit-stop — motor tick skip 동안 victim 만 멈춤. timescale 안 건드림.
 		private float pauseRemaining;
@@ -70,6 +72,8 @@ namespace WitchMendokusai
 		/// 애니메이션 / VFX / 로직이 "현재 움직이고 있는가?" 판단할 때 이 값을 사용해야 한다.
 		/// </summary>
 		public Vector3 Velocity => motor != null ? motor.Context.Velocity : Vector3.zero;
+		// 렌더 보간 Transform이 아닌 실제 물리 위치. 복귀와 체크포인트 판정용
+		public Vector3 Position => unitRigidBody.position;
 
 		/// <summary>
 		/// 직전 tick 이 *실제로* 옮긴 거리. <see cref="Velocity"/> 는 sweep 이 깎기 전후가 섞인 값이라
@@ -115,6 +119,8 @@ namespace WitchMendokusai
 			unitRigidBody.interpolation = RigidbodyInterpolation.Interpolate;
 
 			motor = new Motor(transform, unitRigidBody, unitCapsule, motorTuning);
+			Traversal = new TraversalController(unitCapsule, traversalTuning);
+			motor.OverrideVelocity = OverrideTraversal;
 			motor.Context.OnHitCollider = HandleMotorHit;
 
 			// ExternalImpulse는 Input 보다 *먼저* 등록 — horizontal velocity를 먼저 채우고
@@ -233,6 +239,11 @@ namespace WitchMendokusai
 		{
 			if (IsMovementBlocked())
 				return;
+			if (Traversal.HandleJump(motor.Context))
+			{
+				jumpContributor.Reset(false);
+				return;
+			}
 			jumpContributor.RequestJump();
 		}
 
@@ -243,6 +254,11 @@ namespace WitchMendokusai
 
 		public void SetCrouching(bool requested)
 		{
+			if (requested && Traversal != null && Traversal.Mode != TraversalMode.None)
+			{
+				Traversal.Cancel();
+				requested = false;
+			}
 			crouchRequested = requested;
 			if (groundMovementTuning.Enabled == false)
 				unitObject.UnitStat[UnitStatType.IS_CROUCHING] = requested ? 1 : 0;
@@ -254,7 +270,30 @@ namespace WitchMendokusai
 			MoveDirectionWorld = Vector3.zero;
 			unitObject.UnitStat[UnitStatType.IS_SPRINTING] = 0;
 			SetCrouching(false);
-			jumpContributor.CancelInput();
+			jumpContributor?.CancelInput();
+			Traversal?.Cancel();
+		}
+
+		private bool OverrideTraversal(MotorContext context, float deltaTime)
+		{
+			Traversal.LocalInput = new Vector2(MoveDirectionLocal.x, MoveDirectionLocal.z);
+			Traversal.Facing = LookDirection;
+			Traversal.Unavailable = IsExternallyDriven || unitObject.UnitStat[UnitStatType.DEAD] > 0 ||
+				unitObject.UnitStat[UnitStatType.IS_CROUCHING] > 0;
+			bool overridden = Traversal.Apply(context, deltaTime);
+			if (overridden)
+				jumpContributor.Reset(false);
+			return overridden;
+		}
+
+		public void Teleport(Vector3 position)
+		{
+			CancelMovementInput();
+			externalImpulse.Cancel();
+			Traversal.Reset();
+			jumpContributor.Reset(false);
+			pauseRemaining = 0f;
+			motor.Teleport(position);
 		}
 
 		/// <summary>

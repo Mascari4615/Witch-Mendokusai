@@ -48,6 +48,7 @@ namespace WitchMendokusai
 		private readonly MotorContext context = new();
 
 		public MotorContext Context => context;
+		public System.Func<MotorContext, float, bool> OverrideVelocity { get; set; }
 
 		public Motor(Transform unitTransform, Rigidbody unitRigidBody, CapsuleCollider unitCapsule, MotorTuning tuning)
 		{
@@ -73,17 +74,21 @@ namespace WitchMendokusai
 			ResolveGround(ref position, wasGrounded);
 			bool groundedAtTickStart = context.GroundState == MotorGroundState.Grounded;
 
-			for (int i = 0; i < contributors.Count; i++)
-				contributors[i].Contribute(context, deltaTime);
+			if (OverrideVelocity == null || OverrideVelocity(context, deltaTime) == false)
+			{
+				for (int i = 0; i < contributors.Count; i++)
+					contributors[i].Contribute(context, deltaTime);
+			}
 
 			Vector3 velocity = context.Velocity;
 			Vector3 horizontalDelta = new(velocity.x * deltaTime, 0f, velocity.z * deltaTime);
 			float verticalDeltaY = velocity.y * deltaTime;
 
-			Vector3 newPosition = SweepAndSlide(position, horizontalDelta);
-			if (verticalDeltaY < 0f)
+			Vector3 newPosition = context.FullBodySweep
+				? SweepTraversal(position, velocity * deltaTime) : SweepAndSlide(position, horizontalDelta);
+			if (context.FullBodySweep == false && verticalDeltaY < 0f)
 				newPosition = SweepDescend(newPosition, verticalDeltaY);
-			else if (verticalDeltaY > 0f)
+			else if (context.FullBodySweep == false && verticalDeltaY > 0f)
 				newPosition = SweepAscend(newPosition, verticalDeltaY);
 
 			// 이동이 끝난 *최종* 위치에서 같은 규칙으로 접지를 다시 결정한다.
@@ -113,6 +118,12 @@ namespace WitchMendokusai
 		/// </summary>
 		private void ResolveGround(ref Vector3 position, bool allowSnapDown)
 		{
+			if (context.SuppressGrounding)
+			{
+				context.GroundState = MotorGroundState.Airborne;
+				context.HasGroundNormal = false;
+				return;
+			}
 			GetCapsuleEnds(position, out Vector3 capsuleBottom, out _, out float radius);
 			Vector3 feet = capsuleBottom - Vector3.up * radius;
 			Vector3 origin = feet + Vector3.up * SkinWidth;

@@ -34,6 +34,8 @@ namespace WitchMendokusai.Idle.Editor
 			DrawSaveData();
 			DrawSave();
 			DrawBuild();
+			if (EditorApplication.isPlaying == false && GUILayout.Button("본편 이동 시험 Stage 생성"))
+				WitchMendokusai.EditorTools.TraversalCourseBuilder.Build();
 
 			EditorGUILayout.EndScrollView();
 		}

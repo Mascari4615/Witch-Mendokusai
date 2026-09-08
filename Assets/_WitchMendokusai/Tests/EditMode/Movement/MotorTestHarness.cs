@@ -61,6 +61,7 @@ namespace WitchMendokusai.Tests
 		public Vector3 Position { get; private set; }
 
 		public bool IsGrounded => Context.GroundState == MotorGroundState.Grounded;
+		public CapsuleCollider Capsule { get; private set; }
 
 		public MotorTestHarness(Vector3 startPosition)
 		{
@@ -74,6 +75,7 @@ namespace WitchMendokusai.Tests
 			characterTransform.position = startPosition;
 
 			CapsuleCollider capsule = characterObject.AddComponent<CapsuleCollider>();
+			Capsule = capsule;
 			capsule.height = CAPSULE_HEIGHT;
 			capsule.radius = CAPSULE_RADIUS;
 			// 발이 transform.position 에 오도록 — GetCapsuleEnds 가 bottom - radius 를 발로 본다.

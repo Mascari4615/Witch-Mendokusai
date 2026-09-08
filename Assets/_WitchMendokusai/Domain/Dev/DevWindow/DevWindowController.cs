@@ -23,15 +23,26 @@ namespace WitchMendokusai
 		private const string WINDOW_TITLE = "WM Dev";
 
 		private InputManager inputManager;
+		[SerializeField] private WorldStage traversalStage;
+		private StageManager stageManager;
 		private UIRoot uiRoot;
 		private WMWindow window;
 		private DevWindowView view;
 
 		[Inject]
-		public void Construct(InputManager inputManager, UIRoot uiRoot)
+		public void Construct(InputManager inputManager, UIRoot uiRoot, StageManager stageManager)
 		{
 			this.inputManager = inputManager;
 			this.uiRoot = uiRoot;
+			this.stageManager = stageManager;
+		}
+
+		public void EnterTraversalCourse()
+		{
+			if (stageManager.CurStage == traversalStage)
+				return;
+			stageManager.LoadStage(traversalStage);
+			window.Close();
 		}
 
 		private void Awake()
@@ -114,6 +125,8 @@ namespace WitchMendokusai
 				DevModeRegistry.Instance.Register(new DevDataListMode<QuestSO>("quests", "Quests", "Q_", "quest", "unlock"));
 			if (DevModeRegistry.Instance.FindById("timeweather") == null)
 				DevModeRegistry.Instance.Register(new TimeWeatherMode());
+			if (DevModeRegistry.Instance.FindById("traversal") == null)
+				DevModeRegistry.Instance.Register(new TraversalDevMode(() => Instance.EnterTraversalCourse()));
 		}
 
 		/// <summary>UI 측에서 명령 시스템에 진입할 때 호출. 명령행에 직접 입력한 것과 동일한 경로 (출력/에러 처리 포함).</summary>
