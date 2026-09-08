@@ -46,6 +46,19 @@ namespace WitchMendokusai.Tests
 			Assert.IsFalse(CoversFinger(placed, finger), "손가락 위에 겹침");
 			Assert.Less(placed.y, finger.y + 72f, "아래로 보내면 손바닥에 가림. 옆이어야 한다");
 			Assert.IsTrue(placed.x + TIP.x < finger.x || placed.x > finger.x, "옆에 있어야 한다");
+			Assert.GreaterOrEqual(placed.y, 12f, "옆으로 가며 위로 밀려 나감 (Clamp 몫)");
+		}
+
+		/// <summary>★ 옆 가지는 y 를 손가락 높이 가운데로 잡아 위 끝에서 -20. Clamp 가 12 로 올려야 함 (2026-09-08 변이 실측: 이 줄 없이는 Clamp 를 지워도 초록)</summary>
+		[Test]
+		public void Touch_AtTheTopEdge_StaysInside()
+		{
+			Vector2 finger = new Vector2(960f, 40f);
+			Vector2 placed = PointerTooltipController.Place(finger, TIP, ROOT, true, Layout());
+
+			Assert.GreaterOrEqual(placed.y, 12f);
+			Assert.GreaterOrEqual(placed.x, 12f);
+			Assert.LessOrEqual(placed.x + TIP.x, ROOT.x - 12f);
 		}
 
 		[Test]
@@ -56,6 +69,7 @@ namespace WitchMendokusai.Tests
 
 			Assert.Less(placed.x + TIP.x, finger.x, "왼쪽");
 			Assert.IsFalse(CoversFinger(placed, finger));
+			Assert.GreaterOrEqual(placed.y, 12f, "위 가장자리 안");
 		}
 
 		[Test]
@@ -66,6 +80,7 @@ namespace WitchMendokusai.Tests
 
 			Assert.Greater(placed.x, finger.x, "오른쪽");
 			Assert.IsFalse(CoversFinger(placed, finger));
+			Assert.GreaterOrEqual(placed.y, 12f, "위 가장자리 안");
 		}
 
 		[Test]
