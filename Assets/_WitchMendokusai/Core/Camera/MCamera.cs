@@ -34,6 +34,23 @@ namespace WitchMendokusai
 		private float currentZoom;
 		private Vector3 originalLocalEuler;
 		private Vector3 targetOffsetBase;
+		private Vector3 originalDamping;
+		private bool initialized;
+		private float originalFieldOfView;
+		public OrbitCameraProfile OrbitProfile { get; private set; }
+
+		public void SetOrbitProfile(OrbitCameraProfile profile)
+		{
+			Init();
+			OrbitProfile = profile;
+			if (profile == null && positionComposer != null)
+			{
+				positionComposer.Damping = originalDamping;
+				positionComposer.TargetOffset = targetOffsetBase;
+				CinemachineCamera.Lens.FieldOfView = originalFieldOfView;
+				ResetCameraDistance();
+			}
+		}
 
 		private void Awake()
 		{
@@ -44,6 +61,18 @@ namespace WitchMendokusai
 		{
 			if (positionComposer == null)
 				return;
+
+			if (OrbitProfile != null)
+			{
+				float blend = OrbitProfile.BlendTime <= 0f ? 1f : 1f - Mathf.Exp(-Time.deltaTime / OrbitProfile.BlendTime);
+				positionComposer.CameraDistance = Mathf.Lerp(positionComposer.CameraDistance, OrbitProfile.Distance, blend);
+				positionComposer.TargetOffset = Vector3.Lerp(positionComposer.TargetOffset, OrbitProfile.TargetOffset, blend);
+				positionComposer.Damping = OrbitProfile.FollowDamping;
+				CinemachineCamera.Lens.FieldOfView = Mathf.Lerp(CinemachineCamera.Lens.FieldOfView, OrbitProfile.FieldOfView, blend);
+				Vector3 angles = transform.localEulerAngles;
+				transform.localRotation = Quaternion.Euler(Mathf.LerpAngle(angles.x, OrbitProfile.Pitch, blend), angles.y, angles.z);
+				return;
+			}
 
 			if (zoomSmoothTime > 0.0001f)
 				currentZoom = Mathf.SmoothDamp(currentZoom, targetZoom, ref zoomSmoothVelocity, zoomSmoothTime, Mathf.Infinity, Time.deltaTime);
@@ -61,10 +90,14 @@ namespace WitchMendokusai
 
 		public void Init()
 		{
-			if (positionComposer == null)
+			if (positionComposer == null || initialized)
 				return;
+			initialized = true;
 
 			originalZoom = currentZoom = targetZoom = positionComposer.CameraDistance;
+			originalDamping = positionComposer.Damping;
+			originalFieldOfView = CinemachineCamera.Lens.FieldOfView;
+			targetOffsetBase = positionComposer.TargetOffset;
 			zoomSmoothVelocity = 0f;
 			Vector3 euler0 = transform.localEulerAngles;
 

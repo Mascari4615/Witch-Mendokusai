@@ -89,6 +89,7 @@ namespace WitchMendokusai.EditorTools
 					PrefabUtility.UnloadPrefabContents(dev);
 				}
 				BuildGlider(goal);
+				ExplorationCourseBuilder.Build(ground, climb, goal);
 				AssetDatabase.SaveAssets();
 				Debug.Log("[TraversalCourse] Stage 1001 생성. World의 개발창 > 이동 시험에서 입장");
 			}
@@ -145,7 +146,7 @@ namespace WitchMendokusai.EditorTools
 			}
 		}
 
-		private static GameObject Box(GameObject root, string name, Vector3 position, Vector3 size, Material material)
+		internal static GameObject Box(GameObject root, string name, Vector3 position, Vector3 size, Material material)
 		{
 			GameObject block = CombatPrimitive.Create(PrimitiveType.Cube);
 			Object.DestroyImmediate(block.GetComponent<Renderer>().sharedMaterial);
@@ -154,10 +155,11 @@ namespace WitchMendokusai.EditorTools
 			block.transform.SetParent(root.transform, false);
 			block.transform.localPosition = position;
 			block.transform.localScale = size;
+			block.AddComponent<GroundSurface>();
 			return block;
 		}
 
-		private static Transform Anchor(GameObject root, string name, Vector3 position)
+		internal static Transform Anchor(GameObject root, string name, Vector3 position)
 		{
 			GameObject anchor = new(name);
 			anchor.transform.SetParent(root.transform, false);
@@ -165,7 +167,7 @@ namespace WitchMendokusai.EditorTools
 			return anchor.transform;
 		}
 
-		private static void Label(GameObject root, string text, Vector3 position)
+		internal static void Label(GameObject root, string text, Vector3 position)
 		{
 			TextMeshPro label = Anchor(root, text, position).gameObject.AddComponent<TextMeshPro>();
 			label.font = TMP_Settings.defaultFontAsset;

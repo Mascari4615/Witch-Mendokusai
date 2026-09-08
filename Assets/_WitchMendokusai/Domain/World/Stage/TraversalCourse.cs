@@ -12,6 +12,10 @@ namespace WitchMendokusai
 		[SerializeField] private float fallLimit = -6f;
 		[SerializeField] private float checkpointRadius = 2f;
 		[SerializeField] private float isolationHeight = 100f;
+		[SerializeField] private string courseName = "이동 시험";
+		[SerializeField] private string[] routeInstructions;
+		[SerializeField] private TraversalCameraDriver cameraDriver;
+		private float elapsed;
 		private Vector3 returnPosition;
 		private PlayerProvider players;
 		private StageManager stages;
@@ -38,6 +42,7 @@ namespace WitchMendokusai
 			CheckpointIndex = 0;
 			RecoveryCount = 0;
 			started = false;
+			elapsed = 0f;
 		}
 
 		private void Update()
@@ -47,16 +52,20 @@ namespace WitchMendokusai
 				returnPosition = players.CurrentObject.UnitMovement.Position;
 				transform.position += Vector3.up * Mathf.Max(0f, isolationHeight - transform.position.y);
 				players.CurrentObject.UnitMovement.Teleport(CheckpointPosition);
+				if (cameraDriver != null)
+					cameraDriver.Begin(players.CurrentObject.UnitMovement);
 				BuildHud();
 				started = true;
 			}
 			UnitMovement movement = players.CurrentObject.UnitMovement;
+			if (Finished == false)
+				elapsed += Time.deltaTime;
 			Vector3 position = movement.Position;
 			if (position.y < transform.position.y + fallLimit)
 				Recover();
 			if (Finished == false && movement.IsGrounded() && IsOnCheckpointPlatform(CheckpointIndex + 1, position))
 				CheckpointIndex++;
-			status.text = $"이동 시험 {CheckpointIndex + 1}/{checkpoints.Length} | {movement.Traversal.Mode} | 기력 {movement.Traversal.Stamina:0} | 복귀 {RecoveryCount}";
+			status.text = $"{courseName} {CheckpointIndex + 1}/{checkpoints.Length} | {movement.Traversal.Mode} | 기력 {movement.Traversal.Stamina:0} | 복귀 {RecoveryCount} | {elapsed:0}초";
 			if (Finished)
 				status.text += " | 도착";
 			instruction.text = Finished ? "도착! 체크포인트 복귀로 다시 서거나 이전 Stage로 돌아가기."
@@ -67,6 +76,8 @@ namespace WitchMendokusai
 					: movement.IsGrounded()
 						? "활공: W로 발판 밖으로 나간 뒤 Space 한 번. 점프했다면 Space를 놓고 다시 누르기."
 						: "공중: Space를 눌러 활공. 누르고 있기만 하면 펼쳐지지 않음. 바닥에 가깝거나 기력이 소진되면 전개 불가.";
+			if (routeInstructions != null && CheckpointIndex < routeInstructions.Length)
+				instruction.text = routeInstructions[CheckpointIndex];
 		}
 
 		public bool IsOnCheckpointPlatform(int index, Vector3 position)
@@ -85,6 +96,8 @@ namespace WitchMendokusai
 			status = new Label();
 			hud.Add(status);
 			hud.Add(new Label("WASD 이동 / Ctrl 질주 / Space 점프, 등반 도약, 활공 전환 / C 놓기, 접기"));
+			if (cameraDriver != null)
+				hud.Add(new Label("마우스 시점 / Tab 커서 잠금 전환 / / 개발창. 목표: 금빛 도착점"));
 			instruction = new Label();
 			hud.Add(instruction);
 			VisualElement buttons = new();

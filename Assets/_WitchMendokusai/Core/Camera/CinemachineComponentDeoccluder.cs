@@ -5,14 +5,8 @@ using UnityEngine;
 namespace WitchMendokusai
 {
 	/// <summary>
-	/// 컴포넌트 기반 카메라 가림 해소 Extension — CinemachineDeoccluder 정본의 LayerMask
-	/// 식별 대신 GroundSurface marker (땅·벽 등 「물리적으로 통과 못 하는 표면」 family)
-	/// 가진 collider 만 「가림」 으로 인정.
-	/// Physics Layer 슬롯(32개 한정) 점유 회피 + 점프 판정과 짝 — 「밟는 표면 = 카메라 가림 표면」.
-	///
-	/// 동작: Body stage 후 LookAt → RawPosition 방향으로 SphereCast → GroundSurface
-	/// 가진 collider 중 가장 가까운 hit 보다 카메라가 멀면 그 hit 지점으로 당김.
-	/// damping (당길 때) + smoothingTime (풀려서 멀어질 때) 으로 jitter 방지. TASK-WM-161.
+	/// GroundSurface 표면 기반 가림 해소. Body 계산 뒤 첫 가림부터 안전 거리 제한.
+	/// 장애물 소실 시 거리 복원만 보간. 이동과 카메라 표면 규칙 공유.
 	/// </summary>
 	[AddComponentMenu("Cinemachine/Extensions/WM Component Deoccluder")]
 	[SaveDuringPlay]
@@ -25,23 +19,18 @@ namespace WitchMendokusai
 		[Range(0.01f, 1f)]
 		[SerializeField] private float cameraRadius = 0.08f;
 
-		[Tooltip("LookAt 와 카메라 사이 최소 거리 — 너무 가까이 당기지 X")]
-		[SerializeField] private float minimumDistance = 0.5f;
+		[Tooltip("충돌면과 카메라 구체 사이 여유 거리")]
+		[SerializeField] private float collisionPadding = 0.02f;
+		[SerializeField, Range(1, 8)] private int overlapIterations = 4;
 
 		[Tooltip("trigger collider 도 가림으로 인정할지")]
 		[SerializeField] private QueryTriggerInteraction triggerInteraction = QueryTriggerInteraction.Ignore;
 
-		[Tooltip("당겨질 때 부드러움 (초) — 0=즉시. 0.1~0.3 추천")]
-		[Range(0f, 1f)]
-		[SerializeField] private float damping = 0.15f;
 
 		[Tooltip("가림 풀려 멀어질 때 부드러움 (초) — 보통 damping 보다 더 김. 0.3~0.8 추천")]
 		[Range(0f, 2f)]
 		[SerializeField] private float smoothingTime = 0.5f;
 
-		[Tooltip("장애물이 이 시간(초) 이상 지속 가려야 카메라를 당김. 빠르게 이동하며 스쳐가는 순간 장애물(기둥·벽)은 무시 → 카메라 거리 안 흔들려 어지러움 ↓. 0 = 즉시(구 동작). 0.05~0.15 추천. TASK-WM-163")]
-		[Range(0f, 0.5f)]
-		[SerializeField] private float occlusionPersistTime = 0.08f;
 
 		[Header("Debug")]
 		[Tooltip("Scene view 에 카메라-LookAt 선·hit 지점·구체 표시. Play 중 Scene view 에서 보임. Game view 도 보고 싶으면 Game 탭 상단 Gizmos 토글 ON.")]
@@ -55,6 +44,8 @@ namespace WitchMendokusai
 
 		private const int HIT_BUFFER_SIZE = 16;
 		private static readonly RaycastHit[] HIT_BUFFER = new RaycastHit[HIT_BUFFER_SIZE];
+		private readonly Collider[] overlapBuffer = new Collider[HIT_BUFFER_SIZE];
+		private SphereCollider penetrationProbe;
 
 		private readonly Dictionary<CinemachineVirtualCameraBase, VcamState> stateByVcam = new();
 
@@ -62,7 +53,6 @@ namespace WitchMendokusai
 		{
 			public float currentDistance;
 			public float velocity;
-			public float occludedTime; // 현재 가림이 지속된 시간 (persist 게이트용)
 
 			// Debug 캐시 — OnDrawGizmos 가 Body callback 안에서 그릴 수 없어 마지막 값 보관
 			public Vector3 debugTarget;
@@ -84,48 +74,50 @@ namespace WitchMendokusai
 			if (state.HasLookAt() == false)
 				return;
 
-			Vector3 target = state.ReferenceLookAt;
+			float nearHeight = state.Lens.NearClipPlane * Mathf.Tan(state.Lens.FieldOfView * Mathf.Deg2Rad * 0.5f);
+			float nearWidth = nearHeight * state.Lens.Aspect;
+			float probeRadius = Mathf.Max(cameraRadius, new Vector3(nearWidth, nearHeight, state.Lens.NearClipPlane).magnitude);
+			Vector3 target = ResolveTarget(state.ReferenceLookAt, probeRadius);
 			Vector3 delta = state.RawPosition - target;
 			float desiredDistance = delta.magnitude;
 			if (desiredDistance < 0.0001f)
 				return;
-
 			Vector3 direction = delta / desiredDistance;
 
 			int hitCount = Physics.SphereCastNonAlloc(
 				target,
-				cameraRadius,
+				probeRadius,
 				direction,
 				HIT_BUFFER,
 				desiredDistance,
 				broadMask,
 				triggerInteraction);
 
+			// NonAlloc 포화 시 전체 표본 재조회. 정렬되지 않은 부분 표본으로 가장 가까운 벽 누락 방지
+			RaycastHit[] hits = HIT_BUFFER;
+			if (hitCount == HIT_BUFFER.Length)
+			{
+				hits = Physics.SphereCastAll(target, probeRadius, direction, desiredDistance, broadMask, triggerInteraction);
+				hitCount = hits.Length;
+			}
 			float occludedDistance = desiredDistance;
 			for (int i = 0; i < hitCount; i++)
 			{
-				if (HIT_BUFFER[i].collider.GetComponentInParent<GroundSurface>() == null)
+				if (hits[i].collider.GetComponentInParent<GroundSurface>() == null)
 					continue;
 
-				if (HIT_BUFFER[i].distance < occludedDistance)
-					occludedDistance = HIT_BUFFER[i].distance;
+				occludedDistance = Mathf.Min(occludedDistance, Mathf.Max(0f, hits[i].distance - collisionPadding));
 			}
 
 			if (stateByVcam.TryGetValue(vcam, out VcamState vcamState) == false)
 			{
-				vcamState = new VcamState { currentDistance = desiredDistance, velocity = 0f, occludedTime = 0f };
+				vcamState = new VcamState { currentDistance = desiredDistance, velocity = 0f };
 			}
 
-			// WM-163 폴리싱 — 빠른 이동 중 스쳐가는 순간 장애물 무시. occlusion 이 persist 시간
-			// 넘게 지속돼야 카메라를 당긴다 → 달리며 지나치는 기둥/벽이 카메라 거리를 안 흔듦 (어지러움 ↓).
-			bool isOccluded = occludedDistance < desiredDistance - 0.01f;
-			vcamState.occludedTime = isOccluded ? vcamState.occludedTime + deltaTime : 0f;
-			bool committedOcclusion = isOccluded && vcamState.occludedTime >= occlusionPersistTime;
-			float targetDistance = committedOcclusion ? Mathf.Max(minimumDistance, occludedDistance) : desiredDistance;
-
-			// 당기는 방향(가까워짐) = damping / 풀리는 방향(멀어짐) = smoothingTime
+			// 안전 거리는 첫 프레임부터 적용. 보간은 벽에서 멀어지는 복원에만 사용
+			float targetDistance = occludedDistance;
 			bool pullingIn = targetDistance < vcamState.currentDistance;
-			float smoothTime = pullingIn ? damping : smoothingTime;
+			float smoothTime = pullingIn ? 0f : smoothingTime;
 
 			if (deltaTime > 0f && smoothTime > 0.0001f)
 			{
@@ -170,6 +162,57 @@ namespace WitchMendokusai
 			}
 		}
 
+		private Vector3 ResolveTarget(Vector3 target, float radius)
+		{
+			if (penetrationProbe == null)
+			{
+				GameObject probeObject = new("Camera clearance probe") { hideFlags = HideFlags.HideAndDontSave };
+				penetrationProbe = probeObject.AddComponent<SphereCollider>();
+				penetrationProbe.isTrigger = true;
+				penetrationProbe.enabled = false;
+			}
+			penetrationProbe.radius = radius;
+			for (int iteration = 0; iteration < overlapIterations; iteration++)
+			{
+				int count = Physics.OverlapSphereNonAlloc(target, radius, overlapBuffer, broadMask, triggerInteraction);
+				Collider[] overlaps = overlapBuffer;
+				if (count == overlaps.Length)
+				{
+					overlaps = Physics.OverlapSphere(target, radius, broadMask, triggerInteraction);
+					count = overlaps.Length;
+				}
+				bool moved = false;
+				for (int index = 0; index < count; index++)
+				{
+					Collider surface = overlaps[index];
+					if (surface.GetComponentInParent<GroundSurface>() == null)
+						continue;
+					// 비활성 콜라이더의 침투 결과는 false. 계산 동안만 활성화, 물리 tick에는 비활성
+					penetrationProbe.enabled = true;
+					bool penetrating;
+					Vector3 direction;
+					float distance;
+					try
+					{
+						penetrating = Physics.ComputePenetration(penetrationProbe, target, Quaternion.identity,
+							surface, surface.transform.position, surface.transform.rotation, out direction, out distance);
+					}
+					finally
+					{
+						penetrationProbe.enabled = false;
+					}
+					if (penetrating)
+					{
+						target += direction * (distance + collisionPadding);
+						moved = true;
+					}
+				}
+				if (moved == false)
+					break;
+			}
+			return target;
+		}
+
 		private void OnDrawGizmos()
 		{
 			if (showDebugGizmos == false)
@@ -201,6 +244,13 @@ namespace WitchMendokusai
 
 		protected override void OnDestroy()
 		{
+			if (penetrationProbe != null)
+			{
+				if (Application.isPlaying)
+					Destroy(penetrationProbe.gameObject);
+				else
+					DestroyImmediate(penetrationProbe.gameObject);
+			}
 			stateByVcam.Clear();
 			base.OnDestroy();
 		}

@@ -10,6 +10,7 @@ using VContainer.Unity;
 
 namespace WitchMendokusai
 {
+	[DefaultExecutionOrder(100)]
 	public class CameraManager : MonoBehaviour
 	{
 		public static CameraManager Instance { get; private set; }
@@ -74,6 +75,25 @@ namespace WitchMendokusai
 
 		private float yaw;   // 누적 yaw 목표 (deg). PlayerRotation 이 body 회전에 사용.
 		private float pitch; // 누적 pitch 목표 (deg, MouseLook 한정). + = 아래.
+		private bool suppressLookFrame;
+		public OrbitCameraProfile OrbitProfile { get; private set; }
+		public Vector2 OrbitAngles => new(yaw, pitch);
+
+		public void SetOrbitProfile(OrbitCameraProfile profile)
+		{
+			OrbitProfile = profile;
+			curCamera.SetOrbitProfile(profile);
+		}
+
+		public void SetOrbitAngles(Vector2 angles)
+		{
+			yaw = angles.x;
+			pitch = Mathf.Clamp(angles.y, minPitch, maxPitch);
+			transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+			if (pitchPivot != null)
+				pitchPivot.localRotation = Quaternion.Euler(pitch, 0f, 0f);
+			suppressLookFrame = true;
+		}
 
 		/// <summary>PlayerRotation body 회전용 — 평면 yaw (pitch 무시).</summary>
 		public Quaternion FlatYawRotation => Quaternion.Euler(0f, yaw, 0f);
@@ -109,7 +129,7 @@ namespace WitchMendokusai
 
 			// Init
 			cameras = GetComponentsInChildren<MCamera>(false); // 활성화된 것만
-			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.FixedUpdate;
+			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.ManualUpdate;
 			chatPositionTransposer = cameras.First(cam => cam.UICameraMode == UICameraMode.NPC).CinemachineCamera.GetCinemachineComponent(CinemachineCore.Stage.Body) as CinemachinePositionComposer;
 
 			// TASK-WM-163 — yaw 누적 baseline = 현재 루트 yaw (prefab 0). pitch = 0 (PointAndClick baked).
@@ -175,7 +195,7 @@ namespace WitchMendokusai
 			//   마우스 잠금은 여기 없다(UpdateCursorState 가 따로 본다) — 손가락엔 잠글 커서가 없다.
 			if (ControlMode == CameraControlMode.MouseLook || inputManager.IsTouchMode)
 			{
-				Vector2 look = inputManager.LookDelta;
+				Vector2 look = suppressLookFrame ? Vector2.zero : inputManager.LookDelta;
 				yaw += look.x * mouseYawSensitivity;
 				pitch += -look.y * mousePitchSensitivity;
 				pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
@@ -191,9 +211,9 @@ namespace WitchMendokusai
 				yaw += Time.deltaTime * yawKeySpeed * inputManager.CameraRotateInput;
 
 				// PointAndClick = Q/E 부드럽게 (기존 느낌). pitch 는 0 으로 복귀(vcam baked 각도 유지).
-				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, yaw, 0f), Time.deltaTime * pointClickYawSmooth);
+				transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0f, yaw, 0f), 1f - Mathf.Exp(-Time.deltaTime * pointClickYawSmooth));
 				if (pitchPivot != null)
-					pitchPivot.localRotation = Quaternion.Lerp(pitchPivot.localRotation, Quaternion.identity, Time.deltaTime * pitchSmooth);
+					pitchPivot.localRotation = Quaternion.Lerp(pitchPivot.localRotation, Quaternion.identity, 1f - Mathf.Exp(-Time.deltaTime * pitchSmooth));
 			}
 
 			// 1인칭 = vcam 위치/회전을 직접 구동 (Cinemachine Follow/constraint 체인 우회 → jitter 근절).
@@ -213,7 +233,11 @@ namespace WitchMendokusai
 				&& GameConditionBridge.Get(GameConditionType.IsPaused) == false
 				&& GameConditionBridge.Get(GameConditionType.IsTyping) == false;
 
-			Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+			lockCursor &= Application.isFocused && inputManager != null && inputManager.IsTouchMode == false;
+			CursorLockMode nextLock = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+			if (Cursor.lockState != nextLock)
+				suppressLookFrame = true;
+			Cursor.lockState = nextLock;
 			Cursor.visible = lockCursor == false;
 		}
 
@@ -275,11 +299,8 @@ namespace WitchMendokusai
 			if (firstPersonCamera != null)
 				firstPersonCamera.CinemachineCamera.Priority = isFirstPerson ? firstPersonPriority : 0;
 
-			// 1인칭 = 매 렌더 프레임 갱신(LateUpdate)으로 마우스룩 stepping 제거.
-			// 3인칭 = FixedUpdate (rigidbody 추종 캐릭터와 물리틱 동기 — 기존 OK 보존).
-			cinemachineBrain.UpdateMethod = isFirstPerson
-				? CinemachineBrain.UpdateMethods.LateUpdate
-				: CinemachineBrain.UpdateMethods.FixedUpdate;
+			// 모든 시점의 계산 순서는 LateUpdate에서 명시적 소유
+			cinemachineBrain.UpdateMethod = CinemachineBrain.UpdateMethods.ManualUpdate;
 		}
 
 		public void SetContentCameraMode(ContentCameraMode mode)
@@ -288,7 +309,10 @@ namespace WitchMendokusai
 			// cameras[] = GetComponentsInChildren<MCamera> 라 content(Adventure/Dungeon) + UI(NPC/Tab) 혼합 배열 →
 			// 위치 ≠ enum (CityView=2→Camera_NPC, Arena=3→Camera_Tab 오선택 잠복버그). 필드 기반은 계층 순서 무관 +
 			// content 카메라 추가/재배치에 견고. Normal/Dungeon 은 필드로도 동일 카메라(동작 무변경). TASK-WM-165 item9.
+			if (curCamera != null)
+				curCamera.SetOrbitProfile(null);
 			curCamera = cameras.First(cam => cam.ContentCameraMode == mode);
+			curCamera.SetOrbitProfile(OrbitProfile);
 
 			// 카메라 블렌딩 설정 (던전일 경우 Cut, 그 외 EaseInOut)
 			cinemachineBrain.DefaultBlend.Style = curCamera.BlendStyle;
@@ -378,13 +402,16 @@ namespace WitchMendokusai
 		private void LateUpdate()
 		{
 			UpdateCameraOrientation();
+			suppressLookFrame = false;
+			// 입력, 리그 회전, 보간된 대상 위치 뒤에 최종 카메라 계산 한 번
+			cinemachineBrain.ManualUpdate();
 
 			if (target == null)
 				return;
 
 			Vector3 direction = (target.position - cinemachineBrain.transform.position).normalized;
 			// RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Mathf.Infinity, 1 << LayerMask.NameToLayer("EnvironmentObject"));
-			RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Mathf.Infinity);
+			RaycastHit[] hits = Physics.RaycastAll(cinemachineBrain.transform.position, direction, Vector3.Distance(target.position, cinemachineBrain.transform.position));
 
 			for (int i = 0; i < hits.Length; i++)
 			{

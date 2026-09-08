@@ -24,6 +24,7 @@ namespace WitchMendokusai
 
 		private InputManager inputManager;
 		[SerializeField] private WorldStage traversalStage;
+		[SerializeField] private WorldStage explorationStage;
 		private StageManager stageManager;
 		private UIRoot uiRoot;
 		private WMWindow window;
@@ -42,6 +43,14 @@ namespace WitchMendokusai
 			if (stageManager.CurStage == traversalStage)
 				return;
 			stageManager.LoadStage(traversalStage);
+			window.Close();
+		}
+
+		public void EnterExplorationCourse()
+		{
+			if (stageManager.CurStage == explorationStage)
+				return;
+			stageManager.LoadStage(explorationStage);
 			window.Close();
 		}
 
@@ -126,7 +135,7 @@ namespace WitchMendokusai
 			if (DevModeRegistry.Instance.FindById("timeweather") == null)
 				DevModeRegistry.Instance.Register(new TimeWeatherMode());
 			if (DevModeRegistry.Instance.FindById("traversal") == null)
-				DevModeRegistry.Instance.Register(new TraversalDevMode(() => Instance.EnterTraversalCourse()));
+				DevModeRegistry.Instance.Register(new TraversalDevMode(() => Instance.EnterTraversalCourse(), () => Instance.EnterExplorationCourse()));
 		}
 
 		/// <summary>UI 측에서 명령 시스템에 진입할 때 호출. 명령행에 직접 입력한 것과 동일한 경로 (출력/에러 처리 포함).</summary>
